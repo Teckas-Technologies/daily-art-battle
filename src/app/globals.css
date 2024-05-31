@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Freeman&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .navbar{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .battle-table{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .battle-table1, 
+  .battle-table2{
+    width: 100%;
+  }
+  .battle-img{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  
+  .battle-table1, 
+  .battle-table2{
+    width: 50%;
+  }
+  
+}
+
+body {
+  width: 100%;
+  color: rgb(var(--foreground-rgb));
+  background-image: url('./../../public/images/dark\ pattern7.jpg');
+  background-position: top;
+  background-size: cover;
+  /* background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb)); */
+}
+
+.leaderboard-content {
+  color: black; 
+}
+
+.table-header,
+.table-row {
+  border-bottom: 1px solid #ccc;
+}
+
+.close-button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: black;
+}
+
+.connect-btn{
+  background-color: #fff;
+  color: #000;
+}
+.connect-btn:hover{
+  background-color: #ffffffc1;
+  color: #000;
+}
+
+.vote-btn{
+  /* background-color: #101011f0; */
+  background-color: #040415ef;
+  padding: 10px 15px;
+  width: 150px;
+  color: #8730aa;
+  font-weight: 700;
+}
+
+.vote-btn:hover{
+  background-color: #101011d9;
+}
+
+.upload-btn{
+  background-color: #8730aa;
+  border: 2px solid #8730aa;
+  transition: 0.1s ease;
+}
+.upload-btn:hover{
+  background-color: #8730aacf;
+  border: 2px solid #8730aacf;
+}
+
+.cancel-btn{
+  background-color: #fff;
+  border: 2px solid #8730aa;
+  color: #000;
+  transition: 0.1s ease;
+}
+.cancel-btn:hover{
+  background-color: #ffffffb5;
+  border: 2px dotted #8730aa;
+  color: #000;
+}
