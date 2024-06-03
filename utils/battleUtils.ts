@@ -50,11 +50,12 @@ export const findTodaysBattle = async (): Promise<any> => {
   });
 };
 
-export const findPreviousBattles = async (): Promise<any> => {
+export const findPreviousBattles = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).limit(10).lean();
+  const skip = (page - 1) * limit;
+  const pastBattles = await Battle.find({ endTime: { $lt: today } }).skip(skip).limit(limit);
   return { pastBattles };
 }
 

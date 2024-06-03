@@ -109,12 +109,12 @@ export const useFetchBattles = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-      const fetchBattles = async () => {
+
+      const fetchBattles = async (page: number, limit: number = 10) => {
           setLoading(true);
           setError(null);
           try {
-              const response = await fetch('/api/battle?queryType=battles');
+              const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
               console.log("Fetched battles data:", data);
@@ -126,9 +126,10 @@ export const useFetchBattles = () => {
               setLoading(false);
           }
       };
+      useEffect(() => {
+         fetchBattles(1);
+      }, []);
+     
 
-      fetchBattles();
-  }, []);
-
-  return { battles, loading, error };
+  return { battles, loading, error,fetchMoreBattles: fetchBattles };
 };

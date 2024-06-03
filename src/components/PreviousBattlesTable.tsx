@@ -5,9 +5,9 @@ import Image from 'next/image';
 
 const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
     const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
-    const { battles, error, loading } = useFetchBattles();
+    const { battles, error, loading,fetchMoreBattles} = useFetchBattles();
     const { isConnected, selector, connect, activeAccountId } = useMbWallet();
-
+    const [page, setPage] = useState(1);
     console.log("Fetched battles from hook:", battles);
 
     useEffect(() => {
@@ -18,6 +18,18 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
     }, [battles]);
 
     console.log("Previous Battles in state:", previousBattles);
+
+    const handleNext = () => {
+        setPage(prevPage => prevPage + 1);
+        fetchMoreBattles(page + 1);
+      };
+    
+      const handlePrevious = () => {
+        if (page > 1) {
+          setPage(prevPage => prevPage - 1);
+          fetchMoreBattles(page - 1);
+        }
+      };
 
     return (
         <div className="battle-table mt-8 pb-10 flex flex-col items-center w-full">
@@ -42,7 +54,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                                 alt="Art A"
                                                 width={100} 
                                                 height={100} 
-                                                className="sm:w-48 sm:h-48 w-36 h-36"
+                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
                                                 unoptimized
                                             />
                                         </div>
@@ -54,7 +66,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                                 alt="Art B"
                                                 width={100} 
                                                 height={100}
-                                                className="sm:w-48 sm:h-48 w-36 h-36"
+                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
                                                 unoptimized
                                             />
                                         </div>
@@ -66,9 +78,24 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                             ))}
                         </tbody>
                     </table>
-                    
+
                 </div>
+                <nav className="flex justify-center flex-wrap gap-4 mt-2">
+          <a
+            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${page <= 1 ? 'cursor-not-allowed' : 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
+            onClick={page > 1 ? handlePrevious : undefined}
+          >
+            Previous
+          </a>
+          <a
+            className="flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
+            onClick={handleNext}
+          >
+            Next
+          </a>
+        </nav>
             </div>
+      
         </div>
     );
     

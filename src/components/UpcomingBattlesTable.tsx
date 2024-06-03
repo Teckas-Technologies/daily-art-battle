@@ -67,7 +67,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
   const {  votes,  fetchVotes,  submitVote,} = useVoting();
   const [success,setSuccess] = useState(false);
 
-  const upVote = async (id: string) => {
+  const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
       await connect();
       return;
@@ -105,16 +105,18 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
         <tbody>
           {artData.slice(-10).map((art, index) => (
             <tr key={index} className="border-b bg-white">
-                <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
-                      <div className="flex justify-center">
-                    <Image
-                        src={art.grayScale}
-                        alt="Art A"
-                        width={100} 
-                        height={100} 
-                        className="sm:w-48 sm:h-48 w-36 h-36"
-                        unoptimized
-                    />
+               <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
+                <div className="flex justify-center">
+                    <div className="flex-none">
+                        <Image
+                            src={art.grayScale}
+                            alt="Art A"
+                            width={100}
+                            height={100}
+                            className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
+                            unoptimized
+                        />
+                    </div>
                 </div>
             </td>
               <td className="px-6 py-4 text-xs sm:text-sm font-small break-all" style={{ color: 'black' }}>
@@ -124,7 +126,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
             {art.upVotes}
           </td>
           <td className="px-6 py-4 text-sm sm:text-sm font-small" style={{ color: 'black', backgroundColor: 'none' }}>
-                <button onClick={() => upVote(art._id)} className={`w-full sm:w-auto px-4 py-2 text-white bg-gray-500 hover:bg-gray-600 rounded text-xs sm:text-sm`}>
+                <button onClick={() => onVote(art._id)} className={`w-full sm:w-auto px-4 py-2 text-white bg-gray-500 hover:bg-gray-600 rounded text-xs sm:text-sm`}>
                   Vote
                 </button>
               </td>
