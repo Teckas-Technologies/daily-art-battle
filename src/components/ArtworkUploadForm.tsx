@@ -39,7 +39,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
     console.log(artTitle)
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const uploadArtWork = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!isConnected || !activeAccountId) {
       connect();
@@ -109,7 +109,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
           </div>
         )}
       
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={uploadArtWork}>
             <div className='mb-1'>
                 <label className="block text-sm font-medium text-gray-900" style={{fontWeight:500, fontSize: 13, color:'#fff'}}>
                Art Title

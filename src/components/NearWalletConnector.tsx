@@ -1,4 +1,3 @@
-// components/NearWalletConnector.tsx
 "use client"
 import { useMbWallet } from "@mintbase-js/react";
 

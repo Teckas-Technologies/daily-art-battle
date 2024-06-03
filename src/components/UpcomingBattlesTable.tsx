@@ -67,7 +67,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
   const {  votes,  fetchVotes,  submitVote,} = useVoting();
   const [success,setSuccess] = useState(false);
 
-  const onVote = async (id: string) => {
+  const upVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
       await connect();
       return;
@@ -124,7 +124,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
             {art.upVotes}
           </td>
           <td className="px-6 py-4 text-sm sm:text-sm font-small" style={{ color: 'black', backgroundColor: 'none' }}>
-                <button onClick={() => onVote(art._id)} className={`w-full sm:w-auto px-4 py-2 text-white bg-gray-500 hover:bg-gray-600 rounded text-xs sm:text-sm`}>
+                <button onClick={() => upVote(art._id)} className={`w-full sm:w-auto px-4 py-2 text-white bg-gray-500 hover:bg-gray-600 rounded text-xs sm:text-sm`}>
                   Vote
                 </button>
               </td>
