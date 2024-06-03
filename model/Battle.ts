@@ -5,6 +5,10 @@ import mongoose, { Document, model } from 'mongoose';
 interface Battle extends Document {
   artAId:string;
   artBId:string;
+  artAartistId:string;
+  artBartistId:string;
+  artAtitle: string;
+  artBtitle: string;
   startTime:Date;
   endTime:Date;
   isBattleEnded:Boolean;
@@ -19,13 +23,17 @@ interface Battle extends Document {
   artBcolouredArtReference: string;
   artAgrayScaleReference: string;
   artBgrayScaleReference: string;
-  winningArt?: 'ArtA' | 'ArtB';
+  winningArt?: 'Art A' | 'Art B';
   specialWinner?: string;
 }
 
 const BattleSchema = new mongoose.Schema({
   artAId: { type: String, required: true },
   artBId: { type: String, required: true },
+  artAartistId: { type: String, required: true },
+  artBartistId: { type: String, required: true },
+  artAtitle: { type: String, required: true },
+  artBtitle: { type: String, required: true },
   artAgrayScale: { type: String, required: true },
   artBgrayScale: { type: String, required: true },
   artAcolouredArt: { type: String, required: true },
@@ -38,7 +46,7 @@ const BattleSchema = new mongoose.Schema({
   endTime: { type: Date, required: true },
   isBattleEnded: { type: Boolean, default: false },
   isNftMinted: { type: Boolean, default: false },
-  winningArt: { type: String, enum: ['ArtA', 'ArtB'], required: false },
+  winningArt: { type: String, enum: ['Art A', 'Art B'], required: false },
   artAVotes: { type: Number, default: 0 },
   artBVotes: { type: Number, default: 0 },
   specialWinner: { type: String, required: false },

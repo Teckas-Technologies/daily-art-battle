@@ -11,6 +11,7 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
         isBattleEnded: false
     });
     if(battles){
+        console.log(battles);
     for (const battle of battles) {
         const votes = await Voting.find({ battleId: battle.id });
         const artAVotes = votes.filter(vote => vote.votedFor === 'Art A');
@@ -20,10 +21,12 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
 
         // Mint NFTs for all participants
         await mintNFTsForParticipants(votes, battle);
+        console.log("asdass",winningVotes)
         // Select and mint for a special winner
         const specialWinner = selectRandomWinner(winningVotes);
+        console.log("asdass232",specialWinner)
         if (specialWinner) {
-           
+           console.log("Winner")
             const coloredArt = winningArt === 'Art A' ? battle.artAcolouredArt : battle.artBcolouredArt;
             const coloredArtReference = winningArt === 'Art A' ? battle.artAcolouredArtReference : battle.artBcolouredArtReference;
             await serverMint(specialWinner.participantId, coloredArt, coloredArtReference,true);
@@ -36,7 +39,9 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
         battle.specialWinner = specialWinner?.participantId;
         battle.isBattleEnded = true;
         battle.isNftMinted = true;
+        console.log(battle);
        const res =  await battle.save();
+       console.log("saved",res);
        await ArtTable.findOneAndUpdate(
         { _id: battle.artAId }, 
         { $set: { isCompleted: true } }, 
@@ -61,6 +66,7 @@ const mintNFTsForParticipants = async (votes: any[], battle: any) => {
         const grayScaleReference = (vote.votedFor == "Art A")?battle.artAgrayScaleReference:battle.artBgrayScaleReference;
         await serverMint(vote.participantId, grayScale, grayScaleReference, false);
     }
+    console.log("minted");
 };
 
 

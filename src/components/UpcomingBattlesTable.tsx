@@ -97,8 +97,8 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
     <table className="min-w-full mt-4">
       <thead>
         <tr className="bg-white">
-          <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Arts</th>
-          <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Artist Name</th>
+          <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Arts</th>
+          {/* <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Artist Name</th> */}
           <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>UpVotes</th>
           <th className="px-2 sm:px-6 py-2 text-xs sm:text-sm text-left" style={{ borderTopRightRadius: 5, borderBottomRightRadius: 5, color: 'black' }}></th>
         </tr>
@@ -106,23 +106,25 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
       <tbody>
         {artData.slice(-10).map((art, index) => (
           <tr key={index} className="border-b bg-white">
-            <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
-              <div className="flex justify-center">
-                <div className="flex-none">
-                  <Image
-                    src={art.colouredArt}
-                    alt="Art A"
-                    width={100}
-                    height={100}
-                    className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
-                    unoptimized
-                  />
-                </div>
-              </div>
-            </td>
-            <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm font-small break-all" style={{ color: 'black' }}>
+         <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
+          <div className="flex flex-col items-center">
+            <div className="flex-none">
+              <Image
+                src={art.colouredArt}
+                alt="Art A"
+                width={100}
+                height={100}
+                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
+                unoptimized
+              />
+              <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{art.arttitle} by {art.artistId}</p>
+            </div>
+          </div>
+        </td>
+
+            {/* <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm font-small break-all" style={{ color: 'black' }}>
               {art.artistId}
-            </td>
+            </td> */}
             <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm font-small" style={{ color: 'black' }}>
               {art.upVotes}
             </td>

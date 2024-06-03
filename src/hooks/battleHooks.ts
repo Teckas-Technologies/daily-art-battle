@@ -5,6 +5,10 @@ export interface BattleData {
   _id: string;
   artAId:string;
   artBId:string;
+  artAartistId:string;
+  artBartistId:string;
+  artAtitle: string;
+  artBtitle: string;
   startTime:Date;
   endTime:Date;
   isBattleEnded:Boolean;
@@ -19,7 +23,7 @@ export interface BattleData {
   artBcolouredArtReference: string;
   artAgrayScaleReference: string;
   artBgrayScaleReference: string;
-  winningArt?: 'ArtA' | 'ArtB';
+  winningArt?: 'Art A' | 'Art B';
   specialWinner?: string;
 }
 

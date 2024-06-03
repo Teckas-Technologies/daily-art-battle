@@ -9,13 +9,15 @@ interface Artwork {
   id: string;
   imageUrl: string;
   name: string;
+  title:string;
+  artistId:string;
 }
 
 const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { todayBattle, loading, error } = useFetchTodayBattle();
-  const [artA, setArtA] = useState<Artwork>({ id: 'ArtA', name: 'Art A', imageUrl: '' });
-  const [artB, setArtB] = useState<Artwork>({ id: 'ArtB', name: 'Art B', imageUrl: '' });
+  const [artA, setArtA] = useState<Artwork>({ id: 'ArtA', name: 'Art A', imageUrl: '',title:'',artistId:'' });
+  const [artB, setArtB] = useState<Artwork>({ id: 'ArtB', name: 'Art B', imageUrl: '' ,title:'',artistId:''});
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [battleId, setBattleId] = useState<string>();
   const { votes, fetchVotes, submitVote } = useVoting();
@@ -60,8 +62,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 
   useEffect(() => {
     if (todayBattle) {
-      setArtA({ id: 'Art A', name: 'Art A', imageUrl: todayBattle.artAcolouredArt });
-      setArtB({ id: 'Art B', name: 'Art B', imageUrl: todayBattle.artBcolouredArt });
+      setArtA({ id: 'Art A', name: 'Art A', imageUrl: todayBattle.artAcolouredArt,title:todayBattle.artAtitle ,artistId:todayBattle.artAartistId});
+      setArtB({ id: 'Art B', name: 'Art B', imageUrl: todayBattle.artBcolouredArt,title:todayBattle.artBtitle ,artistId:todayBattle.artBartistId });
       setBattleId(todayBattle._id);
     }
   }, [todayBattle]);

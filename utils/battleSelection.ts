@@ -37,6 +37,10 @@ export const createBattle = async (): Promise<any> => {
     const battleData = {
       artAId: artA._id.toString(),
       artBId: artB._id.toString(),
+      artAtitle: artA.arttitle,
+      artBtitle: artB.arttitle,
+      artAartistId:artA.artistId,
+      artBartistId:artB.artistId,
       artAgrayScale: artA.grayScale,
       artBgrayScale: artB.grayScale,
       artAcolouredArt: artA.colouredArt,
