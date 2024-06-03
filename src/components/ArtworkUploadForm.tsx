@@ -94,32 +94,16 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
       <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #8730aa', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
       <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#8730aa', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
-              {showAlert && (
-          <div className="bg-yellow-200 text-yellow-800 p-3 rounded-md mb-4 max-w-xs">
-            <p className="font-semibold" style={{ fontSize: '0.875rem' }}>Please upload four distinct files, two for each artwork variation:</p>
-            <ol className="list-decimal ml-6">
-              <li style={{ fontSize: '0.875rem' }} > Color: This version will be minted as a single edition (1:1) and awarded to one lucky winner from those who voted for this variation.</li>
-              <li style={{ fontSize: '0.875rem' }} >Grayscale: This version will be minted for everyone who voted for this variation as a participation reward.</li>
-            </ol>
-          </div>
-        )}
-      
+      <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
         <form onSubmit={uploadArtWork}>
-            <div className='mb-1'>
-                <label className="block text-sm font-medium text-gray-900" style={{fontWeight:500, fontSize: 13, color:'#fff'}}>
-               Art Title
-              </label>
-              <input type="text" onChange={handleArtName} className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none" style={{padding:5, border:'none', color:'#000', fontSize:13}}/>
-            </div>
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>
               {index===0 &&(
-                  <label className="block text-sm font-medium text-gray-900" style={{fontWeight:500, fontSize: 13, color:'#fff'}}>
-                  Variation
-                 </label>
-              )
-              }
-              <label 
+                <>
+                <label className="block text-sm font-medium text-gray-900 break-words py-2" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
+                  Upload the highest quality version of your art as the 'Unique Rare'. This version will be minted as a single edition (1:1) and awarded to one lucky winner who picks your art in a battle! This is the version which will be displayed on our site for user to upvote and pick in battle.
+              </label>
+                <label 
               htmlFor={`fileInput-${index}`}  
               className="cursor-pointer bg-white text-sm text-gray-900 rounded-lg focus:outline-none pb-2 mt-2" 
               style={{ 
@@ -133,9 +117,46 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
             </label>
               <input type="file" id={`fileInput-${index}`} className="hidden" onChange={handleFileChange(index)} />
               <span className="px-3 text-sm text-gray-600">{artwork.fileName}</span>
+              </>
+              )}
+              {index==1&&(
+                <>
+                <label className="mt-4 block text-sm font-medium text-gray-900 break-words py-2" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
+                Everyone who picks your art will receive this Derivative Edition as a participation reward, with as many editions minted as there are voters. Make this a derivative work of your unique rare. For example; this version could be grayscale, glitched out, framed as a ticket stub, watermarked, censored, still if your Unique Rare is animated or animated if your Unique Rare is still, etc.
+              </label>
+                <label 
+              htmlFor={`fileInput-${index}`}  
+              className="cursor-pointer bg-white text-sm text-gray-900 rounded-lg focus:outline-none pb-2 mt-2" 
+              style={{ 
+                padding: 5, 
+                border: 'none', 
+                color: '#000', 
+                fontSize: 13
+              }}
+            >
+              {artwork.name}
+            </label>
+              <input type="file" id={`fileInput-${index}`} className="hidden" onChange={handleFileChange(index)} />
+              <span className="mt-2 px-3 text-sm text-gray-600">{artwork.fileName}</span>
+              </>
+              )
+}
+              
                 <br></br>
               </div>
           ))}
+           <div className='mb-1'>
+           <label className="mt-4 block text-sm font-medium text-gray-900 break-words" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
+              Art Title. This name will appear in association with your artwork on this site and in your fans' wallets.
+          </label>
+            <input
+                type="text"
+                onChange={handleArtName}
+                className="block text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none"
+                style={{ padding: 5, border: 'none', color: '#000', fontSize: 13 }}
+            />
+        </div>
+
           <div className="mt-2 space-x-3 flex justify-end">
             <button type="button" onClick={onClose} className=" cancel-btn text-white px-4 py-2 rounded">
               Cancel
