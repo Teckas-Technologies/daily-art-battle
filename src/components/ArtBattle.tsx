@@ -26,7 +26,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       if (todayBattle && activeAccountId) {
         const res = await fetchVotes(activeAccountId, todayBattle._id);
         if (res) {
-          console.log(res.votedFor);
           setVoterFor(res.votedFor);
           setSuccess(true);
         }

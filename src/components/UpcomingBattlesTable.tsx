@@ -110,7 +110,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
               <div className="flex justify-center">
                 <div className="flex-none">
                   <Image
-                    src={art.grayScale}
+                    src={art.colouredArt}
                     alt="Art A"
                     width={100}
                     height={100}

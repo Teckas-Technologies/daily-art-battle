@@ -14,7 +14,6 @@ interface ArtPieceProps {
 
 const ArtPiece: React.FC<ArtPieceProps> = ({ art, onVote, success,votedFor }) => {
     const { isConnected, connect, activeAccountId } = useMbWallet();
-    console.log(votedFor);
 
     return (
         <>
