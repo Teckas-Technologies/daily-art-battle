@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const limit = parseInt(req.query.limit as string) || 10;
           const arts = await findAllArts(page, limit);
             return res.status(200).json(arts);
-        case 'PUT':
+        case 'POST':
           const { id } = req.query;
           const idString = typeof id === 'string' ? id : String(id); 
           
