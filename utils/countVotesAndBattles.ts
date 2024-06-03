@@ -13,10 +13,10 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
     if(battles){
     for (const battle of battles) {
         const votes = await Voting.find({ battleId: battle.id });
-        const artAVotes = votes.filter(vote => vote.votedFor === 'ArtA');
-        const artBVotes = votes.filter(vote => vote.votedFor === 'ArtB');
-        const winningArt = artAVotes.length >= artBVotes.length ? 'ArtA' : 'ArtB';
-        const winningVotes = winningArt === 'ArtA' ? artAVotes : artBVotes;
+        const artAVotes = votes.filter(vote => vote.votedFor === 'Art A');
+        const artBVotes = votes.filter(vote => vote.votedFor === 'Art B');
+        const winningArt = artAVotes.length >= artBVotes.length ? 'Art A' : 'Art B';
+        const winningVotes = winningArt === 'Art A' ? artAVotes : artBVotes;
 
         // Mint NFTs for all participants
         await mintNFTsForParticipants(votes, battle);
@@ -24,8 +24,8 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
         const specialWinner = selectRandomWinner(winningVotes);
         if (specialWinner) {
            
-            const coloredArt = winningArt === 'ArtA' ? battle.artAcolouredArt : battle.artBcolouredArt;
-            const coloredArtReference = winningArt === 'ArtA' ? battle.artAcolouredArtReference : battle.artBcolouredArtReference;
+            const coloredArt = winningArt === 'Art A' ? battle.artAcolouredArt : battle.artBcolouredArt;
+            const coloredArtReference = winningArt === 'Art A' ? battle.artAcolouredArtReference : battle.artBcolouredArtReference;
             await serverMint(specialWinner.participantId, coloredArt, coloredArtReference,true);
         }
 
@@ -57,8 +57,8 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
 
 const mintNFTsForParticipants = async (votes: any[], battle: any) => {
     for (const vote of votes) {
-        const grayScale = (vote.votedFor == "ArtA")?battle.artAgrayScale: battle.artBgrayScale;
-        const grayScaleReference = (vote.votedFor == "ArtA")?battle.artAgrayScaleReference:battle.artBgrayScaleReference;
+        const grayScale = (vote.votedFor == "Art A")?battle.artAgrayScale: battle.artBgrayScale;
+        const grayScaleReference = (vote.votedFor == "Art A")?battle.artAgrayScaleReference:battle.artBgrayScaleReference;
         await serverMint(vote.participantId, grayScale, grayScaleReference, false);
     }
 };

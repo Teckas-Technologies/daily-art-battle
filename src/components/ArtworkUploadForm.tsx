@@ -13,8 +13,8 @@ interface ArtworkUploadFormProps {
 }
 export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose }) => {
   const defaultArtworks: Artwork[] = [
-    { name: 'Unique Rare', file: null , fileName: ''},
-    { name: 'Participation Reward', file: null , fileName: ''},
+    { name: 'Upload Unique Rare', file: null , fileName: ''},
+    { name: 'Upload Derivative Edition', file: null , fileName: ''},
   ];
   const [artworks, setArtworks] = useState<Artwork[]>(defaultArtworks);
   const [artTitle, setArtTitle] = useState("");
@@ -68,11 +68,11 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
         const referenceResult = await uploadReference(metadata);
         const referenceUrl = `https://arweave.net/${referenceResult.id}`;
         switch (artwork.name) {
-          case 'Unique Rare':
+          case 'Upload Unique Rare':
             artBattle.colouredArt = url;
             artBattle.colouredArtReference = referenceUrl;
             break;
-          case 'Participation Reward':
+          case 'Upload Derivative Edition':
             artBattle.grayScale = url;
             artBattle.grayScaleReference = referenceUrl;
         }
@@ -96,11 +96,6 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
       <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#8730aa', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
               {showAlert && (
           <div className="bg-yellow-200 text-yellow-800 p-3 rounded-md mb-4 max-w-xs">
-            {/* <button className="float-right text-yellow-800" onClick={() => setShowAlert(false)}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </button> */}
             <p className="font-semibold" style={{ fontSize: '0.875rem' }}>Please upload four distinct files, two for each artwork variation:</p>
             <ol className="list-decimal ml-6">
               <li style={{ fontSize: '0.875rem' }} > Color: This version will be minted as a single edition (1:1) and awarded to one lucky winner from those who voted for this variation.</li>
