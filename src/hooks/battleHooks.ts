@@ -13,6 +13,12 @@ export interface BattleData {
   artBVotes:Number;
   artAgrayScale: string;
   artBgrayScale: string;
+  artAcolouredArt: string;
+  artBcolouredArt: string;
+  artAcolouredArtReference: string;
+  artBcolouredArtReference: string;
+  artAgrayScaleReference: string;
+  artBgrayScaleReference: string;
   winningArt?: 'ArtA' | 'ArtB';
   specialWinner?: string;
 }

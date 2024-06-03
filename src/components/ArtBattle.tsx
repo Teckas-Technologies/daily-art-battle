@@ -60,8 +60,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 
   useEffect(() => {
     if (todayBattle) {
-      setArtA({ id: 'Art A', name: 'Art A', imageUrl: todayBattle.artAgrayScale });
-      setArtB({ id: 'Art B', name: 'Art B', imageUrl: todayBattle.artBgrayScale });
+      setArtA({ id: 'Art A', name: 'Art A', imageUrl: todayBattle.artAcolouredArt });
+      setArtB({ id: 'Art B', name: 'Art B', imageUrl: todayBattle.artBcolouredArt });
       setBattleId(todayBattle._id);
     }
   }, [todayBattle]);

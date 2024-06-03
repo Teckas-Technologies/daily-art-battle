@@ -16,8 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'PUT':
           const { id } = req.query;
           const idString = typeof id === 'string' ? id : String(id); 
-          
+          console.log("1------",id);
           if (typeof idString === 'string') {
+            console.log("2------",id);
             const result = await updateArtById(idString);
             if (result) {
               return res.status(200).json(result);

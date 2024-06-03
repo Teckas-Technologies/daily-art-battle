@@ -50,7 +50,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                     <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center">
                                             <Image
-                                                src={battle.artAgrayScale}
+                                                src={battle.artAcolouredArt}
                                                 alt="Art A"
                                                 width={100} 
                                                 height={100} 
@@ -62,7 +62,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                     <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center">
                                             <Image
-                                                src={battle.artBgrayScale}
+                                                src={battle.artBcolouredArt}
                                                 alt="Art B"
                                                 width={100} 
                                                 height={100}
