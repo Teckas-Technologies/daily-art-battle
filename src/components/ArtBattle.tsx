@@ -20,13 +20,14 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const [battleId, setBattleId] = useState<string>();
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
-  console.log(todayBattle);
-
+  const [votedFor ,setVoterFor] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
         const res = await fetchVotes(activeAccountId, todayBattle._id);
         if (res) {
+          console.log(res.votedFor);
+          setVoterFor(res.votedFor);
           setSuccess(true);
         }
       }
@@ -60,8 +61,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 
   useEffect(() => {
     if (todayBattle) {
-      setArtA({ id: 'ArtA', name: 'Art A', imageUrl: todayBattle.artAgrayScale });
-      setArtB({ id: 'ArtB', name: 'Art B', imageUrl: todayBattle.artBgrayScale });
+      setArtA({ id: 'Art A', name: 'Art A', imageUrl: todayBattle.artAgrayScale });
+      setArtB({ id: 'Art B', name: 'Art B', imageUrl: todayBattle.artBgrayScale });
       setBattleId(todayBattle._id);
     }
   }, [todayBattle]);
@@ -78,9 +79,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     const success = await submitVote({
       participantId: activeAccountId,
       battleId: battleId,
-      votedFor: id === "ArtA" ? "ArtA" : "ArtB"
+      votedFor: id === "Art A" ? "Art A" : "Art B"
     });
     if (success) {
+      location.reload();
       setSuccess(true);
       alert('Vote submitted successfully!');
     } else {
@@ -111,8 +113,11 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     <div className="mt-10 pt-10 mx-8">
       {/* <h1 className='text-center text-black font-mono mt-5'>{todayBattle.arttitle}</h1> */}
       <div className='battle-img flex' style={{ justifyContent: 'center' }}>
-        <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} />
-        <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} />
+       
+          <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
+  
+            <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
+        
       </div>
       {timeRemaining !== null && (
         <div className="text-lg font-semibold font-mono justify-center items-center text-black text-center py-6" style={{ whiteSpace: 'nowrap' }}>

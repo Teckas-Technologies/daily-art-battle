@@ -3,7 +3,7 @@ import mongoose, { Document, Model } from 'mongoose';
 interface IVoting extends Document {
   participantId: string;
   battleId: string;
-  votedFor: 'ArtA' | 'ArtB';
+  votedFor: 'Art A' | 'Art B';
 }
 
 const votingSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ const votingSchema = new mongoose.Schema({
   votedFor: {
     type: String,
     required: true,
-    enum: ['ArtA', 'ArtB'],
+    enum: ['Art A', 'Art B'],
   },
 }, { timestamps: true });
 

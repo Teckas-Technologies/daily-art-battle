@@ -3,14 +3,14 @@ import { useState, useCallback } from 'react';
 interface Vote {
   participantId: string;
   battleId: string;
-  votedFor: 'ArtA' | 'ArtB';
+  votedFor: 'Art A' | 'Art B';
 }
 
 interface UseVotingReturn {
   votes: Vote[];
   error: string | null;
   loading: boolean;
-  fetchVotes: (participantId: string, battleId: string) => Promise<boolean>;
+  fetchVotes: (participantId: string, battleId: string) => Promise<Vote | null>;
   submitVote: (voteData: Vote) => Promise<boolean>;
 }
 
@@ -19,25 +19,23 @@ export const useVoting = (): UseVotingReturn => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchVotes = useCallback(async (participantId:any,battleId:any) => {
+  const fetchVotes = useCallback(async (participantId: string, battleId: string): Promise<Vote | null> => {
     setLoading(true);
     try {
       const response = await fetch(`/api/vote?participantId=${participantId}&battleId=${battleId}`);
       const data = await response.json();
       if (response.ok) {
-       // setVotes(data.data);
         setError(null);
-        if(data.data){
-          return true;
-         
+        if (data.data) {
+          return data.data as Vote;
         }
-        return false;
+        return null;
       } else {
         throw new Error(data.message || 'Error fetching votes');
       }
     } catch (err) {
-      setError('Error');
-      return false;
+      setError('Error fetching votes');
+      return null;
     } finally {
       setLoading(false);
     }
