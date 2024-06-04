@@ -55,11 +55,11 @@ export const useVoting = (): UseVotingReturn => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-         if (await updateArt(voteData.artId)) {
-          setError(null);
-          return true;
-         }
-         return false;
+        //  if (await updateArt(voteData.artId)) {
+        //   setError(null);
+        //   return true;
+        //  }
+         return true;
       } else {
         throw new Error(data.message || 'Failed to submit vote');
       }

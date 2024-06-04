@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import UpVoting from '../../model/UpVoting';
+import { scheduleArt,findAllArts,updateArtById ,findBattles} from '../../utils/artUtils';
 interface ResponseData {
   success: boolean;
   data?: any;
@@ -19,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
       }
       const vote = await UpVoting.create({ participantId, artId });
+      const result = await updateArtById(artId);
       res.status(201).json({ success: true, data: vote });
     } catch (error) {
       console.error('Error submitting vote:', error);
