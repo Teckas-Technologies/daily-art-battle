@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       const vote = await UpVoting.create({ participantId, artId});
       console.log(vote);
-      res.status(201).json({ success: true, data: vote });
+      res.status(200).json({ success: true, data: vote });
     } catch (error) {
       res.status(400).json({ success: false, error });
     }

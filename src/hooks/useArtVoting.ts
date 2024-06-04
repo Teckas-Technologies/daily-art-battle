@@ -45,23 +45,21 @@ export const useVoting = (): UseVotingReturn => {
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {
-      // const response = await fetch('/api/artVote', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(voteData),
-      // });
-      const response = await fetch(`/api/art`, {
-        method: 'PUT',
+      const response = await fetch('/api/artVote', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: voteData.artId }),
+        body: JSON.stringify(voteData),
       });
+      // const response = await fetch(`/api/art`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ id: voteData.artId }),
+      // });
      
-      const data = await response.json();
-      console.log(data);
       if (response.ok) {
          if (await updateArt(voteData.artId)) {
           setError(null);
@@ -69,6 +67,7 @@ export const useVoting = (): UseVotingReturn => {
          }
          return false;
       } else {
+        const data = await response.json();
         throw new Error(data.message || 'Failed to submit vote');
       }
     } catch (err) {
