@@ -11,6 +11,7 @@ interface UseVotingReturn {
   loading: boolean;
   fetchVotes: (participantId: string, artId: string) => Promise<boolean>;
   submitVote: (voteData: Vote) => Promise<boolean>;
+  updateArt: ( artId: string) => Promise<boolean>;
 }
 
 export const useVoting = (): UseVotingReturn => {
@@ -42,7 +43,7 @@ export const useVoting = (): UseVotingReturn => {
     }
   }, []);
 
-  const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
+  const submitVote = async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {
       const response = await fetch('/api/artVote', {
@@ -56,11 +57,11 @@ export const useVoting = (): UseVotingReturn => {
       const data = await response.json();
       console.log(data);
       if (data.success) {
-         if (await updateArt(voteData.artId)) {
+         //if (await updateArt(voteData.artId)) {
           setError(null);
           return true;
-         }
-         return false;
+       //  }
+       //  return false;
       } else {
         throw new Error(data.message || 'Failed to submit vote');
       }
@@ -70,7 +71,7 @@ export const useVoting = (): UseVotingReturn => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   const updateArt = async (artId: string): Promise<boolean> => {
     try {
@@ -83,7 +84,7 @@ export const useVoting = (): UseVotingReturn => {
         console.error('Failed to update art:', res.status, res.statusText);
       }
   
-      return res.ok;
+      return true;
     } catch (error) {
       console.error('Error updating art:', error);
       return false;
@@ -97,5 +98,6 @@ export const useVoting = (): UseVotingReturn => {
     loading,
     fetchVotes,
     submitVote,
+    updateArt,
   };
 };

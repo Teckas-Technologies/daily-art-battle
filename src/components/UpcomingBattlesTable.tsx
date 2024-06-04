@@ -64,7 +64,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
 
 const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
-  const {  votes,  fetchVotes,  submitVote,} = useVoting();
+  const {  votes,  fetchVotes,  submitVote,updateArt} = useVoting();
   const [success,setSuccess] = useState(false);
 
   const onVote = async (id: string) => {
@@ -83,9 +83,12 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
     });
     console.log(success);
     if (success) {
-      setSuccess(true);
-      alert('Vote submitted successfully!');
-      location.reload();
+      const res = await updateArt(id);
+      if(res){
+        setSuccess(true);
+        alert('Vote submitted successfully!');
+        location.reload();
+      }
     } else {
       alert('Failed to submit vote. Maybe you already voted!');
     }
