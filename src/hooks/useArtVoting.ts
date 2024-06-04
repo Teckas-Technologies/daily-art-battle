@@ -45,19 +45,25 @@ export const useVoting = (): UseVotingReturn => {
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {
-      const response = await fetch('/api/artVote', {
-        method: 'POST',
+      // const response = await fetch('/api/artVote', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(voteData),
+      // });
+      const response = await fetch(`/api/art`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(voteData),
+        body: JSON.stringify({ id: voteData.artId }),
       });
      
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-           const res = await updateArt(voteData.artId);
-           if(res){
+         if (await updateArt(voteData.artId)) {
           setError(null);
           return true;
          }
