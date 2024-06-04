@@ -55,10 +55,6 @@ export const useVoting = (): UseVotingReturn => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        //  if (await updateArt(voteData.artId)) {
-        //   setError(null);
-        //   return true;
-        //  }
          return true;
       } else {
         throw new Error(data.message || 'Failed to submit vote');
@@ -70,23 +66,6 @@ export const useVoting = (): UseVotingReturn => {
       setLoading(false);
     }
   }, []);
-
-  const updateArt = async (artId: string): Promise<boolean> => {
-    try {
-      const res = await fetch(`/api/art`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: artId }),
-      });
-      return res.ok;
-    } catch (error) {
-      console.error('Error updating art:', error);
-      return false;
-    }
-  };
-  
 
   return {
     votes,
