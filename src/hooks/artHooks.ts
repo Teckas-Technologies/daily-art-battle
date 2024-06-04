@@ -12,7 +12,6 @@ export interface ArtData {
   uploadedTime : Date;
   upVotes : number;
   isCompleted:Boolean;
-  isStartedBattle:Boolean;
 }
 
 interface UseSaveDataResult {
@@ -56,44 +55,31 @@ export const useSaveData = (): UseSaveDataResult => {
   return { saveData, loading, error, success };
 };
   
-export const useFetchArts = () => {
-  const [arts, setArts] = useState<ArtData[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
-
-  const fetchArts = async (page: number, limit: number = 10) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/art?page=${page}&limit=${limit}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      if (data.length < limit) {
-        setHasMore(false);
-      }
-      setArts((prevArts) => (page === 1 ? data : [...prevArts, ...data]));
-    } catch (err) {
-      setError('Error loading arts');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchMoreArts = () => {
-    if (hasMore) {
-      const nextPage = page + 1;
-      fetchArts(nextPage);
-      setPage(nextPage);
-    }
-  };
-
-  useEffect(() => {
-    fetchArts(1);
-  }, []);
+    export const useFetchArts = () => {
+      const [arts, setArts] = useState<ArtData[]>([]);
+      const [loading, setLoading] = useState<boolean>(false);
+      const [error, setError] = useState<string | null>(null);
     
-  return { arts, loading, error, fetchMoreArts, hasMore };
+      const fetchArts = async (page: number, limit: number = 10) => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await fetch(`/api/art?page=${page}&limit=${limit}`);
+          if (!response.ok) throw new Error('Network response was not ok');
+          const data = await response.json();
+          setArts(data);
+        } catch (err) {
+          setError("Error loading arts");
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        fetchArts(1);
+      }, []);
+    
+      return { arts, loading, error, fetchMoreArts: fetchArts };
     }
   
 
