@@ -18,7 +18,7 @@ export async function getNextAvailableDate(): Promise<Date> {
 }
 export const findTopTwoArts = async (): Promise<any[]> => {
   await connectToDatabase();
-  const arts = await ArtTable.find({isCompleted:false}).sort({ upVotes: -1 }).limit(2).exec();
+  const arts = await ArtTable.find({isCompleted:false ,isStartedBattle:false}).sort({ upVotes: -1 }).limit(2).exec();
   return arts;
 };
 
@@ -59,6 +59,7 @@ export const createBattle = async (): Promise<any> => {
     console.log(battleData);
     const newBattle = new Battle(battleData);
    const res = await newBattle.save();
+   await Promise.all([ArtTable.updateOne({ _id: artA._id }, { isStartedBattle: true }), ArtTable.updateOne({ _id: artB._id }, { isStartedBattle: true })]);
    console.log(res);
     return newBattle;
   } 

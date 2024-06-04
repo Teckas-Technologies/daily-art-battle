@@ -12,6 +12,7 @@ interface ArtTable extends Document {
   uploadedTime : Date;
   upVotes : Number;
   isCompleted:Boolean;
+  isStartedBattle:Boolean;
 }
 
 const ArtTableSchema = new mongoose.Schema({
@@ -24,6 +25,7 @@ const ArtTableSchema = new mongoose.Schema({
   uploadedTime: { type: Date, required: true },
   upVotes: { type: Number, default: 0 },
   isCompleted:{type: Boolean,default:false},
+  isStartedBattle:{type: Boolean,default:false}
 });
 
 export default mongoose.models.ArtTable || model<ArtTable>('ArtTable', ArtTableSchema);

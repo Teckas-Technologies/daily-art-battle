@@ -14,7 +14,7 @@ export async function scheduleArt(data: any): Promise<any> {
 export const findAllArts = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const skip = (page - 1) * limit;
-  return ArtTable.find({ isCompleted: false })
+  return ArtTable.find({ isStartedBattle: false })
     .sort({ upVotes: -1 })
     .skip(skip)
     .limit(limit);

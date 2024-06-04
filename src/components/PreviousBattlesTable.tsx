@@ -5,31 +5,29 @@ import Image from 'next/image';
 
 const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
     const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
-    const { battles, error, loading,fetchMoreBattles} = useFetchBattles();
+    const { battles, error, loading, fetchMoreBattles, hasMore } = useFetchBattles(); // Retrieve hasMore flag
     const { isConnected, selector, connect, activeAccountId } = useMbWallet();
     const [page, setPage] = useState(1);
-    console.log("Fetched battles from hook:", battles);
 
     useEffect(() => {
         if (battles && battles.pastBattles) {
-            console.log("Setting previous battles:", battles.pastBattles);
             setPreviousBattles(battles.pastBattles);
         }
     }, [battles]);
 
-    console.log("Previous Battles in state:", previousBattles);
-
     const handleNext = () => {
-        setPage(prevPage => prevPage + 1);
-        fetchMoreBattles(page + 1);
-      };
-    
-      const handlePrevious = () => {
-        if (page > 1) {
-          setPage(prevPage => prevPage - 1);
-          fetchMoreBattles(page - 1);
+        if (hasMore) { // Only fetch more battles if there are more available
+            setPage(prevPage => prevPage + 1);
+            fetchMoreBattles(page + 1);
         }
-      };
+    };
+    
+    const handlePrevious = () => {
+        if (page > 1) {
+            setPage(prevPage => prevPage - 1);
+            fetchMoreBattles(page - 1);
+        }
+    };
 
     return (
         <div className="battle-table mt-8 pb-10 flex flex-col items-center w-full">
@@ -80,28 +78,24 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                             ))}
                         </tbody>
                     </table>
-
                 </div>
                 <nav className="flex justify-center flex-wrap gap-4 mt-2">
-          <a
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${page <= 1 ? 'cursor-not-allowed' : 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
-            onClick={page > 1 ? handlePrevious : undefined}
-          >
-            Previous
-          </a>
-          <a
-            className="flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
-            onClick={handleNext}
-          >
-            Next
-          </a>
-        </nav>
+                    <a
+                        className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${page <= 1 ? 'cursor-not-allowed' : 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
+                        onClick={page > 1 ? handlePrevious : undefined}
+                    >
+                        Previous
+                    </a>
+                    <a
+                        className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${!hasMore ? 'cursor-not-allowed' : 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
+                        onClick={hasMore ? handleNext : undefined}
+                    >
+                        Next
+                    </a>
+                </nav>
             </div>
-      
         </div>
     );
-    
-    
-}
+};
 
 export default PreviousArtTable;
