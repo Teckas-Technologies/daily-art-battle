@@ -39,15 +39,15 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                     <table className="min-w-full mt-4">
                         <thead>
                             <tr className="bg-white">
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Art A</th>
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Art B</th>
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>Special Winner</th>
+                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Unique Rare</th>
+                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Derivative Editions</th>
+                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>Holders</th>
                             </tr>
                         </thead>
                         <tbody>
                             {previousBattles.map((battle, index) => (
                                 <tr key={index} className="border-b bg-white">
-                                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
+                                    <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center">
                                             <Image
                                                 src={battle.artAcolouredArt}
@@ -58,11 +58,12 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                                 unoptimized
                                             />
                                         </div>
+                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.artAtitle} by {battle.artAartistId}</p>
                                     </td>
                                     <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center">
                                             <Image
-                                                src={battle.artBcolouredArt}
+                                                src={battle.artAgrayScale}
                                                 alt="Art B"
                                                 width={100} 
                                                 height={100}
@@ -70,8 +71,9 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                                 unoptimized
                                             />
                                         </div>
+                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.artAtitle} by {battle.artAartistId}</p>
                                     </td>
-                                    <td className="px-2 sm:px-6 py-4 text-xs sm:text-sm" style={{ color: 'black' }}>
+                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
                                         {battle.specialWinner}
                                     </td>
                                 </tr>
