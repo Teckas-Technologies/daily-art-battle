@@ -18,7 +18,7 @@ export async function getNextAvailableDate(): Promise<Date> {
 }
 export const findTopTwoArts = async (): Promise<any[]> => {
   await connectToDatabase();
-  const arts = await ArtTable.find({isCompleted:false ,isStartedBattle:false}).sort({ upVotes: -1 }).limit(2).exec();
+  const arts = await ArtTable.find({isStartedBattle:false}).sort({ upVotes: -1 }).limit(2).exec();
   return arts;
 };
 

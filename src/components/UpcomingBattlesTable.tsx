@@ -8,13 +8,19 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
   const { arts, error, loading, fetchMoreArts } = useFetchArts();
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const [page, setPage] = useState(1);
+  const [hasnext,setHasNext] = useState(false);
   useEffect(() => {
     if (arts) {
-      console.log("Upcoming Arts", arts);
+      if (arts.length < 10) { // Change condition to '<' instead of '!='
+        setHasNext(true);
+      }else{
+        setHasNext(false);
+      }
+      console.log("Upcoming Arts", arts.length);
       setUpcomingArts(arts);
     }
-  }, [arts]);
-
+  }, [arts, hasnext]);
+  console.log(hasnext);
   const handleNext = () => {
     setPage(prevPage => prevPage + 1);
     fetchMoreArts(page + 1);
@@ -49,8 +55,8 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
             Previous
           </a>
           <a
-            className="flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
-            onClick={handleNext}
+            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${hasnext?'cursor-not-allowed' :'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
+            onClick={hasnext ? undefined : handleNext}
           >
             Next
           </a>

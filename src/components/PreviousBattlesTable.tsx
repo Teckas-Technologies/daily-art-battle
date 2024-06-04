@@ -8,10 +8,16 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
     const { battles, error, loading,fetchMoreBattles} = useFetchBattles();
     const { isConnected, selector, connect, activeAccountId } = useMbWallet();
     const [page, setPage] = useState(1);
+    const [hasnext,setHasNext] = useState(false);
     console.log("Fetched battles from hook:", battles);
 
     useEffect(() => {
         if (battles && battles.pastBattles) {
+            if (battles.pastBattles.length < 10) { 
+                setHasNext(true);
+              }else{
+                setHasNext(false);
+              }
             console.log("Setting previous battles:", battles.pastBattles);
             setPreviousBattles(battles.pastBattles);
         }
@@ -90,8 +96,8 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
             Previous
           </a>
           <a
-            className="flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
-            onClick={handleNext}
+            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${hasnext?'cursor-not-allowed' :'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
+            onClick={hasnext ? undefined : handleNext}
           >
             Next
           </a>
