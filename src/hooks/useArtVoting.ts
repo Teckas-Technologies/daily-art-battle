@@ -72,7 +72,7 @@ export const useVoting = (): UseVotingReturn => {
     }
   }, []);
 
-  const updateArt = async (artId: string): Promise<boolean> => {
+  const updateArt = useCallback(async (artId: string): Promise<boolean> => {
     try {
       const res = await fetch(`/api/art`, {
         method: 'PUT',
@@ -86,7 +86,7 @@ export const useVoting = (): UseVotingReturn => {
       console.error('Error updating art:', error);
       return false;
     }
-  };
+  });
   
 
   return {
