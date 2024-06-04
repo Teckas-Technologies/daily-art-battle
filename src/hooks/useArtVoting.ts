@@ -55,7 +55,7 @@ export const useVoting = (): UseVotingReturn => {
      
       const data = await response.json();
       console.log(data);
-      if (data.success) {
+      if (response.ok) {
          if (await updateArt(voteData.artId)) {
           setError(null);
           return true;
