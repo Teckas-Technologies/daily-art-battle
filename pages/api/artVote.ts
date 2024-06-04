@@ -12,24 +12,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   await connectToDatabase();
 
   if (req.method === 'POST') {
-    const { participantId, artId} = req.body;
-
-    // Check if the participant has already voted for this battle
-    const existingVote = await UpVoting.findOne({ participantId, artId });
-    console.log(existingVote);
-    if (existingVote) {
-      return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
-    }else{
     try {
-      const vote = await UpVoting.create({ participantId, artId});
-      console.log(vote);
-      res.status(200).json({ success: true, data: vote });
+      const { participantId, artId } = req.body;
+      const existingVote = await UpVoting.findOne({ participantId, artId });
+      if (existingVote) {
+        return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
+      }
+      const vote = await UpVoting.create({ participantId, artId });
+      res.status(201).json({ success: true, data: vote });
     } catch (error) {
-      res.status(400).json({ success: false, error });
+      console.error('Error submitting vote:', error);
+      res.status(500).json({ success: false, error: "Failed to submit vote" });
     }
-
-    }
-  } if (req.method === 'GET') {
+  } else {
+    res.status(405).json({ success: false, error: "Method Not Allowed" });
+  }
+   if (req.method === 'GET') {
     try {
       const { participantId, artId } = req.query;
       const existingVote = await UpVoting.findOne({ participantId, artId });
