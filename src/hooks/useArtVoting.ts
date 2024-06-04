@@ -74,8 +74,12 @@ export const useVoting = (): UseVotingReturn => {
 
   const updateArt = async (artId: string): Promise<boolean> => {
     try {
-      const res = await fetch(`/api/art?id=${artId}`, {
+      const res = await fetch(`/api/art`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: artId }),
       });
       return res.ok;
     } catch (error) {
