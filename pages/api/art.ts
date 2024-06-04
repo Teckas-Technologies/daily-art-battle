@@ -14,7 +14,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const arts = await findAllArts(page, limit);
             return res.status(200).json(arts);
         case 'PUT':
+          console.log("1------");
           const { id } = req.query;
+          console.log("1------",id);
           const idString = typeof id === 'string' ? id : String(id); 
           console.log("1------",id);
           if (typeof idString === 'string') {
