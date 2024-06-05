@@ -18,7 +18,7 @@ export async function getNextAvailableDate(): Promise<Date> {
 }
 export const findTopTwoArts = async (): Promise<any[]> => {
   await connectToDatabase();
-  const arts = await ArtTable.find({isStartedBattle:false}).sort({ upVotes: -1 }).limit(2).exec();
+  const arts = await ArtTable.find({isCompleted:false}).sort({ upVotes: -1 }).limit(2).exec();
   return arts;
 };
 
@@ -59,7 +59,37 @@ export const createBattle = async (): Promise<any> => {
     console.log(battleData);
     const newBattle = new Battle(battleData);
    const res = await newBattle.save();
-   await Promise.all([ArtTable.updateOne({ _id: artA._id }, { isStartedBattle: true }), ArtTable.updateOne({ _id: artB._id }, { isStartedBattle: true })]);
+
+   try {
+    // Updating artA
+    const updateArtA = await ArtTable.findOneAndUpdate(
+      { _id: artA._id }, 
+      { $set: { isStartedBattle: true } }, 
+      { new: true }
+    );
+  
+    if (!updateArtA) {
+      console.error(`Failed to update artA with ID: ${artA._id}`);
+    } else {
+      console.log(`Successfully updated artA: ${updateArtA}`);
+    }
+  
+    // Updating artB
+    const updateArtB = await ArtTable.findOneAndUpdate(
+      { _id: artB._id }, 
+      { $set: { isStartedBattle: true } }, 
+      { new: true }
+    );
+  
+    if (!updateArtB) {
+      console.error(`Failed to update artB with ID: ${artB._id}`);
+    } else {
+      console.log(`Successfully updated artB: ${updateArtB}`);
+    }
+  } catch (error) {
+    console.error("Error updating art records:", error);
+  }
+  
    console.log(res);
     return newBattle;
   } 
