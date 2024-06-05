@@ -44,7 +44,9 @@ export const countVotesAndUpdateBattle = async (): Promise<void> => {
        console.log("saved",res);
        await ArtTable.findOneAndUpdate(
         { _id: battle.artAId }, 
-        { $set: { isCompleted: true } }, 
+        { $set: { isCompleted: true,
+            
+         } }, 
         { new: true } 
       );
 
