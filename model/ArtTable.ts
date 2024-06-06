@@ -1,5 +1,4 @@
 // models/Battle.ts
-
 import mongoose, { Document, model } from 'mongoose';
 
 interface ArtTable extends Document {

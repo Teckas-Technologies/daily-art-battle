@@ -1,3 +1,4 @@
+//artVote.ts is used for upvoting the arts.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import UpVoting from '../../model/UpVoting';
@@ -11,7 +12,7 @@ interface ResponseData {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   await connectToDatabase();
-
+  //POST method is used for creating upvote for the arts
   if (req.method === 'POST') {
     try {
       const { participantId, artId } = req.body;
@@ -29,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } else {
     res.status(405).json({ success: false, error: "Method Not Allowed" });
   }
+  //GET method is used for fetching upvote by id
    if (req.method === 'GET') {
     try {
       const { participantId, artId } = req.query;

@@ -1,3 +1,4 @@
+//vote.ts is used to create votes for the arts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import Voting from '../../model/Voting';
@@ -28,6 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     } catch (error) {
       res.status(400).json({ success: false, error });
     }
+    //GET method is used to fetch vote by participantId and battleId.
   } if (req.method === 'GET') {
     try {
       const { participantId, battleId } = req.query;

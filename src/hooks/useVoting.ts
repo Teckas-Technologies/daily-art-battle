@@ -1,3 +1,4 @@
+//useVoting.ts is used for calling the vote api
 import { useState, useCallback } from 'react';
 
 interface Vote {
@@ -19,6 +20,7 @@ export const useVoting = (): UseVotingReturn => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  //fetchVotes is used for fetching votes by participantId and battle Id
   const fetchVotes = useCallback(async (participantId: string, battleId: string): Promise<Vote | null> => {
     setLoading(true);
     try {
@@ -41,6 +43,7 @@ export const useVoting = (): UseVotingReturn => {
     }
   }, []);
 
+  //SubmitVote is for creating vote for battle
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {
