@@ -1,5 +1,5 @@
+//useArtVoting.ts is used for calling artVoting api.
 import { useState, useCallback } from 'react';
-
 interface Vote {
   participantId: string;
   artId: string;
@@ -18,6 +18,7 @@ export const useVoting = (): UseVotingReturn => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  //fetchVotes is used to fetch artVote by participantId and artId
   const fetchVotes = useCallback(async (participantId:any,artId:any) => {
     setLoading(true);
     try {
@@ -42,6 +43,7 @@ export const useVoting = (): UseVotingReturn => {
     }
   }, []);
 
+  //submitVote is used to create vote the art
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {

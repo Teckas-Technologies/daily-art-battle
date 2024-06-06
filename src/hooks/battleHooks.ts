@@ -44,7 +44,7 @@ interface UseSaveDataResult {
   error: string | null;  // Ensure that 'error' can be a string or null
   success: boolean | null;
 }
-
+//useSaveData is used to create battle
 export const useSaveData = (): UseSaveDataResult => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null); // Allow 'error' to be a string or null
@@ -79,7 +79,7 @@ export const useSaveData = (): UseSaveDataResult => {
 
   return { saveData, loading, error, success };
 };
-
+//useFetchTodayBattle is used to fetch today battle
 export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   const [todayBattle, setTodayBattle] = useState<BattleData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -113,7 +113,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   return { todayBattle, loading, error };
 };
 
-
+//useFetchBattles is used to fetch battles with pagination
 export const useFetchBattles = () => {
   const [battles, setBattles] = useState<BattlesResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);

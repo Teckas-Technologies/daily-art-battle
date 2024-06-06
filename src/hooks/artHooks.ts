@@ -1,4 +1,4 @@
-
+//artHooks.ts is used for calling the art api.
 import { useState, useEffect } from 'react';
 
 export interface ArtData {
@@ -24,7 +24,7 @@ export const useSaveData = (): UseSaveDataResult => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
-
+//saveData is used for creating art.
   const saveData = async (data: any): Promise<void> => {
     setLoading(true);
     setError(null);
@@ -54,7 +54,7 @@ export const useSaveData = (): UseSaveDataResult => {
 
   return { saveData, loading, error, success };
 };
-  
+  //useFetchArts is used for fetching arts by id
     export const useFetchArts = () => {
       const [arts, setArts] = useState<ArtData[]>([]);
       const [loading, setLoading] = useState<boolean>(false);

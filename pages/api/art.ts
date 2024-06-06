@@ -1,18 +1,22 @@
+//art.ts is used for creating creating arts ,fetching arts and updating art by id.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { scheduleArt,findAllArts,updateArtById ,findBattles} from '../../utils/artUtils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     switch (req.method) {
+      //POST method is used to create art.
        case 'POST':
         const art = req.body;
         const saveart = await scheduleArt(art);
         return res.status(201).json(saveart);
+        //GET method is used to fetch arts with pagination.
         case 'GET':
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
           const arts = await findAllArts(page, limit);
             return res.status(200).json(arts);
+        //PUT method is used to update art by id.
         case 'PUT':
           const { id } = req.body;
           const idString = typeof id === 'string' ? id : String(id); 
