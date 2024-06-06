@@ -9,11 +9,24 @@ import "../styles.css";
 import { MintbaseWalletContextProvider } from "@mintbase-js/react";
 
 const inter = Inter({ subsets: ["latin"] });
+export const getCallbackUrl = () => {
+  let callbackUrl = ''
+
+  if (typeof window !== 'undefined') {
+    callbackUrl =
+        window?.location?.host.includes('localhost')
+        ? `http://${window?.location.host}`
+        : `}`
+  }
+
+  return callbackUrl
+}
+
 
 const MintbaseWalletSetup = {
-  contractAddress: "hellovirtualworld.mintspace2.testnet",
-  network: "testnet" as any,
-  callbackUrl: "http://localhost:3000",
+  contractAddress: process.env.ART_BATTLE_CONTRACT,
+  network: process.env.NEXT_PUBLIC_NETWORK as any,
+  callbackUrl: getCallbackUrl(),
 };
 
 export default function RootLayout({
