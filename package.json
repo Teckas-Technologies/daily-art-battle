@@ -16,9 +16,9 @@
   "author": "Teckas Team <info@teckastechnologies.com>",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"ts-node cron.ts\"",
     "build": "next build",
-    "start": "pnpm run dev",
+    "start": "concurrently \"pnpm run dev\" \"ts-node cron.ts\"",
     "lint": "next lint"
   },
   "dependencies": {
