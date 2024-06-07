@@ -9,7 +9,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       //Here we'll count votes and mint nfts for audience
      await countVotes();
      createBattle();
-     mintNfts();
+     mintNfts().catch(error => {
+      console.error('Error in background task mintNfts:', error);
+      // Optionally: Log this error to a logging service or database
+    });
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ success: false, error: 'Error' });
