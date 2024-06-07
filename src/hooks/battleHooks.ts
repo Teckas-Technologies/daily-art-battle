@@ -24,7 +24,10 @@ export interface BattleData {
   artAgrayScaleReference: string;
   artBgrayScaleReference: string;
   winningArt?: 'Art A' | 'Art B';
-  specialWinner?: string;
+  artAspecialWinner?: string;
+  artBspecialWinner?: string;
+  artAvoters?:string[];
+  artBvoters?:string[];
 }
 
 interface UseFetchTodayBattleResult {

@@ -36,7 +36,6 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
   const handleArtName = (e: any) => {
     const name = e.target.value;
     setArtTitle(name);
-    console.log(artTitle)
   };
 
   const uploadArtWork = async (event: React.FormEvent) => {
@@ -60,7 +59,6 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
         }
         const uploadResult = await uploadFile(artwork.file);
         const url = `https://arweave.net/${uploadResult.id}`;
-        console.log("Media Url: ", url);
         const metadata = {
           title: "Art Battle",
           media: artwork.file
@@ -78,7 +76,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
         }
 
       }
-      console.log(artBattle);
+    
       await saveData(artBattle as ArtData);
       alert('All files uploaded successfully');
       onClose();

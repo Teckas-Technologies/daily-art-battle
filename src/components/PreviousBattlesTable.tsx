@@ -9,7 +9,6 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
     const { isConnected, selector, connect, activeAccountId } = useMbWallet();
     const [page, setPage] = useState(1);
     const [hasnext,setHasNext] = useState(false);
-    console.log("Fetched battles from hook:", battles);
 
     useEffect(() => {
         if (battles && battles.pastBattles) {
@@ -18,12 +17,9 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
               }else{
                 setHasNext(false);
               }
-            console.log("Setting previous battles:", battles.pastBattles);
             setPreviousBattles(battles.pastBattles);
         }
     }, [battles]);
-
-    console.log("Previous Battles in state:", previousBattles);
 
     const handleNext = () => {
         setPage(prevPage => prevPage + 1);
@@ -84,7 +80,8 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.artAtitle} by {battle.artAartistId}</p>
                                     </td>
                                     <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
-                                        {battle.specialWinner}
+                                        {battle.artAspecialWinner}
+                                        {battle.artBspecialWinner}
                                     </td>
                                 </tr>
                             ))}
