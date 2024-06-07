@@ -3,16 +3,17 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {createBattle} from '../../utils/battleSelection';
 import { countVotes } from '../../utils/countVotes';
 import { mintNfts } from '../../utils/mintNfts';
+
+export const config = {
+  maxDuration: 250,
+};
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
       //Here we'll count votes and mint nfts for audience
      await countVotes();
      createBattle();
-     mintNfts().catch(error => {
-      console.error('Error in background task mintNfts:', error);
-      // Optionally: Log this error to a logging service or database
-    });
+     await mintNfts();
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ success: false, error: 'Error' });
