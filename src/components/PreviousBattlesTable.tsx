@@ -54,28 +54,32 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                             {previousBattles.map((battle, index) => (
                                 <tr key={index} className="border-b bg-white">
                                     <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
-                                        <div className="flex justify-center">
+                                        <div className="flex justify-center px-2 sm:px-6 py-2 text-xs sm:text-sm font-medium">
+                                      <div className=" md:shrink-0">
                                             <Image
-                                                src={battle.artAcolouredArt}
-                                                alt="Art A"
+                                             src={battle.winningArt === 'Art A' ? battle.artAcolouredArt : battle.artBcolouredArt}
+                                             alt={battle.winningArt === 'Art A' ? "Art A" : "Art B"}
                                                 width={100} 
                                                 height={100} 
-                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
+                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 md:shrink-0 custom-img-size"
                                                 unoptimized
                                             />
+                                            </div>
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.artAtitle} by {battle.artAartistId}</p>
                                     </td>
                                     <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
-                                        <div className="flex justify-center">
+                                        <div className="flex justify-center px-2 sm:px-6 py-2  text-xs sm:text-sm font-medium md:shrink-0">
+                                        <div className="flex-none md:shrink-0">
                                             <Image
-                                                src={battle.artAgrayScale}
-                                                alt="Art B"
+                                                src={battle.winningArt === "Art A" ? battle.artAgrayScale : battle.artBgrayScale}
+                                                alt={battle.winningArt === 'Art A' ? "Art A" : "Art B"}
                                                 width={100} 
                                                 height={100}
-                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48"
+                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 custom-img-size"
                                                 unoptimized
                                             />
+                                            </div>
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.artAtitle} by {battle.artAartistId}</p>
                                     </td>

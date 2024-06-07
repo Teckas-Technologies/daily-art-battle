@@ -60,6 +60,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
+  
+
   useEffect(() => {
     if (todayBattle) {
       setArtA({ id: 'Art A', name: 'Art A', imageUrl: todayBattle.artAcolouredArt,title:todayBattle.artAtitle ,artistId:todayBattle.artAartistId});
