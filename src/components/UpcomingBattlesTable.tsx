@@ -16,11 +16,9 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       }else{
         setHasNext(false);
       }
-      console.log("Upcoming Arts", arts.length);
       setUpcomingArts(arts);
     }
   }, [arts, hasnext]);
-  console.log(hasnext);
   const handleNext = () => {
     setPage(prevPage => prevPage + 1);
     fetchMoreArts(page + 1);
@@ -89,12 +87,10 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
       alert("art  not loaded!");
       return;
     }
-    console.log(id);
     const success = await submitVote({
       participantId: activeAccountId,
       artId: id,
     });
-    console.log(success);
     if (success) {
       setSuccess(true);
       alert('Vote submitted successfully!');
