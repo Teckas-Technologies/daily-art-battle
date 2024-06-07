@@ -11,9 +11,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     try {
       //Here we'll count votes and mint nfts for audience
-     await countVotes();
-     createBattle();
-     await mintNfts();
+      await countVotes();
+      await mintNfts();
+      await createBattle();
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ success: false, error: 'Error' });

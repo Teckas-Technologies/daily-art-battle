@@ -24,6 +24,8 @@ export const mintNfts = async (): Promise<void> => {
             await serverMint(artAspecialWinner, battle.artAcolouredArt, battle.artAcolouredArtReference,true);
             await serverMint(artBspecialWinner, battle.artBcolouredArt, battle.artBcolouredArtReference,true);
         }
+        battle.artAspecialWinner = artAspecialWinner;
+        battle.artBspecialWinner = artBspecialWinner;
         battle.isNftMinted = true;
         console.log(battle);
        const res =  await battle.save();
