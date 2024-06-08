@@ -93,6 +93,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
       <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #8730aa', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
       <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#8730aa', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
       <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
+      <hr></hr>
         <form onSubmit={uploadArtWork}>
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>
@@ -117,6 +118,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
               <span className="px-3 text-sm text-gray-600">{artwork.fileName}</span>
               </>
               )}
+             
               {index==1&&(
                 <>
                 <label className="mt-4 block text-sm font-medium text-gray-900 break-words py-2" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
@@ -139,10 +141,15 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
               </>
               )
 }
+
+
               
                 <br></br>
+               <hr className='mt-4'></hr>
               </div>
           ))}
+
+
            <div className='mb-1'>
            <label className="mt-4 block text-sm font-medium text-gray-900 break-words" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
               Art Title. This name will appear in association with your artwork on this site and in your fans' wallets.
