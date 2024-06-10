@@ -24,7 +24,6 @@ export const useVoting = (): UseVotingReturn => {
     try {
       const response = await fetch(`/api/artVote?participantId=${participantId}&artId=${artId}`);
       const data = await response.json();
-      console.log(response);
       if (response.ok) {
         setError(null);
         if(data.data){
@@ -55,7 +54,7 @@ export const useVoting = (): UseVotingReturn => {
         body: JSON.stringify(voteData),
       });
       const data = await response.json();
-      console.log(data);
+
       if (response.ok) {
          return true;
       } else {
