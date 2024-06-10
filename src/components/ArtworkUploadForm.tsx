@@ -142,7 +142,6 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
               )
 }
 
-
               
                 <br></br>
                <hr className='mt-4'></hr>
