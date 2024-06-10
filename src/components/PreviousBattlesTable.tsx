@@ -36,7 +36,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
     return (
         <div className="battle-table mt-8 pb-10 flex flex-col items-center w-full">
             <h2 className="text-xl font-bold text-black text-center">Previous Battles</h2>
-            <div className="battle-table1 pb-10 w-full overflow-x-auto">
+           <div className="battle-table1 pb-10 w-full overflow-x-auto">
+           <p  className='text-center text-black font-mono mt-5 sm:font-thin md:text-lg'><a href='https://wallet.mintbase.xyz/' className='text-purple-700'>Check your wallet</a> to see your rewards and the spoils of victory if you were a lucky winner. Relive the excitement and see which masterpieces emerged victorious!
+
+</p>
+         
                 <div className="flex items-center justify-between w-full">
                     <table className="min-w-full mt-4">
                         <thead>

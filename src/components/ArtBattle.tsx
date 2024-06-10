@@ -115,9 +115,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   return (
     <div className="mt-10 pt-10 mx-8">
       {/* <h1 className='text-center text-black font-mono mt-5'>{todayBattle.arttitle}</h1> */}
+    <p  className='text-center text-black font-mono mt-5 sm:font-thin md:text-lg'>Welcome to GFXvs, where creators compete with their masterpieces and you vote to win exclusive NFT rewards! Each day, two pieces of art face off, and you decide the winner by casting your vote. For each artwork, one lucky voter is awarded a 1:1 NFT, while everyone else receives participation reward editions. Join the battle by connecting your NEAR wallet, vote for your favorite art, and earn exclusive NFT rewards!</p>
+    
       <div className='battle-img flex' style={{ justifyContent: 'center' }}>
-       
-          <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
+            <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
   
             <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
         
