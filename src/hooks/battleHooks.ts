@@ -99,7 +99,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
           throw new Error('Failed to fetch today\'s battle data');
         }
         const data: BattleData = await response.json();
-        console.log(data);  
+       
         setTodayBattle(data);
       } catch (error) {
         console.error('Error fetching today\'s battle data:', error);
@@ -130,7 +130,7 @@ export const useFetchBattles = () => {
               const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
-              console.log("Fetched battles data:", data);
+           
               setBattles(data);
           } catch (err) {
               console.error('Error fetching battles:', err);

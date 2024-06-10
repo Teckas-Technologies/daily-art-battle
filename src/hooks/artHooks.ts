@@ -74,6 +74,7 @@ export const useSaveData = (): UseSaveDataResult => {
           setLoading(false);
         }
       };
+
     
       useEffect(() => {
         fetchArts(1);
