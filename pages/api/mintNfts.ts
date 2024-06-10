@@ -5,7 +5,7 @@ import { countVotes } from '../../utils/countVotes';
 import { mintNfts } from '../../utils/mintNfts';
 
 export const config = {
-  maxDuration: 250,
+  maxDuration: 300,
 };
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
