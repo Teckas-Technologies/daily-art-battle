@@ -19,7 +19,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess:
   }, [arts]);
 
   useEffect(() => {
-    fetchMoreArts(page);
+   // fetchMoreArts(page);
   }, [page, refresh, uploadSuccess]);
 
   const [hasnext,setHasNext] = useState(false);
