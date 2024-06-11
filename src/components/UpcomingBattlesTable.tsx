@@ -9,6 +9,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const [page, setPage] = useState(1);
   const [hasnext,setHasNext] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     if (arts) {
       if (arts.length < 10) { // Change condition to '<' instead of '!='
@@ -19,6 +20,12 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       setUpcomingArts(arts);
     }
   }, [arts, hasnext]);
+
+  useEffect(() => {
+    // Fetch arts when the component mounts and when refresh state changes
+    fetchMoreArts(page);
+  }, [page, refresh]); // Add refresh to dependencies
+
   const handleNext = () => {
     setPage(prevPage => prevPage + 1);
     fetchMoreArts(page + 1);
@@ -45,7 +52,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       </button>
     </div>
       </div>
-      <BattleTable artData={upcomingArts} />
+      <BattleTable artData={upcomingArts} setRefresh={setRefresh}/>
       <nav className="flex justify-center flex-wrap gap-4 mt-2">
           <a
             className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${page <= 1 ? 'cursor-not-allowed' : 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
@@ -67,7 +74,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
 };
 
 
-const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
+const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<React.SetStateAction<boolean>>}> = ({ artData,setRefresh }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const {  votes,  fetchVotes,  submitVote,} = useVoting();
   const [success,setSuccess] = useState(false);
@@ -88,7 +95,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
     if (success) {
       setSuccess(true);
       alert('Vote submitted successfully!');
-      location.reload();
+      setRefresh(prev => !prev); 
     } else {
       alert('Failed to submit vote. Maybe you already voted!');
     }

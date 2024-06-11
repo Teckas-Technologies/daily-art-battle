@@ -10,7 +10,6 @@ export async function getNextAvailableDate(): Promise<Date> {
   if (!latestBattle || latestBattle.battleEndTime < today) {
     return today;
   }
-
   const nextDay = new Date(latestBattle.battleEndTime);
   nextDay.setDate(nextDay.getDate() + 1);
   return nextDay;
@@ -55,7 +54,7 @@ export const findPreviousBattles = async (page: number, limit: number): Promise<
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ endTime: -1 }).skip(skip).limit(limit);
   return { pastBattles };
 }
 
