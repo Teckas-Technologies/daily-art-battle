@@ -1,27 +1,32 @@
 "use client"
-import React, { useState,ChangeEvent} from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import { uploadFile, uploadReference } from '@mintbase-js/storage';
 import { useMbWallet } from "@mintbase-js/react";
-import {useSaveData, ArtData} from "../hooks/artHooks";
+import { useSaveData, ArtData } from "../hooks/artHooks";
+
 interface Artwork {
   name: string;
   file: File | null;
   fileName: string;
 }
+
 interface ArtworkUploadFormProps {
   onClose: () => void;
+  onSuccessUpload: () => void; 
 }
-export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose }) => {
+
+export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload }) => {
   const defaultArtworks: Artwork[] = [
-    { name: 'Upload Unique Rare', file: null , fileName: ''},
-    { name: 'Upload Derivative Edition', file: null , fileName: ''},
+    { name: 'Upload Unique Rare', file: null, fileName: '' },
+    { name: 'Upload Derivative Edition', file: null, fileName: '' },
   ];
   const [artworks, setArtworks] = useState<Artwork[]>(defaultArtworks);
   const [artTitle, setArtTitle] = useState("");
   const [uploading, setUploading] = useState(false);
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { saveData, loading, error, success } = useSaveData();
-  const [showAlert, setShowAlert] = useState(true);
+  const { saveData } = useSaveData();
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
     const newArtworks = [...artworks];
@@ -33,10 +38,15 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
     setArtworks(newArtworks);
   };
 
-  const handleArtName = (e: any) => {
+  const handleArtName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
     setArtTitle(name);
   };
+
+  useEffect(() => {
+    const allFilesUploaded = artworks.every(artwork => artwork.file !== null);
+    setIsFormValid(allFilesUploaded && artTitle.trim() !== "");
+  }, [artworks, artTitle]);
 
   const uploadArtWork = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -44,18 +54,21 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
       connect();
       return;
     }
+    
     setUploading(true);
     try {
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
-      if(artworks.length < 2) {
+      if (artworks.length < 2) {
         alert("Please Upload All files");
+        return;
       }
+      
       artBattle.arttitle = artTitle;
       
       for (const artwork of artworks) {
         if (!artwork.file) {
           alert(`Missing file for ${artwork.name}`);
-          break;
+          return;
         }
         const uploadResult = await uploadFile(artwork.file);
         const url = `https://arweave.net/${uploadResult.id}`;
@@ -73,25 +86,27 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
           case 'Upload Derivative Edition':
             artBattle.grayScale = url;
             artBattle.grayScaleReference = referenceUrl;
+            break;
+          default:
+            break;
         }
-
       }
     
       await saveData(artBattle as ArtData);
       alert('All files uploaded successfully');
+      onSuccessUpload();
       onClose();
-      location.reload();
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Failed to upload files');
+      alert('Failed to upload files. Please check the files and try again.');
     } finally {
       setUploading(false);
     }
   };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
-      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #8730aa', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
-      <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#8730aa', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
+      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #3deb34', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
+      <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#3deb34', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
       <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
       <hr></hr>
         <form onSubmit={uploadArtWork}>
@@ -165,8 +180,14 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
             <button type="button" onClick={onClose} className=" cancel-btn text-white px-4 py-2 rounded">
               Cancel
             </button>
-            <button type="submit" disabled={uploading || loading} className="mr-2 upload-btn text-white px-4 py-2 rounded">
-              {uploading || loading ? 'Processing...' : 'Upload'}
+            <button
+              type="submit"
+              disabled={!isFormValid || uploading || uploading}
+              className={`mr-2 upload-btn text-white px-4 py-2 rounded ${
+                !isFormValid || uploading || uploading ? 'cursor-not-allowed' : ''
+              }`}
+            >
+              {uploading || uploading ? 'Processing...' : 'Upload'}
             </button>
           </div>
         </form>
@@ -174,3 +195,5 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
     </div>  
   );
 };
+
+export default ArtworkUploadForm;

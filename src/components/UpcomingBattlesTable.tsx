@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { useFetchArts, ArtData } from '@/hooks/artHooks';
+"use client"
+import React, { useState, useEffect } from 'react';
+import { useFetchArts, ArtData } from '../hooks/artHooks';
 import { useMbWallet } from "@mintbase-js/react";
 import Image from 'next/image';
 import { useVoting } from '../hooks/useArtVoting';
-const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
+
+const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess: boolean }> = ({ toggleUploadModal, uploadSuccess }) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
-  const { arts, error, loading, fetchMoreArts } = useFetchArts();
-  const { isConnected, selector, connect, activeAccountId } = useMbWallet();
+  const [refresh, setRefresh] = useState(false); 
+  const { arts, error, fetchMoreArts } = useFetchArts();
+  const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
-  const [hasnext,setHasNext] = useState(false);
+
   useEffect(() => {
     if (arts) {
-      if (arts.length < 10) { // Change condition to '<' instead of '!='
-        setHasNext(true);
-      }else{
-        setHasNext(false);
-      }
       setUpcomingArts(arts);
     }
-  }, [arts, hasnext]);
+  }, [arts]);
+
+  useEffect(() => {
+    fetchMoreArts(page);
+  }, [page, refresh, uploadSuccess]);
+
+  const [hasnext,setHasNext] = useState(false);
+
+  useEffect(() => {
+    if (arts) {
+      setHasNext(arts.length >= 10); 
+      }
+      setUpcomingArts(arts);
+  }, [arts]);
+
   const handleNext = () => {
     setPage(prevPage => prevPage + 1);
     fetchMoreArts(page + 1);
@@ -30,22 +42,18 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       fetchMoreArts(page - 1);
     }
   };
-  if (loading) return 
-    <p>Loading...</p>;
-  if (error) return <p>Error loading battles: {error}</p>;
-
-  return (
+ return (
     <div className="battle-table mt-8 pb-10 flex flex-col items-center" style={{ width: '100%', gap: 8 }}>
     <div className='battle-table1 pb-10'>
       <h2 className="text-xl font-bold text-black text-center">Upcoming Arts</h2> 
       <div className='flex justify-between items-center'> 
-      <div className="add-art-btn text-center py-1 ml-auto mr-9 px-10" style={{paddingRight:'50px'}}> 
+      <div className="add-art-btn text-center py-1 ml-auto  px-10" style={{paddingRight:'110px'}}> 
       <button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 md:mr-5 py-2 vote-btn text-white rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
         Add Artwork
       </button>
     </div>
       </div>
-      <BattleTable artData={upcomingArts} />
+      <BattleTable artData={upcomingArts} setRefresh={setRefresh}/>
       <nav className="flex justify-center flex-wrap gap-4 mt-2">
           <a
             className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${page <= 1 ? 'cursor-not-allowed' : 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
@@ -54,20 +62,22 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
             Previous
           </a>
           <a
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${hasnext?'cursor-not-allowed' :'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
-            onClick={hasnext ? undefined : handleNext}
+            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${hasnext? 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white':'cursor-not-allowed'}`}
+            onClick={hasnext ? handleNext : undefined}
           >
             Next
           </a>
         </nav>
     </div>
+ 
   </div>
   
   );
 };
 
 
-const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
+
+const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<React.SetStateAction<boolean>>}> = ({ artData,setRefresh }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const {  votes,  fetchVotes,  submitVote,} = useVoting();
   const [success,setSuccess] = useState(false);
@@ -88,7 +98,7 @@ const BattleTable: React.FC<{ artData: ArtData[] }> = ({ artData }) => {
     if (success) {
       setSuccess(true);
       alert('Vote submitted successfully!');
-      location.reload();
+      setRefresh(prev => !prev); 
     } else {
       alert('Failed to submit vote. Maybe you already voted!');
     }

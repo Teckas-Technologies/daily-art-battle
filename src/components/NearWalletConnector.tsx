@@ -1,6 +1,5 @@
 "use client"
 import { useMbWallet } from "@mintbase-js/react";
-import Image from "next/image";
 export const NearWalletConnector = () => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
 
@@ -17,16 +16,16 @@ export const NearWalletConnector = () => {
     
       <nav className="navbar bg-gray-950" style={{ width: "100vw", display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, padding: '20px 5vw'}}>
 <div className="flex items-center flex-col md:flex-row">
-  <Image
-    src="/images/logo.png"
-    width={50}
-    height={50}
-    alt="GFXvs"
-    className="mb-2 md:mb-0" // Add margin bottom for smaller screens
-  />
-  <h1 className="font-extrabold text-2xl md:text-md ml-2" style={{color:"#33cd2b"}}>
+<img
+          src="/images/logo.png"
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className="mb-2 md:mb-0" // Add margin bottom for smaller screens
+        />
+  {/* <h1 className="font-extrabold text-2xl md:text-md ml-2" style={{color:"#33cd2b"}}>
     GFXvs
-  </h1>
+  </h1> */}
 </div>
         {isConnected ? (
        <div className="flex flex-col sm:flex-row justify-center items-center mt-4">

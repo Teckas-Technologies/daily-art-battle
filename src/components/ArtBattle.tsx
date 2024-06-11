@@ -15,7 +15,7 @@ interface Artwork {
 
 const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { todayBattle, loading, error } = useFetchTodayBattle();
+  const { todayBattle, loading, error,fetchTodayBattle } = useFetchTodayBattle();
   const [artA, setArtA] = useState<Artwork>({ id: 'ArtA', name: 'Art A', imageUrl: '',title:'',artistId:'' });
   const [artB, setArtB] = useState<Artwork>({ id: 'ArtB', name: 'Art B', imageUrl: '' ,title:'',artistId:''});
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
@@ -23,6 +23,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
   const [votedFor ,setVoterFor] = useState("");
+  const [refresh, setRefresh] = useState(false); 
   useEffect(() => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
@@ -34,8 +35,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       }
     };
 
-    fetchData();
-  }, [todayBattle, activeAccountId, fetchVotes]);
+    fetchData();  
+  }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
   useEffect(() => {
     if (todayBattle) {
@@ -85,15 +86,19 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       votedFor: id === "Art A" ? "Art A" : "Art B"
     });
     if (success) {
-      location.reload();
+      
       setSuccess(true);
       alert('Vote submitted successfully!');
+      setRefresh(prev => !prev); 
     } else {
       alert('Failed to submit vote. Maybe you already voted!');
     }
   };
 
-  if (loading) return <p>Loading battle details...</p>;
+  useEffect(() => {
+    fetchTodayBattle(); // Fetch battle details when component mounts or refresh state changes
+  }, [refresh]);
+
   if (error) return <p>Error fetching battle details: {error}</p>;
 
   if (!todayBattle) {
