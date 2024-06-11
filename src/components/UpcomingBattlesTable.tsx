@@ -46,7 +46,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
     <div className='battle-table1 pb-10'>
       <h2 className="text-xl font-bold text-black text-center">Upcoming Arts</h2> 
       <div className='flex justify-between items-center'> 
-      <div className="add-art-btn text-center py-1 ml-auto mr-9 px-10" style={{paddingRight:'50px'}}> 
+      <div className="add-art-btn text-center py-1 ml-auto  px-10" style={{paddingRight:'110px'}}> 
       <button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 md:mr-5 py-2 vote-btn text-white rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
         Add Artwork
       </button>
