@@ -105,8 +105,8 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
-      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #8730aa', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
-      <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#8730aa', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
+      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #3deb34', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
+      <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#3deb34', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
       <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
       <hr></hr>
         <form onSubmit={uploadArtWork}>

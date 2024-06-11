@@ -140,10 +140,28 @@ export const useFetchBattles = () => {
               setLoading(false);
           }
       };
+
+      const fetchBattlesByVotes = async (page: number, limit: number = 10) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}&sort=vote`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data: BattlesResponse = await response.json();
+         
+            setBattles(data);
+        } catch (err) {
+            console.error('Error fetching battles:', err);
+            setError("Error fetching battles!");
+        } finally {
+            setLoading(false);
+        }
+    };
       useEffect(() => {
          fetchBattles(1);
       }, []);
      
 
-  return { battles, loading, error,fetchMoreBattles: fetchBattles };
+  return { battles, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };
 };
+
