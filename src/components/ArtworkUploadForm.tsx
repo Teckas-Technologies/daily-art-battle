@@ -1,29 +1,32 @@
 "use client"
-import React, { useState,ChangeEvent, useEffect} from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import { uploadFile, uploadReference } from '@mintbase-js/storage';
 import { useMbWallet } from "@mintbase-js/react";
-import {useSaveData, ArtData} from "../hooks/artHooks";
+import { useSaveData, ArtData } from "../hooks/artHooks";
+
 interface Artwork {
   name: string;
   file: File | null;
   fileName: string;
 }
+
 interface ArtworkUploadFormProps {
   onClose: () => void;
- 
+  onSuccessUpload: () => void; 
 }
-export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose}) => {
+
+export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload }) => {
   const defaultArtworks: Artwork[] = [
-    { name: 'Upload Unique Rare', file: null , fileName: ''},
-    { name: 'Upload Derivative Edition', file: null , fileName: ''},
+    { name: 'Upload Unique Rare', file: null, fileName: '' },
+    { name: 'Upload Derivative Edition', file: null, fileName: '' },
   ];
   const [artworks, setArtworks] = useState<Artwork[]>(defaultArtworks);
   const [artTitle, setArtTitle] = useState("");
   const [uploading, setUploading] = useState(false);
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { saveData, loading, error, success } = useSaveData();
-  const [showAlert, setShowAlert] = useState(true);
+  const { saveData } = useSaveData();
   const [isFormValid, setIsFormValid] = useState(false);
+
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
     const newArtworks = [...artworks];
@@ -35,11 +38,10 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose}) 
     setArtworks(newArtworks);
   };
 
-  const handleArtName = (e: any) => {
+  const handleArtName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
     setArtTitle(name);
   };
-
 
   useEffect(() => {
     const allFilesUploaded = artworks.every(artwork => artwork.file !== null);
@@ -56,16 +58,17 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose}) 
     setUploading(true);
     try {
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
-      if(artworks.length < 2) {
+      if (artworks.length < 2) {
         alert("Please Upload All files");
+        return;
       }
+      
       artBattle.arttitle = artTitle;
       
       for (const artwork of artworks) {
         if (!artwork.file) {
           alert(`Missing file for ${artwork.name}`);
-          
-          break;
+          return;
         }
         const uploadResult = await uploadFile(artwork.file);
         const url = `https://arweave.net/${uploadResult.id}`;
@@ -83,18 +86,19 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose}) 
           case 'Upload Derivative Edition':
             artBattle.grayScale = url;
             artBattle.grayScaleReference = referenceUrl;
+            break;
+          default:
+            break;
         }
-
       }
     
       await saveData(artBattle as ArtData);
       alert('All files uploaded successfully');
+      onSuccessUpload();
       onClose();
-      location.reload();
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Failed to upload files. Please check the files and try again.');
-     
     } finally {
       setUploading(false);
     }
@@ -178,12 +182,12 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose}) 
             </button>
             <button
               type="submit"
-              disabled={!isFormValid || uploading || loading}
+              disabled={!isFormValid || uploading || uploading}
               className={`mr-2 upload-btn text-white px-4 py-2 rounded ${
-                !isFormValid || uploading || loading ? 'cursor-not-allowed' : ''
+                !isFormValid || uploading || uploading ? 'cursor-not-allowed' : ''
               }`}
             >
-              {uploading || loading ? 'Processing...' : 'Upload'}
+              {uploading || uploading ? 'Processing...' : 'Upload'}
             </button>
           </div>
         </form>

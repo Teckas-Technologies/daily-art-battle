@@ -1,31 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useFetchArts, ArtData } from '@/hooks/artHooks';
+"use client"
+import React, { useState, useEffect } from 'react';
+import { useFetchArts, ArtData } from '../hooks/artHooks';
 import { useMbWallet } from "@mintbase-js/react";
 import Image from 'next/image';
 import { useVoting } from '../hooks/useArtVoting';
 
-const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
+const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess: boolean }> = ({ toggleUploadModal, uploadSuccess }) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
-  const { arts, error, loading, fetchMoreArts } = useFetchArts();
-  const { isConnected, selector, connect, activeAccountId } = useMbWallet();
+  const [refresh, setRefresh] = useState(false); 
+  const { arts, error, fetchMoreArts } = useFetchArts();
+  const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
-  const [hasnext,setHasNext] = useState(false);
-  const [refresh, setRefresh] = useState(false);
-  useEffect(() => {
-    if (arts) {
-      if (arts.length < 10) { // Change condition to '<' instead of '!='
-        setHasNext(true);
-      }else{
-        setHasNext(false);
-      }
-      setUpcomingArts(arts);
-    }
-  }, [arts, hasnext]);
 
   useEffect(() => {
-    // Fetch arts when the component mounts and when refresh state changes
+    if (arts) {
+      setUpcomingArts(arts);
+    }
+  }, [arts]);
+
+  useEffect(() => {
     fetchMoreArts(page);
-  }, [page, refresh]); // Add refresh to dependencies
+  }, [page, refresh, uploadSuccess]);
+
+  const [hasnext,setHasNext] = useState(false);
+
+  useEffect(() => {
+    if (arts) {
+      setHasNext(arts.length >= 10); 
+      }
+      setUpcomingArts(arts);
+  }, [arts]);
 
   const handleNext = () => {
     setPage(prevPage => prevPage + 1);
@@ -38,11 +42,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       fetchMoreArts(page - 1);
     }
   };
-
-
-  if (error) return <p>Error loading battles: {error}</p>;
-
-  return (
+ return (
     <div className="battle-table mt-8 pb-10 flex flex-col items-center" style={{ width: '100%', gap: 8 }}>
     <div className='battle-table1 pb-10'>
       <h2 className="text-xl font-bold text-black text-center">Upcoming Arts</h2> 
@@ -62,8 +62,8 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
             Previous
           </a>
           <a
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${hasnext?'cursor-not-allowed' :'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white'}`}
-            onClick={hasnext ? undefined : handleNext}
+            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${hasnext? 'hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white':'cursor-not-allowed'}`}
+            onClick={hasnext ? handleNext : undefined}
           >
             Next
           </a>
@@ -74,6 +74,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
   
   );
 };
+
 
 
 const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<React.SetStateAction<boolean>>}> = ({ artData,setRefresh }) => {
