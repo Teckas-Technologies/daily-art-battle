@@ -34,6 +34,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         }
       }
     };
+    fetchTodayBattle();
 
     fetchData();  
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
@@ -94,11 +95,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       alert('Failed to submit vote. Maybe you already voted!');
     }
   };
-
-  useEffect(() => {
-    fetchTodayBattle(); // Fetch battle details when component mounts or refresh state changes
-  }, [refresh]);
-
   if (error) return <p>Error fetching battle details: {error}</p>;
 
   if (!todayBattle) {

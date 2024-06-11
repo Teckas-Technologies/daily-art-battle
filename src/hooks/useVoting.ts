@@ -55,6 +55,7 @@ export const useVoting = (): UseVotingReturn => {
         body: JSON.stringify(voteData),
       });
       const data = await response.json();
+      console.log(response);
       if (response.ok) {
         setVotes((prevVotes) => [...prevVotes, voteData]);  // Optionally update local state
         setError(null);
