@@ -1,5 +1,5 @@
 "use client"
-import React, { useState,ChangeEvent} from 'react';
+import React, { useState,ChangeEvent, useEffect} from 'react';
 import { uploadFile, uploadReference } from '@mintbase-js/storage';
 import { useMbWallet } from "@mintbase-js/react";
 import {useSaveData, ArtData} from "../hooks/artHooks";
@@ -22,6 +22,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { saveData, loading, error, success } = useSaveData();
   const [showAlert, setShowAlert] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
     const newArtworks = [...artworks];
@@ -38,6 +39,12 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
     setArtTitle(name);
   };
 
+
+  useEffect(() => {
+    const allFilesUploaded = artworks.every(artwork => artwork.file !== null);
+    setIsFormValid(allFilesUploaded && artTitle.trim() !== "");
+  }, [artworks, artTitle]);
+
   const uploadArtWork = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!isConnected || !activeAccountId) {
@@ -49,12 +56,14 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
       if(artworks.length < 2) {
         alert("Please Upload All files");
+    
       }
       artBattle.arttitle = artTitle;
       
       for (const artwork of artworks) {
         if (!artwork.file) {
           alert(`Missing file for ${artwork.name}`);
+          
           break;
         }
         const uploadResult = await uploadFile(artwork.file);
@@ -165,7 +174,13 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
             <button type="button" onClick={onClose} className=" cancel-btn text-white px-4 py-2 rounded">
               Cancel
             </button>
-            <button type="submit" disabled={uploading || loading} className="mr-2 upload-btn text-white px-4 py-2 rounded">
+            <button
+              type="submit"
+              disabled={!isFormValid || uploading || loading}
+              className={`mr-2 upload-btn text-white px-4 py-2 rounded ${
+                !isFormValid || uploading || loading ? 'cursor-not-allowed' : ''
+              }`}
+            >
               {uploading || loading ? 'Processing...' : 'Upload'}
             </button>
           </div>
