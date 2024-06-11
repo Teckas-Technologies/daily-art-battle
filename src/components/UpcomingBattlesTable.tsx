@@ -3,6 +3,7 @@ import { useFetchArts, ArtData } from '@/hooks/artHooks';
 import { useMbWallet } from "@mintbase-js/react";
 import Image from 'next/image';
 import { useVoting } from '../hooks/useArtVoting';
+
 const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const { arts, error, loading, fetchMoreArts } = useFetchArts();
@@ -37,6 +38,8 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       fetchMoreArts(page - 1);
     }
   };
+
+
   if (error) return <p>Error loading battles: {error}</p>;
 
   return (
@@ -66,6 +69,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
           </a>
         </nav>
     </div>
+ 
   </div>
   
   );

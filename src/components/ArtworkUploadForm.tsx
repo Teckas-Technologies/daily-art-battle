@@ -10,8 +10,9 @@ interface Artwork {
 }
 interface ArtworkUploadFormProps {
   onClose: () => void;
+ 
 }
-export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose }) => {
+export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose}) => {
   const defaultArtworks: Artwork[] = [
     { name: 'Upload Unique Rare', file: null , fileName: ''},
     { name: 'Upload Derivative Edition', file: null , fileName: ''},
@@ -51,12 +52,12 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
       connect();
       return;
     }
+    
     setUploading(true);
     try {
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
       if(artworks.length < 2) {
         alert("Please Upload All files");
-    
       }
       artBattle.arttitle = artTitle;
       
@@ -92,7 +93,8 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
       location.reload();
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Failed to upload files');
+      alert('Failed to upload files. Please check the files and try again.');
+     
     } finally {
       setUploading(false);
     }
@@ -189,3 +191,5 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose })
     </div>  
   );
 };
+
+export default ArtworkUploadForm;
