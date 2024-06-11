@@ -99,7 +99,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     fetchTodayBattle(); // Fetch battle details when component mounts or refresh state changes
   }, [refresh]);
 
-  if (loading) return <p>Loading battle details...</p>;
   if (error) return <p>Error fetching battle details: {error}</p>;
 
   if (!todayBattle) {

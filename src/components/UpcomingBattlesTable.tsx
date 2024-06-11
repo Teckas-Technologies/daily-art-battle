@@ -37,8 +37,6 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
       fetchMoreArts(page - 1);
     }
   };
-  if (loading) return 
-    <p>Loading...</p>;
   if (error) return <p>Error loading battles: {error}</p>;
 
   return (
