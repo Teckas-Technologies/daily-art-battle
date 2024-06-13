@@ -51,6 +51,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess:
     <div className="battle-table mt-8 pb-10 flex flex-col items-center" style={{ width: '100%', gap: 8 }}>
     <div className='battle-table1 pb-10'>
       <h2 className="text-xl font-bold text-black text-center">Upcoming Arts</h2> 
+      <p  className='text-center text-black font-mono mt-5 sm:font-thin md:text-lg'>Upvote your favorite artworks to influence what will be up for battle next. Think you’ve got what it takes? Upload your own masterpiece and join the competition!      </p>
       <div className='flex justify-between items-center'> 
       <div className="add-art-btn text-center py-1 ml-auto  px-10" style={{paddingRight:'110px'}}> 
       <button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 md:mr-5 py-2 vote-btn text-white rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
