@@ -19,10 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const existingVote = await UpVoting.findOne({ participantId, artId });
       if (existingVote) {
         return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
-      }
+      }else{
       const vote = await UpVoting.create({ participantId, artId });
       const result = await updateArtById(artId);
       res.status(201).json({ success: true, data: vote });
+      }
     } catch (error) {
       console.error('Error submitting vote:', error);
       res.status(500).json({ success: false, error: "Failed to submit vote" });
