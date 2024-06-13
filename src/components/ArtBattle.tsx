@@ -34,11 +34,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         }
       }
     };
-    const initializeData = async () => {
        fetchData();
        fetchTodayBattle();
-    };
-    initializeData();
+   
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
   useEffect(() => {
