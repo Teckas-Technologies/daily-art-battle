@@ -3,7 +3,7 @@ background: rgb(144,40,47);
 background: radial-gradient(circle, rgba(144,40,47,0.3) 0%, rgba(144,40,47,0.6) 0%, rgba(16,18,35,0.3730085784313726) 55%);
 } */
 
-@media (max-width: 1024px) {
+@media (max-width: 1300px) {
     .custom-img-size {
       width: 6.5rem; /* Equivalent to 72px */
       height: 6.5rem; /* Equivalent to 72px */

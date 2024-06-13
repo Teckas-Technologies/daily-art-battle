@@ -12,9 +12,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(201).json(scheduledBattle);
       //GET method is used for fetching battles
       case 'GET':
+        const timeout = (ms:any) => new Promise(resolve => setTimeout(resolve, ms));
         const { queryType } = req.query;
         //Here we'll fetch today battles
         if (queryType === 'Today') {
+         
+          await timeout(1000);
           const todayBattle = await findTodaysBattle();
           return res.status(200).json(todayBattle);
         //Here we'll fetch battles with pagination
@@ -26,10 +29,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const battles = await findPreviousBattlesByVotes(page,limit);
             return res.status(200).json(battles);
           }else{
+          
           const battles = await findPreviousBattles(page,limit);
           return res.status(200).json(battles);
           }
-        } else {
+        }
+         else {
           const battles = await findAllBattles();
           return res.status(200).json(battles);
         }

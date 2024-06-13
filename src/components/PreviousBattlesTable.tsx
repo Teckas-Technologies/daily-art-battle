@@ -54,10 +54,10 @@ const closePopUp = () => {
     return (
         <div className="battle-table mt-8 pb-10 flex flex-col items-center w-full">
             <h2 className="text-xl font-bold text-black text-center">Previous Battles</h2>
-           <div className="battle-table1 pb-10 w-full overflow-x-auto">
-           <p  className='text-center text-black font-mono mt-5 sm:font-thin md:text-lg'><a href='https://wallet.mintbase.xyz/' className='text-green-600'>Check your wallet</a> to see your rewards and the spoils of victory if you were a lucky winner. Relive the excitement and see which masterpieces emerged victorious!
-
+            <p  className='battle-table1 pb-10 w-full overflow-x-auto text-center text-black font-mono mt-5 sm:font-thin md:text-lg'><a href='https://wallet.mintbase.xyz/' className='text-green-600'>Check your wallet</a> to see your rewards and the spoils of victory if you were a lucky winner. Relive the excitement and see which masterpieces emerged victorious!
 </p>
+           <div className="battle-table1 pb-10 w-full overflow-x-auto">
+       
          
                 <div className="flex items-center justify-between w-full">
                     <table className="min-w-full mt-4">
@@ -104,7 +104,7 @@ const closePopUp = () => {
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art A' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
                                         </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
                                     {battle.winningArt === "Art A" ? battle.artAspecialWinner : battle.artBspecialWinner}
                                     <br></br>
 
@@ -171,7 +171,7 @@ const closePopUp = () => {
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art B' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
                                         </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
                                     {battle.winningArt === "Art B" ? battle.artAspecialWinner : battle.artBspecialWinner}
                                     <br></br>
 

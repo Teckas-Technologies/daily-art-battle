@@ -19,8 +19,13 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess:
   }, [arts]);
 
   useEffect(() => {
-   fetchMoreArts(page);
-  }, [page, refresh, uploadSuccess]);
+    const initializeData = async () => {
+      fetchMoreArts(page);
+   };
+   const timeoutId = setTimeout(initializeData, 1000); 
+
+    return () => clearTimeout(timeoutId);
+  }, [page, refresh, uploadSuccess, fetchMoreArts]);
 
   const [hasnext,setHasNext] = useState(false);
 

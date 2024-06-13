@@ -24,7 +24,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const [success, setSuccess] = useState(false);
   const [votedFor ,setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false); 
-  useEffect(() => {
+  useEffect( () => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
         const res = await fetchVotes(activeAccountId, todayBattle._id);
@@ -34,9 +34,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         }
       }
     };
-    fetchTodayBattle();
-
-    fetchData();  
+       fetchData();
+       fetchTodayBattle();
+   
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
   useEffect(() => {
