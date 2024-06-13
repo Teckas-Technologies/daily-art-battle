@@ -34,7 +34,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         }
       }
     };
-    fetchTodayBattle();
+  // await fetchTodayBattle();
 
     fetchData();  
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
