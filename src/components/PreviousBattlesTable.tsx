@@ -104,7 +104,7 @@ const closePopUp = () => {
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art A' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
                                         </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
                                     {battle.winningArt === "Art A" ? battle.artAspecialWinner : battle.artBspecialWinner}
                                     <br></br>
 
@@ -171,7 +171,7 @@ const closePopUp = () => {
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art B' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
                                         </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
                                     {battle.winningArt === "Art B" ? battle.artAspecialWinner : battle.artBspecialWinner}
                                     <br></br>
 
