@@ -19,7 +19,18 @@ export const findAllArts = async (page: number, limit: number): Promise<any> => 
     .skip(skip)
     .limit(limit);
 };
-export const updateArtById = async (id: any,participantId:any): Promise<any> => {
+export const updateArtById = async (id: any): Promise<any> => {
+  await connectToDatabase();
+   return await ArtTable.findByIdAndUpdate(
+    id,
+    { $inc: { upVotes: 1 } },
+    { new: true }
+  );
+
+};
+
+
+export const findAndupdateArtById = async (id: any,participantId:any): Promise<any> => {
   await connectToDatabase();
   const vote = await UpVoting.create({ participantId, artId:id });
    await ArtTable.findByIdAndUpdate(
