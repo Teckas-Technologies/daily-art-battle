@@ -21,14 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } else if (queryType === 'battles') {
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
-          const sort = req.query.sort;
-          if(sort=='vote'){
-            const battles = await findPreviousBattlesByVotes(page,limit);
-            return res.status(200).json(battles);
-          }else{
+          // const sort = req.query.sort;
+          // if(sort=='vote'){
+          //   const battles = await findPreviousBattlesByVotes(page,limit);
+          //   return res.status(200).json(battles);
+          // }else{
           const battles = await findPreviousBattles(page,limit);
           return res.status(200).json(battles);
-          }
+          // }
         } else {
           const battles = await findAllBattles();
           return res.status(200).json(battles);
