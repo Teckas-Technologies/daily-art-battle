@@ -38,8 +38,11 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       await fetchTodayBattle();
       await fetchData();
     };
-  
-    initializeData(); 
+    const timeoutId = setTimeout(() => {
+      initializeData();
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
   useEffect(() => {
