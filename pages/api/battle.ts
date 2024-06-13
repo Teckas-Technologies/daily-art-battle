@@ -15,21 +15,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { queryType } = req.query;
         //Here we'll fetch today battles
         if (queryType === 'Today') {
+          console.log("today")
           const todayBattle = await findTodaysBattle();
           return res.status(200).json(todayBattle);
         //Here we'll fetch battles with pagination
         } else if (queryType === 'battles') {
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
-          // const sort = req.query.sort;
-          // if(sort=='vote'){
-          //   const battles = await findPreviousBattlesByVotes(page,limit);
-          //   return res.status(200).json(battles);
-          // }else{
+          const sort = req.query.sort;
+          if(sort=='vote'){
+            const battles = await findPreviousBattlesByVotes(page,limit);
+            return res.status(200).json(battles);
+          }else{
+            console.log("previous")
           const battles = await findPreviousBattles(page,limit);
           return res.status(200).json(battles);
-          // }
-        } else {
+          }
+        }
+         else {
           const battles = await findAllBattles();
           return res.status(200).json(battles);
         }
