@@ -25,7 +25,10 @@ const ArtPiece: React.FC<ArtPieceProps> = ({ art, onVote, success,votedFor }) =>
         <img
     src={art.imageUrl}
     alt={art.name}
+    width={100}
+    height={100}
     className="w-24 h-24 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-59 lg:h-59 md:shrink-0 custom-img-size"
+    style={{width:"60%",height:"80%"}}
   />
   <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center">{art.title} by {art.artistId}</p>
             {votedFor == art.name ?(

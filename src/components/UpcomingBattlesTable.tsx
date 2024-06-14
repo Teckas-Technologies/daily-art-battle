@@ -121,7 +121,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
           <div className="flex justify-center items-center flex-grow p-4">
             <img
               src={art.colouredArt}
-              alt="Art A"
+              alt="Art A" 
               width={100}
               height={100}
               className="w-48 h-48 sm:w-36 sm:h-36 md:w-48 md:h-full"
