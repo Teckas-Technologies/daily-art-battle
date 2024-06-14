@@ -15,7 +15,7 @@ interface Artwork {
 
 const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { todayBattle, loading, error } = useFetchTodayBattle();
+  const { todayBattle, loading, error,fetchTodayBattle } = useFetchTodayBattle();
   const [artA, setArtA] = useState<Artwork>({ id: 'ArtA', name: 'Art A', imageUrl: '',title:'',artistId:'' });
   const [artB, setArtB] = useState<Artwork>({ id: 'ArtB', name: 'Art B', imageUrl: '' ,title:'',artistId:''});
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
@@ -23,7 +23,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
   const [votedFor ,setVoterFor] = useState("");
-  useEffect(() => {
+  const [refresh, setRefresh] = useState(false); 
+  useEffect( () => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
         const res = await fetchVotes(activeAccountId, todayBattle._id);
@@ -33,9 +34,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         }
       }
     };
-
-    fetchData();
-  }, [todayBattle, activeAccountId, fetchVotes]);
+       fetchData();
+       fetchTodayBattle();
+   
+  }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
   useEffect(() => {
     if (todayBattle) {
@@ -85,15 +87,14 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       votedFor: id === "Art A" ? "Art A" : "Art B"
     });
     if (success) {
-      location.reload();
+      
       setSuccess(true);
       alert('Vote submitted successfully!');
+      setRefresh(prev => !prev); 
     } else {
       alert('Failed to submit vote. Maybe you already voted!');
     }
   };
-
-  if (loading) return <p>Loading battle details...</p>;
   if (error) return <p>Error fetching battle details: {error}</p>;
 
   if (!todayBattle) {
@@ -115,9 +116,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   return (
     <div className="mt-10 pt-10 mx-8">
       {/* <h1 className='text-center text-black font-mono mt-5'>{todayBattle.arttitle}</h1> */}
+    <p  className='text-center text-black font-mono mt-5 sm:font-thin md:text-lg pt-8 md:mt-9'>Welcome to GFXvs, where creators compete with their masterpieces and you vote to win exclusive NFT rewards! Each day, two pieces of art face off, and you decide the winner by casting your vote. For each artwork, one lucky voter is awarded a 1:1 NFT, while everyone else receives participation reward editions. Join the battle by connecting your NEAR wallet, vote for your favorite art, and earn exclusive NFT rewards!</p>
+    
       <div className='battle-img flex' style={{ justifyContent: 'center' }}>
-       
-          <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
+            <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
   
             <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
         

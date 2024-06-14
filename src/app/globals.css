@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Freeman&display=swap');
 
 *{
   margin: 0;
@@ -99,7 +98,7 @@ body {
   background-color: #040415ef;
   padding: 10px 15px;
   width: 150px;
-  color: #8730aa;
+  color: #3deb34;
   font-weight: 700;
 }
 
@@ -108,23 +107,23 @@ body {
 }
 
 .upload-btn{
-  background-color: #8730aa;
-  border: 2px solid #8730aa;
+  background-color: #3deb34;
+  border: 2px solid #3deb34;
   transition: 0.1s ease;
 }
 .upload-btn:hover{
-  background-color: #8730aacf;
-  border: 2px solid #8730aacf;
+  background-color: #3deb34;
+  border: 2px solid #3deb34;
 }
 
 .cancel-btn{
   background-color: #fff;
-  border: 2px solid #8730aa;
+  border: 2px solid #3deb34;
   color: #000;
   transition: 0.1s ease;
 }
 .cancel-btn:hover{
   background-color: #ffffffb5;
-  border: 2px dotted #8730aa;
+  border: 2px dotted #3deb34;
   color: #000;
 }

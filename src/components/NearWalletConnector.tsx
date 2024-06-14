@@ -1,6 +1,5 @@
 "use client"
 import { useMbWallet } from "@mintbase-js/react";
-
 export const NearWalletConnector = () => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
 
@@ -16,15 +15,24 @@ export const NearWalletConnector = () => {
   return(
     
       <nav className="navbar bg-gray-950" style={{ width: "100vw", display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, padding: '20px 5vw'}}>
-      <h1 className="text-purple-600 font-extrabold text-2xl">
-    Daily Art Battle
-  </h1>
+<div className="flex items-center flex-col md:flex-row">
+<img
+          src="/images/logo.png"
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className="mb-2 md:mb-0" // Add margin bottom for smaller screens
+        />
+  {/* <h1 className="font-extrabold text-2xl md:text-md ml-2" style={{color:"#33cd2b"}}>
+    GFXvs
+  </h1> */}
+</div>
         {isConnected ? (
-          <div className="flex justify-center items-center mt-4">
-            <p className="px-2 text-xs sm:text-sm md:text-base">{activeAccountId}</p>
-            <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={handleSignout}>
-              Disconnect
-            </button>
+       <div className="flex flex-col sm:flex-row justify-center items-center mt-4">
+       <p className="px-1 text-xs sm:text-sm md:text-base">{activeAccountId}</p>
+       <button className="mt-2 sm:mt-0 sm:ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={handleSignout}>
+         Disconnect
+       </button>     
           </div>  
         ) : (
           <button className="px-4 py-2 flex connect-btn rounded" style={{ width: 'auto', display: 'flex', alignItems: 'center', gap: 8, fontSize: 'clamp(0.75rem, 2vw, 1rem)' }} onClick={handleSignIn}>

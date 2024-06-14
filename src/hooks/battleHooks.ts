@@ -34,6 +34,7 @@ interface UseFetchTodayBattleResult {
   todayBattle: BattleData | null;
   loading: boolean;
   error: string | null;
+  fetchTodayBattle: () => Promise<void>; 
 }
 
 interface BattlesResponse {
@@ -88,32 +89,32 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTodayBattle = async () => {
-      setLoading(true);
-      setError(null);
+  const fetchTodayBattle = async () => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const response = await fetch('/api/battle?queryType=Today');
-        if (!response.ok) {
-          throw new Error('Failed to fetch today\'s battle data');
-        }
-        const data: BattleData = await response.json();
-        console.log(data);  
-        setTodayBattle(data);
-      } catch (error) {
-        console.error('Error fetching today\'s battle data:', error);
-        setError('Failed to fetch data');
-      } finally {
-        setLoading(false);
+    try {
+      const response = await fetch('/api/battle?queryType=Today');
+      if (!response.ok) {
+        throw new Error('Failed to fetch today\'s battle data');
       }
-    };
+      const data: BattleData = await response.json();
+     
+      setTodayBattle(data);
+    } catch (error) {
+      console.error('Error fetching today\'s battle data:', error);
+      setError('Failed to fetch data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchTodayBattle();
   }, []);
 
 
-  return { todayBattle, loading, error };
+  return { todayBattle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
 };
 
 //useFetchBattles is used to fetch battles with pagination
@@ -130,7 +131,7 @@ export const useFetchBattles = () => {
               const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
-              console.log("Fetched battles data:", data);
+           
               setBattles(data);
           } catch (err) {
               console.error('Error fetching battles:', err);
@@ -139,10 +140,28 @@ export const useFetchBattles = () => {
               setLoading(false);
           }
       };
+
+      const fetchBattlesByVotes = async (page: number, limit: number = 10) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}&sort=vote`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data: BattlesResponse = await response.json();
+         
+            setBattles(data);
+        } catch (err) {
+            console.error('Error fetching battles:', err);
+            setError("Error fetching battles!");
+        } finally {
+            setLoading(false);
+        }
+    };
       useEffect(() => {
          fetchBattles(1);
       }, []);
      
 
-  return { battles, loading, error,fetchMoreBattles: fetchBattles };
+  return { battles, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };
 };
+
