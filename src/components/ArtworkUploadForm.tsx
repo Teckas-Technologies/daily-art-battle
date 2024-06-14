@@ -4,7 +4,7 @@ import { uploadFile, uploadReference } from '@mintbase-js/storage';
 import { useMbWallet } from "@mintbase-js/react";
 import { useSaveData, ArtData } from "../hooks/artHooks";
 import { Button } from './ui/button';
-import { Form } from './ui/form';
+
 
 interface Artwork {
   name: string;
@@ -111,7 +111,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
       <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#3deb34', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
       <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
       <hr></hr>
-        <Form onSubmit={uploadArtWork}>
+        <form onSubmit={uploadArtWork}>
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>
               {index===0 &&(
@@ -192,7 +192,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
               {uploading || uploading ? 'Processing...' : 'Upload'}
             </Button>
           </div>
-        </Form>
+        </form>
       </div>
     </div>  
   );
