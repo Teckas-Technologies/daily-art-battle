@@ -3,6 +3,8 @@ import React, { useState, ChangeEvent, useEffect } from 'react';
 import { uploadFile, uploadReference } from '@mintbase-js/storage';
 import { useMbWallet } from "@mintbase-js/react";
 import { useSaveData, ArtData } from "../hooks/artHooks";
+import { Button } from './ui/button';
+import { Form } from './ui/form';
 
 interface Artwork {
   name: string;
@@ -104,12 +106,12 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
     }
   };
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
-      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #3deb34', height: 'auto', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
+    <div className="navbar fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
+      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #3deb34', height: 'auto' , position: 'relative',maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
       <h2 className="text-lg font-bold mb-2 text-center" style={{color:'#3deb34', paddingBottom:6, borderBottom: '1.5px solid white', fontSize: 18}}>Upload Artwork</h2>
       <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
       <hr></hr>
-        <form onSubmit={uploadArtWork}>
+        <Form onSubmit={uploadArtWork}>
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>
               {index===0 &&(
@@ -177,10 +179,10 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
         </div>
 
           <div className="mt-2 space-x-3 flex justify-end">
-            <button type="button" onClick={onClose} className=" cancel-btn text-white px-4 py-2 rounded">
+            <Button type="button" onClick={onClose} className=" cancel-btn text-white px-4 py-2 rounded">
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={!isFormValid || uploading || uploading}
               className={`mr-2 upload-btn text-white px-4 py-2 rounded ${
@@ -188,9 +190,9 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
               }`}
             >
               {uploading || uploading ? 'Processing...' : 'Upload'}
-            </button>
+            </Button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>  
   );

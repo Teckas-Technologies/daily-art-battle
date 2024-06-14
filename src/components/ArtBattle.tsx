@@ -4,6 +4,7 @@ import ArtPiece from './ArtPiece';
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from '@/hooks/battleHooks';
 import { useVoting } from '../hooks/useVoting';
+import { Button } from './ui/button';
 
 interface Artwork {
   id: string;
@@ -104,9 +105,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
           <h2 style={{ color: '#000', fontWeight: 600, fontSize: 18 }}>No Battles Today!</h2>
           <p className="px-5" style={{ color: '#000', textAlign: 'justify' }}>To start your battle by clicking the "Add Artwork" Button.</p>
           <div className="add-art-btn mt-5 text-center">
-            <button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 py-2 vote-btn text-white rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
+            <Button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 py-2 vote-btn text-white rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
               Add Artwork
-            </button>
+            </Button>
           </div>
         </div>
       </div>
