@@ -128,8 +128,10 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
               loading="lazy"
             />
           </div>
+          <p className="mt-2 py-2 text-gray-900 text-xs sm:text-sm font-small break-words text-center">{art.arttitle} by {art.artistId}</p>
+        
           <div className="flex justify-between items-center mt-auto p-4">
-            <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+             <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
               <svg className="h-5 w-5 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 01.625.22l7 5a1 1 0 01.375 1.375l-1.875 3.75a1 1 0 01-.625.625l-5 1a1 1 0 01-1.125-.375l-3.75-5a1 1 0 01.625-1.625l.75-.125 1.125-.25a2 2 0 011.25.5l3.75 5A2 2 0 0112 16h-1v-3a1 1 0 10-2 0v3H8a2 2 0 01-1.625-.875l-3.75-5a2 2 0 01.5-3.25l1.125-.25.75-.125A1 1 0 016 8.5l-1.875-3.75a1 1 0 01.375-1.375l7-5A1 1 0 0110 3zm0 1.75L4.625 8.5 6 10l4-2 4 2 1.375-1.75L10 4.75z" clipRule="evenodd" />
               </svg>
