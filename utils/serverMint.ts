@@ -7,12 +7,12 @@ import { MintArgsResponse, NearContractCall, execute, mint } from "@mintbase-js/
 import { NEXT_PUBLIC_NETWORK, SERVER_WALLET_ID, SERVER_WALLET_PK , ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT} from "../src/config/constants";
 
 
-export const serverMint = async (accountId: string,  mediaUrl: string, referenceUrl: string, isSpecialNft: boolean): Promise<void> => {
+export const serverMint = async (accountId: string,  mediaUrl: string, referenceUrl: string, isSpecialNft: boolean): Promise<any> => {
     
     const mintArgs = await serverMintArgs(accountId, mediaUrl, referenceUrl, isSpecialNft?SPECIAL_WINNER_CONTRACT:ART_BATTLE_CONTRACT)
     //Execute mint with server wallet
     const account = await connectAccount();
-    await execute({ account: account }, mintArgs) as FinalExecutionOutcome
+    return await execute({ account: account }, mintArgs) as FinalExecutionOutcome
 
 }
 export const connectAccount = async (

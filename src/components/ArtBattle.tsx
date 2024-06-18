@@ -5,6 +5,7 @@ import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from '@/hooks/battleHooks';
 import { useVoting } from '../hooks/useVoting';
 import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -98,6 +99,14 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     }
   };
   if (error) return <p>Error fetching battle details: {error}</p>;
+  if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
+ 
+  <div className="space-y-2">
+    <Skeleton className="h-4 w-[300px]" />
+    <Skeleton className="h-4 w-[300px]" />
+    <Skeleton className="h-40 w-[300px]" />
+  </div>
+</div>
 
   if (!todayBattle) {
     return (
