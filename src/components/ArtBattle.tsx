@@ -23,7 +23,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const [success, setSuccess] = useState(false);
   const [votedFor ,setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false); 
-  console.log(todayBattle);
   useEffect( () => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
