@@ -49,6 +49,7 @@ const ArtPiece: React.FC<ArtPieceProps> = ({ art, onVote, success,votedFor }) =>
             <Button onClick={onVote}  disabled={!isConnected||success} className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected||success ? 'cursor-not-allowed' : ''}`}>Pick {art.name}</Button>
             )} 
             </div>
+          
             </div> 
         </>
     );
