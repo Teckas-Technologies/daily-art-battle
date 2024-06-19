@@ -58,7 +58,7 @@ export const useVoting = (): UseVotingReturn => {
       if (response.ok) {
          return true;
       } else {
-        throw new Error(data.message || 'Failed to submit vote');
+        throw new Error("error"+data.message || 'Failed to submit vote');
       }
     } catch (err) {
       setError('Error');
