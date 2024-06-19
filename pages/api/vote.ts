@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   await connectToDatabase();
 
   if (req.method === 'POST') {
+    try {
     const { participantId, battleId, votedFor } = req.body;
 
     // Check if the participant has already voted for this battle
@@ -23,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     // Create a new vote
-    try {
+   
       const vote = await Voting.create({ participantId, battleId, votedFor });
       res.status(201).json({ success: true, data: vote });
     } catch (error) {
@@ -39,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.status(400).json({ success: false, error });
     }
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    // res.setHeader('Allow', ['GET', 'POST']);
+    // res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

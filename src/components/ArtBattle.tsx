@@ -4,7 +4,6 @@ import ArtPiece from './ArtPiece';
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from '@/hooks/battleHooks';
 import { useVoting } from '../hooks/useVoting';
-
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -59,7 +58,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     const hours = Math.floor(time / (1000 * 60 * 60));
     const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    return `${hours}h ${minutes}m ${seconds}s`;
+    const milliseconds = time % 1000;
+    return `${hours}h ${minutes}m ${seconds}s ${milliseconds}ms`;
   };
 
   
@@ -96,6 +96,14 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     }
   };
   if (error) return <p>Error fetching battle details: {error}</p>;
+//   if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
+ 
+//   <div className="space-y-2">
+//     <Skeleton className="h-4 w-[300px] " />
+//     <Skeleton className="h-4 w-[300px]" />
+//     <Skeleton className="h-40 w-[300px]" />
+//   </div>
+// </div>
 
   if (!todayBattle) {
     return (
@@ -104,7 +112,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
           <h2 style={{ color: '#000', fontWeight: 600, fontSize: 18 }}>No Battles Today!</h2>
           <p className="px-5" style={{ color: '#000', textAlign: 'justify' }}>To start your battle by clicking the "Add Artwork" Button.</p>
           <div className="add-art-btn mt-5 text-center">
-            <button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 py-2 vote-btn text-white rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
+            <button onClick={toggleUploadModal} disabled={!isConnected} className={`px-4 py-2 vote-btn text-white bg-gray-900 rounded ${!isConnected ? 'cursor-not-allowed' : ''}`}>
               Add Artwork
             </button>
           </div>
@@ -116,19 +124,20 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   return (
     <div className="mt-10 pt-10 mx-8">
       {/* <h1 className='text-center text-black font-mono mt-5'>{todayBattle.arttitle}</h1> */}
-    <p  className='text-center text-black font-mono mt-5 sm:font-thin md:text-lg pt-8 md:mt-9'>Welcome to GFXvs, where creators compete with their masterpieces and you vote to win exclusive NFT rewards! Each day, two pieces of art face off, and you decide the winner by casting your vote. For each artwork, one lucky voter is awarded a 1:1 NFT, while everyone else receives participation reward editions. Join the battle by connecting your NEAR wallet, vote for your favorite art, and earn exclusive NFT rewards!</p>
+      {timeRemaining !== null && (
+        <h2 className=" pt-10 md:mt-9 sm:text-xl md:text-2xl lg:text-4xl  mt-5 text-lg font-semibold font-mono justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
+          Time remaining: {formatTime(timeRemaining)}
+        </h2>
+      )}
+    <p  className='mt-2 text-center text-black font-mono  sm:font-thin md:text-lg'>Welcome to GFXvs, where creators compete with their masterpieces and you vote to win exclusive NFT rewards! Each day, two pieces of art face off, and you decide the winner by casting your vote. For each artwork, one lucky voter is awarded a 1:1 NFT, while everyone else receives participation reward editions. Join the battle by connecting your NEAR wallet, vote for your favorite art, and earn exclusive NFT rewards!</p>
     
-      <div className='battle-img flex' style={{ justifyContent: 'center' }}>
+      <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
   
             <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
         
       </div>
-      {timeRemaining !== null && (
-        <div className="text-lg font-semibold font-mono justify-center items-center text-black text-center py-6" style={{ whiteSpace: 'nowrap' }}>
-          Time remaining: {formatTime(timeRemaining)}
-        </div>
-      )}
+     
     </div>
   );
 };
