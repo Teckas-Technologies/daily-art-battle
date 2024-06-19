@@ -2,6 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { BattleData, useFetchBattles } from '@/hooks/battleHooks';
 import { useMbWallet } from "@mintbase-js/react";
 import Image from 'next/image';
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table"
 
 const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
     const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
@@ -60,21 +69,20 @@ const closePopUp = () => {
        
          
                 <div className="flex items-center justify-between w-full">
-                    <table className="min-w-full mt-4">
-                        <thead>
-                            <tr className="bg-white">
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Unique Rare</th>
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Derivative Editions</th>
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Rare Owner</th>
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Votes</th>
-                                <th className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-left" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <Table className="min-w-full mt-4">
+                        <TableHeader>
+                            <TableRow className="bg-white">
+                                <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Unique Rare</TableHead >
+                                <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Rare Owner</TableHead >
+                                <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Votes</TableHead >
+                                <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>Date</TableHead >
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {previousBattles.map((battle, index) => (
                               <>
-                                <tr key={index} className="border-b bg-white">
-                                    <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
+                                <TableRow key={index} className="border-b bg-white">
+                                    <TableCell className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center px-2 sm:px-6 py-2 text-xs sm:text-sm font-medium">
                                       <div className=" md:shrink-0">
                                             <Image
@@ -88,60 +96,21 @@ const closePopUp = () => {
                                             </div>
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art A' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
-                                        </td>
-                                    <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
-                                        <div className="flex justify-center px-2 sm:px-6 py-2  text-xs sm:text-sm font-medium md:shrink-0">
-                                        <div className="flex-none md:shrink-0">
-                                            <Image
-                                                src={battle.winningArt === "Art A" ? battle.artAgrayScale : battle.artBgrayScale}
-                                                alt={battle.winningArt === 'Art A' ? "Art A" : "Art B"}
-                                                width={100} 
-                                                height={100}
-                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 custom-img-size"
-                                                unoptimized
-                                            />
-                                            </div>
-                                        </div>
-                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art A' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
-                                        </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
+                                        </TableCell>
+                               
+                                    <TableCell className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
                                     {battle.winningArt === "Art A" ? battle.artAspecialWinner : battle.artBspecialWinner}
                                     <br></br>
-
-
-                                    <p className="cursor-pointer text-blue-600" onClick={() => handlePopUp(battle.winningArt === "Art A" ? battle.artAId : battle.artBId)}># Derivative</p>
-                                            {pop && selectedArtId === (battle.winningArt === "Art A" ? battle.artAId : battle.artBId) && (
-                                                <div className="popup absolute bg-white border rounded shadow-md p-4 mt-2" style={{ width: '400px', maxHeight: '400px', overflowY: 'auto' }}>
-                                                    <p>
-                                                        {battle.winningArt === 'Art A' ? (
-                                                            battle.artAvoters && battle.artAvoters.length > 0 ? (
-                                                                battle.artAvoters.map((vote, index) => <span key={index}>{vote}<br></br></span>)
-                                                            ) : (
-                                                                "No votes"
-                                                            )
-                                                        ) : (
-                                                            battle.artBvoters && battle.artBvoters.length > 0 ? (
-                                                                battle.artBvoters.map((vote, index) => <span key={index}>{vote}<br></br></span>)
-                                                            ) : (
-                                                                "No votes"
-                                                            )
-                                                        )}
-                                                    </p>
-                                                    <button onClick={closePopUp} className="mt-2 px-3 py-1 bg-blue-500 text-white rounded">Close</button>
-                                                </div>
-                                            )}
-
-
-                                    </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    </TableCell>
+                                    <TableCell className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
                                     {battle.winningArt === "Art A" ?`${battle.artAVotes}` : `${battle.artBVotes}`}
-                                    </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    </TableCell>
+                                    <TableCell className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
                                     {`${formatDate(battle.startTime)}`}
-                                    </td>
-                                </tr>
-                                <tr key={index} className="border-b bg-white">
-                                    <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow key={index} className="border-b bg-white">
+                                    <TableCell  className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center px-2 sm:px-6 py-2 text-xs sm:text-sm font-medium">
                                       <div className=" md:shrink-0">
                                             <Image
@@ -155,62 +124,28 @@ const closePopUp = () => {
                                             </div>
                                         </div>
                                         <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art B' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
-                                    </td>
-                                    <td className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
-                                        <div className="flex justify-center px-2 sm:px-6 py-2  text-xs sm:text-sm font-medium md:shrink-0">
-                                        <div className="flex-none md:shrink-0">
-                                            <Image
-                                                src={battle.winningArt === "Art A" ? battle.artBgrayScale : battle.artAgrayScale}
-                                                alt={battle.winningArt === 'Art A' ? "Art B" : "Art A"}
-                                                width={100} 
-                                                height={100}
-                                                className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 custom-img-size"
-                                                unoptimized
-                                            />
-                                            </div>
-                                        </div>
-                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art B' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
-                                        </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
+                                    </TableCell >
+                                
+                                    <TableCell  className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
                                     {battle.winningArt === "Art B" ? battle.artAspecialWinner : battle.artBspecialWinner}
                                     <br></br>
 
-                                    <p className="cursor-pointer text-blue-600" onClick={() => handlePopUp(battle.winningArt === "Art A" ? battle.artBId : battle.artAId)}># Derivative</p>
-                                            {pop && selectedArtId === (battle.winningArt === "Art A" ? battle.artBId : battle.artAId) && (
-                                                <div className="popup absolute bg-white border rounded shadow-md p-4 mt-2" style={{ width: '400px', maxHeight: '400px', overflowY: 'auto' }}>
-                                                    <p>
-                                                        {battle.winningArt === 'Art A' ? (
-                                                            battle.artBvoters && battle.artBvoters.length > 0 ? (
-                                                                battle.artBvoters.map((vote, index) => <span key={index}>{vote}<br></br></span>)
-                                                            ) : (
-                                                                "No votes"
-                                                            )
-                                                        ) : (
-                                                            battle.artAvoters && battle.artAvoters.length > 0 ? (
-                                                                battle.artAvoters.map((vote, index) => <span key={index}>{vote}<br></br></span>)
-                                                            ) : (
-                                                                "No votes"
-                                                            )
-                                                        )}
-                                                    </p>
-                                                    <button onClick={closePopUp} className="mt-2 px-3 py-1 bg-blue-500 text-white rounded">Close</button>
-                                                </div>
-                                            )}
-
-                                       </td>
                                    
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+
+                                       </TableCell >
+                                   
+                                    <TableCell  className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
                                     {battle.winningArt === "Art B" ?`${battle.artAVotes}` : `${battle.artBVotes}`}
                                    
-                                    </td>
-                                    <td className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
+                                    </TableCell >
+                                    <TableCell  className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
                                     {`${formatDate(battle.startTime)}`}
-                                    </td>
-                                </tr>
+                                    </TableCell >
+                                </TableRow>
                                 </>
                             ))}
-                        </tbody>
-                    </table>
+                        </TableBody>
+                    </Table>
 
                 </div>
                 <nav className="flex justify-center flex-wrap gap-4 mt-2">
