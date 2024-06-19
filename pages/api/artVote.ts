@@ -13,9 +13,11 @@ export const config = {
   maxDuration: 300,
 };
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+  try {
   await connectToDatabase();
   //POST method is used for creating upvote for the arts
-  if (req.method === 'POST') {
+  switch (req.method) {
+    case 'POST':
     try {
       const { participantId, artId } = req.body;
       const existingVote = await UpVoting.findOne({ participantId, artId });
@@ -29,11 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       console.error('Error submitting vote:', error);
       res.status(500).json({ success: false, error: "Failed to submit vote" });
     }
-  } else {
-    res.status(405).json({ success: false, error: "Method Not Allowed" });
-  }
-  //GET method is used for fetching upvote by id
-   if (req.method === 'GET') {
+    //GET method is used for fetching upvote by id
+  case 'GET':
     try {
       const { participantId, artId } = req.query;
       const existingVote = await UpVoting.findOne({ participantId, artId });
@@ -41,8 +40,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     } catch (error) {
       res.status(400).json({ success: false, error });
     }
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+
+  default:
+        res.setHeader('Allow', ['POST', 'GET']);
+        return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+}catch (error) {
+  console.error('API error:', error);
+}
+
 }
