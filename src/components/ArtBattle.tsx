@@ -99,14 +99,14 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     }
   };
   if (error) return <p>Error fetching battle details: {error}</p>;
-  if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
+//   if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
  
-  <div className="space-y-2">
-    <Skeleton className="h-4 w-[300px]" />
-    <Skeleton className="h-4 w-[300px]" />
-    <Skeleton className="h-40 w-[300px]" />
-  </div>
-</div>
+//   <div className="space-y-2">
+//     <Skeleton className="h-4 w-[300px] " />
+//     <Skeleton className="h-4 w-[300px]" />
+//     <Skeleton className="h-40 w-[300px]" />
+//   </div>
+// </div>
 
   if (!todayBattle) {
     return (
