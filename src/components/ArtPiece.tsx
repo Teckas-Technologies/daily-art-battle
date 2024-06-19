@@ -28,8 +28,15 @@ const ArtPiece: React.FC<ArtPieceProps> = ({ art, onVote, success,votedFor }) =>
     width={100}
     height={100}
  className=" w-36 h-36 md:shrink-0 max-w-full max-h-full lg:w-80 lg:h-80 shadow-lg"
- style={{ boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}
- 
+ style={{
+    background: 'rgba(255, 255, 255, 0.2)', // Semi-transparent white
+    backdropFilter: 'blur(10px)', // Blur effect
+    boxShadow: '0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 12px 30px 0 rgba(0, 0, 0, 0.25)', // Shadow effect
+    borderRadius: '10px', // Rounded corners
+    border: '1px solid rgba(255, 255, 255, 0.3)', // Light border to enhance glass effect
+    padding: '20px', // Padding for inner content
+    color: '#fff', // White text color for contrast
+  }}
   />
 
 <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-all text-center whitespace-pre-wrap">
