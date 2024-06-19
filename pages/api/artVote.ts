@@ -9,21 +9,18 @@ interface ResponseData {
   message?: string;
   error?: any;
 }
-export const config = {
-  maxDuration: 300,
-};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
-  try {
   await connectToDatabase();
   //POST method is used for creating upvote for the arts
-  switch (req.method) {
-    case 'POST':
+  if (req.method === 'POST') {
     try {
       const { participantId, artId } = req.body;
       const existingVote = await UpVoting.findOne({ participantId, artId });
       if (existingVote) {
         return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
       }else{
+
       const result = await findAndupdateArtById(artId,participantId);
       res.status(201).json({ success: true, data: result });
       }
@@ -31,8 +28,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       console.error('Error submitting vote:', error);
       res.status(500).json({ success: false, error: "Failed to submit vote" });
     }
-    //GET method is used for fetching upvote by id
-  case 'GET':
+  } else {
+    res.status(405).json({ success: false, error: "Method Not Allowed" });
+  }
+  //GET method is used for fetching upvote by id
+   if (req.method === 'GET') {
     try {
       const { participantId, artId } = req.query;
       const existingVote = await UpVoting.findOne({ participantId, artId });
@@ -40,13 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     } catch (error) {
       res.status(400).json({ success: false, error });
     }
-
-  default:
-        res.setHeader('Allow', ['POST', 'GET']);
-        return res.status(405).end(`Method ${req.method} Not Allowed`);
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-}catch (error) {
-  console.error('API error:', error);
-}
-
 }
