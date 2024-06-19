@@ -124,7 +124,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
               alt="Art A"
               width={100}
               height={100}
-              className="w-48 h-48 sm:w-36 sm:h-36 md:w-48 md:h-full"
+              className="w-48 h-48 sm:w-36 sm:h-36 md:w-48 md:h-48"
               loading="lazy"
               style={{ boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}
             />
