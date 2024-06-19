@@ -9,7 +9,9 @@ interface ResponseData {
   message?: string;
   error?: any;
 }
-
+export const config = {
+  maxDuration: 300,
+};
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   await connectToDatabase();
   //POST method is used for creating upvote for the arts
