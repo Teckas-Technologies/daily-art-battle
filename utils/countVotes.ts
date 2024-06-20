@@ -23,6 +23,7 @@ export const countVotes = async (): Promise<void> => {
         battle.artBVotes = artBVotes.length;
         battle.isBattleEnded = true;
         battle.winningArt = winningArt;
+        battle.totalVotes = artAVotes.length + artBVotes.length;
         battle.artAvoters = artAVotes.map(vote => vote.participantId);
         battle.artBvoters = artBVotes.map(vote => vote.participantId);
         console.log(battle.artBvoters);

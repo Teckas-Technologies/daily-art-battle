@@ -14,9 +14,10 @@ import {
 
 const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadModal }) => {
     const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
-    const { battles, error, loading,fetchMoreBattles,fetchBattlesbyVotes} = useFetchBattles();
+    const { battles, error, loading,fetchMoreBattles} = useFetchBattles();
     const { isConnected, selector, connect, activeAccountId } = useMbWallet();
     const [page, setPage] = useState(1);
+    const [sort,setSort] = useState("Date");
     const [hasnext,setHasNext] = useState(false);
     const [selectedArtId, setSelectedArtId] = useState<string | null>(null);
     const [pop, setPopUp] = useState(false);
@@ -36,13 +37,13 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
 
     const handleNext = () => {
         setPage(prevPage => prevPage + 1);
-        fetchMoreBattles(page + 1);
+        fetchMoreBattles(sort,page + 1);
       };
     
       const handlePrevious = () => {
         if (page > 1) {
           setPage(prevPage => prevPage - 1);
-          fetchMoreBattles(page - 1);
+          fetchMoreBattles(sort,page - 1);
         }
       };
 
@@ -60,6 +61,15 @@ const closePopUp = () => {
     setSelectedArtId(null); // Reset the selected art ID to close the popup
     setPopUp(false);
 };
+
+const handleVotes =()=>{
+ 
+  setSort("Date");
+}
+
+const handleDates =()=>{
+ setSort("Vote");
+}
     return (
         <div className="battle-table mt-8 pb-10 flex flex-col items-center w-full">
             <h2 className="text-xl font-bold text-black text-center">Previous Battles</h2>
@@ -74,8 +84,8 @@ const closePopUp = () => {
                             <TableRow className="bg-white">
                                 <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, borderRight: '1px solid black', color: 'black' }}>Unique Rare</TableHead >
                                 <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Rare Owner</TableHead >
-                                <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Votes</TableHead >
-                                <TableHead  className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>Date</TableHead >
+                                <TableHead  onClick={handleVotes} className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center cursor-pointer" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5,borderRight: '1px solid black', color: 'black' }}>Votes</TableHead >
+                                <TableHead  onClick={handleDates} className="px-2 sm:px-6 py-3  text-xs sm:text-sm text-center cursor-pointer" style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5, color: 'black' }}>Date</TableHead >
                             </TableRow>
                         </TableHeader>
                         <TableBody>
