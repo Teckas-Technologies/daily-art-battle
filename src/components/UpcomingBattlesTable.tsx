@@ -129,7 +129,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
               style={{ boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}
             />
           </div>
-          <p className="mt-2 py-2 text-gray-900 text-xs sm:text-sm font-small break-all text-center">{art.arttitle} by {art.artistId}</p>
+          <p className="mt-2 py-2 text-gray-900 text-xs sm:text-sm font-small break-words text-center">{art.arttitle} by {art.artistId}</p>
 
           <div className="flex justify-between items-center mt-auto p-4">
             <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
