@@ -95,7 +95,7 @@ const closePopUp = () => {
                                             />
                                             </div>
                                         </div>
-                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art A' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
+                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-all text-center">{battle.winningArt === 'Art A' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
                                         </TableCell>
                                
                                     <TableCell className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
@@ -123,7 +123,7 @@ const closePopUp = () => {
                                             />
                                             </div>
                                         </div>
-                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-center">{battle.winningArt === 'Art B' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
+                                        <p className="mt-2 py-2 text-xs sm:text-sm font-small break-all text-center">{battle.winningArt === 'Art B' ? `${battle.artAtitle} by ${battle.artAartistId} `: `${battle.artBtitle} by ${battle.artBartistId} `}</p>
                                     </TableCell >
                                 
                                     <TableCell  className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner break-all">
