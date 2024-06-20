@@ -23,7 +23,7 @@ export const countVotes = async (): Promise<void> => {
         battle.artBVotes = artBVotes.length;
         battle.isBattleEnded = true;
         battle.winningArt = winningArt;
-        battle.totalVotes = artAVotes.length + artBVotes.length;
+        battle.totalVotes = votes.length;
         battle.artAvoters = artAVotes.map(vote => vote.participantId);
         battle.artBvoters = artBVotes.map(vote => vote.participantId);
         console.log(battle.artBvoters);
@@ -32,6 +32,7 @@ export const countVotes = async (): Promise<void> => {
        await ArtTable.findOneAndUpdate(
         { _id: battle.artAId }, 
         { $set: { isCompleted: true,
+         votes:artAVotes.length
             
          } }, 
         { new: true } 
@@ -39,7 +40,8 @@ export const countVotes = async (): Promise<void> => {
 
       await ArtTable.findOneAndUpdate(
         { _id: battle.artBId }, 
-        { $set: { isCompleted: true } }, 
+        { $set: { isCompleted: true,
+          votes:artAVotes.length } }, 
         { new: true } 
       );
         console.log("Art A Votes:", artAVotes.length);

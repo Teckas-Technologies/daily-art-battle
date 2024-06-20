@@ -15,7 +15,6 @@ export interface BattleData {
   isNftMinted:Boolean;
   artAVotes:Number;
   artBVotes:Number;
-  totalVotes:Number;
   artAgrayScale: string;
   artBgrayScale: string;
   artAcolouredArt: string;
@@ -125,11 +124,10 @@ export const useFetchBattles = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-      const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
+      const fetchBattles = async (page: number, limit: number = 10) => {
           setLoading(true);
           setError(null);
           try {
-            console.log(sort);
               const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
@@ -143,7 +141,26 @@ export const useFetchBattles = () => {
           }
       };
 
-  
-  return { battles, loading, error,fetchMoreBattles: fetchBattles};
-};
+      const fetchBattlesByVotes = async (page: number, limit: number = 10) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data: BattlesResponse = await response.json();
+         
+            setBattles(data);
+        } catch (err) {
+            console.error('Error fetching battles:', err);
+            setError("Error fetching battles!");
+        } finally {
+            setLoading(false);
+        }
+    };
+      useEffect(() => {
+         fetchBattles(1);
+      }, []);
+     
 
+  return { battles, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };
+};

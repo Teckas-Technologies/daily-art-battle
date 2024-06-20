@@ -27,6 +27,23 @@ export const mintNfts = async (): Promise<void> => {
         }
         battle.artAspecialWinner = artAspecialWinner;
         battle.artBspecialWinner = artBspecialWinner;
+
+        await ArtTable.findOneAndUpdate(
+            { _id: battle.artAId }, 
+            { $set: { isCompleted: true,
+                specialWinner:artAspecialWinner
+                
+             } }, 
+            { new: true } 
+          );
+    
+          await ArtTable.findOneAndUpdate(
+            { _id: battle.artBId }, 
+            { $set: { isCompleted: true,
+                specialWinner:artAspecialWinner
+               } }, 
+            { new: true } 
+          );
         battle.isNftMinted = true;
         console.log(battle);
        const res =  await battle.save();

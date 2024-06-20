@@ -12,6 +12,8 @@ export interface ArtData {
   uploadedTime : Date;
   upVotes : number;
   isCompleted:Boolean;
+  specialWinner?: string;
+  votes?:number;
 }
 
 interface UseSaveDataResult {
