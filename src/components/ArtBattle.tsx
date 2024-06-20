@@ -128,7 +128,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
            {formatTime(timeRemaining)}
         </h2>
       )}
-    <p  className='mt-2 text-center text-black font-mono  sm:font-thin md:text-lg'>Welcome to GFXvs, where creators compete with their masterpieces and you vote to win exclusive NFT rewards! Each day, two pieces of art face off, and you decide the winner by casting your vote. For each artwork, one lucky voter is awarded a 1:1 NFT, while everyone else receives participation reward editions. Join the battle by connecting your NEAR wallet, vote for your favorite art, and earn exclusive NFT rewards!</p>
+    <p  className='mt-2 text-center text-black font-mono  sm:font-thin md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
     
       <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
