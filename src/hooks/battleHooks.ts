@@ -145,7 +145,7 @@ export const useFetchBattles = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
+            const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}&sort=vote`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data: BattlesResponse = await response.json();
          
@@ -164,3 +164,4 @@ export const useFetchBattles = () => {
 
   return { battles, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };
 };
+
