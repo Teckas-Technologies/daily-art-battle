@@ -141,7 +141,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
           </span>
           <Button
             onClick={() => onVote(art._id)}
-            className="h-8 w-15 text-white px-2 py-1 sm:px-3 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base rounded-md"
+            className="text-xs h-15 text-white px-2 py-1 sm:px-3 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base rounded-md"
           >
             Vote
           </Button>
