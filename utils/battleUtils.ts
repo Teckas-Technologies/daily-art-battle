@@ -63,7 +63,7 @@ export const findPreviousBattlesByVotes = async (page: number, limit: number): P
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ endTime: -1 }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ totalVotes: -1 }).skip(skip).limit(limit);
   return { pastBattles };
 }
 
