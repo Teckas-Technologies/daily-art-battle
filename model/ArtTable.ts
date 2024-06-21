@@ -8,12 +8,14 @@ interface ArtTable extends Document {
   grayScale: string;
   colouredArtReference: string;
   grayScaleReference: string;
-  uploadedTime : Date;
+  uploadedTime: Date;
   upVotes : Number;
   isCompleted:Boolean;
   isStartedBattle:Boolean;
   specialWinner?: string;
   votes?:Number;
+  battleTime?: Date;
+  endTime?: Date;
 }
 
 const ArtTableSchema = new mongoose.Schema({
@@ -29,6 +31,8 @@ const ArtTableSchema = new mongoose.Schema({
   isCompleted:{type: Boolean,default:false},
   isStartedBattle:{type: Boolean,default:false},
   specialWinner: { type: String, required: false },
+  battleTime: { type: Date},
+  endTime: { type: Date},
 });
 
 export default mongoose.models.ArtTable || model<ArtTable>('ArtTable', ArtTableSchema);
