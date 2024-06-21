@@ -114,6 +114,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
 
   return (
 <div className="mx-8 overflow-hidden battle-table container my-12 mx-auto px-4 md:px-12" style={{ zIndex: '-1' }}>
+
 <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
   {artData.slice(-10).map((art, index) => (
     <div key={index} className="flex justify-center overflow-hidden">
