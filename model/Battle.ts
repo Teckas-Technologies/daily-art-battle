@@ -15,6 +15,7 @@ interface Battle extends Document {
   isNftMinted:Boolean;
   artAVotes:Number;
   artBVotes:Number;
+  totalVotes:Number;
   artAgrayScale: string;
   artBgrayScale: string;
   artAcolouredArt: string;
@@ -53,6 +54,7 @@ const BattleSchema = new mongoose.Schema({
   winningArt: { type: String, enum: ['Art A', 'Art B'], required: false },
   artAVotes: { type: Number, default: 0 },
   artBVotes: { type: Number, default: 0 },
+  totalVotes: { type: Number, default: 0 },
   artAspecialWinner: { type: String, required: false },
   artBspecialWinner: { type: String, required: false },
   artAvoters: { type: [String], required: false },

@@ -19,6 +19,25 @@ export const findAllArts = async (page: number, limit: number): Promise<any> => 
     .skip(skip)
     .limit(limit);
 };
+
+export const findPreviousArts = async (page: number, limit: number): Promise<any> => {
+  await connectToDatabase();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const skip = (page - 1) * limit;
+  const pastBattles = await ArtTable.find({ endTime: { $lt: today } }).sort({ endTime: -1 }).skip(skip).limit(limit);
+  return { pastBattles };
+}
+
+export const findPreviousArtsByVotes = async (page: number, limit: number): Promise<any> => {
+  await connectToDatabase();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const skip = (page - 1) * limit;
+  const pastBattles = await ArtTable.find({ endTime: { $lt: today } }).sort({ votes: -1 }).skip(skip).limit(limit);
+  return { pastBattles };
+} 
+
 export const updateArtById = async (id: any): Promise<any> => {
   await connectToDatabase();
    return await ArtTable.findByIdAndUpdate(

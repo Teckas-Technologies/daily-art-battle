@@ -21,12 +21,27 @@ export const mintNfts = async (): Promise<void> => {
         console.log("art B",artBspecialWinner);
         if (artAspecialWinner && artBspecialWinner) {
            console.log("Winner")
-          const res =  await serverMint(artAspecialWinner, battle.artAcolouredArt, battle.artAcolouredArtReference,true);
-          console.log("---------------",res);
+            await serverMint(artAspecialWinner, battle.artAcolouredArt, battle.artAcolouredArtReference,true);
             await serverMint(artBspecialWinner, battle.artBcolouredArt, battle.artBcolouredArtReference,true);
         }
         battle.artAspecialWinner = artAspecialWinner;
         battle.artBspecialWinner = artBspecialWinner;
+
+        await ArtTable.findOneAndUpdate(
+            { _id: battle.artAId }, 
+            { $set: { isCompleted: true,
+                specialWinner:artAspecialWinner  
+             } }, 
+            { new: true } 
+          );
+    
+          await ArtTable.findOneAndUpdate(
+            { _id: battle.artBId }, 
+            { $set: { isCompleted: true,
+                specialWinner:artAspecialWinner
+               } }, 
+            { new: true } 
+          );
         battle.isNftMinted = true;
         console.log(battle);
        const res =  await battle.save();
