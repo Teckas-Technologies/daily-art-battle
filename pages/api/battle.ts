@@ -28,12 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if(sort=='vote'){
             const battles = await findPreviousBattlesByVotes(page,limit);
             return res.status(200).json(battles);
-          }else if(sort=='date'){
+          }else{
+          
           const battles = await findPreviousBattles(page,limit);
           return res.status(200).json(battles);
-          }else{
-            const battles = await findPreviousBattles(page,limit);
-            return res.status(200).json(battles);
           }
         }
          else {
