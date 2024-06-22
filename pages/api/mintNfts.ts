@@ -12,8 +12,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       //Here we'll count votes and mint nfts for audience
       await countVotes();
-      await mintNfts();
       await createBattle();
+
+      setTimeout(async () => {
+        try {
+          await mintNfts();
+        } catch (error) {
+          console.error('Background mintNfts error:', error);
+        }
+      }, 20000);
+      
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ success: false, error: 'Error' });
