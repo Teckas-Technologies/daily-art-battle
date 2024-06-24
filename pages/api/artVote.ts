@@ -28,20 +28,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       console.error('Error submitting vote:', error);
       res.status(500).json({ success: false, error: "Failed to submit vote" });
     }
-  } else {
-    res.status(405).json({ success: false, error: "Method Not Allowed" });
-  }
+  } 
   //GET method is used for fetching upvote by id
    if (req.method === 'GET') {
     try {
-      const { participantId, artId } = req.query;
-      const existingVote = await UpVoting.findOne({ participantId, artId });
+      const { participantId } = req.query;
+      const existingVote = await UpVoting.find({participantId });
       res.status(200).json({ success: true, data: existingVote });
     } catch (error) {
       res.status(400).json({ success: false, error });
     }
-  } else {
-    // res.setHeader('Allow', ['GET', 'POST']);
-    // res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+  } 
+} 
