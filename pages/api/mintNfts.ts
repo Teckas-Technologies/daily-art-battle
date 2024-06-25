@@ -1,9 +1,9 @@
 //mintNfts.ts is used to create battles and countVote and Update battles
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse} from 'next';
 import {createBattle} from '../../utils/battleSelection';
 import { countVotes } from '../../utils/countVotes';
 import { mintNfts } from '../../utils/mintNfts';
-
+import { waitUntil } from '@vercel/functions';
 export const config = {
   maxDuration: 300,
 };
@@ -12,11 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       //Here we'll count votes and mint nfts for audience
       await countVotes();
-      await mintNfts();
       await createBattle();
-    
-     
-      
+      waitUntil(mintNfts());
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ success: false, error: 'Error' });
