@@ -38,7 +38,7 @@ export const mintNfts = async (): Promise<void> => {
           await ArtTable.findOneAndUpdate(
             { _id: battle.artBId }, 
             { $set: { isCompleted: true,
-                specialWinner:artAspecialWinner
+                specialWinner:artBspecialWinner
                } }, 
             { new: true } 
           );

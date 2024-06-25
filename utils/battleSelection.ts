@@ -23,7 +23,7 @@ export const findTopTwoArts = async (): Promise<any[]> => {
 };
 
 export const createBattle = async (): Promise<any> => {
-  const battles = await Battle.find({isNftMinted:false});
+  const battles = await Battle.find({isBattleEnded:false});
   if(battles.length<=0){
   const [artA, artB] = await findTopTwoArts();
     const startDate = await getNextAvailableDate();
