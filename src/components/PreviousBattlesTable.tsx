@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ArtData,useFetchBattles } from '@/hooks/artHooks';
 import { useMbWallet } from "@mintbase-js/react";
 import Image from 'next/image';
+import {  SPECIAL_WINNER_CONTRACT} from "../config/constants";
 import {
     Table,
     TableBody,
@@ -87,7 +88,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                     <TableCell className="px-2 sm:px-6 py-4  text-xs sm:text-sm font-medium" style={{ color: 'black' }}>
                                         <div className="flex justify-center px-2 sm:px-6 py-2 text-xs sm:text-sm font-medium">
                                       <div className=" md:shrink-0">
-                                         <a href={`https://www.tradeport.xyz/near/collection/gfxvsrares.mintbase1.near?bottomTab=trades&tab=items&tokenId=${battle.tokenId}`}>   <Image
+                                         <a href={`https://www.tradeport.xyz/near/collection/${SPECIAL_WINNER_CONTRACT}?bottomTab=trades&tab=items&tokenId=${battle.tokenId}`}>   <Image
                                              src={ battle.colouredArt}
                                              alt={'Art'}
                                                 width={100} 
