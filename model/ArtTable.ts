@@ -29,7 +29,7 @@ const ArtTableSchema = new mongoose.Schema({
   uploadedTime: { type: Date, required: true },
   upVotes: { type: Number, default: 0 },
   votes: { type: Number, default: 0 },
-  tokenId: { type: Number, default: 0 },
+  tokenId: { type: Number, default: -1 },
   isCompleted:{type: Boolean,default:false},
   isStartedBattle:{type: Boolean,default:false},
   specialWinner: { type: String, required: false },

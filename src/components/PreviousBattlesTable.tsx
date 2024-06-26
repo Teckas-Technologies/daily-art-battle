@@ -115,7 +115,6 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                     {`${battle.endTime ? formatDate(battle.endTime) : "Date not available"}`}
                                     </TableCell>
                                 </TableRow>
-
                                 </>
                             ))}
                         </TableBody>
