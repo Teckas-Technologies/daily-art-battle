@@ -17,6 +17,7 @@ export interface ArtData {
   votes?:Number;
   battleTime?: Date;
   endTime?: Date;
+  tokenId:Number;
 }
 
 

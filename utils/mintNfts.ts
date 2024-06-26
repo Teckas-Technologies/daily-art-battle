@@ -13,18 +13,46 @@ export const mintNfts = async (): Promise<void> => {
       console.log("Fetching completed battles",battle);
     if(battle){
         console.log(battle);
-        const resa = await mintNFTsForParticipants(battle.artAvoters,battle.artAgrayScale,battle.artAgrayScaleReference);
-       const resq = await mintNFTsForParticipants(battle.artBvoters,battle.artBgrayScale,battle.artBgrayScaleReference);
+        await mintNFTsForParticipants(battle.artAvoters,battle.artAgrayScale,battle.artAgrayScaleReference);
+       await mintNFTsForParticipants(battle.artBvoters,battle.artBgrayScale,battle.artBgrayScaleReference);
         const artAspecialWinner = selectRandomWinner(battle.artAvoters);
         const artBspecialWinner = selectRandomWinner(battle.artBvoters);
-        console.log("minted participanta A",resa);
-        console.log("minted participanta A",resq);
+        let tokenIdA ;
+        let tokenIdB;
         console.log("art A",artAspecialWinner);
         console.log("art B",artBspecialWinner);
         if (artAspecialWinner && artBspecialWinner) {
            console.log("Winner")
-            await serverMint(artAspecialWinner, battle.artAcolouredArt, battle.artAcolouredArtReference,true);
-            await serverMint(artBspecialWinner, battle.artBcolouredArt, battle.artBcolouredArtReference,true);
+           const res1 =  await serverMint(artAspecialWinner, battle.artAcolouredArt, battle.artAcolouredArtReference,true);
+           const res2 =  await serverMint(artBspecialWinner, battle.artBcolouredArt, battle.artBcolouredArtReference,true);
+           const logs1:any[] = res1.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
+           const tokenIds1 = logs1.map(log => {
+            const match = log.match(/EVENT_JSON:(.*)/);
+            if (match && match[1]) {
+              const eventData = JSON.parse(match[1]);
+              if (eventData.data && eventData.data.length > 0) {
+                return eventData.data[0].token_ids;
+              }
+            }
+            return null;
+          }).filter(tokenIds => tokenIds !== null).flat();
+          
+          console.log('Token IDs:', tokenIds1);
+          tokenIdA = tokenIds1[0];
+           const logs2:any[] = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
+           const tokenIds2 = logs2.map(log => {
+            const match = log.match(/EVENT_JSON:(.*)/);
+            if (match && match[1]) {
+              const eventData = JSON.parse(match[1]);
+              if (eventData.data && eventData.data.length > 0) {
+                return eventData.data[0].token_ids;
+              }
+            }
+            return null;
+          }).filter(tokenIds => tokenIds !== null).flat();
+          
+          console.log('Token IDs:', tokenIds2[0]);
+          tokenIdB = tokenIds2[0];
         }
         battle.artAspecialWinner = artAspecialWinner;
         battle.artBspecialWinner = artBspecialWinner;
@@ -32,7 +60,8 @@ export const mintNfts = async (): Promise<void> => {
         await ArtTable.findOneAndUpdate(
             { _id: battle.artAId }, 
             { $set: { isCompleted: true,
-                specialWinner:artAspecialWinner  
+                specialWinner:artAspecialWinner  ,
+                tokenId : tokenIdA
              } }, 
             { new: true } 
           );
@@ -40,7 +69,8 @@ export const mintNfts = async (): Promise<void> => {
           await ArtTable.findOneAndUpdate(
             { _id: battle.artBId }, 
             { $set: { isCompleted: true,
-                specialWinner:artBspecialWinner
+                specialWinner:artBspecialWinner,
+                tokenId : tokenIdB
                } }, 
             { new: true } 
           );
