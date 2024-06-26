@@ -101,11 +101,18 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMove = (event:any) => {
     if (!isDragging) return;
 
+    let clientX;
+    if (event.type === 'touchmove') {
+      clientX = event.touches[0].clientX;
+    } else {
+      clientX = event.clientX;
+    }
+
     const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.max(0, Math.min(event.clientX - rect.left, rect.width));
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
     const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
 
     setSliderPosition(percent);
@@ -118,6 +125,15 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+
+  const handleTouchStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
 
   if (error) return <p>Error fetching battle details: {error}</p>;
 //   if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
@@ -153,41 +169,40 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         </h2>
       )}
     <p  className='mt-2 text-center text-black font-mono  sm:font-thin mb-8 md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
-      <div className="w-full relative" onMouseUp={handleMouseUp}>
-        <div
-          className="relative w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
-          onMouseMove={handleMove}
-          onMouseDown={handleMouseDown}
-        >
+     
+    <div className="w-full relative" onMouseUp={handleMouseUp} onTouchEnd={handleTouchEnd}>
+      <div
+        className="relative w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
+        onMouseMove={handleMove}
+        onMouseDown={handleMouseDown}
+        onTouchMove={handleMove}
+        onTouchStart={handleTouchStart}
+      >
         <img
           alt={artB.title}
-          
           draggable={false}
           src={artB.imageUrl}
-
-       />
-          <div
-            className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
-            style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-          >
-           <img
-            
-        
+        />
+        <div
+          className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
+          style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+        >
+          <img
             draggable={false}
             alt={artA.title}
             src={artA.imageUrl}
           />
-          </div>
-          <div
-            className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
-            style={{
-              left: `calc(${sliderPosition}% - 1px)`,
-            }}
-          >
-            <div className="bg-white absolute rounded-full h-3 w-3 -left-1 top-[calc(50%-5px)]" />
-          </div>
+        </div>
+        <div
+          className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
+          style={{
+            left: `calc(${sliderPosition}% - 1px)`,
+          }}
+        >
+          <div className="bg-white absolute rounded-full h-3 w-3 -left-1 top-[calc(50%-5px)]" />
         </div>
       </div>
+    </div>
    
     <div className="flex items-center justify-center space-x-">
   <div className="mr-6">
