@@ -13,10 +13,12 @@ export const mintNfts = async (): Promise<void> => {
       console.log("Fetching completed battles",battle);
     if(battle){
         console.log(battle);
-        await mintNFTsForParticipants(battle.artAvoters,battle.artAgrayScale,battle.artAgrayScaleReference);
-        await mintNFTsForParticipants(battle.artBvoters,battle.artBgrayScale,battle.artBgrayScaleReference);
+        const resa = await mintNFTsForParticipants(battle.artAvoters,battle.artAgrayScale,battle.artAgrayScaleReference);
+       const resq = await mintNFTsForParticipants(battle.artBvoters,battle.artBgrayScale,battle.artBgrayScaleReference);
         const artAspecialWinner = selectRandomWinner(battle.artAvoters);
         const artBspecialWinner = selectRandomWinner(battle.artBvoters);
+        console.log("minted participanta A",resa);
+        console.log("minted participanta A",resq);
         console.log("art A",artAspecialWinner);
         console.log("art B",artBspecialWinner);
         if (artAspecialWinner && artBspecialWinner) {
