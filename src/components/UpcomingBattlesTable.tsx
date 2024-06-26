@@ -147,18 +147,23 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
               backgroundSize: 'cover',
             }}
           />
-         <Button
-          onClick={() => onVote(art._id)}
-          className={`absolute bottom-0 right-1 text-white text-md sm:text-xl md:text-2xl hover:bg-gray-400  h-6 right-0 ${votes.some(vote => vote.artId === art._id && vote.participantId === activeAccountId)
-            ? 'bg-green-700 hover:bg-green-400 '
-            : 'bg-blue-700 hover:bg-blue-400'
-        }}bg-blue-700 text-white rounded-md px-2 py-1 text-xs sm:px-3 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base sm:h-12 md:h-15`}
-        >
-         
-        <FontAwesomeIcon icon={faArrowUp} className="text-white mr-1" />
-          
-            <h2 className="text-white text-md sm:text-xl md:text-xl">{`${art.upVotes}`}</h2>
-        </Button>
+         <button
+  onClick={() => onVote(art._id)}
+  className={`
+    absolute bottom-0 right-1 text-white text-md sm:text-xl md:text-2xl h-6 right-0
+    ${votes.some(vote => vote.artId === art._id && vote.participantId === activeAccountId)
+      ? 'bg-green-800'
+      : 'bg-blue-700 hover:bg-blue-400'}
+    text-white rounded-md px-2 py-1 text-xs sm:px-3 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base sm:h-12 md:h-15
+  `}
+  disabled={votes.some(vote => vote.artId === art._id && vote.participantId === activeAccountId)}
+>
+<div className="flex items-center">
+    <FontAwesomeIcon icon={faArrowUp} className="text-white mr-1 flex-shrink-0" />
+    <h2 className="text-white text-md sm:text-xl md:text-xl flex-shrink-0">{`${art.upVotes}`}</h2>
+  </div>
+
+</button>
 
 
         </div>  
