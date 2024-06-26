@@ -38,6 +38,7 @@
     "@sentry/node": "^8.0.0",
     "@sentry/tracing": "^7.114.0",
     "@types/node-cron": "^3.0.11",
+    "@vercel/functions": "^1.0.2",
     "big.js": "^6.2.1",
     "bn.js": "^5.2.1",
     "class-variance-authority": "^0.7.0",

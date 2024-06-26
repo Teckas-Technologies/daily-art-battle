@@ -4,6 +4,8 @@ import ArtPiece from './ArtPiece';
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from '@/hooks/battleHooks';
 import { useVoting } from '../hooks/useVoting';
+import { Button } from './ui/button';
+import { ART_BATTLE_CONTRACT } from '@/config/constants';
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -61,7 +63,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  
+ 
 
   useEffect(() => {
     if (todayBattle) {
@@ -94,6 +96,29 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       alert('Failed to submit vote. Maybe you already voted!');
     }
   };
+  
+
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!isDragging) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(event.clientX - rect.left, rect.width));
+    const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
+
+    setSliderPosition(percent);
+  };
+
+  const handleMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   if (error) return <p>Error fetching battle details: {error}</p>;
 //   if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
  
@@ -122,21 +147,82 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 
   return (
     <div className="mt-10 pt-10 mx-8">
-      {/* <h1 className='text-center text-black font-mono mt-5'>{todayBattle.arttitle}</h1> */}
-      {timeRemaining !== null && (
+       {timeRemaining !== null && (
         <h2 className=" pt-10 md:mt-9 sm:text-xl md:text-2xl lg:text-4xl  mt-5 text-lg font-semibold font-mono justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
            {formatTime(timeRemaining)}
         </h2>
       )}
-    <p  className='mt-2 text-center text-black font-mono  sm:font-thin md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
+    <p  className='mt-2 text-center text-black font-mono  sm:font-thin mb-8 md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
+      <div className="w-full relative" onMouseUp={handleMouseUp}>
+        <div
+          className="relative w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
+          onMouseMove={handleMove}
+          onMouseDown={handleMouseDown}
+        >
+        <img
+          alt={artB.title}
+          
+          draggable={false}
+          src={artB.imageUrl}
+
+       />
+          <div
+            className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
+            style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+          >
+           <img
+            
+        
+            draggable={false}
+            alt={artA.title}
+            src={artA.imageUrl}
+          />
+          </div>
+          <div
+            className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
+            style={{
+              left: `calc(${sliderPosition}% - 1px)`,
+            }}
+          >
+            <div className="bg-white absolute rounded-full h-3 w-3 -left-1 top-[calc(50%-5px)]" />
+          </div>
+        </div>
+      </div>
+   
+    <div className="flex items-center justify-center space-x-">
+  <div className="mr-6">
+    {votedFor === artA.name ? (
+      <Button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+        Voted {artA.name}
+      </Button>
+    ) : (
+      <Button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+        Pick {artA.name}
+      </Button>
+    )}
+  </div>
+  <div className="ml-6">
+    {votedFor === artB.name ? (
+      <Button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+        Voted {artB.name}
+      </Button>
+    ) : (
+      <Button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+        Pick {artB.name}
+      </Button>
+    )}
+  </div>
+</div>
+
+     
     
-      <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
+      {/* <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
   
             <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
         
       </div>
-     
+      */}
     </div>
   );
 };
