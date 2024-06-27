@@ -53,4 +53,3 @@ export const countVotes = async (): Promise<void> => {
     }
 }
 };
-
