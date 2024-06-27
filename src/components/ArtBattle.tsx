@@ -236,7 +236,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       )}
     </div>
   </div>
-  <div className="flex flex-col items-center ml-6">
+  <div className="flex flex-col items-center ml-8">
     <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal truncate">
       {artB.title.length > 40 ? `${artB.title.slice(0, 40)}...` : artB.title} by {artB.artistId}
     </p>
