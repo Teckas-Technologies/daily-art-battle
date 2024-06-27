@@ -113,7 +113,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                                     {`${battle.votes}`}
                                     </TableCell>
                                     <TableCell className="mt-2 py-2 text-xs sm:text-sm font-small break-words text-black text-center special-winner">
-                                    {`${battle.endTime ? formatDate(battle.endTime) : "Date not available"}`}
+                                    {`${battle.battleTime ? formatDate(battle.battleTime) : "Date not available"}`}
                                     </TableCell>
                                 </TableRow>
                                 </>
