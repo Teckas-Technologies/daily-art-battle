@@ -15,7 +15,7 @@ export const NearWalletConnector = () => {
   return(
     
       <nav className="navbar bg-gray-950" style={{ width: "100vw", display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, padding: '20px 5vw'}}>
-<div className="flex items-center flex-col md:flex-row">
+<div className="flex items-center flex-col md:flex-col">
 <img
           src="/images/logo.png"
           alt="GFXvs"
@@ -28,17 +28,17 @@ export const NearWalletConnector = () => {
   </h1> */}
 </div>
         {isConnected ? (
-       <div className="flex flex-col sm:flex-row justify-center items-center mt-4">
-       <p className="px-1 text-xs sm:text-sm md:text-base">{activeAccountId}</p>
-       <button className="mt-2 sm:mt-0 sm:ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={handleSignout}>
+       <div className="flex flex-row justify-center items-center mt-4">
+       <p className="px-2 ml-2 text-xs sm:text-sm md:text-base">{activeAccountId}</p>
+       {/* <button className="mt-2 sm:mt-0 sm:ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={handleSignout}>
          Disconnect
-       </button>     
+       </button>      */}
+         <img onClick={handleSignout} src="/wallet lock.png" className="w-10 h-10 cursor-pointer"></img>
           </div>  
         ) : (
-          <button className="px-4 py-2 flex connect-btn rounded" style={{ width: 'auto', display: 'flex', alignItems: 'center', gap: 8, fontSize: 'clamp(0.75rem, 2vw, 1rem)' }} onClick={handleSignIn}>
-            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
-            Connect To NEAR
-          </button>
+          // <button className="px-4 py-2 flex connect-btn rounded" style={{ width: 'auto', display: 'flex', alignItems: 'center', gap: 8, fontSize: 'clamp(0.75rem, 2vw, 1rem)' }} onClick={handleSignIn}>
+           <img onClick={handleSignIn} src="/wallet open.png" className="w-10 h-10 cursor-pointer"></img>
+          // </button>
         )}
       </nav>
       
