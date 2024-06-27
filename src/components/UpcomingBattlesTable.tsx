@@ -142,6 +142,8 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
             className="w-full h-full object-cover"
             loading="lazy"
             style={{
+              height: '100%', // Ensuring the image takes the full height of its container
+              aspectRatio: '1/1', 
               boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
               backgroundPosition: 'center',
               backgroundSize: 'cover',
