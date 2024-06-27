@@ -4,6 +4,8 @@ import ArtPiece from './ArtPiece';
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from '@/hooks/battleHooks';
 import { useVoting } from '../hooks/useVoting';
+import { Button } from './ui/button';
+import { ART_BATTLE_CONTRACT } from '@/config/constants';
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -58,11 +60,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     const hours = Math.floor(time / (1000 * 60 * 60));
     const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    const milliseconds = time % 1000;
-    return `${hours}h ${minutes}m ${seconds}s ${milliseconds}ms`;
+    return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  
+ 
 
   useEffect(() => {
     if (todayBattle) {
@@ -95,6 +96,45 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       alert('Failed to submit vote. Maybe you already voted!');
     }
   };
+  
+
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMove = (event:any) => {
+    if (!isDragging) return;
+
+    let clientX;
+    if (event.type === 'touchmove') {
+      clientX = event.touches[0].clientX;
+    } else {
+      clientX = event.clientX;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
+
+    setSliderPosition(percent);
+  };
+
+  const handleMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+
   if (error) return <p>Error fetching battle details: {error}</p>;
 //   if(loading) return <div className="flex items-center justify-center space-x-4" style={{marginTop:'100px'}} >
  
@@ -123,21 +163,114 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 
   return (
     <div className="mt-10 pt-10 mx-8">
-      {/* <h1 className='text-center text-black font-mono mt-5'>{todayBattle.arttitle}</h1> */}
-      {timeRemaining !== null && (
-        <h2 className=" pt-10 md:mt-9 sm:text-xl md:text-2xl lg:text-4xl  mt-5 text-lg font-semibold font-mono justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
-          Time remaining: {formatTime(timeRemaining)}
+       {timeRemaining !== null && (
+        <h2 className=" pt-10 md:mt-9 text-xl font-bold text-black text-center justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
+           {formatTime(timeRemaining)}
         </h2>
       )}
-    <p  className='mt-2 text-center text-black font-mono  sm:font-thin md:text-lg'>Welcome to GFXvs, where creators compete with their masterpieces and you vote to win exclusive NFT rewards! Each day, two pieces of art face off, and you decide the winner by casting your vote. For each artwork, one lucky voter is awarded a 1:1 NFT, while everyone else receives participation reward editions. Join the battle by connecting your NEAR wallet, vote for your favorite art, and earn exclusive NFT rewards!</p>
+    <p  className='mt-2 text-center text-black font-mono  sm:font-thin mb-8 md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
+     
+    <div className="w-full relative" onMouseUp={handleMouseUp} onTouchEnd={handleTouchEnd}>
+  <div
+    className="relative w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+    onMouseMove={handleMove}
+    onMouseDown={handleMouseDown}
+    onTouchMove={handleMove}
+    onTouchStart={handleTouchStart}
+  >
+    <img
+      alt={artB.title}
+      draggable={false}
+      src={artB.imageUrl}
+      className='w-full h-full object-cover'
+    />
+    <div
+      className="absolute top-0 left-0 right-0 bg-white w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+      style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+    >
+      <img
+        draggable={false}
+        alt={artA.title}
+        src={artA.imageUrl}
+        className='w-full h-full object-cover'
+      />
+    </div>
+    <div
+      className="absolute top-0 bottom-0 w-1   cursor-ew-resize"
+      style={{
+        left: `calc(${sliderPosition}% - 1px)`,
+        backgroundColor:"#30f216"
+      }}
+    >
+     <div className="absolute rounded-full h-5 w-5 -left-2 top-[calc(50%-12px)] flex items-center justify-center border border-black" style={{
+        backgroundColor:"#30f216"
+      }}>
+      </div>
+    </div>
+  </div>
+</div>
+
+   
+<div className="flex items-center justify-center px-4">
+  <div className="flex flex-col items-center px-4">
+    <p className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all" style={{ maxWidth: '300px' }}>
+    {artA.title} by {artA.artistId}
+    </p>
+    <div className="flex items-center mt-auto p-4">
+    {votedFor === artA.name ? (
+      <Button
+        onClick={() => onVote(artA.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs py-4 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
+        Voted {artA.name}
+      </Button>
+    ) : (
+      <Button
+        onClick={() => onVote(artA.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs  py-4 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
+        Pick {artA.name}
+      </Button>
+    )}
+    </div>
+  </div>
+  <div className="flex flex-col items-center px-4">
+    <p className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal" style={{ maxWidth: '300px' }}>
+   {artB.title} by {artB.artistId}
+    </p>
+    <div className="flex items-center mt-auto p-4">
+    {votedFor === artB.name ? (
+      <Button
+        onClick={() => onVote(artB.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs mt-2 py-4 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
+        Voted {artB.name}
+      </Button>
+    ) : (
+      <Button
+        onClick={() => onVote(artB.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs mt-2 py-4 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
+        Pick {artB.name}
+      </Button>
+    )}
+    </div>
+  </div>
+</div>
+
+     
     
-      <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
+      {/* <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
   
             <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
         
       </div>
-     
+      */}
     </div>
   );
 };

@@ -23,9 +23,9 @@ export const findTopTwoArts = async (): Promise<any[]> => {
 };
 
 export const createBattle = async (): Promise<any> => {
-  const battles = await Battle.find({isNftMinted:false});
-  if(battles.length<=0){
+  const battles = await Battle.find({isBattleEnded:false});
   const [artA, artB] = await findTopTwoArts();
+  if(battles.length<=0 && (artA && artB)){
     const startDate = await getNextAvailableDate();
     startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(startDate);
@@ -88,6 +88,8 @@ export const createBattle = async (): Promise<any> => {
   
    console.log(res);
     return newBattle;
-  } 
+  } else{
+    console.log("Not enough arts");
+  }
 }
 

@@ -9,10 +9,22 @@ export interface ArtData {
   grayScale: string;
   colouredArtReference: string;
   grayScaleReference: string;
-  uploadedTime : Date;
-  upVotes : number;
+  uploadedTime: Date;
+  upVotes : Number;
   isCompleted:Boolean;
+  isStartedBattle:Boolean;
+  specialWinner?: string;
+  votes?:Number;
+  battleTime?: Date;
+  endTime?: Date;
+  tokenId:Number;
 }
+
+
+interface BattlesResponse {
+  pastBattles: ArtData[];
+}
+
 
 interface UseSaveDataResult {
   saveData: (data: any) => Promise<void>;
@@ -75,6 +87,8 @@ export const useSaveData = (): UseSaveDataResult => {
         }
       };
 
+      
+
     
       useEffect(() => {
         fetchArts(1);
@@ -84,4 +98,34 @@ export const useSaveData = (): UseSaveDataResult => {
     }
   
 
+    export const useFetchBattles = () => {
+      const [battles, setBattles] = useState<BattlesResponse | null>(null);
+      const [loading, setLoading] = useState<boolean>(false);
+      const [error, setError] = useState<string | null>(null);
+    
+    
+          const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
+              setLoading(true);
+              setError(null);
+              try {
+                  const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
+                  if (!response.ok) throw new Error('Network response was not ok');
+                  const data: BattlesResponse = await response.json();
+               
+                  setBattles(data);
+              } catch (err) {
+                  console.error('Error fetching battles:', err);
+                  setError("Error fetching battles!");
+              } finally {
+                  setLoading(false);
+              }
+          };
+    
+          useEffect(() => {
+             fetchBattles("date",1);
+          }, []);
+         
+    
+      return { battles, loading, error,fetchMoreBattles: fetchBattles };
+        }
  

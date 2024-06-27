@@ -1,6 +1,6 @@
 //useArtVoting.ts is used for calling artVoting api.
 import { useState, useCallback } from 'react';
-interface Vote {
+export interface Vote {
   participantId: string;
   artId: string;
 }
@@ -9,7 +9,7 @@ interface UseVotingReturn {
   votes: Vote[];
   error: string | null;
   loading: boolean;
-  fetchVotes: (participantId: string, artId: string) => Promise<boolean>;
+  fetchVotes: ( artId: string) => Promise<Vote[]>;
   submitVote: (voteData: Vote) => Promise<boolean>;
 }
 
@@ -19,28 +19,29 @@ export const useVoting = (): UseVotingReturn => {
   const [loading, setLoading] = useState<boolean>(false);
 
   //fetchVotes is used to fetch artVote by participantId and artId
-  const fetchVotes = useCallback(async (participantId:any,artId:any) => {
+  const fetchVotes = useCallback(async (participantId: string): Promise<Vote[]> => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/artVote?participantId=${participantId}&artId=${artId}`);
+      const response = await fetch(`/api/artVote?participantId=${participantId}`);
       const data = await response.json();
       if (response.ok) {
         setError(null);
-        if(data.data){
-          return true;
-         
+        if (data.data) {
+          setVotes(data.data); // Assuming data.data is an array of votes
+          return data.data;
         }
-        return false;
+        return []; // Return an empty array if data.data is falsy
       } else {
         throw new Error(data.message || 'Error fetching votes');
       }
     } catch (err) {
       setError('Error');
-      return false;
+      return []; // Return an empty array in case of error
     } finally {
       setLoading(false);
     }
   }, []);
+  
 
   //submitVote is used to create vote the art
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {

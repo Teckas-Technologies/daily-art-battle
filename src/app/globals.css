@@ -114,4 +114,9 @@
   }
   
 
- 
+  body {
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+  }
+
+
+  
