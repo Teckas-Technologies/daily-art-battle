@@ -182,6 +182,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       alt={artB.title}
       draggable={false}
       src={artB.imageUrl}
+      className='w-full h-full object-cover'
     />
     <div
       className="absolute top-0 left-0 right-0 bg-white w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
@@ -191,6 +192,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         draggable={false}
         alt={artA.title}
         src={artA.imageUrl}
+        className='w-full h-full object-cover'
       />
     </div>
     <div
