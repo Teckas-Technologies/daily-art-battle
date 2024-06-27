@@ -211,17 +211,17 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 </div>
 
    
-<div className="flex items-center justify-center">
-  <div className="flex flex-col items-center">
-    <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all" style={{ maxWidth: '300px' }}>
-      {artA.title} by {artA.artistId}
+<div className="flex items-center justify-center px-4">
+  <div className="flex flex-col items-center px-4">
+    <p className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all" style={{ maxWidth: '300px' }}>
+    oming of Age in a High-Vis Vest: My Summer Internship That Changed Everything by starpause.near
     </p>
     <div className="flex items-center mt-auto p-4">
     {votedFor === artA.name ? (
       <Button
         onClick={() => onVote(artA.id)}
         disabled={!isConnected || success}
-        className={`px-4 text-xs py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+        className={`px-4 text-xs py-4 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
       >
         Voted {artA.name}
       </Button>
@@ -229,23 +229,23 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       <Button
         onClick={() => onVote(artA.id)}
         disabled={!isConnected || success}
-        className={`px-4 text-xs  py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+        className={`px-4 text-xs  py-4 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
       >
         Pick {artA.name}
       </Button>
     )}
     </div>
   </div>
-  <div className="flex flex-col items-center">
-    <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal" style={{ maxWidth: '300px' }}>
-      {artB.title} by {artB.artistId}
+  <div className="flex flex-col items-center px-4">
+    <p className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal" style={{ maxWidth: '300px' }}>
+    oming of Age in a High-Vis Vest: My Summer Internship That Changed Everything by starpause.near
     </p>
     <div className="flex items-center mt-auto p-4">
     {votedFor === artB.name ? (
       <Button
         onClick={() => onVote(artB.id)}
         disabled={!isConnected || success}
-        className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+        className={`px-4 text-xs mt-2 py-4 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
       >
         Voted {artB.name}
       </Button>
@@ -253,7 +253,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       <Button
         onClick={() => onVote(artB.id)}
         disabled={!isConnected || success}
-        className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+        className={`px-4 text-xs mt-2 py-4 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
       >
         Pick {artB.name}
       </Button>
