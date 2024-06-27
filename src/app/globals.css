@@ -114,14 +114,9 @@
   }
   
 
-  .truncate {
-    width: 250px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  body {
+    overflow-x: hidden; /* Hide horizontal scrollbar */
   }
- 
-
 
 
   

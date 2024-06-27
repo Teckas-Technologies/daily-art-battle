@@ -164,65 +164,92 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   return (
     <div className="mt-10 pt-10 mx-8">
        {timeRemaining !== null && (
-        <h2 className=" pt-10 md:mt-9 sm:text-xl md:text-2xl lg:text-4xl  mt-5 text-lg font-semibold font-mono justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
+        <h2 className=" pt-10 md:mt-9 text-xl font-bold text-black text-center justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
            {formatTime(timeRemaining)}
         </h2>
       )}
     <p  className='mt-2 text-center text-black font-mono  sm:font-thin mb-8 md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
      
     <div className="w-full relative" onMouseUp={handleMouseUp} onTouchEnd={handleTouchEnd}>
-      <div
-        className="relative w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
-        onMouseMove={handleMove}
-        onMouseDown={handleMouseDown}
-        onTouchMove={handleMove}
-        onTouchStart={handleTouchStart}
-      >
-        <img
-          alt={artB.title}
-          draggable={false}
-          src={artB.imageUrl}
-        />
-        <div
-          className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-[70/45] m-auto overflow-hidden select-none"
-          style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-        >
-          <img
-            draggable={false}
-            alt={artA.title}
-            src={artA.imageUrl}
-          />
-        </div>
-        <div
-          className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
-          style={{
-            left: `calc(${sliderPosition}% - 1px)`,
-          }}
-        >
-          <div className="bg-white absolute rounded-full h-3 w-3 -left-1 top-[calc(50%-5px)]" />
-        </div>
+  <div
+    className="relative w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+    onMouseMove={handleMove}
+    onMouseDown={handleMouseDown}
+    onTouchMove={handleMove}
+    onTouchStart={handleTouchStart}
+  >
+    <img
+      alt={artB.title}
+      draggable={false}
+      src={artB.imageUrl}
+    />
+    <div
+      className="absolute top-0 left-0 right-0 bg-white w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+      style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+    >
+      <img
+        draggable={false}
+        alt={artA.title}
+        src={artA.imageUrl}
+      />
+    </div>
+    <div
+      className="absolute top-0 bottom-0 w-1   cursor-ew-resize"
+      style={{
+        left: `calc(${sliderPosition}% - 1px)`,
+        backgroundColor:"#30f216"
+      }}
+    >
+     <div className="absolute rounded-full h-5 w-5 -left-2 top-[calc(50%-12px)] flex items-center justify-center border border-black" style={{
+        backgroundColor:"#30f216"
+      }}>
       </div>
     </div>
+  </div>
+</div>
+
    
-    <div className="flex items-center justify-center space-x-">
-  <div className="mr-6">
+<div className="flex items-center justify-center space-x-6">
+  <div className="flex flex-col items-center mr-6">
+    <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal">
+      {artA.title} by {artA.artistId}
+    </p>
     {votedFor === artA.name ? (
-      <Button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+      <Button
+        onClick={() => onVote(artA.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
         Voted {artA.name}
       </Button>
     ) : (
-      <Button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+      <Button
+        onClick={() => onVote(artA.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
         Pick {artA.name}
       </Button>
     )}
   </div>
-  <div className="ml-6">
+  <div className="flex flex-col items-center ml-6">
+    <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal">
+      {artB.title} by {artB.artistId}
+    </p>
     {votedFor === artB.name ? (
-      <Button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+      <Button
+        onClick={() => onVote(artB.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
         Voted {artB.name}
       </Button>
     ) : (
-      <Button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}>
+      <Button
+        onClick={() => onVote(artB.id)}
+        disabled={!isConnected || success}
+        className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${!isConnected || success ? 'cursor-not-allowed' : ''}`}
+      >
         Pick {artB.name}
       </Button>
     )}
