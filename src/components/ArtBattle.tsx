@@ -211,8 +211,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 </div>
 
    
-<div className="flex items-center justify-center space-x-6">
-  <div className="flex flex-col items-center mr-6">
+<div className="flex items-center justify-center space-x-8">
+  <div className="flex flex-col items-center mr-10">
     <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal truncate">
       {artA.title.length > 40 ? `${artA.title.slice(0, 40)}...` : artA.title} by {artA.artistId}
     </p>
@@ -236,7 +236,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
       )}
     </div>
   </div>
-  <div className="flex flex-col items-center ml-8">
+  <div className="flex flex-col items-center ml-10">
     <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal truncate">
       {artB.title.length > 40 ? `${artB.title.slice(0, 40)}...` : artB.title} by {artB.artistId}
     </p>
