@@ -214,7 +214,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
 <div className="flex items-center justify-center px-4">
   <div className="flex flex-col items-center px-4">
     <p className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all" style={{ maxWidth: '300px' }}>
-    {artA.name} by {artA.artistId}
+    {artA.title} by {artA.artistId}
     </p>
     <div className="flex items-center mt-auto p-4">
     {votedFor === artA.name ? (
@@ -238,7 +238,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   </div>
   <div className="flex flex-col items-center px-4">
     <p className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal" style={{ maxWidth: '300px' }}>
-   {artB.name} by {artB.artistId}
+   {artB.title} by {artB.artistId}
     </p>
     <div className="flex items-center mt-auto p-4">
     {votedFor === artB.name ? (
