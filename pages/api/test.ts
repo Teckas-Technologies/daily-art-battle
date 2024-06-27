@@ -9,9 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const pipeline = [
         {
           $project: {
-            artBId: 1, // Include the _id field
-            artBspecialWinner: 1, // Include the special_winner field
-            artBVotes: 1, // Include the votes field
+            artAId: 1, // Include the _id field
+            artAspecialWinner: 1, // Include the special_winner field
+            artAVotes: 1, // Include the votes field
             startTime: 1,
             endTime: 1 // Include the startedTime field
           }
@@ -22,11 +22,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 try{
       for (const battleDoc of battleData) {
         await ArtTable.updateOne(
-          { _id: battleDoc.artBId },
+          { _id: battleDoc.artAId },
           {
             $set: {
-              specialWinner: battleDoc.artBspecialWinner,
-              votes: battleDoc.artBVotes,
+              specialWinner: battleDoc.artAspecialWinner,
+              votes: battleDoc.artAVotes,
               endTime: battleDoc.endTime,
               battleTime : battleDoc.startTime
             }
