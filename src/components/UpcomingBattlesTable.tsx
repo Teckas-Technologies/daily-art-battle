@@ -139,7 +139,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
           <img
             src={art.colouredArt}
             alt="Art A"
-            className="absolute top-0 left-0 w-full h-full object-cover"
+            className="w-full h-full object-cover"
             loading="lazy"
             style={{
               boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
