@@ -216,6 +216,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
     <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal">
       {artA.title} by {artA.artistId}
     </p>
+    <div className="flex items-center mt-auto p-4">
     {votedFor === artA.name ? (
       <Button
         onClick={() => onVote(artA.id)}
@@ -233,6 +234,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
         Pick {artA.name}
       </Button>
     )}
+    </div>
   </div>
   <div className="flex flex-col items-center ml-6">
     <p className="mt-2 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal">
