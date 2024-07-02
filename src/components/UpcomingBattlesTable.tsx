@@ -121,7 +121,7 @@ const BattleTable: React.FC<{ artData: ArtData[] ,setRefresh: React.Dispatch<Rea
       setSuccess(true);
       const votes = await fetchVotes(activeAccountId);
       setVotes(votes);
-      alert('Vote submitted successfully!');
+   //   alert('Vote submitted successfully!');
       setRefresh(prev => !prev); 
     } else {
       alert('Failed to submit vote. Maybe you already voted!');
