@@ -14,22 +14,22 @@ export const NearWalletConnector = () => {
 
   return(
     
-      <nav className="navbar bg-gray-950" style={{ width: "100vw", display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, padding: '20px 5vw'}}>
+      <nav className="navbar bg-gray-950" style={{ width: "100vw", display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, padding: '10px 5vw'}}>
 <div className="flex items-center flex-col md:flex-col">
 <img
           src="/images/logo.png"
           alt="GFXvs"
           width={50}
           height={50}
-          className="mb-2 md:mb-0" // Add margin bottom for smaller screens
+          className=" md:mb-0" // Add margin bottom for smaller screens
         />
   {/* <h1 className="font-extrabold text-2xl md:text-md ml-2" style={{color:"#33cd2b"}}>
     GFXvs
   </h1> */}
 </div>
         {isConnected ? (
-       <div className="flex flex-row justify-center items-center mt-4 hover-trigger">
-       <p className="px-2 ml-2 text-xs sm:text-sm md:text-base hover-target">{activeAccountId}</p>
+       <div className="flex flex-row justify-center items-center  hover-trigger">
+       <p className="px-2 items-center text-xs sm:text-sm md:text-base">{activeAccountId}</p>
        {/* <button className="mt-2 sm:mt-0 sm:ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={handleSignout}>
          Disconnect
        </button>      */}

@@ -25,20 +25,19 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   const [success, setSuccess] = useState(false);
   const [votedFor ,setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false); 
-
-  const fetchData = async () => {
-    if (todayBattle && activeAccountId) {
-      const res = await fetchVotes(activeAccountId, todayBattle._id);
-      if (res) {
-        setVoterFor(res.votedFor);
-        setSuccess(true);
-      }
-    }
-  };
-
   useEffect( () => {
+    const fetchData = async () => {
+      if (todayBattle && activeAccountId) {
+        const res = await fetchVotes(activeAccountId, todayBattle._id);
+        if (res) {
+          setVoterFor(res.votedFor);
+          setSuccess(true);
+        }
+      }
+    };
        fetchData();
        fetchTodayBattle();
+   
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
   useEffect(() => {
@@ -163,13 +162,13 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({ toggleUploadMo
   }
 
   return (
-    <div className="mt-10 pt-10 mx-8">
+    <div className="mt-10 mx-8">
        {timeRemaining !== null && (
-        <h2 className=" pt-10 md:mt-9 text-xl font-bold text-black text-center justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
+        <h2 className="mt-9 text-xl font-bold text-black text-center justify-center items-center text-black text-center" style={{ whiteSpace: 'nowrap' }}>
            {formatTime(timeRemaining)}
         </h2>
       )}
-    <p  className='mt-2 text-center text-black font-mono  sm:font-thin mb-8 md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
+    <p  className=' text-center text-black font-mono  sm:font-thin mb-8 md:text-lg'>Welcome to GFXvs, where creators clash for daily cash prizes. Cast your vote to secure participation NFTs and a chance to win an exclusive 1:1 masterpiece. Connect your NEAR wallet to join the thrilling competition!</p>
      
     <div className="w-full relative" onMouseUp={handleMouseUp} onTouchEnd={handleTouchEnd}>
   <div

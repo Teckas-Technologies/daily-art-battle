@@ -11,15 +11,9 @@ import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess: boolean }> = ({ toggleUploadModal, uploadSuccess }) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const [refresh, setRefresh] = useState(false); 
-  const { arts, error, fetchMoreArts } = useFetchArts();
+  const { arts, totalPage,error, fetchMoreArts } = useFetchArts();
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    if (arts) {
-      setUpcomingArts(arts);
-    }
-  }, [arts]);
 
   useEffect(() => {
     const initializeData = async () => {
@@ -34,7 +28,7 @@ const UpcomingArtTable: React.FC<{ toggleUploadModal: () => void, uploadSuccess:
 
   useEffect(() => {
     if (arts) {
-      setHasNext(arts.length >= 10); 
+      setHasNext(page==totalPage-1); 
       }
       setUpcomingArts(arts);
   }, [arts]);
