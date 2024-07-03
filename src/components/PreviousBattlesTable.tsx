@@ -59,7 +59,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
     return (
         <div className="battle-table mt-8 pb-10 flex flex-col items-center">
             <h2 className="text-xl font-bold text-black text-center">Previous Battles</h2>
-            <p  className='battle-table1 pb-10 w-full overflow-x-auto text-center text-black font-mono mt-5 sm:font-thin md:text-lg'><a href='https://wallet.mintbase.xyz/' className='text-green-600'>Check your wallet</a> to see your rewards and the spoils of victory if you were a lucky winner. Relive the excitement and see which masterpieces emerged victorious!
+            <p  className='battle-table1 pb-10 w-full overflow-x-auto text-center text-black font-mono mt-5 sm:font-thin md:text-lg'><a href='https://wallet.mintbase.xyz/' target="_blank" className='text-green-600'>Check your wallet</a> to see your rewards and the spoils of victory if you were a lucky winner. Relive the excitement and see which masterpieces emerged victorious!
 </p>
            <div className=" pb-10 w-full overflow-x-auto">
                 <div className="flex items-center justify-between">
@@ -97,7 +97,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({ toggleU
                     <tr key={index} className="bg-white overflow-y-auto max-h-96" style={{ borderTopLeftRadius: 40, borderBottomLeftRadius: 40 }}>
                     <td className="p-0 w-24 h-24 sm:w-36 sm:h-36 md:w-64 md:h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96" style={{ borderTopLeftRadius: 40, borderBottomLeftRadius: 40 }}>
     <div className="bg-white border h-full w-full" style={{ borderRadius: 40 }}>
-        <a href={`https://www.tradeport.xyz/near/collection/${SPECIAL_WINNER_CONTRACT}?bottomTab=trades&tab=items&tokenId=${battle.tokenId}`} className="flex flex-col items-center h-full w-full">
+        <a href={`https://www.tradeport.xyz/near/collection/${SPECIAL_WINNER_CONTRACT}?bottomTab=trades&tab=items&tokenId=${battle.tokenId}`} target="_blank" className="flex flex-col items-center h-full w-full">
             <div className="relative w-full h-full" style={{ borderTopLeftRadius: 40, borderBottomLeftRadius: 40 }}>
                 <Image
                     src={battle.colouredArt}
