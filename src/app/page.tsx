@@ -7,7 +7,7 @@ import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
 import ArtBattle from '../components/ArtBattle';
 import UpcomingBattlesTable from '../components/UpcomingBattlesTable';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
-
+import Footer from '@/components/Footer';
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -21,6 +21,7 @@ const Home: NextPage = () => {
       <ArtBattle toggleUploadModal={toggleUploadModal} />
       <UpcomingBattlesTable toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <PreviousArtTable toggleUploadModal={toggleUploadModal}/>
+      <Footer/>
     </main>
   );
 };
