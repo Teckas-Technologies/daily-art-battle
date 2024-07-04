@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
           }else{
           const page = parseInt(req.query.page as string) || 1;
-          const limit = parseInt(req.query.limit as string) || 10;
+          const limit = parseInt(req.query.limit as string) || 9;
           const {arts,totalDocuments,totalPages} = await findAllArts(page, limit);
             return res.status(200).json({arts,totalDocuments,totalPages});
           }

@@ -75,7 +75,7 @@ export const useSaveData = (): UseSaveDataResult => {
       const [loading, setLoading] = useState<boolean>(false);
       const [error, setError] = useState<string | null>(null);
     
-      const fetchArts = async (page: number, limit: number = 10) => {
+      const fetchArts = async (page: number, limit: number = 9) => {
         setLoading(true);
         setError(null);
         try {
