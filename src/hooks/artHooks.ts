@@ -87,6 +87,7 @@ export const useSaveData = (): UseSaveDataResult => {
         } catch (err) {
           setError("Error loading arts");
         } finally {
+          
           setLoading(false);
         }
       };
