@@ -3,7 +3,7 @@
 // import OpenAI from 'openai';
 
 // const openai = new OpenAI({
-//   apiKey: "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",
+//   apiKey: "",
 // });
 
 // export default async function handler(
