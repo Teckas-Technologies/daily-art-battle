@@ -14,10 +14,14 @@ export async function scheduleArt(data: any): Promise<any> {
 export const findAllArts = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const skip = (page - 1) * limit;
-  return ArtTable.find({ isStartedBattle: false })
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false })
+  .sort({ upVotes: -1 });
+  const totalPages = Math.ceil(totalDocuments / limit);
+  const arts = await ArtTable.find({ isStartedBattle: false })
     .sort({ upVotes: -1 })
     .skip(skip)
     .limit(limit);
+  return {arts,totalDocuments,totalPages};
 };
 
 export const findPreviousArts = async (page: number, limit: number): Promise<any> => {
@@ -25,8 +29,10 @@ export const findPreviousArts = async (page: number, limit: number): Promise<any
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await ArtTable.countDocuments({ endTime: { $lt: today } }).sort({ endTime: -1 });
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await ArtTable.find({ endTime: { $lt: today } }).sort({ endTime: -1 }).skip(skip).limit(limit);
-  return { pastBattles };
+  return { pastBattles,totalDocuments,totalPages };
 }
 
 export const findPreviousArtsByVotes = async (page: number, limit: number): Promise<any> => {
@@ -34,8 +40,10 @@ export const findPreviousArtsByVotes = async (page: number, limit: number): Prom
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await ArtTable.countDocuments({ endTime: { $lt: today } }).sort({ votes: -1 });
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await ArtTable.find({ endTime: { $lt: today } }).sort({ votes: -1 }).skip(skip).limit(limit);
-  return { pastBattles };
+  return { pastBattles,totalDocuments,totalPages };
 } 
 
 export const updateArtById = async (id: any): Promise<any> => {

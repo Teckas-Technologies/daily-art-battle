@@ -22,17 +22,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               const battles = await findPreviousArtsByVotes(page,limit);
               return res.status(200).json(battles);
             }else if(sort=='date'){
-            const battles = await findPreviousArts(page,limit);
-            return res.status(200).json(battles);
+            const {pastBattles,totalDocuments,totalPages} = await findPreviousArts(page,limit);
+            return res.status(200).json({pastBattles,totalDocuments,totalPages});
             }else{
-              const battles = await findPreviousArts(page,limit);
-              return res.status(200).json(battles);
+              const {battles,totalDocuments,totalPages} = await findPreviousArts(page,limit);
+              return res.status(200).json({battles,totalDocuments,totalPages});
             }
           }else{
           const page = parseInt(req.query.page as string) || 1;
-          const limit = parseInt(req.query.limit as string) || 10;
-          const arts = await findAllArts(page, limit);
-            return res.status(200).json(arts);
+          const limit = parseInt(req.query.limit as string) || 9;
+          const {arts,totalDocuments,totalPages} = await findAllArts(page, limit);
+            return res.status(200).json({arts,totalDocuments,totalPages});
           }
             
         //PUT method is used to update art by id.
