@@ -15,11 +15,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
   const [hasnext, setHasNext] = useState(false);
   const [selectedArtId, setSelectedArtId] = useState<string | null>(null);
   const [pop, setPopUp] = useState(false);
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("date");
 
   useEffect(() => {
     if (battles && battles.pastBattles) {
-      if (battles.pastBattles.length < 10) {
+      if (page > battles.totalPages - 1) {
         setHasNext(true);
       } else {
         setHasNext(false);
@@ -52,12 +52,17 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
   };
 
   return (
+    <section id="previous">
     <div className="battle-table mt-8 pb-10 flex flex-col items-center">
       <h2 className="text-xl font-bold text-black text-center">
         Previous Battles
       </h2>
       <p className="battle-table1 pb-10 w-full overflow-x-auto text-center text-black font-mono mt-5 sm:font-thin md:text-lg">
-        <a href="https://wallet.mintbase.xyz/" className="text-green-600">
+        <a
+          href="https://wallet.mintbase.xyz/"
+          target="_blank"
+          className="text-green-600"
+        >
           Check your wallet
         </a>{" "}
         to see your rewards and the spoils of victory if you were a lucky
@@ -157,10 +162,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                         >
                           <a
                             href={`https://www.tradeport.xyz/near/collection/${SPECIAL_WINNER_CONTRACT}?bottomTab=trades&tab=items&tokenId=${battle.tokenId}`}
+                            target="_blank"
                             className="flex flex-col items-center h-full w-full"
                           >
                             <div
-                              className="relative w-full h-full"
+                              className="relative w-full h-full opacity-50 hover:opacity-100"
                               style={{
                                 borderTopLeftRadius: 40,
                                 borderBottomLeftRadius: 40,
@@ -171,7 +177,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                                 alt={"Art"}
                                 width={400} // Arbitrary value; the actual size will be controlled by CSS
                                 height={400} // Arbitrary value; the actual size will be controlled by CSS
-                                className="w-full h-full object-cover rounded-l-3xl"
+                                className="w-full h-full object-cover rounded-l-3xl "
                                 unoptimized
                                 style={{
                                   height: "100%", // Ensuring the image takes the full height of its container
@@ -196,7 +202,9 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                       </td>
 
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words break-all text-black text-center special-winner">
-                        {battle.specialWinner}
+                        {battle.specialWinner == null
+                          ? `NA`
+                          : battle.specialWinner}
                         <br />
                       </td>
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words  break-all text-black text-center special-winner">
@@ -222,6 +230,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
         </div>
         <nav className="flex justify-center flex-wrap gap-4 mt-2">
           <a
+            href="#previous"
             className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
@@ -232,6 +241,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
             Previous
           </a>
           <a
+          href="#previous"
             className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "cursor-not-allowed"
@@ -244,6 +254,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
         </nav>
       </div>
     </div>
+    </section>
   );
 };
 

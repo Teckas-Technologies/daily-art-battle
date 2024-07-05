@@ -23,6 +23,8 @@ export interface ArtData {
 
 interface BattlesResponse {
   pastBattles: ArtData[];
+  totalDocuments:any;
+  totalPages:any
 }
 
 
@@ -69,32 +71,32 @@ export const useSaveData = (): UseSaveDataResult => {
   //useFetchArts is used for fetching arts by id
     export const useFetchArts = () => {
       const [arts, setArts] = useState<ArtData[]>([]);
+      const [totalPage, setTotalPage] = useState<any>();
       const [loading, setLoading] = useState<boolean>(false);
       const [error, setError] = useState<string | null>(null);
     
-      const fetchArts = async (page: number, limit: number = 10) => {
+      const fetchArts = async (page: number, limit: number = 9) => {
         setLoading(true);
         setError(null);
         try {
           const response = await fetch(`/api/art?page=${page}&limit=${limit}`);
           if (!response.ok) throw new Error('Network response was not ok');
           const data = await response.json();
-          setArts(data);
+          setArts(data.arts);
+          setTotalPage(data.totalPages)
         } catch (err) {
           setError("Error loading arts");
         } finally {
+          
           setLoading(false);
         }
       };
 
-      
-
-    
       useEffect(() => {
         fetchArts(1);
       }, []);
     
-      return { arts, loading, error, fetchMoreArts: fetchArts };
+      return { arts, totalPage,loading, error, fetchMoreArts: fetchArts };
     }
   
 
