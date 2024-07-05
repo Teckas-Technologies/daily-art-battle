@@ -345,9 +345,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
               </div>
             )}           
          
-         {artA.title.length > 20 ? (
+         {artA.title.length > 25 ? (
                   <>
-                    {artA.title.substring(0, 20)}{' '}
+                    {artA.title.substring(0, 25)}{' '}
                     <span
                       className="text-sky-600 cursor-pointer hover:underline max-h-5"
                      onClick={handlePopUpA}
@@ -406,9 +406,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         </div>
               </div>
             )}           
-                {artB.title.length > 20 ? (
+                {artB.title.length > 25 ? (
                   <>
-                    {artB.title.substring(0, 20)}{' '}
+                    {artB.title.substring(0, 25)}{' '}
                     <span
                       className="text-sky-600 cursor-pointer hover:underline max-h-5"
                      onClick={handlePopUpB}
