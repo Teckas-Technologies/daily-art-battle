@@ -7,6 +7,7 @@ import { useVoting } from "../hooks/useVoting";
 import { Button } from "./ui/button";
 import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import { Skeleton } from "./ui/skeleton";
+import ArtTable from "../../model/ArtTable";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -41,6 +42,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const [success, setSuccess] = useState(false);
   const [votedFor, setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const[popupA,setPopUpA] = useState(false);
+  const[popupB,setPopUpB] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
@@ -167,6 +170,20 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
 
     return () => clearTimeout(timer); 
   }, []);
+
+  const handlePopUpB = ()=>{
+    setPopUpB(true);
+  }
+  const closePopUpB = ()=>{
+    setPopUpB(false);
+  }
+
+  const handlePopUpA = ()=>{
+    setPopUpA(true);
+  }
+  const closePopUpA = ()=>{
+    setPopUpA(false);
+  }
 
 
   if (skeletonLoading) {
@@ -312,13 +329,42 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       <div className="flex items-center justify-center px-4">
         <div className="flex flex-col items-center px-4">
           <p
-            className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all"
+            className="mt-4 max-h-5 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all"
             style={{ maxWidth: "300px" }}
           > 
-           {artA.title.length > 10 ? `${artA.title.substring(0, 10)}...`
-                                    : artA.title}{" "} by {artA.artistId}
+          {popupA &&(
+              <div className="absolute pb-10 max-h-5 py-2">
+               <div className="bg-black border rounded-lg">
+           <div className="popup-content">
+            <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpA}>
+              &times;
+            </span>
+            <p className="text-white py-2">{artA.title}</p>
+          </div>  
+        </div>
+              </div>
+            )}           
+         
+         {artA.title.length > 10 ? (
+                  <>
+                    {artA.title.substring(0, 10)}{' '}
+                    <span
+                      className="text-sky-600 cursor-pointer hover:underline max-h-5"
+                     onClick={handlePopUpA}
+                    >
+                      read more
+                    </span>
+                  </>
+                ) : (
+                  artA.title
+                )}
+             
+           
+            {' '}
+                by {artA.artistId}
           </p>
-          <div className="flex items-center ">
+          {!popupA &&(
+          <div className="flex items-center mt-10">
             {votedFor === artA.name ? (
               <Button
                 onClick={() => onVote(artA.id)}
@@ -341,16 +387,46 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
               </Button>
             )}
           </div>
+          )}
         </div>
         <div className="flex flex-col items-center px-4">
           <p
-            className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
+            className="mt-4  max-h-5  text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
             style={{ maxWidth: "300px" }}
           >
-           {artB.title.length > 10 ? `${artB.title.substring(0, 10)}...`
-                                    : artB.title}{" "} by {artB.artistId}
+            {popupB &&(
+              <div className="absolute pb-10 max-h-5 py-2">
+               <div className="bg-black border rounded-lg">
+           <div className="popup-content">
+            <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpB}>
+              &times;
+            </span>
+            <p className="text-white py-2">{artB.title}</p>
+          </div>
+        </div>
+              </div>
+            )}           
+                {artB.title.length > 10 ? (
+                  <>
+                    {artB.title.substring(0, 10)}{' '}
+                    <span
+                      className="text-sky-600 cursor-pointer hover:underline max-h-5"
+                     onClick={handlePopUpB}
+                    >
+                      read more
+                    </span>
+                  </>
+                ) : (
+                  artB.title
+                )}
+             
+           
+            {' '}
+                by {artB.artistId}
           </p>
-          <div className="flex items-center">
+          {!popupB &&(
+          <div className="flex items-center  mt-10 max-h-10">
+           
             {votedFor === artB.name ? (
               <Button
                 onClick={() => onVote(artB.id)}
@@ -372,7 +448,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
                 Pick {artB.name}
               </Button>
             )}
+         
           </div>
+)}
         </div>
       </div>
 
