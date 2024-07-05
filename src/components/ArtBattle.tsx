@@ -314,10 +314,11 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
           <p
             className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all"
             style={{ maxWidth: "300px" }}
-          >
-            {artA.title} by {artA.artistId}
+          > 
+           {artA.title.length > 10 ? `${artA.title.substring(0, 10)}...`
+                                    : artA.title}{" "} by {artA.artistId}
           </p>
-          <div className="flex items-center mt-auto p-4">
+          <div className="flex items-center ">
             {votedFor === artA.name ? (
               <Button
                 onClick={() => onVote(artA.id)}
@@ -346,14 +347,15 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
             className="mt-4 text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
             style={{ maxWidth: "300px" }}
           >
-            {artB.title} by {artB.artistId}
+           {artB.title.length > 10 ? `${artB.title.substring(0, 10)}...`
+                                    : artB.title}{" "} by {artB.artistId}
           </p>
-          <div className="flex items-center mt-auto p-4">
+          <div className="flex items-center">
             {votedFor === artB.name ? (
               <Button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs mt-2 py-4 font-semibold bg-green-600 text-white rounded ${
+                className={`px-4 text-xs font-semibold bg-green-600 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
@@ -363,7 +365,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
               <Button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs mt-2 py-4 vote-btn text-white rounded ${
+                className={`px-4 text-xs vote-btn text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
