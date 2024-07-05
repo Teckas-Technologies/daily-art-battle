@@ -48,6 +48,7 @@ const UpcomingArtTable: React.FC<{
     }
   };
   return (
+    <section id="upcoming">
     <div
       className="battle-table mt-8 pb-10 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
@@ -77,6 +78,7 @@ const UpcomingArtTable: React.FC<{
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
         <nav className="flex justify-center flex-wrap gap-4 mt-2">
           <a
+          href="#upcoming"
             className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
@@ -87,6 +89,7 @@ const UpcomingArtTable: React.FC<{
             Previous
           </a>
           <a
+           href="#upcoming"
             className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
@@ -99,6 +102,7 @@ const UpcomingArtTable: React.FC<{
         </nav>
       </div>
     </div>
+    </section>
   );
 };
 
