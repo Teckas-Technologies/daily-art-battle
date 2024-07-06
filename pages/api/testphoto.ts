@@ -34,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Composite the logo onto the original image
       originalImage.composite(logoImage, 0, 0, {
         mode: Jimp.BLEND_SOURCE_OVER,
+        opacitySource: 1, // Keep the opacity of logoImage as it is
+        opacityDest: 1 // Keep the opacity of originalImage as it is
       });
 
       // Get the processed image as a buffer
