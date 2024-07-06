@@ -20,6 +20,7 @@ const UpcomingArtTable: React.FC<{
 
   useEffect(() => {
     const initializeData = async () => {
+   
       fetchMoreArts(page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
@@ -47,6 +48,9 @@ const UpcomingArtTable: React.FC<{
       fetchMoreArts(page - 1);
     }
   };
+
+
+  
   return (
     <section id="upcoming">
     <div
