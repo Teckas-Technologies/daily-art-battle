@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Jimp from 'jimp';
+
+// Configure the API handler
 export const config = {
   api: {
     bodyParser: {
@@ -7,6 +9,7 @@ export const config = {
     },
   },
 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { imageData, logoData } = req.body;
@@ -31,8 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Composite the logo onto the original image
       originalImage.composite(logoImage, 0, 0, {
         mode: Jimp.BLEND_SOURCE_OVER,
-        opacitySource: 0.5, // Adjust opacity as needed
-        opacityDest: 1 // Set the destination opacity as needed
       });
 
       // Get the processed image as a buffer
