@@ -108,8 +108,9 @@ useEffect(() => {
       connect();
       return;
     }
-    await generateParticipation();
     setUploading(true);
+    await generateParticipation();
+   
     try {
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
       if (artworks.length < 1) {

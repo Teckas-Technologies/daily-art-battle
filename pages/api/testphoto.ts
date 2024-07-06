@@ -1,6 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Jimp from 'jimp';
-
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb', // Increase the size limit as needed
+    },
+  },
+};
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { imageData, logoData } = req.body;
