@@ -4,8 +4,8 @@ import { uploadFile, uploadReference } from '@mintbase-js/storage';
 import { useMbWallet } from "@mintbase-js/react";
 import { useSaveData, ArtData } from "../hooks/artHooks";
 import { Button } from './ui/button';
-
-
+import { useFetchImage } from "../hooks/testImageHook";
+import Badge from '../../public/images/badge.png';
 interface Artwork {
   name: string;
   file: File | null;
@@ -28,6 +28,9 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { saveData } = useSaveData();
   const [isFormValid, setIsFormValid] = useState(false);
+  const {image,fetchImage} = useFetchImage();
+
+
 
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -45,10 +48,59 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
     setArtTitle(name);
   };
 
-  useEffect(() => {
-    const allFilesUploaded = artworks.every(artwork => artwork.file !== null);
-    setIsFormValid(allFilesUploaded && artTitle.trim() !== "");
-  }, [artworks, artTitle]);
+  const fetchImageAsBase64 = async (imagePath: string): Promise<string> => {
+    const response = await fetch(imagePath);
+    const blob = await response.blob();
+  
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        // Remove the prefix if it exists
+        const base64WithoutPrefix = base64String.split(',')[1];
+        resolve(base64WithoutPrefix);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+  
+
+ const convertFileToBase64 = (file: any): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      // Remove the prefix if it exists
+      const base64WithoutPrefix = base64String.split(',')[1];
+      resolve(base64WithoutPrefix);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
+const  generateParticipation = async()=>{
+  const fetchedImageData = await convertFileToBase64(artworks[0].file);
+  console.log(Badge.src)
+   const fetchedLogoData = await fetchImageAsBase64(Badge.src);
+  const file = await fetchImage(fetchedImageData, fetchedLogoData);
+  
+  if (file) {
+    artworks[1] = { ...artworks[1], file, fileName: file.name };
+  } else {
+    artworks[1] = { ...artworks[1], file: null, fileName: '' };
+  }
+  console.log(artworks[1]);
+}
+  
+useEffect(() => {
+  const isFirstFileUploaded = artworks[0]?.file !== null;
+  setIsFormValid(isFirstFileUploaded && artTitle.trim() !== "");
+}, [artworks, artTitle]);
+
+
+
 
   const uploadArtWork = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -56,11 +108,12 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
       connect();
       return;
     }
-    
     setUploading(true);
+    await generateParticipation();
+   
     try {
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
-      if (artworks.length < 2) {
+      if (artworks.length < 1) {
         alert("Please Upload All files");
         return;
       }
@@ -88,12 +141,11 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
           case 'Upload Derivative Edition':
             artBattle.grayScale = url;
             artBattle.grayScaleReference = referenceUrl;
-            break;
+              break;
           default:
             break;
         }
       }
-    
       await saveData(artBattle as ArtData);
       alert('All files uploaded successfully');
       onSuccessUpload();
@@ -135,36 +187,11 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
               <span className="px-3 text-sm text-gray-600">{artwork.fileName}</span>
               </>
               )}
-             
-              {index==1&&(
-                <>
-                <label className="mt-4 block text-sm font-medium text-gray-900 break-words py-2" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
-                Everyone who picks your art will receive this Derivative Edition as a participation reward, with as many editions minted as there are voters. Make this a derivative work of your unique rare. For example; this version could be grayscale, glitched out, framed as a ticket stub, watermarked, censored, still if your Unique Rare is animated or animated if your Unique Rare is still, etc.
-              </label>
-                <label 
-              htmlFor={`fileInput-${index}`}  
-              className="cursor-pointer bg-white text-sm text-gray-900 rounded-lg focus:outline-none pb-2 mt-2" 
-              style={{ 
-                padding: 5, 
-                border: 'none', 
-                color: '#000', 
-                fontSize: 13
-              }}
-            >
-              {artwork.name}
-            </label>
-              <input type="file" id={`fileInput-${index}`} className="hidden" onChange={handleFileChange(index)} />
-              <span className="mt-2 px-3 text-sm text-gray-600">{artwork.fileName}</span>
-              </>
-              )
-}
-
-              
                 <br></br>
-               <hr className='mt-4'></hr>
+              
               </div>
           ))}
-
+        <hr className='mt-4'></hr>
 
            <div className='mb-1'>
            <label className="mt-4 block text-sm font-medium text-gray-900 break-words" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
