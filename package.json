@@ -45,6 +45,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cron": "^3.1.7",
+    "jimp": "^0.22.12",
     "lucide-react": "^0.394.0",
     "mintbase-ui": "^1.0.2",
     "mongoose": "^8.3.4",
@@ -58,7 +59,6 @@
     "react-hook-form": "^7.51.5",
     "react-query": "^3.39.3",
     "react-share": "^5.1.0",
-    "sharp": "^0.33.4",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

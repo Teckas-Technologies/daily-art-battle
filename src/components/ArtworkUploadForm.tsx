@@ -82,7 +82,8 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
 
 const  generateParticipation = async()=>{
   const fetchedImageData = await convertFileToBase64(artworks[0].file);
-   const fetchedLogoData = await fetchImageAsBase64('/_next/static/media/badge.1e502192.png');
+  console.log(Badge.src)
+   const fetchedLogoData = await fetchImageAsBase64(Badge.src);
   const file = await fetchImage(fetchedImageData, fetchedLogoData);
   
   if (file) {
