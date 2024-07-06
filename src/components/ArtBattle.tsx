@@ -172,16 +172,20 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   }, []);
 
   const handlePopUpB = ()=>{
+   
     setPopUpB(true);
   }
   const closePopUpB = ()=>{
+   
     setPopUpB(false);
   }
 
   const handlePopUpA = ()=>{
+   
     setPopUpA(true);
   }
   const closePopUpA = ()=>{
+   
     setPopUpA(false);
   }
 
@@ -333,13 +337,13 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
             style={{ maxWidth: "300px" }}
           > 
           {popupA &&(
-              <div className="absolute pb-10 max-h-5 py-2">
+              <div className="absolute pb-10 py-2">
                <div className="bg-black border rounded-lg">
            <div className="popup-content">
             <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpA}>
               &times;
             </span>
-            <p className="text-white py-2">{artA.title}</p>
+            <p className="text-white py-2 ">{artA.title}</p>
           </div>  
         </div>
               </div>
@@ -395,13 +399,13 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
             style={{ maxWidth: "300px" }}
           >
             {popupB &&(
-              <div className="absolute pb-10 max-h-5 py-2">
+              <div className="absolute pb-10  py-2">
                <div className="bg-black border rounded-lg">
            <div className="popup-content">
             <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpB}>
               &times;
             </span>
-            <p className="text-white py-2">{artB.title}</p>
+            <p className="text-white py-2 break-all">{artB.title}</p>
           </div>
         </div>
               </div>
