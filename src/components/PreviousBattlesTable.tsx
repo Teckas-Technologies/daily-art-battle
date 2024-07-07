@@ -54,7 +54,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <section id="previous">
     <div className="battle-table mt-8 pb-10 flex flex-col items-center">
-      <h2 className="text-xl font-bold text-black text-center">
+      <h2 className="text-2xl font-bold text-black text-center">
         Previous Battles
       </h2>
       <p className="battle-table1 pb-10 w-full overflow-x-auto text-center text-black font-mono mt-5 sm:font-thin md:text-lg">

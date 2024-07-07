@@ -58,7 +58,7 @@ const UpcomingArtTable: React.FC<{
       style={{ width: "100%", gap: 8 }}
     >
       <div className="battle-table1 pb-10">
-        <h2 className="text-xl font-bold text-black text-center">
+        <h2 className="text-2xl font-bold text-black text-center">
           Upcoming Arts
         </h2>
         <p className="px-4 text-center text-black font-mono mt-5 sm:font-thin md:text-lg">
