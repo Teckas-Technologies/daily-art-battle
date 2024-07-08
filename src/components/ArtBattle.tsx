@@ -406,7 +406,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
             <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpB}>
               &times;
             </span>
-            <p className="text-white py-2 break-all">{artB.title}</p>
+            <p className="text-white py-2 break-all">{artB.title} by {artB.artistId} </p>
           </div>
         </div>
               </div>
@@ -422,12 +422,13 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
                     </span>
                   </>
                 ) : (
-                  artB.title
+                  <>
+                  {artB.title} by {artB.artistId}
+                  </>
                 )}
              
            
-            {' '}
-                by {artB.artistId}
+        
           </p>
           {!popupB &&(
           <div className="flex items-center  mt-10 max-h-10">
