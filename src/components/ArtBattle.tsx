@@ -368,31 +368,31 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
            
           
           </p>
-          {!popupA &&(
+      
           <div className="flex items-center mt-10">
             {votedFor === artA.name ? (
-              <Button
+              <button
                 onClick={() => onVote(artA.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs py-4 font-semibold bg-green-600 text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Voted {artA.name}
-              </Button>
+              </button>
             ) : (
-              <Button
+              <button
                 onClick={() => onVote(artA.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs  py-4 vote-btn text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-gray-900 hover:bg-gray-700 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Pick {artA.name}
-              </Button>
+              </button>
             )}
           </div>
-          )}
+    
         </div>
         <div className="flex flex-col items-center px-4">
           <p
@@ -430,33 +430,33 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
            
         
           </p>
-          {!popupB &&(
+         
           <div className="flex items-center  mt-10 max-h-10">
            
             {votedFor === artB.name ? (
-              <Button
+              <button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs font-semibold bg-green-600 text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Voted {artB.name}
-              </Button>
+              </button>
             ) : (
-              <Button
+              <button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs vote-btn text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-gray-900 hover:bg-gray-700 text-white rounded  ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Pick {artB.name}
-              </Button>
+              </button>
             )}
          
           </div>
-)}
+
         </div>
       </div>
 
