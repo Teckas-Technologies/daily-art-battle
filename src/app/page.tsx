@@ -16,6 +16,7 @@ const Home: NextPage = () => {
 
   return (
     <main className="flex flex-col justify-center" style={{ width: '100vw', backgroundImage: 'url(\'images/dark pattern7.jpg\')', backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
+    
       <NearWalletConnector />
       {showUploadModal && <ArtworkUploadForm onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <ArtBattle toggleUploadModal={toggleUploadModal} />

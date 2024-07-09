@@ -6,9 +6,9 @@ export interface ArtData {
   artistId: string;
   arttitle: string;
   colouredArt: string;
-  grayScale: string;
+  // grayScale: string;
   colouredArtReference: string;
-  grayScaleReference: string;
+  // grayScaleReference: string;
   uploadedTime: Date;
   upVotes : Number;
   isCompleted:Boolean;

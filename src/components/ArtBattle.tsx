@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import { Skeleton } from "./ui/skeleton";
 import ArtTable from "../../model/ArtTable";
+import runProcess from "../../utils/generateImage";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -243,6 +244,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
           </div>
         </div>
       </div>
+      
     );
   }
 
@@ -459,6 +461,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
 
         </div>
       </div>
+
 
       {/* <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>

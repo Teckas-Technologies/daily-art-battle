@@ -20,7 +20,7 @@ interface ArtworkUploadFormProps {
 export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload }) => {
   const defaultArtworks: Artwork[] = [
     { name: 'Upload Unique Rare', file: null, fileName: '' },
-    { name: 'Upload Derivative Edition', file: null, fileName: '' },
+    // { name: 'Upload Derivative Edition', file: null, fileName: '' },
   ];
   const [artworks, setArtworks] = useState<Artwork[]>(defaultArtworks);
   const [artTitle, setArtTitle] = useState("");
@@ -48,51 +48,51 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
     setArtTitle(name);
   };
 
-  const fetchImageAsBase64 = async (imagePath: string): Promise<string> => {
-    const response = await fetch(imagePath);
-    const blob = await response.blob();
+//   const fetchImageAsBase64 = async (imagePath: string): Promise<string> => {
+//     const response = await fetch(imagePath);
+//     const blob = await response.blob();
   
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        // Remove the prefix if it exists
-        const base64WithoutPrefix = base64String.split(',')[1];
-        resolve(base64WithoutPrefix);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
+//     return new Promise<string>((resolve, reject) => {
+//       const reader = new FileReader();
+//       reader.onloadend = () => {
+//         const base64String = reader.result as string;
+//         // Remove the prefix if it exists
+//         const base64WithoutPrefix = base64String.split(',')[1];
+//         resolve(base64WithoutPrefix);
+//       };
+//       reader.onerror = reject;
+//       reader.readAsDataURL(blob);
+//     });
+//   };
   
 
- const convertFileToBase64 = (file: any): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result as string;
-      // Remove the prefix if it exists
-      const base64WithoutPrefix = base64String.split(',')[1];
-      resolve(base64WithoutPrefix);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-};
+//  const convertFileToBase64 = (file: any): Promise<string> => {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.onloadend = () => {
+//       const base64String = reader.result as string;
+//       // Remove the prefix if it exists
+//       const base64WithoutPrefix = base64String.split(',')[1];
+//       resolve(base64WithoutPrefix);
+//     };
+//     reader.onerror = reject;
+//     reader.readAsDataURL(file);
+//   });
+// };
 
-const  generateParticipation = async()=>{
-  const fetchedImageData = await convertFileToBase64(artworks[0].file);
-  console.log(Badge.src)
-   const fetchedLogoData = await fetchImageAsBase64(Badge.src);
-  const file = await fetchImage(fetchedImageData, fetchedLogoData);
+// const  generateParticipation = async()=>{
+//   const fetchedImageData = await convertFileToBase64(artworks[0].file);
+//   console.log(Badge.src)
+//    const fetchedLogoData = await fetchImageAsBase64(Badge.src);
+//   const file = await fetchImage(fetchedImageData, fetchedLogoData);
   
-  if (file) {
-    artworks[1] = { ...artworks[1], file, fileName: file.name };
-  } else {
-    artworks[1] = { ...artworks[1], file: null, fileName: '' };
-  }
-  console.log(artworks[1]);
-}
+//   if (file) {
+//     artworks[1] = { ...artworks[1], file, fileName: file.name };
+//   } else {
+//     artworks[1] = { ...artworks[1], file: null, fileName: '' };
+//   }
+//   console.log(artworks[1]);
+// }
   
 useEffect(() => {
   const isFirstFileUploaded = artworks[0]?.file !== null;
@@ -109,7 +109,7 @@ useEffect(() => {
       return;
     }
     setUploading(true);
-    await generateParticipation();
+    // await generateParticipation();
    
     try {
       const artBattle: Partial<ArtData> = { artistId: activeAccountId };
@@ -138,10 +138,10 @@ useEffect(() => {
             artBattle.colouredArt = url;
             artBattle.colouredArtReference = referenceUrl;
             break;
-          case 'Upload Derivative Edition':
-            artBattle.grayScale = url;
-            artBattle.grayScaleReference = referenceUrl;
-              break;
+          // case 'Upload Derivative Edition':
+          //   artBattle.grayScale = url;
+          //   artBattle.grayScaleReference = referenceUrl;
+          //     break;
           default:
             break;
         }

@@ -2,7 +2,7 @@ import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import ArtTable from '../model/ArtTable';
 import Voting from '../model/Voting';
-
+import runProcess from "./generateImage";
 export const countVotes = async (): Promise<void> => {
     await connectToDatabase();
     const battles = await Battle.find({
@@ -18,6 +18,15 @@ export const countVotes = async (): Promise<void> => {
         const winningArt = artAVotes.length >= artBVotes.length ? 'Art A' : 'Art B';
         console.log(artAVotes.map(vote => vote.participantId));
         console.log(artBVotes.map(vote => vote.participantId));
+        if(winningArt==='Art A'){
+        const result =   await runProcess(battle.artAcolouredArt,battle.artBcolouredArt,battle.artAtitle,battle.artBartistId,battle.artAartistId);
+        battle.grayScale = result?.url;
+        battle.grayScaleReference = result?.referenceUrl;
+        }else if(winningArt==='Art B'){
+          const result =   await runProcess(battle.artBcolouredArt,battle.artAcolouredArt,battle.artBtitle,battle.artAartistId,battle.artBartistId);
+          battle.grayScale = result?.url;
+          battle.grayScaleReference = result?.referenceUrl;
+        }
         // Update battle information
         battle.artAVotes = artAVotes.length;
         battle.artBVotes = artBVotes.length;
