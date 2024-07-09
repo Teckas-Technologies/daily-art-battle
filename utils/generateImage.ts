@@ -3,6 +3,7 @@ import axios from 'axios';
 import Jimp from 'jimp';
 import Badge from '../public/images/badge.png';
 import { uploadFile,uploadReference } from '@mintbase-js/storage';
+import { BASE_URL } from '@/config/constants';
 async function processImage(imageDataURL:any, losingDataURL:any, logoDataURL:any,text:any,text2:any,text3:any) {
   try {
     const [imageResponse, losingDataResponse, logoResponse] = await Promise.all([
@@ -41,7 +42,7 @@ async function processImage(imageDataURL:any, losingDataURL:any, logoDataURL:any
 
     shadowImage.blur(shadowBlur);
 
-    const x = originalImage.bitmap.width - losingArtImage.bitmap.width - shadowOffset - shadowBlur;
+    const x = originalImage.bitmap.width - losingArtImage.bitmap.width - shadowOffset - shadowBlur - 30;
     const y = originalImage.bitmap.height - losingArtImage.bitmap.height - shadowOffset - shadowBlur - 80;
 
     // Composite the shadow and losing art onto the original image
@@ -63,35 +64,35 @@ async function processImage(imageDataURL:any, losingDataURL:any, logoDataURL:any
       });
 
     // Load the font (Jimp.FONT_SANS_32_BLACK for black color)
-    const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
-
+    const font1 = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+    const font2 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
     // Add black text at the top center
   
-    const textWidth = Jimp.measureText(font, text);
+    const textWidth = Jimp.measureText(font2, text);
     const textX = (originalImage.bitmap.width - textWidth) / 2;
     const textY = 10; // Padding from the top
 
-    originalImage.print(font, textX, textY, {
+    originalImage.print(font2, textX, textY, {
       text: text,
       alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
       alignmentY: Jimp.VERTICAL_ALIGN_TOP
     }, textWidth);
 
 
-    const text2Width = Jimp.measureText(font, text2);
-    const text2X = originalImage.bitmap.width - text2Width  ; // 10px margin from the right
+    const text2Width = Jimp.measureText(font2, text2);
+    const text2X = originalImage.bitmap.width - text2Width -30 ; // 10px margin from the right
     const text2Y = originalImage.bitmap.height-40; // 10px margin from the bottom
-    originalImage.print(font, text2X, text2Y, {
+    originalImage.print(font2, text2X, text2Y, {
       text: text2,
       alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT,
       alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM
     }, text2Width);
 
     // Add text 3 (aligned to the right bottom with margin top)
-    const text3Width = Jimp.measureText(font, text3);
-    const text3X = originalImage.bitmap.width - text3Width ; // 10px margin from the right
+    const text3Width = Jimp.measureText(font1, text3);
+    const text3X = originalImage.bitmap.width - text3Width -30 ; // 10px margin from the right
     const text3Y = originalImage.bitmap.height -70; // 60px margin from the bottom
-    originalImage.print(font, text3X, text3Y, {
+    originalImage.print(font1, text3X, text3Y, {
       text: text3,
       alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT,
       alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM
@@ -107,11 +108,12 @@ async function processImage(imageDataURL:any, losingDataURL:any, logoDataURL:any
   }
 }
 
+
 export default async function runProcess(imageData:any,losingData:any,text:any,text2:any,text3:any) {
   const imageDataURL =imageData;
   const losingDataURL = losingData;
-  const logoDataURL = `http://localhost:3000/${Badge.src}`;
-
+  const logoDataURL =  BASE_URL + Badge.src;
+  console.log(logoDataURL)
   try {
     const processedImageBuffer = await processImage(imageDataURL, losingDataURL, logoDataURL,text,text2,text3);
     const blob = new Blob([processedImageBuffer], { type: 'image/jpeg' });
