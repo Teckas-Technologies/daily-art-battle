@@ -171,7 +171,7 @@ export default async function runProcess() {
 console.log(battle)
   if (battle) {
    
-      const logoDataURL = BASE_URL + Badge.src;
+      const logoDataURL = "https://daily-art-battle-n5zj-git-grid-changes-teckas-technologies.vercel.app/" + Badge.src;
       console.log(logoDataURL);
       try {
         let processedImageBuffer;
