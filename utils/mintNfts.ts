@@ -6,7 +6,8 @@ import testrunProcess from "./testGenerate";
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
     console.log("Minting nft");
-    await testrunProcess();
+   const res= await testrunProcess();
+   console.log(res);
     const battle = await Battle.findOne({
         isNftMinted: false,
         isBattleEnded: true
