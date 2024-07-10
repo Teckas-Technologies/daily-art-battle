@@ -111,7 +111,9 @@ export default async function testrunProcess() {
               battle.artAartistId
             );
           }
-          
+
+          console.log(processedImageBuffer);
+
           if (processedImageBuffer && Buffer.isBuffer(processedImageBuffer)) {
             const blob = new Blob([processedImageBuffer], { type: "image/jpeg" });
   
