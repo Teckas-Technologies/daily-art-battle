@@ -18,15 +18,6 @@ export const countVotes = async (): Promise<void> => {
         const winningArt = artAVotes.length >= artBVotes.length ? 'Art A' : 'Art B';
         console.log(artAVotes.map(vote => vote.participantId));
         console.log(artBVotes.map(vote => vote.participantId));
-        if(winningArt==='Art A'){
-        const result =   await runProcess(battle.artAcolouredArt,battle.artBcolouredArt,battle.artAtitle,battle.artAartistId,battle.artBartistId);
-        battle.grayScale = result?.url;
-        battle.grayScaleReference = result?.referenceUrl;
-        }else if(winningArt==='Art B'){
-          const result =   await runProcess(battle.artBcolouredArt,battle.artAcolouredArt,battle.artBtitle,battle.artBartistId,battle.artAartistId);
-          battle.grayScale = result?.url;
-          battle.grayScaleReference = result?.referenceUrl;
-        }
         // Update battle information
         battle.artAVotes = artAVotes.length;
         battle.artBVotes = artBVotes.length;
