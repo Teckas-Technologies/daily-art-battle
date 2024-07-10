@@ -1,6 +1,5 @@
 const { createCanvas, loadImage } = require('canvas');
 const axios = require('axios');
-import Jimp from "jimp";
 import Badge from "../public/images/badge.png";
 import { uploadFile, uploadReference } from "@mintbase-js/storage";
 import { BASE_URL } from "@/config/constants";
@@ -41,10 +40,10 @@ async function processImage(imageDataURL:any, losingDataURL:any, logoDataURL:any
     ctx.shadowOffsetY = 3;
     ctx.drawImage(losingArtImage, originalImage.width - losingArtWidth - 30, originalImage.height - losingArtHeight - 80, losingArtWidth, losingArtHeight);
 
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-    ctx.shadowBlur = 3;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
 
     // Add text 1 (bottom right of losing art image)
     ctx.font = '26px Arial';
@@ -88,9 +87,7 @@ export default async function testrunProcess() {
   
   console.log(battle)
     if (battle) {
-     
         const logoDataURL = BASE_URL + Badge.src;
-        console.log(logoDataURL);
         try {
           let processedImageBuffer;
           if (battle.winningArt === "Art A") {
@@ -114,7 +111,7 @@ export default async function testrunProcess() {
               battle.artAartistId
             );
           }
-          console.log(processedImageBuffer)
+          
           if (processedImageBuffer && Buffer.isBuffer(processedImageBuffer)) {
             const blob = new Blob([processedImageBuffer], { type: "image/jpeg" });
   
