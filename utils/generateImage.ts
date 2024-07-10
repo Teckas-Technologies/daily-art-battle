@@ -11,6 +11,7 @@ async function processImage(
   losingDataURL: any,
   logoDataURL: any,
   text: any,
+  text1:any,
   text2: any,
   text3: any
 ) {
@@ -29,10 +30,32 @@ async function processImage(
       Jimp.read(Buffer.from(logoResponse.data)),
     ]);
 
+    const font1 = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
+    const font2 = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+    const font3 = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE);
+
+    
+
+
     logoImage.resize(originalImage.bitmap.width, originalImage.bitmap.height);
 
-    const losingArtWidth = 256;
-    losingArtImage.resize(losingArtWidth, Jimp.AUTO);
+    const losingArtWidth = 366;
+    losingArtImage.resize(losingArtWidth, 266);
+
+    const text1Width = Jimp.measureText(font1, text1);
+    const text1X = losingArtImage.bitmap.width - text1Width - 10; // 10px margin from the right
+    const text1Y = losingArtImage.bitmap.height - 40; // 10px margin from the bottom
+    losingArtImage.print(
+      font1,
+      text1X,
+      text1Y,
+      {
+        text: text1,
+        alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT,
+        alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM,
+      },
+      text1Width
+    );
 
     const shadowOffset = 3; // Small shadow offset
     const shadowBlur = 3; // Shadow blur
@@ -98,9 +121,7 @@ async function processImage(
         opacityDest: 1,
       });
 
-    // Load the font (Jimp.FONT_SANS_32_BLACK for black color)
-    const font1 = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
-    const font2 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+
     // Add black text at the top center
 
     const textWidth = Jimp.measureText(font2, text);
@@ -119,11 +140,12 @@ async function processImage(
       textWidth
     );
 
-    const text2Width = Jimp.measureText(font2, text2);
+ 
+    const text2Width = Jimp.measureText(font3, text2);
     const text2X = originalImage.bitmap.width - text2Width - 30; // 10px margin from the right
     const text2Y = originalImage.bitmap.height - 40; // 10px margin from the bottom
     originalImage.print(
-      font2,
+      font3,
       text2X,
       text2Y,
       {
@@ -171,7 +193,7 @@ export default async function runProcess() {
 console.log(battle)
   if (battle) {
    
-      const logoDataURL = "https://daily-art-battle-n5zj-git-grid-changes-teckas-technologies.vercel.app/" + Badge.src;
+      const logoDataURL = BASE_URL + Badge.src;
       console.log(logoDataURL);
       try {
         let processedImageBuffer;
@@ -181,6 +203,7 @@ console.log(battle)
             battle.artBcolouredArt,
             logoDataURL,
             battle.artAtitle,
+            battle.artBtitle,
             battle.artAartistId,
             battle.artBartistId
           );
@@ -190,6 +213,7 @@ console.log(battle)
             battle.artAcolouredArt,
             logoDataURL,
             battle.artBtitle,
+            battle.artAtitle,
             battle.artBartistId,
             battle.artAartistId
           );

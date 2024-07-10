@@ -2,10 +2,11 @@ import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import ArtTable from '../model/ArtTable';
 import { serverMint } from "./serverMint";
-
+import testrunProcess from "./testGenerate";
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
     console.log("Minting nft");
+    await testrunProcess();
     const battle = await Battle.findOne({
         isNftMinted: false,
         isBattleEnded: true
