@@ -23,6 +23,7 @@ export const getCallbackUrl = () => {
 }
 
 
+
 const MintbaseWalletSetup = {
   contractAddress: process.env.ART_BATTLE_CONTRACT,
   network: process.env.NEXT_PUBLIC_NETWORK as any,
