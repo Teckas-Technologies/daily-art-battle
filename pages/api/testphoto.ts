@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Jimp from 'jimp';
 import runProcess from '../../utils/generateImage';
-
+import { uploadFile, uploadReference } from "@mintbase-js/storage";
+import { BASE_URL } from "@/config/constants";
 // Configure the API handler
 export const config = {
   api: {
@@ -58,12 +59,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Get the processed image as a buffer
       const processedImageBuffer = await originalImage.getBufferAsync(Jimp.MIME_JPEG);
 
-    //   // Set response headers for a downloadable file
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Content-Disposition', 'attachment; filename="processed_image.jpg"');
+      const blob = new Blob([processedImageBuffer], { type: "image/jpeg" });
+  
+      const processedFile = new File([blob], "processed-image.jpg", {
+        type: "image/jpeg",
+      });
+      const uploadResult = await uploadFile(processedFile);
+      const url = `https://arweave.net/${uploadResult.id}`;
 
-      // Send the processed image buffer as the response
-      return res.status(200).send(processedImageBuffer);
+      const metadata = {
+        title: "Art Battle",
+        media: processedFile,
+      };
+
+      const referenceResult = await uploadReference(metadata);
+      const referenceUrl = `https://arweave.net/${referenceResult.id}`;
+
+      console.log(url, referenceUrl);
+     
+      console.log("saved",res);
+      return res.status(200).send( { url, referenceUrl });
     } catch (error) {
       console.error('Error processing image:', error);
       return res.status(500).json({ message: 'Internal Server Error' });
