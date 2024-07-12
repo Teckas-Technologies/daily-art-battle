@@ -88,6 +88,7 @@ export default async function testrunProcess() {
   console.log(battle)
     if (battle) {
         const logoDataURL = BASE_URL + Badge.src;
+        console.log(logoDataURL);
         try {
           let processedImageBuffer;
           if (battle.winningArt === "Art A") {
@@ -135,7 +136,7 @@ export default async function testrunProcess() {
             battle.grayScale = url;
             battle.grayScaleReference = referenceUrl;
             const res =  await battle.save();
-            console.log("saved",res);
+  
             return { url, referenceUrl };
           }
         } catch (error) {

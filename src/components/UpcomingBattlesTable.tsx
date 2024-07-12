@@ -32,7 +32,11 @@ const UpcomingArtTable: React.FC<{
 
   useEffect(() => {
     if (arts) {
-      setHasNext(page == totalPage - 1);
+      if (page <= totalPage - 1) {
+        setHasNext(true);
+      } else {
+        setHasNext(false);
+      }
     }
     setUpcomingArts(arts);
   }, [arts]);
