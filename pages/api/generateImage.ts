@@ -32,6 +32,7 @@ export default async function handler(
         throw new Error('Failed to download image');
       }
   
+      
       const buffer = await response.arrayBuffer(); // Get image data as buffer
   
       // Send image as Blob in response
