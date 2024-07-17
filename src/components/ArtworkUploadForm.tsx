@@ -7,6 +7,7 @@ import { Button } from './ui/button';
 import { useFetchImage } from "../hooks/testImageHook";
 import Badge from '../../public/images/badge.png';
 import { useFetchGeneratedImage } from "../hooks/generateImageHook";
+import Toast from './Toast'; 
 interface Artwork {
   name: string;
   file: File | null|undefined;
@@ -38,6 +39,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const[imageChoose,setImageChoosen] = useState(false);
   const [message, setMessage] = useState<string>('');
   const[disable,setDisable]=useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null); 
 
 
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -230,9 +232,9 @@ useEffect(() => {
         }
       }
       await saveData(artBattle as ArtData);
-      alert('All files uploaded successfully');
+      setToastMessage('All files uploaded successfully');
       onSuccessUpload();
-      onClose();
+     setTimeout(()=>{onClose();},2000)
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Failed to upload files. Please check the files and try again.');
@@ -246,6 +248,9 @@ useEffect(() => {
         <h2 className="text-lg font-bold mb-2 text-center" style={{ color: '#3deb34', paddingBottom: 6, borderBottom: '1.5px solid white', fontSize: 18 }}>Upload Artwork</h2>
        
         <form onSubmit={uploadArtWork}>
+        {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+      )}
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>
               {index === 0 && (
@@ -327,7 +332,7 @@ useEffect(() => {
               <br></br>
             </div>
           ))}
-          <hr className='mt-4'></hr>
+          <hr ></hr>
 
           <div className='mb-1'>
             <label className="mt-4 block text-sm font-medium text-gray-900 break-words" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
@@ -355,6 +360,7 @@ useEffect(() => {
           </div>
         </form>
       </div>
+      
     </div>
   );
 };

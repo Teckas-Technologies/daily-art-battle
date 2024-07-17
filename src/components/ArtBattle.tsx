@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import { Skeleton } from "./ui/skeleton";
 import ArtTable from "../../model/ArtTable";
+import Toast from './Toast'; 
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -44,6 +45,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const [refresh, setRefresh] = useState(false);
   const[popupA,setPopUpA] = useState(false);
   const[popupB,setPopUpB] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null); 
   useEffect(() => {
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
@@ -117,10 +119,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
     });
     if (success) {
       setSuccess(true);
-      alert("Vote submitted successfully!");
+     setToastMessage("Vote submitted successfully!");
       setRefresh((prev) => !prev);
     } else {
-      alert("Failed to submit vote. Maybe you already voted!");
+     setToastMessage("Failed to submit vote. Maybe you already voted!");
     }
   };
 
@@ -461,6 +463,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         
       </div>
       */}
+        {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+      )}
     </div>
   );
 };

@@ -53,7 +53,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
 
   return (
     <section id="previous">
-    <div className="battle-table mt-8 pb-10 flex flex-col items-center">
+    <div className="battle-table mt-8 pb-10 md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center">
       <h2 className="text-xl font-bold text-black text-center">
         Previous Battles
       </h2>
@@ -228,10 +228,10 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
             </table>
           </div>
         </div>
-        <nav className="flex justify-center flex-wrap gap-4 mt-2">
+        <nav className="flex justify-center flex-wrap gap-5 mt-6">
           <a
             href="#previous"
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
                 : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
@@ -242,7 +242,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
           </a>
           <a
           href="#previous"
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+            className={` shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "cursor-not-allowed"
                 : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
