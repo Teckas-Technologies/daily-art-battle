@@ -27,7 +27,6 @@ export const useFetchGeneratedImage = () => {
           const base64String = data.imageBlob;
           const blob = base64ToBlob(base64String, 'image/png'); 
            fetchedFile = new File([blob], 'GeneratedImage.png', { type: 'image/png' });
-          console.log(fetchedFile);
           setFile(fetchedFile); 
         }
       return { imageUrl: data.imageUrl, file: fetchedFile };

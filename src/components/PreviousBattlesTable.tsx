@@ -166,7 +166,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                             className="flex flex-col items-center h-full w-full"
                           >
                             <div
-                              className="relative w-full h-full opacity-50 hover:opacity-100"
+                              className="relative w-full h-full"
                               style={{
                                 borderTopLeftRadius: 40,
                                 borderBottomLeftRadius: 40,

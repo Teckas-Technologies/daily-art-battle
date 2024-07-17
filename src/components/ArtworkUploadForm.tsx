@@ -37,6 +37,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const[choose,setFileChoosen] = useState(false);
   const[imageChoose,setImageChoosen] = useState(false);
   const [message, setMessage] = useState<string>('');
+  const[disable,setDisable]=useState(false);
 
 
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -78,10 +79,16 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   };
   
   const handlePrompt = () => {
+    const newArtworks = [...artworks];
+    newArtworks[0] = { ...newArtworks[0], file: null, fileName: '' ,previewUrl: '' };
+    setArtworks(newArtworks); 
+    setDisable(true)
+    setMessage('');
     setPrompt(true);
   }
 
   const handleClosePrompt = (event: React.MouseEvent) => {
+     setDisable(false);
     event.preventDefault(); 
     setPrompt(false);
     setMessage('');
@@ -102,18 +109,21 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
     event.preventDefault(); // Prevent form submission
     setImageCreating(true);
     const res = await fetchGeneratedImage(message);
+    
     if (res) {
       const newArtworks = [...artworks];
       newArtworks[0] = { ...newArtworks[0], previewUrl: res?.imageUrl,file:res.file };
+      setImageChoosen(false);
       setArtworks(newArtworks); 
       setPrompt(false);
       setImageCreating(false);
     }
-    console.log(res);
+    
   }
 
   const handleChoosenImage = async (event: React.MouseEvent) => {
     event.preventDefault();
+    setDisable(false);
     setFileChoosen(true);
     setImageChoosen(true);
 
@@ -156,7 +166,6 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
 
 const  generateParticipation = async()=>{
   const fetchedImageData = await convertFileToBase64(artworks[0].file);
-  console.log(Badge.src)
    const fetchedLogoData = await fetchImageAsBase64(Badge.src);
   const file = await fetchImage(fetchedImageData, fetchedLogoData);
   
@@ -165,7 +174,7 @@ const  generateParticipation = async()=>{
   } else {
     artworks[1] = { ...artworks[1], file: null, fileName: '' };
   }
-  console.log(artworks[1]);
+
 }
   
 useEffect(() => {
@@ -235,8 +244,7 @@ useEffect(() => {
     <div className="navbar fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
       <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #3deb34', height: 'auto' , position: 'relative', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
         <h2 className="text-lg font-bold mb-2 text-center" style={{ color: '#3deb34', paddingBottom: 6, borderBottom: '1.5px solid white', fontSize: 18 }}>Upload Artwork</h2>
-        <h2 className='text-lg font-medium mb-2 text-red-200 text-center'>Please upload 2 files</h2>
-        <hr></hr>
+       
         <form onSubmit={uploadArtWork}>
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>
@@ -247,7 +255,7 @@ useEffect(() => {
                   </label>
                   <label
                     htmlFor={`fileInput-${index}`}
-                    className="cursor-pointer bg-white text-sm text-gray-900 rounded-lg focus:outline-none pb-2 mt-2"
+                    className={` bg-white text-sm text-gray-900 rounded-lg focus:outline-none pb-2 mt-2 ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                     style={{
                       padding: 5,
                       border: 'none',
@@ -257,13 +265,18 @@ useEffect(() => {
                   >
                     {artwork.name}
                   </label>
-                  <input type="file" id={`fileInput-${index}`} className="hidden" onChange={handleFileChange(index)} />
-                  <span className="px-3 text-sm text-gray-600">{artwork.fileName} </span> 
-                 <span onClick={handlePrompt} className='text-sm text-white cursor-pointer'>Generate using Ai</span>
+                  <input  className={` hidden ${disable ? 'cursor-not-allowed' : ''}`} disabled={disable} type="file"  id={`fileInput-${index}`}  onChange={handleFileChange(index)} />
+                  <span className={`px-3 text-sm text-gray-600 ${disable ? 'cursor-not-allowed' : ''}`}>{artwork.fileName} </span> 
+                 <button  disabled={disable} onClick={handlePrompt} className={`text-sm rounded-lg text-gray-900 bg-white pb-1  ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}  style={{
+                      padding: 4,
+                      border: 'none',
+                      color: '#000',
+                      fontSize: 13
+                    }}>Generate using AI</button>
                  {prompt &&(
                  <>
-                 <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                   Your message
+                 <label htmlFor="message" className="mt-3 block mb-2 break-words text-sm font-medium text-red-500 dark:text-white">
+                   Image generation will take one minute.
                  </label>
                   <textarea
                     id="message"
