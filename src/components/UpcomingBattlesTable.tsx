@@ -32,7 +32,11 @@ const UpcomingArtTable: React.FC<{
 
   useEffect(() => {
     if (arts) {
-      setHasNext(page == totalPage - 1);
+      if (page <= totalPage - 1) {
+        setHasNext(true);
+      } else {
+        setHasNext(false);
+      }
     }
     setUpcomingArts(arts);
   }, [arts]);
@@ -61,7 +65,7 @@ const UpcomingArtTable: React.FC<{
         <h2 className="text-xl font-bold text-black text-center">
           Upcoming Arts
         </h2>
-        <p className="px-4 text-center text-black font-mono mt-5 sm:font-thin md:text-lg">
+        <p className="px-4 text-center text-black font-mono mt-5 ml-20 mr-20 sm:font-thin md:text-lg">
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}
@@ -80,10 +84,10 @@ const UpcomingArtTable: React.FC<{
           </div>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
-        <nav className="flex justify-center flex-wrap gap-4 mt-2">
+        <nav className="flex justify-center flex-wrap gap-5 mt-2">
           <a
           href="#upcoming"
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
                 : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
@@ -94,7 +98,7 @@ const UpcomingArtTable: React.FC<{
           </a>
           <a
            href="#upcoming"
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
                 : "cursor-not-allowed"
