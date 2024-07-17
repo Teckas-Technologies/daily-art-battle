@@ -167,7 +167,7 @@ const BattleTable: React.FC<{
                 <img
                   src={art.colouredArt}
                   alt="Art A"
-                  className="w-full h-full object-cover opacity-50 hover:opacity-100"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                   style={{
                     height: "100%", // Ensuring the image takes the full height of its container
