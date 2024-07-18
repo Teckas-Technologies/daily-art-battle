@@ -16,11 +16,11 @@ export const findAllArts = async (page: number, limit: number): Promise<any> => 
   const skip = limit * (page === 1 ? 0 : page - 1); 
   const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
   const totalPages = Math.ceil(totalDocuments / limit);
-  // Find the documents with sorting, skipping, and limiting
   const arts = await ArtTable.find({ isStartedBattle: false })
-  .sort({ upVotes: -1 })
+  .sort({ upVotes: -1,_id: 1 })
   .skip(skip)
-  .limit(limit);
+  .limit(limit)
+  .exec();
 
   return {arts,totalDocuments,totalPages};
 };
