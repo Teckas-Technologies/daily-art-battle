@@ -131,3 +131,36 @@ export const useSaveData = (): UseSaveDataResult => {
       return { battles, loading, error,fetchMoreBattles: fetchBattles };
         }
  
+
+
+
+        export const useFetchArtById = () => {
+          const [art, setArts] = useState<ArtData | null>(null);
+          const [loading, setLoading] = useState<boolean>(false);
+          const [error, setError] = useState<string | null>(null);
+        
+        
+              const fetchArtById = async (id:any) => {
+                  setLoading(true);
+                  setError(null);
+                  try {
+                      const response = await fetch(`/api/art?queryType=upcoming&id=${id}`);
+                      if (!response.ok) throw new Error('Network response was not ok');
+                      const data = await response.json();
+                      
+                      setArts(data.art);
+                      return data.art;
+                  } catch (err) {
+                      console.error('Error fetching art:', err);
+                      setError("Error fetching art!");
+                  } finally {
+                      setLoading(false);
+                  }
+              };
+        
+              
+             
+        
+          return { fetchArtById};
+            }
+     

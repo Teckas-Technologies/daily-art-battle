@@ -7,7 +7,7 @@ import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
-
+import { useRouter } from 'next/navigation';
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
   uploadSuccess: boolean;
@@ -122,6 +122,7 @@ const BattleTable: React.FC<{
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserVotes = async () => {
@@ -133,6 +134,10 @@ const BattleTable: React.FC<{
 
     fetchUserVotes();
   }, [activeAccountId, fetchVotes]);
+
+  const handleArt = (id:any)=>{
+    router.push(`/art/${id}`);
+  }
 
   const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
@@ -169,9 +174,10 @@ const BattleTable: React.FC<{
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
                 <img
+                onClick={()=>handleArt(art._id)}
                   src={art.colouredArt}
                   alt="Art A"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:cursor-pointer"
                   loading="lazy"
                   style={{
                     height: "100%", // Ensuring the image takes the full height of its container

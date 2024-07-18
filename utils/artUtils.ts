@@ -79,3 +79,9 @@ export const findBattles = async (): Promise<any> => {
   await connectToDatabase();
   return await ArtTable.find().sort({ upVotes: -1 }).limit(2).exec();
 };
+
+export const findArtById = async (id:any): Promise<any> => {
+  await connectToDatabase();
+  return await ArtTable.findOne({_id:id});
+};
+

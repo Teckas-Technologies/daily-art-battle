@@ -203,7 +203,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
 
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words break-all text-black text-center special-winner">
                         {battle.specialWinner == null
-                          ? `NA`
+                          ? `Insufficient votes`
                           : battle.specialWinner}
                         <br />
                       </td>
