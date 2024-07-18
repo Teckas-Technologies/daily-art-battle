@@ -5,3 +5,4 @@ export const SPECIAL_WINNER_CONTRACT = process.env.SPECIAL_WINNER_CONTRACT || "g
 export const SERVER_WALLET_PK = process.env.SERVER_WALLET_PK || 'anon';
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 export const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/"
+export const OPENAI = process.env.OPENAI || ""

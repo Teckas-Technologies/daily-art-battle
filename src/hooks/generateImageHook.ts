@@ -3,9 +3,11 @@ import { useState } from 'react';
 export const useFetchGeneratedImage = () => {
   const [imageUrl, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchGeneratedImage = async (prompt: string) => {
     try {
+      setError(null);
       const response = await fetch('/api/generateImage', {
         method: 'POST',
         headers: {
@@ -17,6 +19,7 @@ export const useFetchGeneratedImage = () => {
       });
 
       if (!response.ok) {
+        setError('Failed to fetch the image. Please try again.');
         throw new Error('Network response was not ok');
       }
 
@@ -29,13 +32,15 @@ export const useFetchGeneratedImage = () => {
            fetchedFile = new File([blob], 'GeneratedImage.png', { type: 'image/png' });
           setFile(fetchedFile); 
         }
-      return { imageUrl: data.imageUrl, file: fetchedFile };
+      return { imageUrl: data.imageUrl, file: fetchedFile};
     } catch (err) {
       console.error('Error fetching image:', err);
+      setError('An error occurred while fetching the image.');
+      return null;
     }
   };
 
-  return { imageUrl, file, fetchGeneratedImage };
+  return { imageUrl, file, fetchGeneratedImage,error };
 };
 
 const base64ToBlob = (base64String: string, contentType: string): Blob => {
