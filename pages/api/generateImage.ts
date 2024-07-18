@@ -1,10 +1,11 @@
 // pages/api/generateImage.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
+import { OPENAI } from '@/config/constants';
 
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI,
+  apiKey: OPENAI,
 });
 
 export default async function handler(

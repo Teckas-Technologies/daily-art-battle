@@ -13,14 +13,15 @@ export async function scheduleArt(data: any): Promise<any> {
 
 export const findAllArts = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
-  const skip = (page - 1) * limit;
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false })
-  .sort({ upVotes: -1 });
+  const skip = limit * (page === 1 ? 0 : page - 1); 
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
   const totalPages = Math.ceil(totalDocuments / limit);
+  // Find the documents with sorting, skipping, and limiting
   const arts = await ArtTable.find({ isStartedBattle: false })
-    .sort({ upVotes: -1 })
-    .skip(skip)
-    .limit(limit);
+  .sort({ upVotes: -1 })
+  .skip(skip)
+  .limit(limit);
+
   return {arts,totalDocuments,totalPages};
 };
 
@@ -31,7 +32,10 @@ export const findPreviousArts = async (page: number, limit: number): Promise<any
   const skip = (page - 1) * limit;
   const totalDocuments = await ArtTable.countDocuments({ endTime: { $lt: today } }).sort({ endTime: -1 });
   const totalPages = Math.ceil(totalDocuments / limit);
-  const pastBattles = await ArtTable.find({ endTime: { $lt: today } }).sort({ endTime: -1 }).skip(skip).limit(limit);
+  const pastBattles = await ArtTable.find({ endTime: { $lt: today } })
+  .sort({ endTime: -1 })
+  .skip(skip)
+  .limit(limit);
   return { pastBattles,totalDocuments,totalPages };
 }
 
@@ -42,7 +46,10 @@ export const findPreviousArtsByVotes = async (page: number, limit: number): Prom
   const skip = (page - 1) * limit;
   const totalDocuments = await ArtTable.countDocuments({ endTime: { $lt: today } }).sort({ votes: -1 });
   const totalPages = Math.ceil(totalDocuments / limit);
-  const pastBattles = await ArtTable.find({ endTime: { $lt: today } }).sort({ votes: -1 }).skip(skip).limit(limit);
+  const pastBattles = await ArtTable.find({ endTime: { $lt: today } })
+  .sort({ votes: -1 })
+  .skip(skip)
+  .limit(limit);
   return { pastBattles,totalDocuments,totalPages };
 } 
 

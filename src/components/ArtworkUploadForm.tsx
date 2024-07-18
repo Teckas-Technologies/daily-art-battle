@@ -33,13 +33,14 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const [isFormValid, setIsFormValid] = useState(false);
   const {image,fetchImage} = useFetchImage();
   const [imageCreating, setImageCreating] = useState(false);
-  const { imageUrl,file, fetchGeneratedImage } = useFetchGeneratedImage();  
+  const { imageUrl,file, fetchGeneratedImage,error } = useFetchGeneratedImage();  
   const [prompt, setPrompt] = useState(false);
   const[choose,setFileChoosen] = useState(false);
   const[imageChoose,setImageChoosen] = useState(false);
   const [message, setMessage] = useState<string>('');
   const[disable,setDisable]=useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
+  const[imageError,setImageError] = useState(false);
 
 
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +79,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
 
   const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);
+    setImageError(false);
   };
   
   const handlePrompt = () => {
@@ -91,6 +93,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
 
   const handleClosePrompt = (event: React.MouseEvent) => {
      setDisable(false);
+     setImageError(false);
     event.preventDefault(); 
     setPrompt(false);
     setMessage('');
@@ -110,8 +113,8 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const handleCreate = async (event: React.MouseEvent) => {
     event.preventDefault(); // Prevent form submission
     setImageCreating(true);
+
     const res = await fetchGeneratedImage(message);
-    
     if (res) {
       const newArtworks = [...artworks];
       newArtworks[0] = { ...newArtworks[0], previewUrl: res?.imageUrl,file:res.file };
@@ -119,8 +122,13 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
       setArtworks(newArtworks); 
       setPrompt(false);
       setImageCreating(false);
-    }
-    
+      }else{
+        console.error("error");
+        setImageError(true);
+        setImageCreating(false);  
+       
+      }
+   
   }
 
   const handleChoosenImage = async (event: React.MouseEvent) => {
@@ -288,9 +296,10 @@ useEffect(() => {
                     rows={4}
                     value={message}
                     onChange={handleMessageChange}
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${imageError ? 'textarea-error' : ''}`}
                     placeholder="Write your thoughts here..."
                   ></textarea>
+                  {imageError && <label className="text-sm font-medium error-message">Please enter valid thoughts for image generation.</label>}
                   
                </>
                     )}

@@ -164,7 +164,7 @@ const BattleTable: React.FC<{
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
-        {artData.slice(-10).map((art, index) => (
+        {artData.map((art, index) => (
           <div key={index} className="flex justify-center overflow-hidden">
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
