@@ -280,7 +280,7 @@ useEffect(() => {
                   </label>
                   <input  className={` hidden ${disable ? 'cursor-not-allowed' : ''}`} disabled={disable} type="file"  id={`fileInput-${index}`}  onChange={handleFileChange(index)} />
                   <span className={`px-3 text-sm text-gray-600 ${disable ? 'cursor-not-allowed' : ''}`}>{artwork.fileName} </span> 
-                 <button  disabled={disable} onClick={handlePrompt} className={`text-sm rounded-lg text-gray-900 bg-white pb-1  ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}  style={{
+                 <button  disabled={disable} onClick={handlePrompt} className={`text-sm mt-3 rounded-lg text-gray-900 bg-white pb-1  ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}  style={{
                       padding: 4,
                       border: 'none',
                       color: '#000',

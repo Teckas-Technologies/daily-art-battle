@@ -1,14 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ArtPiece from "./ArtPiece";
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
-import { Button } from "./ui/button";
-import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import { Skeleton } from "./ui/skeleton";
-import ArtTable from "../../model/ArtTable";
 import Toast from './Toast'; 
+import { useFetchTheme } from "@/hooks/themeHook";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -40,13 +37,16 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [battleId, setBattleId] = useState<string>();
   const { votes, fetchVotes, submitVote } = useVoting();
+  const{fethcedThemeById}= useFetchTheme();
   const [success, setSuccess] = useState(false);
   const [votedFor, setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false);
   const[popupA,setPopUpA] = useState(false);
   const[popupB,setPopUpB] = useState(false);
+  const[title,setTitle] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
   useEffect(() => {
+   
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
         const res = await fetchVotes(activeAccountId, todayBattle._id);
@@ -60,7 +60,29 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
     fetchTodayBattle();
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
+
+  function getWeekOfYear(date: Date): number {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNumber = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+    return weekNumber;
+}
+
+
+
+const getTheme =async(week:any)=>{
+const res = await fethcedThemeById(week);
+if(res){
+setTitle(res.holidayInspiredTheme);
+}
+
+}
   useEffect(() => {
+    const date = new Date();
+    const weekNumber: number = getWeekOfYear(date);
+    getTheme(weekNumber);
+   
     if (todayBattle) {
       const endTime = new Date(todayBattle.endTime).getTime();
       const now = new Date().getTime();
@@ -119,10 +141,13 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
     });
     if (success) {
       setSuccess(true);
-     setToastMessage("Vote submitted successfully!");
+      setToastMessage("Vote submitted successfully!");
+    setTimeout(()=>{
+      setToastMessage(null);
+    },5000)
       setRefresh((prev) => !prev);
     } else {
-     setToastMessage("Failed to submit vote. Maybe you already voted!");
+    alert("Failed to submit vote. Maybe you already voted!");
     }
   };
 
@@ -246,9 +271,15 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
 
   return (
     <div className="mt-10 mx-8">
+     <h2
+          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap" }}
+        >
+          {title}
+        </h2>
       {timeRemaining !== null && (
         <h2
-          className="mt-9 text-xl font-bold text-black text-center justify-center items-center text-black text-center"
+          className=" text-xl font-bold text-black text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
@@ -329,19 +360,19 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       </div>
 
       <div className="flex items-center justify-center px-4">
-        <div className="flex flex-col items-center px-4">
+      <div className="flex flex-col items-center px-4">
           <p
             className="mt-4 max-h-5 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all"
             style={{ maxWidth: "300px" }}
           > 
           {popupA &&(
-              <div className="absolute pb-10 max-h-5 py-2">
+              <div className="absolute pb-10 py-2">
                <div className="bg-black border rounded-lg">
            <div className="popup-content">
             <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpA}>
               &times;
             </span>
-            <p className="text-white py-2">{artA.title}</p>
+            <p className="text-white py-2 ">{artA.title} by {artA.artistId}</p>
           </div>  
         </div>
               </div>
@@ -358,38 +389,39 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
                     </span>
                   </>
                 ) : (
-                  artA.title
+                  <>
+                  {artA.title} by  {artA.artistId}
+                  </>
                 )}
              
            
-            {' '}
-                by {artA.artistId}
+          
           </p>
-          {!popupA &&(
+      
           <div className="flex items-center mt-10">
             {votedFor === artA.name ? (
-              <Button
+              <button
                 onClick={() => onVote(artA.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs py-4 font-semibold bg-green-600 text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Voted {artA.name}
-              </Button>
+              </button>
             ) : (
-              <Button
+              <button
                 onClick={() => onVote(artA.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs  py-4 vote-btn text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-gray-900 hover:bg-gray-700 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Pick {artA.name}
-              </Button>
+              </button>
             )}
           </div>
-          )}
+    
         </div>
         <div className="flex flex-col items-center px-4">
           <p
@@ -397,13 +429,13 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
             style={{ maxWidth: "300px" }}
           >
             {popupB &&(
-              <div className="absolute pb-10 max-h-5 py-2">
+              <div className="absolute pb-10  py-2">
                <div className="bg-black border rounded-lg">
            <div className="popup-content">
             <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpB}>
               &times;
             </span>
-            <p className="text-white py-2">{artB.title}</p>
+            <p className="text-white py-2 break-all">{artB.title} by {artB.artistId} </p>
           </div>
         </div>
               </div>
@@ -419,42 +451,43 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
                     </span>
                   </>
                 ) : (
-                  artB.title
+                  <>
+                  {artB.title} by {artB.artistId}
+                  </>
                 )}
              
            
-            {' '}
-                by {artB.artistId}
+        
           </p>
-          {!popupB &&(
+         
           <div className="flex items-center  mt-10 max-h-10">
            
             {votedFor === artB.name ? (
-              <Button
+              <button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs font-semibold bg-green-600 text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Voted {artB.name}
-              </Button>
+              </button>
             ) : (
-              <Button
+              <button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-4 text-xs vote-btn text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-gray-900 hover:bg-gray-700 text-white rounded  ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Pick {artB.name}
-              </Button>
+              </button>
             )}
          
           </div>
-)}
+
         </div>
-      </div>
+        </div>
 
       {/* <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
