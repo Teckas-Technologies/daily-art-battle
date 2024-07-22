@@ -7,7 +7,7 @@ import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
-
+import { useRouter } from 'next/navigation';
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
   uploadSuccess: boolean;
@@ -20,6 +20,7 @@ const UpcomingArtTable: React.FC<{
 
   useEffect(() => {
     const initializeData = async () => {
+   
       fetchMoreArts(page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
@@ -51,6 +52,9 @@ const UpcomingArtTable: React.FC<{
       fetchMoreArts(page - 1);
     }
   };
+
+
+  
   return (
     <section id="upcoming">
     <div
@@ -61,7 +65,7 @@ const UpcomingArtTable: React.FC<{
         <h2 className="text-xl font-bold text-black text-center">
           Upcoming Arts
         </h2>
-        <p className="px-4 text-center text-black font-mono mt-5 sm:font-thin md:text-lg">
+        <p className="px-4 text-center text-black font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}
@@ -80,10 +84,10 @@ const UpcomingArtTable: React.FC<{
           </div>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
-        <nav className="flex justify-center flex-wrap gap-4 mt-2">
+        <nav className="flex justify-center flex-wrap gap-5 mt-2">
           <a
           href="#upcoming"
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
                 : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
@@ -94,7 +98,7 @@ const UpcomingArtTable: React.FC<{
           </a>
           <a
            href="#upcoming"
-            className={`flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
                 : "cursor-not-allowed"
@@ -118,6 +122,7 @@ const BattleTable: React.FC<{
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserVotes = async () => {
@@ -129,6 +134,10 @@ const BattleTable: React.FC<{
 
     fetchUserVotes();
   }, [activeAccountId, fetchVotes]);
+
+  const handleArt = (id:any)=>{
+    router.push(`/art/${id}`);
+  }
 
   const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
@@ -160,14 +169,15 @@ const BattleTable: React.FC<{
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
-        {artData.slice(-10).map((art, index) => (
+        {artData.map((art, index) => (
           <div key={index} className="flex justify-center overflow-hidden">
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
                 <img
+                onClick={()=>handleArt(art._id)}
                   src={art.colouredArt}
                   alt="Art A"
-                  className="w-full h-full object-cover opacity-50 hover:opacity-100"
+                  className="w-full h-full object-cover hover:cursor-pointer"
                   loading="lazy"
                   style={{
                     height: "100%", // Ensuring the image takes the full height of its container
