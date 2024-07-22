@@ -1,13 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ArtPiece from "./ArtPiece";
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
-import { Button } from "./ui/button";
-import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import { Skeleton } from "./ui/skeleton";
-import ArtTable from "../../model/ArtTable";
 import Toast from './Toast'; 
 import { useFetchTheme } from "@/hooks/themeHook";
 interface Artwork {
@@ -85,7 +81,6 @@ setTitle(res.holidayInspiredTheme);
   useEffect(() => {
     const date = new Date();
     const weekNumber: number = getWeekOfYear(date);
-    console.log(weekNumber);
     getTheme(weekNumber);
    
     if (todayBattle) {
