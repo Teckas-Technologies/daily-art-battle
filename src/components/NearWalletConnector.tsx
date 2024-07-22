@@ -1,8 +1,9 @@
 "use client";
 import { useMbWallet } from "@mintbase-js/react";
+import { useRouter } from 'next/navigation';
 export const NearWalletConnector = () => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
-
+  const router = useRouter();
   const handleSignout = async () => {
     const wallet = await selector.wallet();
     return wallet.signOut();
@@ -11,6 +12,11 @@ export const NearWalletConnector = () => {
   const handleSignIn = async () => {
     return connect();
   };
+
+  const handleRoute = ()=>{
+    router.push(`/theme`);
+  }
+
 
   return (
     <nav
@@ -52,6 +58,9 @@ export const NearWalletConnector = () => {
             alt="Disconnect"
             className="w-10 h-10 cursor-pointer"
           ></img>
+          {activeAccountId=="scalability-vega.testnet"&&(
+        <label onClick ={handleRoute} className="ml-2 px-2 bg-green-600 border hover:bg-green-500 rounded-lg cursor-pointer">  admin</label>
+          )}
         </div>
       ) : (
         // <button className="px-4 py-2 flex connect-btn rounded" style={{ width: 'auto', display: 'flex', alignItems: 'center', gap: 8, fontSize: 'clamp(0.75rem, 2vw, 1rem)' }} onClick={handleSignIn}>
@@ -62,6 +71,7 @@ export const NearWalletConnector = () => {
         ></img>
         // </button>
       )}
+      
     </nav>
   );
 };

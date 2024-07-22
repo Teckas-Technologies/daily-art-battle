@@ -65,7 +65,7 @@ const UpcomingArtTable: React.FC<{
         <h2 className="text-xl font-bold text-black text-center">
           Upcoming Arts
         </h2>
-        <p className="px-4 text-center text-black font-mono mt-5 ml-20 mr-20 sm:font-thin md:text-lg">
+        <p className="px-4 text-center text-black font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}
