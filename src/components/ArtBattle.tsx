@@ -254,7 +254,7 @@ setTitle(res.holidayInspiredTheme);
       <>
 
       {!todayBattle ?(
-      <div className="mt-5 pt-10 mx-8 flex justify-center">
+      <div className="mt-4  mx-8 flex justify-center">
         <div
           className="no-battle flex mt-5"
           style={{
