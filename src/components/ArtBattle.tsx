@@ -213,27 +213,48 @@ setTitle(res.holidayInspiredTheme);
   }
 
 
-  if (skeletonLoading) {
-    return (
-      <div className="flex items-center justify-center space-x-4" style={{ marginTop: '100px' }}>
+ 
+
+ 
+  if (error) return <p>Error fetching battle details: {error}</p>;
+  
+
+
+  return (
+    <div className="mt-10 mx-8">
+     <h2
+          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap" }}
+        >
+          {title}
+        </h2>
+      {timeRemaining !== null && (
+        <h2
+          className=" text-2xl font-bold text-white text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap" }}
+        >
+          {formatTime(timeRemaining)}
+        </h2>
+      )}
+      <p className=" text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
+        Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
+        vote to secure participation NFTs and a chance to win an exclusive 1:1
+        masterpiece. Connect your NEAR wallet to join the thrilling competition!
+      </p>
+      
+      {skeletonLoading ? (
+      <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
         <div className="space-y-2">
           <Skeleton className="h-4 w-[300px]" />
           <Skeleton className="h-4 w-[300px]" />
           <Skeleton className="h-40 w-[300px]" />
         </div>
       </div>
-    );
-  }
+    ):(
+      <>
 
-
- 
-
-  if (error) return <p>Error fetching battle details: {error}</p>;
-  
-
-  if (!todayBattle) {
-    return (
-      <div className="mt-10 pt-10 mx-8 flex justify-center">
+      {!todayBattle ?(
+      <div className="mt-4  mx-8 flex justify-center">
         <div
           className="no-battle flex mt-5"
           style={{
@@ -266,31 +287,8 @@ setTitle(res.holidayInspiredTheme);
           </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="mt-10 mx-8">
-     <h2
-          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          {title}
-        </h2>
-      {timeRemaining !== null && (
-        <h2
-          className=" text-xl font-bold text-black text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          {formatTime(timeRemaining)}
-        </h2>
-      )}
-      <p className=" text-center text-black font-mono  sm:font-thin mb-8 md:text-lg">
-        Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
-        vote to secure participation NFTs and a chance to win an exclusive 1:1
-        masterpiece. Connect your NEAR wallet to join the thrilling competition!
-      </p>
-
+    ):( 
+   <>
       <div
         className="w-full relative"
         onMouseUp={handleMouseUp}
@@ -310,7 +308,7 @@ setTitle(res.holidayInspiredTheme);
             className="w-full h-full object-cover"
           />
           <div
-            className="absolute top-0 left-0 right-0 bg-white w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+            className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
             style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
           >
             <img
@@ -390,7 +388,7 @@ setTitle(res.holidayInspiredTheme);
                   </>
                 ) : (
                   <>
-                  {artA.title} by  {artA.artistId}
+                 <p className="text-white"> {artA.title} by  {artA.artistId}</p>
                   </>
                 )}
              
@@ -413,7 +411,7 @@ setTitle(res.holidayInspiredTheme);
               <button
                 onClick={() => onVote(artA.id)}
                 disabled={!isConnected || success}
-                className={`px-2 text-xs py-3 font-semibold bg-gray-900 hover:bg-gray-700 text-white rounded ${
+                className={`px-2 text-xs py-3 font-semibold bg-white hover:bg-gray-300 text-black rounded ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
@@ -452,7 +450,7 @@ setTitle(res.holidayInspiredTheme);
                   </>
                 ) : (
                   <>
-                  {artB.title} by {artB.artistId}
+                 <p className="text-white"> {artB.title} by {artB.artistId}</p>
                   </>
                 )}
              
@@ -476,7 +474,7 @@ setTitle(res.holidayInspiredTheme);
               <button
                 onClick={() => onVote(artB.id)}
                 disabled={!isConnected || success}
-                className={`px-2 text-xs py-3 font-semibold bg-gray-900 hover:bg-gray-700 text-white rounded  ${
+                className={`px-2 text-xs py-3 font-semibold bg-white hover:bg-gray-300 text-black rounded  ${
                   !isConnected || success ? "cursor-not-allowed" : ""
                 }`}
               >
@@ -488,6 +486,13 @@ setTitle(res.holidayInspiredTheme);
 
         </div>
         </div>
+        </>
+         )
+}
+</>
+
+)
+}
 
       {/* <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
             <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
@@ -500,6 +505,7 @@ setTitle(res.holidayInspiredTheme);
         <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
       )}
     </div>
+    
   );
 };
 

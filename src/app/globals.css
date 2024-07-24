@@ -85,7 +85,6 @@
   body {
     width: 100%;
     color: rgb(var(--foreground-rgb));
-    background-image: url('./../../public/images/dark\ pattern7.jpg');
     background-position: top;
     background-size: cover;
     /* background: linear-gradient(

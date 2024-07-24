@@ -29,7 +29,10 @@ const Home = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-     
+        <video autoPlay muted loop id="background-video" style={{ position: 'fixed', right: 0, bottom: 0,  objectFit: 'cover', minWidth: '100%', minHeight: '100%', zIndex: -1,filter: 'blur(5px) brightness(50%)', }}>
+    <source src="images/back.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+    </video>
      <NearWalletConnector />
       <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <a href="#">
