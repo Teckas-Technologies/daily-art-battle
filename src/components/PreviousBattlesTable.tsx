@@ -54,10 +54,10 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <section id="previous">
     <div className="battle-table mt-8 pb-10 md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center">
-      <h2 className="text-xl font-bold text-black text-center">
+      <h2 className="text-2xl font-bold text-white text-center">
         Previous Battles
       </h2>
-      <p className="battle-table1 pb-10 w-full overflow-x-auto text-center text-black font-mono mt-5 sm:font-thin md:text-lg">
+      <p className="battle-table1 pb-10 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
         <a
           href="https://wallet.mintbase.xyz/"
           target="_blank"
@@ -76,7 +76,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
               <thead>
                 <tr className="text-xs md:text-2xl sm:text-xl">
                   <th
-                    className="text-center  font-normal text-black"
+                    className="text-center  font-normal text-white"
                     style={{
                       borderTopLeftRadius: 5,
                       borderBottomLeftRadius: 5,
@@ -84,12 +84,12 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                   >
                     UNIQUE RARE
                   </th>
-                  <th className="text-center  font-normal text-black">
+                  <th className="text-center  font-normal text-white">
                     RARE OWNER
                   </th>
                   <th
                     onClick={() => handleSort("vote")}
-                    className="text-black text-center cursor-pointer font-normal hover:underline"
+                    className="text-white text-center cursor-pointer font-normal hover:underline"
                   >
                     <span className="flex items-center justify-center hover:underline">
                       <svg
@@ -109,7 +109,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                   </th>
                   <th
                     onClick={() => handleSort("date")}
-                    className="text-black text-center cursor-pointer font-normal hover:underline"
+                    className="text-white text-center cursor-pointer font-normal hover:underline"
                   >
                     <span className="flex items-center justify-center ">
                       <svg
@@ -157,7 +157,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                         }}
                       >
                         <div
-                          className="bg-white border h-full w-full"
+                          className="bg-white h-full w-full"
                           style={{ borderRadius: 40 }}
                         >
                           <a
@@ -177,7 +177,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                                 alt={"Art"}
                                 width={400} // Arbitrary value; the actual size will be controlled by CSS
                                 height={400} // Arbitrary value; the actual size will be controlled by CSS
-                                className="w-full h-full object-cover rounded-l-3xl "
+                                className="w-full h-full border object-cover rounded-l-3xl "
                                 unoptimized
                                 style={{
                                   height: "100%", // Ensuring the image takes the full height of its container
