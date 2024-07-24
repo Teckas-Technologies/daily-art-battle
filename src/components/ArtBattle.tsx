@@ -308,7 +308,7 @@ setTitle(res.holidayInspiredTheme);
             className="w-full h-full object-cover"
           />
           <div
-            className="absolute top-0 left-0 right-0 bg-white w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+            className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
             style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
           >
             <img
