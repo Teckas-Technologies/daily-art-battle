@@ -252,7 +252,7 @@ useEffect(() => {
   };
   return (
     <div className="navbar fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" style={{ width: '100vw' }}>
-      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0', border: '2px dotted #3deb34', height: 'auto' , position: 'relative', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
+      <div className="bg-white p-4 rounded-lg" style={{ backgroundColor: '#101011f0',maxWidth: '330px', border: '2px dotted #3deb34', height: 'auto' , position: 'relative', maxHeight: '95vh', overflow: 'scroll', scrollbarWidth: 'none' }}>
         <h2 className="text-lg font-bold mb-2 text-center" style={{ color: '#3deb34', paddingBottom: 6, borderBottom: '1.5px solid white', fontSize: 18 }}>Upload Artwork</h2>
        
         <form onSubmit={uploadArtWork}>
@@ -266,6 +266,7 @@ useEffect(() => {
                   <label className="block text-sm font-medium text-gray-900 break-words py-2" style={{ fontWeight: 500, fontSize: 13, color: '#fff', maxWidth: '300px' }}>
                     Upload the highest quality version of your art as the 'Unique Rare'. This version will be minted as a single edition (1:1) and awarded to one lucky winner who picks your art in a battle! This is the version which will be displayed on our site for user to upvote and pick in battle.
                   </label>
+                  {!disable && (
                   <label
                     htmlFor={`fileInput-${index}`}
                     className={` bg-white text-sm text-gray-900 rounded-lg focus:outline-none pb-2 mt-2 ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
@@ -273,19 +274,25 @@ useEffect(() => {
                       padding: 5,
                       border: 'none',
                       color: '#000',
-                      fontSize: 13
+                      fontSize: 13,
                     }}
                   >
+
                     {artwork.name}
                   </label>
+                  )}
                   <input  className={` hidden ${disable ? 'cursor-not-allowed' : ''}`} disabled={disable} type="file"  id={`fileInput-${index}`}  onChange={handleFileChange(index)} />
-                  <span className={`px-3 text-sm text-gray-600 ${disable ? 'cursor-not-allowed' : ''}`}>{artwork.fileName} </span> 
-                 <button  disabled={disable} onClick={handlePrompt} className={`text-sm mt-3 rounded-lg text-gray-900 bg-white pb-1  ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}  style={{
+                  <span className={`px-3 text-sm text-gray-600 ${disable ? 'cursor-not-allowed' : ''}`} style={{ maxWidth: '300px', wordBreak: 'break-all', whiteSpace: 'normal' }}>
+                {artwork.fileName}
+              </span>
+              {!disable && (
+                 <button  disabled={disable} onClick={handlePrompt} className={`text-sm mt-3 rounded-lg text-gray-900 bg-white pb-1  ${disable ? 'cursor-not-allowed hidden' : 'cursor-pointer'}`}  style={{
                       padding: 4,
                       border: 'none',
                       color: '#000',
                       fontSize: 13
                     }}>Generate using AI</button>
+                  )}
                  {prompt &&(
                  <>
                  <label htmlFor="message" className="mt-3 block mb-2 break-words text-sm font-medium text-red-500 dark:text-white">

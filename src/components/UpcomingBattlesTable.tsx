@@ -58,14 +58,14 @@ const UpcomingArtTable: React.FC<{
   return (
     <section id="upcoming">
     <div
-      className="battle-table mt-8 pb-10 flex flex-col items-center"
+      className="battle-table mt-[50px] pb-10 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
     >
       <div className="battle-table1 pb-10">
-        <h2 className="text-xl font-bold text-black text-center">
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
-        <p className="px-4 text-center text-black font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
+        <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}
@@ -75,7 +75,7 @@ const UpcomingArtTable: React.FC<{
             <Button
               onClick={toggleUploadModal}
               disabled={!isConnected}
-              className={`px-4 md:mr-5 py-2 vote-btn text-white rounded ${
+              className={`px-4 md:mr-5 py-2 vote-btn text-black bg-white hover:bg-gray-300 rounded ${
                 !isConnected ? "cursor-not-allowed" : ""
               }`}
             >

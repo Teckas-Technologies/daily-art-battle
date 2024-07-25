@@ -12,9 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') {
-    // return res.status(405).json({ error: 'Method not allowed' });
-  } 
+  if (req.method == 'POST') {
   const { prompt } = req.body;
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt is required' });
@@ -40,9 +38,9 @@ export default async function handler(
       const blob = Buffer.from(buffer).toString('base64'); // Convert buffer to base64-encoded string
       res.status(200).json({ imageUrl,imageBlob: blob });
     }
-  //res.send(imageUrl)
   } catch (error) {
     console.error('Error generating image:', error);
     res.status(500).json({ error: 'Failed to generate image' });
   }
+}
 }
