@@ -34,10 +34,6 @@ export default async function spinner() {
     
 
     const base64Gif = response.data.gif;
-    const inputBuffer = Buffer.from(base64Gif, 'base64');
-
-    const res = await uploadBuffer(inputBuffer, "image/gif", "spinner");
-    console.log(res);
 
     return base64Gif;
 
