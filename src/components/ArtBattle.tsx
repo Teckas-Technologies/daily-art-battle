@@ -230,7 +230,7 @@ setTitle(res.holidayInspiredTheme);
         </h2>
       {timeRemaining !== null && (
         <h2
-          className=" text-2xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className=" text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}

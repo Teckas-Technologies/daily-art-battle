@@ -16,10 +16,20 @@ const Home: NextPage = () => {
 
   return (
     <main className="flex flex-col justify-center" style={{ width: '100vw',  backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
-       <video autoPlay muted loop id="background-video" style={{ position: 'fixed', right: 0, bottom: 0,  objectFit: 'cover', minWidth: '100%', minHeight: '100%', zIndex: -1,filter: 'blur(5px) brightness(50%)', }}>
+      <video autoPlay muted loop id="background-video" style={{ 
+    position: 'fixed', 
+    right: 0, 
+    bottom: 0, 
+    objectFit: 'cover', 
+    minWidth: '100%', 
+    minHeight: '100%', 
+    zIndex: -1,
+    filter: 'blur(5px) brightness(50%)'
+}}>
     <source src="images/back.mp4" type="video/mp4" />
     Your browser does not support the video tag.
-    </video>
+</video>
+
       <NearWalletConnector />
       {showUploadModal && <ArtworkUploadForm onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <ArtBattle toggleUploadModal={toggleUploadModal} />
