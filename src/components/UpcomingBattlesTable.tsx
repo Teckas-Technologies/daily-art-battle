@@ -58,11 +58,11 @@ const UpcomingArtTable: React.FC<{
   return (
     <section id="upcoming">
     <div
-      className="battle-table mt-8 pb-10 flex flex-col items-center"
+      className="battle-table mt-[50px] pb-10 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
     >
       <div className="battle-table1 pb-10">
-        <h2 className="text-2xl font-bold text-white text-center">
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
         <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
