@@ -223,14 +223,14 @@ setTitle(res.holidayInspiredTheme);
   return (
     <div className="mt-10 mx-8">
      <h2
-          className="mt-9 text-2xl md:text-4xl lg:text-5xl font-bold text-black text-center justify-center items-center text-black text-center"
+          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {title}
         </h2>
       {timeRemaining !== null && (
         <h2
-          className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className=" text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
@@ -378,7 +378,7 @@ setTitle(res.holidayInspiredTheme);
          
          {artA.title.length > 25 ? (
                   <>
-                    {artA.title.substring(0, 25)}{' '}
+                    <p className="text-white">{artA.title.substring(0, 25)}{' '}</p>
                     <span
                       className="text-sky-600 cursor-pointer hover:underline max-h-5"
                      onClick={handlePopUpA}
@@ -423,7 +423,7 @@ setTitle(res.holidayInspiredTheme);
         </div>
         <div className="flex flex-col items-center px-4">
           <p
-            className="mt-4  max-h-5  text-white py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
+            className="mt-4  max-h-5  text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
             style={{ maxWidth: "300px" }}
           >
             {popupB &&(
@@ -440,7 +440,7 @@ setTitle(res.holidayInspiredTheme);
             )}           
                 {artB.title.length > 25 ? (
                   <>
-                    {artB.title.substring(0, 25)}{' '}
+                    <p className="text-white">{artB.title.substring(0, 25)}{' '}</p>
                     <span
                       className="text-sky-600 cursor-pointer hover:underline max-h-5"
                      onClick={handlePopUpB}
