@@ -423,7 +423,7 @@ setTitle(res.holidayInspiredTheme);
         </div>
         <div className="flex flex-col items-center px-4">
           <p
-            className="mt-4  max-h-5  text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
+            className="mt-4  max-h-5  text-white py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
             style={{ maxWidth: "300px" }}
           >
             {popupB &&(
