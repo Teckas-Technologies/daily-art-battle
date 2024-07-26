@@ -378,7 +378,7 @@ setTitle(res.holidayInspiredTheme);
          
          {artA.title.length > 25 ? (
                   <>
-                    {artA.title.substring(0, 25)}{' '}
+                    <p className="text-white">{artA.title.substring(0, 25)}{' '}</p>
                     <span
                       className="text-sky-600 cursor-pointer hover:underline max-h-5"
                      onClick={handlePopUpA}
@@ -440,7 +440,7 @@ setTitle(res.holidayInspiredTheme);
             )}           
                 {artB.title.length > 25 ? (
                   <>
-                    {artB.title.substring(0, 25)}{' '}
+                    <p className="text-white">{artB.title.substring(0, 25)}{' '}</p>
                     <span
                       className="text-sky-600 cursor-pointer hover:underline max-h-5"
                      onClick={handlePopUpB}

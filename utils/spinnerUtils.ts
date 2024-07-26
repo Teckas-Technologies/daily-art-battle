@@ -28,7 +28,7 @@ export default async function spinner() {
     const response = await axios.post('http://127.0.0.1:5000/api/generate_gif', {
       image1: imageA,
       image2: imageB,
-      transition_type: 'slide'
+      transition_type: 'rotate'
     });
 
     

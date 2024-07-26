@@ -16,8 +16,11 @@ export const NearWalletConnector = () => {
   const handleRoute = ()=>{
     router.push(`/theme`);
   }
-
-
+  const url = ()=>{
+    const url = window.location.origin;
+    window.location.href = url;
+  }
+ 
   return (
     <nav
       className="navbar bg-gray-950"
@@ -32,6 +35,7 @@ export const NearWalletConnector = () => {
       }}
     >
       <div className="flex items-center flex-col md:flex-col">
+        <a onClick={url}>
         <img
           src="/images/logo.png"
           alt="GFXvs"
@@ -39,6 +43,7 @@ export const NearWalletConnector = () => {
           height={50}
           className=" md:mb-0" // Add margin bottom for smaller screens
         />
+        </a>
         {/* <h1 className="font-extrabold text-2xl md:text-md ml-2" style={{color:"#33cd2b"}}>
     GFXvs
   </h1> */}
