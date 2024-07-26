@@ -2,6 +2,8 @@ import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import ArtTable from '../model/ArtTable';
 import { serverMint } from "./serverMint";
+import spinner from "./spinnerUtils";
+import uploadArweave from "./uploadArweave";
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
     console.log("Minting nft");
@@ -9,11 +11,16 @@ export const mintNfts = async (): Promise<void> => {
         isNftMinted: false,
         isBattleEnded: true
     });
-      console.log("Fetching completed battles",battle);
+
+    const ress = await spinner();
+    const response = await uploadArweave(ress);
+    battle.grayScale = response.url;
+    battle.grayScaleReference = response.referenceUrl;
+    console.log("Fetching completed battles",battle);
     if(battle){
         console.log(battle);
-        await mintNFTsForParticipants(battle.artAvoters,battle.artAgrayScale,battle.artAgrayScaleReference);
-       await mintNFTsForParticipants(battle.artBvoters,battle.artBgrayScale,battle.artBgrayScaleReference);
+        await mintNFTsForParticipants(battle.artAvoters,battle.grayScale,battle.grayScaleReference);
+       await mintNFTsForParticipants(battle.artBvoters,battle.grayScale,battle.grayScaleReference);
         const artAspecialWinner = selectRandomWinner(battle.artAvoters);
         const artBspecialWinner = selectRandomWinner(battle.artBvoters);
         let tokenIdA ;
