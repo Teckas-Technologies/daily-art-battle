@@ -57,7 +57,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
       <h2 className="text-4xl font-bold text-white text-center">
         Previous Battles
       </h2>
-      <p className="battle-table1 pb-10 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
+      <p className="battle-table1 px-4 ml-7 mr-7  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 pb-10 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
         <a
           href="https://wallet.mintbase.xyz/"
           target="_blank"

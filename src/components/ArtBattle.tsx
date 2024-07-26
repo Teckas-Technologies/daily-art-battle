@@ -236,7 +236,7 @@ setTitle(res.holidayInspiredTheme);
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className=" text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
+      <p className=" text-center text-white font-mono md:ml-20 md:mr-20  lg:ml-20 lg:mr-20  sm:font-thin mb-8 md:text-lg">
         Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
         vote to secure participation NFTs and a chance to win an exclusive 1:1
         masterpiece. Connect your NEAR wallet to join the thrilling competition!

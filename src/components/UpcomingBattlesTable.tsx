@@ -165,7 +165,7 @@ const BattleTable: React.FC<{
 
   return (
     <div
-      className="mx-8 overflow-hidden battle-table container my-12 mx-auto px-4 md:px-12"
+      className="battle-table px-5 mt-8 pb-10 md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center"
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
