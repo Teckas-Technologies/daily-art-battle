@@ -222,25 +222,22 @@ setTitle(res.holidayInspiredTheme);
 
   return (
     <div className="mt-10 mx-8">
-     <h2
-          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
+     <h2 className="mt-9 md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
-          {title}
+      Theme : Donald Trump
         </h2>
       {timeRemaining !== null && (
         <h2
-          className=" text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className=" text-4xl mt-5 font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className=" text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
-        Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
-        vote to secure participation NFTs and a chance to win an exclusive 1:1
-        masterpiece. Connect your NEAR wallet to join the thrilling competition!
-      </p>
+      <p className="mt-5 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
+     
+      Join GFXvs Royale and showcase your NFT creations for a chance to win from a $50 prize pool! Connect your NEAR wallet and dive into the excitement of daily battles and exclusive rewards!     </p>
       
       {skeletonLoading ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
