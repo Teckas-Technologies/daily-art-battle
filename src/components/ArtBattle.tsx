@@ -222,21 +222,33 @@ setTitle(res.holidayInspiredTheme);
 
   return (
     <div className="mt-10 mx-8">
-     <h2
-          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
+        <a
+  href="https://royale.gfxvs.com/"
+  target="_blank"
+  className="text-green-600"
+>
+  <h2
+    className="mt-10 text-2xl hover:cursor-pointer text-green-600 font-bold text-center justify-center items-center flex"
+  >
+    🔔 Click here to Join GFXvs Royale: Compete for a $50 Prize Pool in a 5-day Event!
+  </h2>
+</a>
+
+     {/* <h2
+          className="mt-9 text-2xl font-bold text-white text-center justify-center items-center  text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {title}
-        </h2>
+        </h2> */}
       {timeRemaining !== null && (
         <h2
-          className=" text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className="mt-3 text-4xl font-bold text-white text-center justify-center items-center text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className=" text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
+      <p className="mt-3 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
         Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
         vote to secure participation NFTs and a chance to win an exclusive 1:1
         masterpiece. Connect your NEAR wallet to join the thrilling competition!
