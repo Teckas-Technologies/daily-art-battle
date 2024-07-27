@@ -222,15 +222,27 @@ setTitle(res.holidayInspiredTheme);
 
   return (
     <div className="mt-10 mx-8">
+        <a
+  href="https://royale.gfxvs.com/"
+  target="_blank"
+  className="text-green-600"
+>
+  <h2
+    className="mt-10 text-2xl hover:cursor-pointer text-green-600 font-bold text-center justify-center items-center flex"
+  >
+    🔔 Join GFXvs Royale: Compete for a $50 Prize Pool in a 5-day Event!
+  </h2>
+</a>
+
      <h2
-          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
+          className="mt-9 text-2xl font-bold text-white text-center justify-center items-center  text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {title}
         </h2>
       {timeRemaining !== null && (
         <h2
-          className=" text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className=" text-4xl font-bold text-white text-center justify-center items-center text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
