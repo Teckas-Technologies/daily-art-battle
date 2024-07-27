@@ -5,6 +5,7 @@ export interface Vote {
   artId: string;
 }
 
+
 interface UseVotingReturn {
   votes: Vote[];
   error: string | null;
