@@ -17,16 +17,25 @@ const UpcomingArtTable: React.FC<{
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState("date");
+
+  const handleSort = (sortType: string) => {
+    setSort(sortType);
+    setPage(1); // Reset to first page when sorting
+    fetchMoreArts(sortType, 1);
+  };
+
+
 
   useEffect(() => {
     const initializeData = async () => {
    
-      fetchMoreArts(page);
+      fetchMoreArts(sort,page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [page, refresh, uploadSuccess, fetchMoreArts]);
+  }, [sort,page, refresh, uploadSuccess, fetchMoreArts]);
 
   const [hasnext, setHasNext] = useState(false);
 
@@ -43,13 +52,13 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(page + 1);
+    fetchMoreArts(sort,page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(page - 1);
+      fetchMoreArts(sort,page - 1);
     }
   };
 
@@ -82,6 +91,16 @@ const UpcomingArtTable: React.FC<{
               Add Artwork
             </Button>
           </div>
+        </div>
+        <div className="mt-5 flex justify-center">
+        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("date")}>
+          Date  
+        </p>
+        <p className="text-white px-3">|</p>
+       
+        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("vote")}>
+          Vote
+         </p>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
         <nav className="flex justify-center flex-wrap gap-5 mt-2">
@@ -165,7 +184,7 @@ const BattleTable: React.FC<{
 
   return (
     <div
-      className="mx-8 overflow-hidden battle-table container my-12 mx-auto px-4 md:px-12"
+      className="mx-4 overflow-hidden battle-table container mt-4 mx-auto px-4 md:px-12"
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
