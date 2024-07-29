@@ -223,7 +223,7 @@ setTitle(res.holidayInspiredTheme);
   return (
     <div className="mt-10 mx-8">
      <h2
-          className="mt-9 text-2xl font-bold text-black text-center justify-center items-center text-black text-center"
+          className="mt-9 text-2xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {title}
