@@ -17,8 +17,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   toggleUploadModal,
 }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { todayBattle, loading, error, fetchTodayBattle } =
+  const { todayBattle, loading,battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
+
+
   const [artA, setArtA] = useState<Artwork>({
     id: "ArtA",
     name: "Art A",
@@ -42,6 +44,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const[popupA,setPopUpA] = useState(false);
   const[popupB,setPopUpB] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
+  const [skeletonLoad,setSkeletonLoading] = useState(true);
+
+
+
   useEffect(() => {
    
     const fetchData = async () => {
@@ -53,16 +59,24 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         }
       }
     };
+
     fetchData();
     fetchTodayBattle();
-  }, [todayBattle, activeAccountId, fetchVotes, refresh]);
+  }, [todayBattle, fetchVotes, refresh]);
 
 
+  useEffect(()=>{
+    if(battle){
+      console.log(battle)
+      setSkeletonLoading(false);
+    }
+  },[battle])
 
 
   useEffect(() => {
-
-   
+    if(!battle && todayBattle){
+      setSkeletonLoading(false);
+    }
     if (todayBattle) {
       const endTime = new Date(todayBattle.endTime).getTime();
       const now = new Date().getTime();
@@ -86,6 +100,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   };
 
   useEffect(() => {
+
+  
     if (todayBattle) {
       setArtA({
         id: "Art A",
@@ -167,17 +183,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
     setIsDragging(false);
   };
 
-  
-  const [skeletonLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 5000); 
-
-    return () => clearTimeout(timer); 
-  }, []);
-
   const handlePopUpB = ()=>{
     setPopUpB(true);
   }
@@ -217,7 +222,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         masterpiece. Connect your NEAR wallet to join the thrilling competition!
       </p>
       
-      {skeletonLoading ? (
+      {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
         <div className="space-y-2">
           <Skeleton className="h-4 w-[300px]" />
