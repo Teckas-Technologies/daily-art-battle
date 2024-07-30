@@ -13,6 +13,7 @@ export const mintNfts = async (): Promise<void> => {
     });
 
     const ress = await spinner();
+    console.log("Uploading arweave")
     const response = await uploadArweave(ress);
     battle.grayScale = response.url;
     battle.grayScaleReference = response.referenceUrl;

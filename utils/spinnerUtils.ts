@@ -1,7 +1,6 @@
 import Battle from "../model/Battle";
 const axios = require('axios');
 import { connectToDatabase } from "./mongoose";
-import { uploadBuffer } from "@mintbase-js/storage";
 export default async function spinner() {
   await connectToDatabase();
   const battle = await Battle.findOne({
@@ -31,7 +30,7 @@ export default async function spinner() {
       transition_type: 'rotate'
     });
     const base64Gif = response.data.gif;
-
+    console.log(base64Gif);
     return base64Gif;
 
   } catch (error) {
