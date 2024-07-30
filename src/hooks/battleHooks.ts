@@ -34,6 +34,7 @@ interface UseFetchTodayBattleResult {
   todayBattle: BattleData | null;
   loading: boolean;
   error: string | null;
+  battle:boolean;
   fetchTodayBattle: () => Promise<void>; 
 }
 
@@ -88,6 +89,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   const [todayBattle, setTodayBattle] = useState<BattleData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [battle, setBattle] = useState<boolean>(false);
 
   const fetchTodayBattle = async () => {
     setLoading(true);
@@ -99,7 +101,9 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
         throw new Error('Failed to fetch today\'s battle data');
       }
       const data: BattleData = await response.json();
-     
+     if(data==null){
+      setBattle(true)
+     }
       setTodayBattle(data);
     } catch (error) {
       console.error('Error fetching today\'s battle data:', error);
@@ -114,7 +118,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   }, []);
 
 
-  return { todayBattle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
+  return { todayBattle,battle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
 };
 
 //useFetchBattles is used to fetch battles with pagination
