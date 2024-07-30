@@ -51,7 +51,7 @@
     "lucide-react": "^0.394.0",
     "mintbase-ui": "^1.0.2",
     "mongoose": "^8.3.4",
-    "near-api-js": "4.0.3",
+    "near-api-js": "^2.1.4",
     "next": "14.0.1",
     "node-cron": "^3.0.3",
     "npm": "^10.8.2",
