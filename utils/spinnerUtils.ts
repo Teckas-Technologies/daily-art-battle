@@ -30,7 +30,6 @@ export default async function spinner() {
       transition_type: 'rotate'
     });
     const base64Gif = response.data.gif;
-    console.log(base64Gif);
     return base64Gif;
 
   } catch (error) {
