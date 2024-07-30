@@ -5,7 +5,6 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
-import { useFetchTheme } from "@/hooks/themeHook";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -37,13 +36,11 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [battleId, setBattleId] = useState<string>();
   const { votes, fetchVotes, submitVote } = useVoting();
-  const{fethcedThemeById}= useFetchTheme();
   const [success, setSuccess] = useState(false);
   const [votedFor, setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false);
   const[popupA,setPopUpA] = useState(false);
   const[popupB,setPopUpB] = useState(false);
-  const[title,setTitle] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
   useEffect(() => {
    
@@ -61,27 +58,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   }, [todayBattle, activeAccountId, fetchVotes, refresh]);
 
 
-  function getWeekOfYear(date: Date): number {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    const weekNumber = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-    return weekNumber;
-}
 
 
-
-const getTheme =async(week:any)=>{
-const res = await fethcedThemeById(week);
-if(res){
-setTitle(res.holidayInspiredTheme);
-}
-
-}
   useEffect(() => {
-    const date = new Date();
-    const weekNumber: number = getWeekOfYear(date);
-    getTheme(weekNumber);
+
    
     if (todayBattle) {
       const endTime = new Date(todayBattle.endTime).getTime();
@@ -222,15 +202,10 @@ setTitle(res.holidayInspiredTheme);
 
   return (
     <div className="mt-10 mx-8">
-     <h2
-          className="mt-9 text-2xl font-bold text-white text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          {title}
-        </h2>
+      <div className="mt-9">
       {timeRemaining !== null && (
         <h2
-          className="mt-2 text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
@@ -504,6 +479,7 @@ setTitle(res.holidayInspiredTheme);
         {toastMessage && (
         <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
       )}
+      </div>
     </div>
     
   );
