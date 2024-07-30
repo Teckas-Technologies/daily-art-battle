@@ -177,6 +177,11 @@ useEffect(() => {
           alert(`Missing file for ${artwork.name}`);
           return;
         }
+        if(artwork.file.size>30000000){
+          alert(`The file size should be less than 30 MB`);
+          return;
+        }
+        console.log(artwork.file.size);
         const uploadResult = await uploadFile(artwork.file);
         const url = `https://arweave.net/${uploadResult.id}`;
         const metadata = {
