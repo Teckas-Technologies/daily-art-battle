@@ -15,10 +15,10 @@ const Home = ({ params }: { params: { id: string } }) => {
     const fetchArt = async () => {
       try {
         const art = await fetchArtById(params.id);
-        console.log(art);
+        // console.log(art);
       
         setUpcomingArt(art);
-        console.log(upcomingArt?.colouredArt)
+        // console.log(upcomingArt?.colouredArt)
       } catch (error) {
         console.error('Failed to fetch art:', error);
       }

@@ -17,16 +17,25 @@ const UpcomingArtTable: React.FC<{
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState("date");
+
+  const handleSort = (sortType: string) => {
+    setSort(sortType);
+    setPage(1); // Reset to first page when sorting
+    fetchMoreArts(sortType, 1);
+  };
+
+
 
   useEffect(() => {
     const initializeData = async () => {
    
-      fetchMoreArts(page);
+      fetchMoreArts(sort,page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [page, refresh, uploadSuccess, fetchMoreArts]);
+  }, [sort,page, refresh, uploadSuccess, fetchMoreArts]);
 
   const [hasnext, setHasNext] = useState(false);
 
@@ -43,13 +52,13 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(page + 1);
+    fetchMoreArts(sort,page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(page - 1);
+      fetchMoreArts(sort,page - 1);
     }
   };
 
@@ -58,11 +67,11 @@ const UpcomingArtTable: React.FC<{
   return (
     <section id="upcoming">
     <div
-      className="battle-table mt-8 pb-10 flex flex-col items-center"
+      className="battle-table mt-[50px] pb-10 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
     >
       <div className="battle-table1 pb-10">
-        <h2 className="text-4xl font-bold text-white text-center">
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
         <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
@@ -82,6 +91,16 @@ const UpcomingArtTable: React.FC<{
               Add Artwork
             </Button>
           </div>
+        </div>
+        <div className="mt-5 flex justify-center">
+        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("date")}>
+          Date  
+        </p>
+        <p className="text-white px-3">|</p>
+       
+        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("vote")}>
+          Vote
+         </p>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
         <nav className="flex justify-center flex-wrap gap-5 mt-2">
@@ -165,7 +184,7 @@ const BattleTable: React.FC<{
 
   return (
     <div
-      className="battle-table px-5 mt-8 pb-10 md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center"
+      className="mx-4 overflow-hidden battle-table container mt-4 mx-auto px-4 md:px-12"
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">

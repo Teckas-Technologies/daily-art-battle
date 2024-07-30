@@ -25,6 +25,21 @@ export const findAllArts = async (page: number, limit: number): Promise<any> => 
   return {arts,totalDocuments,totalPages};
 };
 
+
+export const findAllArtsByDate = async (page: number, limit: number): Promise<any> => {
+  await connectToDatabase();
+  const skip = limit * (page === 1 ? 0 : page - 1); 
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
+  const totalPages = Math.ceil(totalDocuments / limit);
+  const arts = await ArtTable.find({ isStartedBattle: false })
+  .sort({ uploadedTime: -1,_id: 1 })
+  .skip(skip)
+  .limit(limit)
+  .exec();
+
+  return {arts,totalDocuments,totalPages};
+};
+
 export const findPreviousArts = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
