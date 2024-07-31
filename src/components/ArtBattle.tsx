@@ -140,7 +140,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       setToastMessage("Vote submitted successfully!");
     setTimeout(()=>{
       setToastMessage(null);
-    },5000)
+    },3000)
       setRefresh((prev) => !prev);
     } else {
     alert("Failed to submit vote. Maybe you already voted!");
