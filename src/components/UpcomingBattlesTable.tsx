@@ -198,7 +198,7 @@ const BattleTable: React.FC<{
                   src={art.colouredArt}
                   alt="Art A"
                   className="w-full h-full object-cover hover:cursor-pointer"
-                  loading="lazy"
+                  loading="eager"
                   style={{
                     height: "100%", // Ensuring the image takes the full height of its container
                     aspectRatio: "1/1",
