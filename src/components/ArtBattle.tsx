@@ -482,7 +482,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       </div>
       */}
         {toastMessage && (
-        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+        <Toast success={true} message={toastMessage} onClose={() => setToastMessage(null)} />
       )}
       </div>
     </div>
