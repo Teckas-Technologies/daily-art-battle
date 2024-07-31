@@ -67,10 +67,10 @@ const UpcomingArtTable: React.FC<{
   return (
     <section id="upcoming">
     <div
-      className="battle-table mt-[50px] pb-10 flex flex-col items-center"
+      className="battle-table mt-[50px] pb-5 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
     >
-      <div className="battle-table1 pb-10">
+      <div className="battle-table1 ">
         <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
@@ -92,7 +92,7 @@ const UpcomingArtTable: React.FC<{
             </Button>
           </div>
         </div>
-        <div className="mt-5 flex justify-center">
+        <div className="mt-5 flex justify-end">
         <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("date")}>
           Date  
         </p>
@@ -103,7 +103,7 @@ const UpcomingArtTable: React.FC<{
          </p>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
-        <nav className="flex justify-center flex-wrap gap-5 mt-2">
+        <nav className="flex justify-center flex-wrap gap-3 mt-5">
           <a
           href="#upcoming"
             className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
