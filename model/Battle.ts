@@ -26,7 +26,7 @@ interface Battle extends Document {
   artBspecialWinner?: string;
   artAvoters?:string[];
   artBvoters?:string[];
-
+  isSpecialWinnerMinted?:Boolean;
 }
 
 const BattleSchema = new mongoose.Schema({
@@ -45,6 +45,7 @@ const BattleSchema = new mongoose.Schema({
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
   isBattleEnded: { type: Boolean, default: false },
+  isSpecialWinnerMinted: { type: Boolean, default: false },
   isNftMinted: { type: Boolean, default: false },
   winningArt: { type: String, enum: ['Art A', 'Art B'], required: false },
   artAVotes: { type: Number, default: 0 },
