@@ -17,7 +17,7 @@ const UpcomingArtTable: React.FC<{
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState("date");
+  const [sort, setSort] = useState("dateDsc");
 
   const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const sortType = event.target.value
@@ -98,8 +98,10 @@ const UpcomingArtTable: React.FC<{
          onChange={handleSort}
         className="bg-white mr-10 text-black border border-gray-600 rounded-lg p-2 cursor-pointer"
       >
-        <option value="date">Date</option>
-        <option value="vote">Vote</option>
+        <option value="dateDsc">Date DSC</option>
+        <option value="dateAsc">Date ASC</option>
+        <option value="voteAsc">Vote ASC</option>
+        <option value="voteDsc">Vote DSC</option>
       </select>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
@@ -198,7 +200,7 @@ const BattleTable: React.FC<{
                   src={art.colouredArt}
                   alt="Art A"
                   className="w-full h-full object-cover hover:cursor-pointer"
-                  loading="eager"
+                  loading="lazy"
                   style={{
                     height: "100%", // Ensuring the image takes the full height of its container
                     aspectRatio: "1/1",
