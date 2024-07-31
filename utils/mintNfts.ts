@@ -1,5 +1,6 @@
 import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
+import Voting from '../model/Voting';
 import ArtTable from '../model/ArtTable';
 import { serverMint } from "./serverMint";
 import spinner from "./spinnerUtils";
@@ -19,12 +20,12 @@ export const mintNfts = async (): Promise<void> => {
     battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
-        console.log(battle);
-        await mintNFTsForParticipants(battle.artAvoters,battle.grayScale,battle.grayScaleReference);
-       await mintNFTsForParticipants(battle.artBvoters,battle.grayScale,battle.grayScaleReference);
+        await mintNFTsForParticipants(battle.artAvoters,battle.grayScale,battle.grayScaleReference,battle._id);
+       await mintNFTsForParticipants(battle.artBvoters,battle.grayScale,battle.grayScaleReference,battle._id);
+      if(battle.isSpecialWinnerMinted==false){
         const artAspecialWinner = selectRandomWinner(battle.artAvoters);
         const artBspecialWinner = selectRandomWinner(battle.artBvoters);
-        let tokenIdA ;
+        let tokenIdA;
         let tokenIdB;
         console.log("art A",artAspecialWinner);
         console.log("art B",artBspecialWinner);
@@ -93,9 +94,10 @@ export const mintNfts = async (): Promise<void> => {
             { new: true } 
           );
         battle.isNftMinted = true;
-        console.log(battle);
+        battle.isSpecialWinnerMinted = true;
        const res =  await battle.save();
        console.log("saved",res);
+        }
     }
 }
 
@@ -119,9 +121,20 @@ export const mintNfts = async (): Promise<void> => {
 //     }
 // };
 
-const mintNFTsForParticipants = async (artVoters: string[], grayScale:string,grayScaleReference:string ) => {
+const mintNFTsForParticipants = async (artVoters: string[], grayScale:string,grayScaleReference:string,battleId:any ) => {
     for (const vote of artVoters) {
+      const voted = await Voting.findOne({battleId:battleId,participantId:vote})
+      if(voted?.isMinted==false){
         await serverMint(vote, grayScale, grayScaleReference, false);
+      await Voting.findOneAndUpdate(
+        {battleId:battleId,participantId:vote}, 
+        { $set: { isMinted: true,
+         } }, 
+        { new: true } 
+      );
+    }else{
+      continue;
+    }
     }
     console.log("minted");
 };
