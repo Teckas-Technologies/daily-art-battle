@@ -140,7 +140,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       setToastMessage("Vote submitted successfully!");
     setTimeout(()=>{
       setToastMessage(null);
-    },5000)
+    },3000)
       setRefresh((prev) => !prev);
     } else {
     alert("Failed to submit vote. Maybe you already voted!");
@@ -482,7 +482,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       </div>
       */}
         {toastMessage && (
-        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+        <Toast success={true} message={toastMessage} onClose={() => setToastMessage(null)} />
       )}
       </div>
     </div>

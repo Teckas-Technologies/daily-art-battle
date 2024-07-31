@@ -19,7 +19,8 @@ const UpcomingArtTable: React.FC<{
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("date");
 
-  const handleSort = (sortType: string) => {
+  const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
     fetchMoreArts(sortType, 1);
@@ -70,7 +71,7 @@ const UpcomingArtTable: React.FC<{
       className="battle-table mt-[50px] pb-5 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
     >
-      <div className="battle-table1 ">
+      <div className="battle-table1">
         <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
@@ -92,19 +93,19 @@ const UpcomingArtTable: React.FC<{
             </Button>
           </div>
         </div>
-        <div className="mt-5 flex justify-end md:mr-20 lg:mr-20">
-      <select
-        // onChange={handleSortChange}
-        className="bg-white mr-5 text-black border rounded-lg p-2 cursor-pointer"
+        <div className="mt-5 flex justify-end md:mr-20  lg:mr-20">
+        <select
+         onChange={handleSort}
+        className="bg-white mr-10 text-black border border-gray-600 rounded-lg p-2 cursor-pointer"
       >
         <option value="date">Date</option>
         <option value="vote">Vote</option>
       </select>
-    </div>
+        </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
-        <nav className="flex justify-center flex-wrap gap-3 mt-5">
+        <nav className="flex justify-center flex-wrap gap-5 mt-5">
           <a
-          href="#upcoming"
+          href={page > 1 ? "#upcoming" : undefined}
             className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
@@ -115,12 +116,13 @@ const UpcomingArtTable: React.FC<{
             Previous
           </a>
           <a
-           href="#upcoming"
+           href={hasnext ?`#upcoming`:undefined}
             className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
                 : "cursor-not-allowed"
             }`}
+            
             onClick={hasnext ? handleNext : undefined}
           >
             Next
