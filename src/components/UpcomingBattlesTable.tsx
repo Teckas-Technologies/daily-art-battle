@@ -92,16 +92,15 @@ const UpcomingArtTable: React.FC<{
             </Button>
           </div>
         </div>
-        <div className="mt-5 flex justify-end">
-        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("date")}>
-          Date  
-        </p>
-        <p className="text-white px-3">|</p>
-       
-        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("vote")}>
-          Vote
-         </p>
-        </div>
+        <div className="mt-5 flex justify-end md:mr-20 lg:mr-20">
+      <select
+        // onChange={handleSortChange}
+        className="bg-white mr-5 text-black border rounded-lg p-2 cursor-pointer"
+      >
+        <option value="date">Date</option>
+        <option value="vote">Vote</option>
+      </select>
+    </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
         <nav className="flex justify-center flex-wrap gap-3 mt-5">
           <a
