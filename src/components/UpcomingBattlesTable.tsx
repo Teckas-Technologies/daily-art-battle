@@ -145,6 +145,11 @@ const BattleTable: React.FC<{
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
+  const [selectedArtId, setSelectedArtId] = useState(null);
+
+  const handleImageClick = (id:any) => {
+    setSelectedArtId(id);
+  };
 
   useEffect(() => {
     const fetchUserVotes = async () => {
@@ -157,9 +162,6 @@ const BattleTable: React.FC<{
     fetchUserVotes();
   }, [activeAccountId, fetchVotes]);
 
-  const handleArt = (id:any)=>{
-    router.push(`/art/${id}`);
-  }
 
   const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
@@ -196,7 +198,7 @@ const BattleTable: React.FC<{
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
                 <img
-                onClick={()=>handleArt(art._id)}
+                onClick={()=>handleImageClick(art._id)}
                   src={art.colouredArt}
                   alt="Art A"
                   className="w-full h-full object-cover hover:cursor-pointer"
@@ -210,6 +212,26 @@ const BattleTable: React.FC<{
                     backgroundSize: "cover",
                   }}
                 />
+                {selectedArtId === art._id && (
+            <div
+              className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded-lg"
+              onClick={() => setSelectedArtId(null)}
+            >
+              <div className="p-5">
+                <a href="#">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">
+                  Title:  {art?.arttitle}
+                  </h5>
+                </a>
+                <p className="mb-3 font-normal text-white">
+                Artist Id: {art?.artistId}
+                </p>
+                <p className="mb-3 font-normal text-white">
+                Up Votes: {`${art?.upVotes}`}
+                </p>
+                </div>
+            </div>
+          )}
                 <button
                   onClick={() => onVote(art._id)}
                   className={`
