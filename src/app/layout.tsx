@@ -48,7 +48,7 @@ export default function RootLayout({
     zIndex: -1,
     filter: 'blur(5px) brightness(50%)'
 }}>
-    <source src="images/back2.mp4" type="video/mp4" />
+    <source src="images/back3.mp4" type="video/mp4" />
     Your browser does not support the video tag.
 </video>
           <div className="flex flex-1 flex-col min-h-screen text-gray-500 gradient w-full  h-full flex justify-center items-center bold text-white">
