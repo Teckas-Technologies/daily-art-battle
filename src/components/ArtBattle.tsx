@@ -198,7 +198,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   }
 
 
- 
 
  
   if (error) return <p>Error fetching battle details: {error}</p>;
