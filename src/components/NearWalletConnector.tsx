@@ -34,7 +34,7 @@ export const NearWalletConnector = () => {
         padding: "10px 5vw",
       }}
     >
-      <div className="flex items-center flex-col md:flex-col">
+      <div className="flex items-center flex-row md:flex-row">
         <a onClick={url}>
         <img
           src="/images/logo.png"
@@ -43,7 +43,16 @@ export const NearWalletConnector = () => {
           height={50}
           className=" md:mb-0" // Add margin bottom for smaller screens
         />
-        </a>
+           </a>
+       <p style={{fontFamily:'saved-zero'}} className="ml-2 mr-2">x</p>
+        <img
+          src="/SIN Main Logo.png"
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className="md:mb-0" // Add margin bottom for smaller screens
+        />
+      
         {/* <h1 className="font-extrabold text-2xl md:text-md ml-2" style={{color:"#33cd2b"}}>
     GFXvs
   </h1> */}

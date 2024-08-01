@@ -208,18 +208,21 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
+      <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
+          style={{ fontFamily:'saved-zero' }}
+        >
+      Theme : The Grand Queen
+        </h2>
       {timeRemaining !== null && (
         <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
+          className=" mt-2 text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap",fontFamily:'Garet-book' }}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className="mt-2 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
-        Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
-        vote to secure participation NFTs and a chance to win an exclusive 1:1
-        masterpiece. Connect your NEAR wallet to join the thrilling competition!
+      <p style={{fontFamily:'Garet-book'}} className="mt-2 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
+      Join Sin Gfxvs and showcase your NFT creations for a chance to win from a 125 $HONEY and $25 USDC price pool! Connect your NEAR wallet and dive into the excitement of daily battles and exclusive rewards!
       </p>
       
       {skeletonLoad ? (

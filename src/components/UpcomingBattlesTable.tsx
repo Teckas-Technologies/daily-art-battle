@@ -72,10 +72,10 @@ const UpcomingArtTable: React.FC<{
       style={{ width: "100%", gap: 8 }}
     >
       <div className="battle-table1">
-        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
+        <h2 style={{fontFamily:'saved-zero'}} className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
-        <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
+        <p style={{fontFamily:'Garet-book'}} className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}

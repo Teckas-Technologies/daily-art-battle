@@ -54,10 +54,10 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <section id="previous">
     <div className="battle-table mt-8  md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
+      <h2 style={{fontFamily:'saved-zero'}} className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
         Previous Battles
       </h2>
-      <p className="battle-table1 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
+      <p  style={{fontFamily:'Garet-book'}} className="battle-table1 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
         <a
           href="https://wallet.mintbase.xyz/"
           target="_blank"

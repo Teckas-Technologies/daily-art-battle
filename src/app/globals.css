@@ -66,6 +66,22 @@
     }
   }
 
+  @font-face {
+    font-family: 'saved-zero';
+    src: url(saved\ by\ zero\ rg.ttf);
+  }
+
+  
+  @font-face {
+    font-family: 'Garet-book';
+    src: url(Garet-Book.ttf);
+  }
+
+  @font-face {
+    font-family: 'Garet-heavy';
+    src: url(Garet-Heavy.ttf);
+  }
+
   @layer base {
     * {
       @apply border-border;
