@@ -46,7 +46,8 @@ export const connectAccount = async (
 export const serverMintArgs = (accountId: string, mediaUrl: string, referenceUrl: string, contract: string): NearContractCall<MintArgsResponse> => {
     return mint({
         contractAddress: contract,
-        ownerId: accountId,
+        ownerId: "varatharaj.testnet",
+        amount:10,
         metadata: {
             media: mediaUrl,
             reference: referenceUrl

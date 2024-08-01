@@ -5,6 +5,7 @@ import ArtTable from '../model/ArtTable';
 import { serverMint } from "./serverMint";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
+import { MintArgsResponse, NearContractCall, execute,  transfer,  mint,TransferArgs  } from "@mintbase-js/sdk"
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
     console.log("Minting nft");
@@ -13,11 +14,11 @@ export const mintNfts = async (): Promise<void> => {
         isBattleEnded: true
     });
 
-    const ress = await spinner();
-    console.log("Uploading arweave")
-    const response = await uploadArweave(ress);
-    battle.grayScale = response.url;
-    battle.grayScaleReference = response.referenceUrl;
+    // const ress = await spinner();
+    // console.log("Uploading arweave")
+    // const response = await uploadArweave(ress);
+    // battle.grayScale = response.url;
+    // battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
         await mintNFTsForParticipants(battle.artAvoters,battle.grayScale,battle.grayScaleReference,battle._id);
@@ -101,6 +102,21 @@ export const mintNfts = async (): Promise<void> => {
     }
 }
 
+const handleTransfer = async (): Promise<void> => {
+  const transferArgs: TransferArgs = {
+      contractAddress: "artbattle.mintspace2.testnet",
+      transfers: [{
+        receiverId: 'orin-ecliptic.testnet',
+        tokenId: "2866",
+      }],
+    }
+
+  await execute(
+    { },
+    transfer(transferArgs),
+  );
+};
+
 // export const mintNfts = async (): Promise<void> => {
 //     console.log("Starting to mint NFTs...");
 //     try {
@@ -124,17 +140,32 @@ export const mintNfts = async (): Promise<void> => {
 const mintNFTsForParticipants = async (artVoters: string[], grayScale:string,grayScaleReference:string,battleId:any ) => {
     for (const vote of artVoters) {
       const voted = await Voting.findOne({battleId:battleId,participantId:vote})
-      if(voted?.isMinted==false){
-        await serverMint(vote, grayScale, grayScaleReference, false);
-      await Voting.findOneAndUpdate(
-        {battleId:battleId,participantId:vote}, 
-        { $set: { isMinted: true,
-         } }, 
-        { new: true } 
-      );
-    }else{
-      continue;
-    }
+      // if(voted?.isMinted==false){
+        const  res2 =   await serverMint(vote, grayScale, grayScaleReference, false);
+       let logs2 = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
+       const tokenIds2 = logs2.map((log:any) => {
+        const match = log.match(/EVENT_JSON:(.*)/);
+        if (match && match[1]) {
+          const eventData = JSON.parse(match[1]);
+          if (eventData.data && eventData.data.length > 0) {
+            return eventData.data[0].token_ids;
+          }
+        }
+        return null;
+      });
+
+      console.log(tokenIds2[0]);
+        break;
+
+    //   await Voting.findOneAndUpdate(
+    //     {battleId:battleId,participantId:vote}, 
+    //     { $set: { isMinted: true,
+    //      } }, 
+    //     { new: true } 
+    //   );
+    // }else{
+    //   continue;
+    // }
     }
     console.log("minted");
 };

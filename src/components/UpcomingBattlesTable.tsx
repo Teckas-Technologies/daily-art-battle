@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from 'next/navigation';
+import Overlay from "./Overlay"
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
   uploadSuccess: boolean;
@@ -146,12 +147,21 @@ const BattleTable: React.FC<{
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
   const [selectedArtId, setSelectedArtId] = useState(null);
+  const[url,setUrl] = useState('');
+  const[message,setMessage] = useState('Check out this art and put your votes');
+
 
   const handleImageClick = (id:any) => {
     setSelectedArtId(id);
   };
 
+  const handleClose = () => {
+    setSelectedArtId(null);
+  };
+
   useEffect(() => {
+
+    setUrl(window.location.href)
     const fetchUserVotes = async () => {
       if (activeAccountId) {
         const votes = await fetchVotes(activeAccountId);
@@ -212,26 +222,9 @@ const BattleTable: React.FC<{
                     backgroundSize: "cover",
                   }}
                 />
-                {selectedArtId === art._id && (
-            <div
-              className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded-lg"
-              onClick={() => setSelectedArtId(null)}
-            >
-              <div className="p-5">
-                <a href="#">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">
-                  Title:  {art?.arttitle}
-                  </h5>
-                </a>
-                <p className="mb-3 font-normal text-white">
-                Artist Id: {art?.artistId}
-                </p>
-                <p className="mb-3 font-normal text-white">
-                Up Votes: {`${art?.upVotes}`}
-                </p>
-                </div>
-            </div>
-          )}
+                    {selectedArtId === art._id && (
+                      <Overlay onClose={handleClose}  art={art}/>
+                    )}
                 <button
                   onClick={() => onVote(art._id)}
                   className={`
