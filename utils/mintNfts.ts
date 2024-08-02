@@ -2,9 +2,10 @@ import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import Voting from '../model/Voting';
 import ArtTable from '../model/ArtTable';
-import { serverMint } from "./serverMint";
+import { serverMint,connectAccount } from "./serverMint";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
+import { NEXT_PUBLIC_NETWORK, SERVER_WALLET_ID, SERVER_WALLET_PK , ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT} from "../src/config/constants";
 import { MintArgsResponse, NearContractCall, execute,  transfer,  mint,TransferArgs  } from "@mintbase-js/sdk"
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
@@ -103,6 +104,7 @@ export const mintNfts = async (): Promise<void> => {
 }
 
 const handleTransfer = async (): Promise<void> => {
+  console.log("tranfer")
   const transferArgs: TransferArgs = {
       contractAddress: "artbattle.mintspace2.testnet",
       transfers: [{
@@ -110,9 +112,9 @@ const handleTransfer = async (): Promise<void> => {
         tokenId: "2866",
       }],
     }
-
+    const account = await connectAccount();
   await execute(
-    { },
+    { account:account},
     transfer(transferArgs),
   );
 };
@@ -139,22 +141,23 @@ const handleTransfer = async (): Promise<void> => {
 
 const mintNFTsForParticipants = async (artVoters: string[], grayScale:string,grayScaleReference:string,battleId:any ) => {
     for (const vote of artVoters) {
-      const voted = await Voting.findOne({battleId:battleId,participantId:vote})
+      const voted = await Voting.findOne({battleId:battleId,participantId:vote});
+      await handleTransfer();
       // if(voted?.isMinted==false){
-        const  res2 =   await serverMint(vote, grayScale, grayScaleReference, false);
-       let logs2 = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
-       const tokenIds2 = logs2.map((log:any) => {
-        const match = log.match(/EVENT_JSON:(.*)/);
-        if (match && match[1]) {
-          const eventData = JSON.parse(match[1]);
-          if (eventData.data && eventData.data.length > 0) {
-            return eventData.data[0].token_ids;
-          }
-        }
-        return null;
-      });
+      //   const  res2 =   await serverMint(vote, grayScale, grayScaleReference, false);
+      //  let logs2 = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
+      //  const tokenIds2 = logs2.map((log:any) => {
+      //   const match = log.match(/EVENT_JSON:(.*)/);
+      //   if (match && match[1]) {
+      //     const eventData = JSON.parse(match[1]);
+      //     if (eventData.data && eventData.data.length > 0) {
+      //       return eventData.data[0].token_ids;
+      //     }
+      //   }
+      //   return null;
+      // });
 
-      console.log(tokenIds2[0]);
+      // console.log(tokenIds2[0]);
         break;
 
     //   await Voting.findOneAndUpdate(
