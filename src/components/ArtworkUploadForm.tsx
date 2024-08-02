@@ -40,6 +40,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const[disable,setDisable]=useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
   const[imageError,setImageError] = useState(false);
+  const[toast,setToast] = useState(true);
 
 
   const handleFileChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -178,7 +179,8 @@ useEffect(() => {
           return;
         }
         if(artwork.file.size>30000000){
-          alert(`The file size should be less than 30 MB`);
+          setToastMessage(`The file size should be less than 30 MB`);
+          setToast(false);
           return;
         }
         console.log(artwork.file.size);
@@ -205,6 +207,7 @@ useEffect(() => {
       }
       await saveData(artBattle as ArtData);
       setToastMessage('All files uploaded successfully');
+      setToast(true)
       onSuccessUpload();
      setTimeout(()=>{onClose();},2000)
     } catch (error) {
@@ -221,7 +224,7 @@ useEffect(() => {
        
         <form onSubmit={uploadArtWork}>
         {toastMessage && (
-        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+        <Toast success={toast} message={toastMessage} onClose={() => setToastMessage(null)} />
       )}
           {artworks.map((artwork, index) => (
             <div key={index} className='mb-1'>

@@ -17,9 +17,10 @@ const UpcomingArtTable: React.FC<{
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState("date");
+  const [sort, setSort] = useState("dateDsc");
 
-  const handleSort = (sortType: string) => {
+  const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
     fetchMoreArts(sortType, 1);
@@ -92,15 +93,16 @@ const UpcomingArtTable: React.FC<{
             </Button>
           </div>
         </div>
-        <div className="mt-5 flex justify-center">
-        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("date")}>
-          Date  
-        </p>
-        <p className="text-white px-3">|</p>
-       
-        <p className="text-white hover:cursor-pointer hover:underline" onClick={()=>handleSort("vote")}>
-          Vote
-         </p>
+        <div className="mt-5 flex justify-end md:mr-20  lg:mr-20">
+        <select
+         onChange={handleSort}
+        className="bg-white mr-10 text-black border border-gray-600 rounded-lg p-2 cursor-pointer"
+      >
+        <option value="dateDsc">Date DSC</option>
+        <option value="dateAsc">Date ASC</option>
+        <option value="voteAsc">Vote ASC</option>
+        <option value="voteDsc">Vote DSC</option>
+      </select>
         </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
         <nav className="flex justify-center flex-wrap gap-5 mt-5">
