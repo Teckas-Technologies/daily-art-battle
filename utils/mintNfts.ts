@@ -1,12 +1,17 @@
 import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
-import Voting from '../model/Voting';
 import ArtTable from '../model/ArtTable';
-import { serverMint,connectAccount } from "./serverMint";
+import { serverMint } from "./serverMint";
+import { participationMint,connectAccount } from "./participationMint";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
-import { NEXT_PUBLIC_NETWORK, SERVER_WALLET_ID, SERVER_WALLET_PK , ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT} from "../src/config/constants";
-import { MintArgsResponse, NearContractCall, execute,  transfer,  mint,TransferArgs  } from "@mintbase-js/sdk"
+import {  execute,  transfer,TransferArgs  } from "@mintbase-js/sdk"
+
+interface Transfer {
+  receiverId: string;
+  tokenId:string;
+}
+
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
     console.log("Minting nft");
@@ -15,6 +20,7 @@ export const mintNfts = async (): Promise<void> => {
         isBattleEnded: true
     });
 
+    console.log(battle);
     // const ress = await spinner();
     // console.log("Uploading arweave")
     // const response = await uploadArweave(ress);
@@ -22,8 +28,9 @@ export const mintNfts = async (): Promise<void> => {
     // battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
-        await mintNFTsForParticipants(battle.artAvoters,battle.grayScale,battle.grayScaleReference,battle._id);
-       await mintNFTsForParticipants(battle.artBvoters,battle.grayScale,battle.grayScaleReference,battle._id);
+      const votes = battle.artAVotes+battle.artBVotes;
+      console.log(votes);
+        await mintNFTsForParticipants(votes ,battle.grayScale,battle.grayScaleReference);
       if(battle.isSpecialWinnerMinted==false){
         const artAspecialWinner = selectRandomWinner(battle.artAvoters);
         const artBspecialWinner = selectRandomWinner(battle.artBvoters);
@@ -42,7 +49,6 @@ export const mintNfts = async (): Promise<void> => {
            if(artBspecialWinner){
              const  res2 =  await serverMint(artBspecialWinner, battle.artBcolouredArt, battle.artBcolouredArtReference,true);
              logs2 = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
-
             }
            if(logs1){
            const tokenIds1 = logs1.map((log:any) => {
@@ -103,74 +109,42 @@ export const mintNfts = async (): Promise<void> => {
     }
 }
 
-const handleTransfer = async (): Promise<void> => {
+const mintNFTsForParticipants = async (artVoters:number, grayScale:string,grayScaleReference:string ) => {
+        const  res2 =   await participationMint(artVoters, grayScale, grayScaleReference, false);
+       let logs2 = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
+       const tokenIds2 = logs2.map((log:any) => {
+        const match = log.match(/EVENT_JSON:(.*)/);
+        if (match && match[1]) {
+          const eventData = JSON.parse(match[1]);
+          if (eventData.data && eventData.data.length > 0) {
+            return eventData.data[0].token_ids;
+          }
+        }
+        return null;
+      });
+
+      console.log(tokenIds2[0]);
+      await handleTransfer(tokenIds2[0]);
+    console.log("minted");
+};
+
+const handleTransfer = async (tokenIds:string[]): Promise<void> => {
+  let tokenList: Transfer[] = [];
+
+  for(const tokenId of tokenIds){
+    let trans: Transfer = { receiverId:"xor-rhythm.testnet",tokenId:tokenId };
+    tokenList.push(trans);
+  }
   console.log("tranfer")
   const transferArgs: TransferArgs = {
       contractAddress: "artbattle.mintspace2.testnet",
-      transfers: [{
-        receiverId: 'orin-ecliptic.testnet',
-        tokenId: "2866",
-      }],
+      transfers: tokenList,
     }
     const account = await connectAccount();
   await execute(
     { account:account},
     transfer(transferArgs),
   );
-};
-
-// export const mintNfts = async (): Promise<void> => {
-//     console.log("Starting to mint NFTs...");
-//     try {
-//         await connectToDatabase();
-//         console.log("Connected to database, now minting NFT...");
-//         const battle = await Battle.findOne({
-//             isNftMinted: false,
-//             isBattleEnded: true
-//         });
-//         if (!battle) {
-//             console.log("No battle found that meets the criteria.");
-//             return; // If no battle is found, exits the function
-//         }
-//         console.log("Fetched battle:", battle);
-//         // If there are additional steps, log them similarly
-//     } catch (error) {
-//         console.error("Error in mintNfts:", error);
-//     }
-// };
-
-const mintNFTsForParticipants = async (artVoters: string[], grayScale:string,grayScaleReference:string,battleId:any ) => {
-    for (const vote of artVoters) {
-      const voted = await Voting.findOne({battleId:battleId,participantId:vote});
-      await handleTransfer();
-      // if(voted?.isMinted==false){
-      //   const  res2 =   await serverMint(vote, grayScale, grayScaleReference, false);
-      //  let logs2 = res2.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
-      //  const tokenIds2 = logs2.map((log:any) => {
-      //   const match = log.match(/EVENT_JSON:(.*)/);
-      //   if (match && match[1]) {
-      //     const eventData = JSON.parse(match[1]);
-      //     if (eventData.data && eventData.data.length > 0) {
-      //       return eventData.data[0].token_ids;
-      //     }
-      //   }
-      //   return null;
-      // });
-
-      // console.log(tokenIds2[0]);
-        break;
-
-    //   await Voting.findOneAndUpdate(
-    //     {battleId:battleId,participantId:vote}, 
-    //     { $set: { isMinted: true,
-    //      } }, 
-    //     { new: true } 
-    //   );
-    // }else{
-    //   continue;
-    // }
-    }
-    console.log("minted");
 };
 
 
