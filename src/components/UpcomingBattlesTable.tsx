@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useFetchArts, ArtData } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
-import Image from "next/image";
 import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,9 +24,7 @@ const UpcomingArtTable: React.FC<{
     setPage(1); // Reset to first page when sorting
     fetchMoreArts(sortType, 1);
   };
-
-
-
+  
   useEffect(() => {
     const initializeData = async () => {
    
