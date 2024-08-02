@@ -1,15 +1,9 @@
-import { connectToDatabase } from "./mongoose";
-import { uploadFile, uploadReference,uploadBuffer } from "@mintbase-js/storage";
+
+import {uploadBuffer } from "@mintbase-js/storage";
 export default async function uploadArweave(base64:any) {
     const inputBuffer = Buffer.from(base64, 'base64');
 
-    const blob = new Blob([inputBuffer], { type: "image/jpeg" });
-
-    const processedFile = new File([blob], "processed-image.jpg", {
-      type: "image/jpeg",
-    });
-
-   
+    console.log("Upload")
     const uploadResult = await uploadBuffer(inputBuffer,"image/gif","File");
     const url = `https://arweave.net/${uploadResult.id}`;
     const metadata = {
