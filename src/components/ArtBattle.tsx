@@ -220,8 +220,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         </h2>
       )}
       <p style={{fontFamily:'Garet-book'}} className="mt-2 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
-      Join Sin Gfxvs and showcase your NFT creations for a chance to win from a 125 $HONEY and $25 USDC price pool! Connect your NEAR wallet and dive into the excitement of daily battles and exclusive rewards!
-      </p>
+      Join the SIN x GFXvs Art Swarm and showcase your NFT creations for a chance to win from a 200 $HONEY and $25 USDC prize pool! Connect your NEAR wallet and dive into the excitement of daily battles and exclusive rewards!
+        </p>
       
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
