@@ -27,9 +27,11 @@ export const mintNfts = async (): Promise<void> => {
     console.log("Fetching completed battles",battle);
     if(battle){
       const votes = battle.artAVotes+battle.artBVotes;
+      if(votes>0){
       const tokenIds =  await mintNFTsForParticipants(votes,battle.grayScale,battle.grayScaleReference);
       const voters = await mergeVoters(battle.artAvoters,battle.artBvoters);
       await handleTransfer(tokenIds,voters);
+      }
   
       if(battle.isSpecialWinnerMinted==false){
         const artAspecialWinner = selectRandomWinner(battle.artAvoters);
