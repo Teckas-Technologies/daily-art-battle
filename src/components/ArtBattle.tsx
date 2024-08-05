@@ -223,14 +223,14 @@ setTitle(res.holidayInspiredTheme);
   return (
     <div className="mt-10 mx-8">
         <a
-  href="https://royale.gfxvs.com/"
+  href="https://sin.gfxvs.com/"
   target="_blank"
   className="text-green-600"
 >
   <h2
     className="mt-10 text-2xl hover:cursor-pointer text-green-600 font-bold text-center justify-center items-center flex"
   >
-    🔔 Click here to Join GFXvs Royale: Compete for a $50 Prize Pool in a 5-day Event!
+    🔔 Click here to Join SIN GFXvs: Compete for a 200 $HONEY & $25 USDC Prize Pool in a 5-day Event!
   </h2>
 </a>
 
