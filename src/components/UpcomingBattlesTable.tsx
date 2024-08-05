@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useFetchArts, ArtData } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
+import Image from "next/image";
+import Overlay from "./Overlay";
 import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,13 +20,17 @@ const UpcomingArtTable: React.FC<{
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("dateDsc");
 
+
+
   const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
     fetchMoreArts(sortType, 1);
   };
-  
+
+
+
   useEffect(() => {
     const initializeData = async () => {
    
@@ -72,7 +78,7 @@ const UpcomingArtTable: React.FC<{
         <h2 style={{fontFamily:'saved-zero'}} className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
-        <p style={{fontFamily:'Garet-book'}} className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
+        <p style={{fontFamily:'Garet-book'}}  className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}
@@ -142,6 +148,33 @@ const BattleTable: React.FC<{
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
+  
+  const [selectedArtId, setSelectedArtId] = useState(null);
+
+  const getQueryParam = (param: string): string | null => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(param);
+    }
+    return null;
+  };
+
+  const artId = getQueryParam('artId');
+
+  const handleImageClick = (id:any) => {
+    setSelectedArtId(id);
+    const url = new URL(window.location.href);
+    url.searchParams.set('artId', id);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  const handleClose = () => {
+    setSelectedArtId(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('artId');
+    window.history.pushState({}, '', url.toString());
+  };
+
 
   useEffect(() => {
     const fetchUserVotes = async () => {
@@ -189,11 +222,15 @@ const BattleTable: React.FC<{
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
         {artData.map((art, index) => (
+           
           <div key={index} className="flex justify-center overflow-hidden">
+             {(selectedArtId === art._id || artId === art._id) && (
+              <Overlay onClose={handleClose}  art={art} onVote={onVote} votes={votes}/>
+            )}
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
                 <img
-                onClick={()=>handleArt(art._id)}
+                 onClick={()=>handleImageClick(art._id)}
                   src={art.colouredArt}
                   alt="Art A"
                   className="w-full h-full object-cover hover:cursor-pointer"
