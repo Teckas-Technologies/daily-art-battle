@@ -14,11 +14,12 @@ interface Transfer {
 
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
-    console.log("Minting nft");
+    console.log("Started Minting nft");
     const battle = await Battle.findOne({
         isNftMinted: false,
         isBattleEnded: true
     });
+
     const ress = await spinner();
     console.log("Uploading arweave")
     const response = await uploadArweave(ress);
