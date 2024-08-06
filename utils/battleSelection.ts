@@ -36,11 +36,6 @@ export const findTopTwoArts = async (): Promise<any[]> => {
 export const createBattle = async (): Promise<any> => {
   const battles = await Battle.find({isBattleEnded:false});
   const [artA, artB] = await findTopTwoArts();
-  console.log("Art A");
-  console.log(artA);
-  console.log("Art B");
-  console.log(artB);
-
   if(battles.length<=0 && (artA && artB)){
     const startDate = await getNextAvailableDate();
     startDate.setHours(0, 0, 0, 0);
