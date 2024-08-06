@@ -18,13 +18,29 @@ export async function getNextAvailableDate(): Promise<Date> {
 }
 export const findTopTwoArts = async (): Promise<any[]> => {
   await connectToDatabase();
-  const arts = await ArtTable.find({isCompleted:false}).sort({ upVotes: -1 }).limit(2).exec();
-  return arts;
+  const art = await ArtTable.aggregate([
+    { $match: { isCompleted: false } },  
+    { $sort: { upVotes: -1 } }, 
+    {
+      $group: {
+        _id: "$artistId",  
+        art: { $first: "$$ROOT" } 
+      }
+    },
+    { $replaceRoot: { newRoot: "$art" } }, 
+    { $limit: 2 } 
+  ]).exec();
+  return art;
 };
 
 export const createBattle = async (): Promise<any> => {
   const battles = await Battle.find({isBattleEnded:false});
   const [artA, artB] = await findTopTwoArts();
+  console.log("Art A");
+  console.log(artA);
+  console.log("Art B");
+  console.log(artB);
+
   if(battles.length<=0 && (artA && artB)){
     const startDate = await getNextAvailableDate();
     startDate.setHours(0, 0, 0, 0);
