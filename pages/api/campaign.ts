@@ -12,4 +12,11 @@ export default async function handler(
     await Campaign.create(data);
     return res.status(201).json({ success: true, message: "Campaign created Successfully" });
     }
+
+    if (req.method == 'GET') {
+      await connectToDatabase();
+      const title = req.query.title;
+      const campaign = await Campaign.findOne({campaignTitle:title});
+      return res.status(201).json({ success: true, data:campaign});
+      }
   } 

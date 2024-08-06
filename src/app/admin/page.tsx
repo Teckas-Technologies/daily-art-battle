@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useMbWallet } from "@mintbase-js/react";
 
 const Admin: React.FC = () => {
 

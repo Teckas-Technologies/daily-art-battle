@@ -12,4 +12,4 @@ const campaignSchema = new mongoose.Schema({
     campaignWelcomeText: {type: String,required: true,},
 });
 
-export default mongoose.models.Campaign || model<Campaign>('Battle', campaignSchema);
+export default mongoose.models.Campaign || model<Campaign>('Campaign', campaignSchema);
