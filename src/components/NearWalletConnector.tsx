@@ -14,7 +14,7 @@ export const NearWalletConnector = () => {
   };
 
   const handleRoute = ()=>{
-    router.push(`/theme`);
+    router.push(`/admin`);
   }
   const url = ()=>{
     const url = window.location.origin;
