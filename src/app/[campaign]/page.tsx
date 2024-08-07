@@ -15,7 +15,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     return(
         <>
         <NearWalletConnector/>
-        <h1>{campaign?.campaignTheme}</h1>
+             <h1>{campaign?.campaignTheme}</h1>
         <h1>{campaign?.campaignWelcomeText}</h1>
         {params.campaign}
         </>

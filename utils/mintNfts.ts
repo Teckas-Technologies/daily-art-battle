@@ -160,14 +160,14 @@ const selectRandomWinner = (votes: any[]): any => {
     return votes[randomIndex];
 };
 
-      const mergeVoters = (votersA: any[],votersB:any[]): any => {
-          const voters:any[] = [];
-          for(const voter of votersA){
-            voters.push(voter);
-          }
-          for(const voter of votersB){
-            voters.push(voter);
-          }
+const mergeVoters = (votersA: any[],votersB:any[]): any => {
+    const voters:any[] = [];
+    for(const voter of votersA){
+      voters.push(voter);
+    }
+    for(const voter of votersB){
+      voters.push(voter);
+    }
 
-          return voters
-      };
+    return voters
+};

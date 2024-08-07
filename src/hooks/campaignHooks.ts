@@ -31,8 +31,30 @@ export const useFetchCampaignByTitle = () => {
             }
         };
   
+        const saveCampaign = async (data:any) => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(`/api/campaign`,{
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const res = await response.json();
+                return res;
+            } catch (err) {
+                console.error('Error saving art:', err);
+                setError("Error saving art!");
+            } finally {
+                setLoading(false);
+            }
+        };
+  
         
        
   
-    return {fetchCampaignByTitle};
+    return {fetchCampaignByTitle,saveCampaign};
       }
