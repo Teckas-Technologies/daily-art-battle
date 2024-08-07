@@ -250,11 +250,11 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
           }}
         >
           <h2 style={{ color: "#000", fontWeight: 600, fontSize: 18 }}>
-            No Battles Today!
+           Battle starts tomorrow
           </h2>
-          <p className="px-5" style={{ color: "#000", textAlign: "justify" }}>
+          {/* <p className="px-5" style={{ color: "#000", textAlign: "justify" }}>
             To start your battle by clicking the "Add Artwork" Button.
-          </p>
+          </p> */}
           <div className="add-art-btn mt-5 text-center">
             <button
               onClick={toggleUploadModal}

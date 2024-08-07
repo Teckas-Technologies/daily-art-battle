@@ -31,6 +31,7 @@ export const findTopTwoArts = async (): Promise<any[]> => {
     { $limit: 2 },
     { $replaceRoot: { newRoot: "$topArt" } }
   ]).exec();
+  console.log(art)
   return art;
 };
 
