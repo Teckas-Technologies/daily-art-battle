@@ -2,7 +2,11 @@
 import { NearWalletConnector } from "@/components/NearWalletConnector";
 import { useFetchCampaignByTitle, CampaignData } from "@/hooks/campaignHooks";
 import { useEffect, useState } from "react";
-
+import ArtBattle from "@/components/ArtBattle";
+import UpcomingBattlesTable from "@/components/UpcomingBattlesTable";
+import PreviousArtTable from "@/components/PreviousBattlesTable";
+import Footer from "@/components/Footer";
+import ArtworkUploadForm from "@/components/ArtworkUploadForm";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [campaign, setCampaign] = useState<CampaignData>();
   const [videoUrl, setVideoUrl] = useState<string>("");
@@ -31,6 +35,11 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     const byteArray = new Uint8Array(byteNumbers);
     return new Blob([byteArray], { type });
   };
+
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
   return (
     <main
@@ -65,7 +74,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         </video>
       )}
       <NearWalletConnector />
-      <h1></h1>
+      {showUploadModal && <ArtworkUploadForm onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      <ArtBattle toggleUploadModal={toggleUploadModal} />
+      <UpcomingBattlesTable toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtTable toggleUploadModal={toggleUploadModal}/>
+      <Footer/>
+      
     </main>
   );
 };

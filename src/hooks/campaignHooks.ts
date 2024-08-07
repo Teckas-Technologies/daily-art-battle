@@ -7,6 +7,8 @@ export interface CampaignData {
   campaignWelcomeText: string;
   color:string;
   video:string;
+  startDate:string;
+  endDate:string;
 }
 
 export const useFetchCampaignByTitle = () => {
