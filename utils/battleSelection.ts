@@ -23,12 +23,13 @@ export const findTopTwoArts = async (): Promise<any[]> => {
     { $sort: { upVotes: -1 } }, 
     {
       $group: {
-        _id: "$artistId",  
-        art: { $first: "$$ROOT" } 
+        _id: "$artistId",
+        topArt: { $first: "$$ROOT" }
       }
     },
-    { $replaceRoot: { newRoot: "$art" } }, 
-    { $limit: 2 } 
+    { $sort: { "topArt.upVotes": -1 } },
+    { $limit: 2 },
+    { $replaceRoot: { newRoot: "$topArt" } }
   ]).exec();
   return art;
 };
