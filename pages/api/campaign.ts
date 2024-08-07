@@ -15,6 +15,11 @@ export default async function handler(
 
     if (req.method == 'GET') {
       await connectToDatabase();
+      const queryType = req.query.queryType;
+      if(queryType=='campaigns'){
+        const campaign = await Campaign.find();
+        return res.status(201).json({ success: true, data:campaign});
+      }
       const title = req.query.title;
       const campaign = await Campaign.findOne({campaignTitle:title});
       return res.status(201).json({ success: true, data:campaign});

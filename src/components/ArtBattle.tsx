@@ -11,7 +11,7 @@ interface Artwork {
   name: string;
   title: string;
   artistId: string;
-}
+} 
 
 const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   toggleUploadModal,

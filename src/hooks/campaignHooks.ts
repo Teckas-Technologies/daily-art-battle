@@ -5,6 +5,8 @@ export interface CampaignData {
   campaignTitle: string;
   campaignTheme: string;
   campaignWelcomeText: string;
+  color:string;
+  video:string;
 }
 
 export const useFetchCampaignByTitle = () => {
@@ -30,11 +32,30 @@ export const useFetchCampaignByTitle = () => {
                 setLoading(false);
             }
         };
+
+        const fetchCampaign = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(`/api/campaign?queryType=campaigns`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const res = await response.json();
+                
+                setCampaign(res.data);
+                return res.data;
+            } catch (err) {
+                console.error('Error fetching art:', err);
+                setError("Error fetching art!");
+            } finally {
+                setLoading(false);
+            }
+        };
   
         const saveCampaign = async (data:any) => {
             setLoading(true);
             setError(null);
             try {
+                console.log(data);
                 const response = await fetch(`/api/campaign`,{
                     method: 'POST',
                     headers: {
@@ -56,5 +77,5 @@ export const useFetchCampaignByTitle = () => {
         
        
   
-    return {fetchCampaignByTitle,saveCampaign};
+    return {fetchCampaignByTitle,saveCampaign,fetchCampaign};
       }
