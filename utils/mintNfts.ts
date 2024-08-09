@@ -6,6 +6,7 @@ import { participationMint,connectAccount } from "./participationMint";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
 import {  execute,  transfer,TransferArgs  } from "@mintbase-js/sdk"
+import { ART_BATTLE_CONTRACT } from "@/config/constants";
 
 interface Transfer {
   receiverId: string;
@@ -14,12 +15,11 @@ interface Transfer {
 
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
-    console.log("Started Minting nft");
+    console.log("Minting nft");
     const battle = await Battle.findOne({
         isNftMinted: false,
         isBattleEnded: true
-    });
-
+    }); 
     const ress = await spinner();
     console.log("Uploading arweave")
     const response = await uploadArweave(ress);
@@ -112,7 +112,20 @@ export const mintNfts = async (): Promise<void> => {
     }
 }
 
-const mintNFTsForParticipants = async (artVoters:number, grayScale:string,grayScaleReference:string ) => {
+const mintNFTsForParticipants = async (artVoters: number, grayScale: string, grayScaleReference: string): Promise<string[]> => {
+  const maxBatchSize = 99;
+  const tokenIds: string[] = [];
+
+  for (let i = 0; i < artVoters; i += maxBatchSize) {
+      const batchSize = Math.min(maxBatchSize, artVoters - i);
+      const batchTokenIds = await mintBatch(batchSize, grayScale, grayScaleReference);
+      tokenIds.push(...batchTokenIds);
+  }
+
+  return tokenIds;
+};
+
+const mintBatch = async (artVoters:number, grayScale:string,grayScaleReference:string ) => {
         const  res =   await participationMint(artVoters, grayScale, grayScaleReference, false);
        let logs = res.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
        const tokenIds = logs.map((log:any) => {
@@ -130,30 +143,37 @@ const mintNFTsForParticipants = async (artVoters:number, grayScale:string,graySc
 };
 
 
-const handleTransfer = async (tokenIds:string[],voters:string[]): Promise<void> => {
+const handleTransfer = async (tokenIds: string[], voters: string[]): Promise<void> => {
   if (tokenIds.length !== voters.length) {
-    throw new Error('Arrays must be of the same length');
+      throw new Error('Arrays must be of the same length');
   }
 
-    let tokenList: Transfer[] = [];
+  const maxBatchSize = 99;
 
-    for (let i = 0; i < tokenIds.length; i++) {
-        let trans: Transfer = { receiverId: voters[i], tokenId: tokenIds[i] };
-        tokenList.push(trans);
-    }
+  for (let i = 0; i < tokenIds.length; i += maxBatchSize) {
+      const tokenChunk = tokenIds.slice(i, i + maxBatchSize);
+      const voterChunk = voters.slice(i, i + maxBatchSize);
 
-       console.log("tranfer")
+      let tokenList: Transfer[] = [];
+      for (let j = 0; j < tokenChunk.length; j++) {
+          let trans: Transfer = { receiverId: voterChunk[j], tokenId: tokenChunk[j] };
+          tokenList.push(trans);
+      }
+
+      console.log(`Transfer batch ${i / maxBatchSize + 1}`);
+
       const transferArgs: TransferArgs = {
-      contractAddress: "artbattle.mintspace2.testnet",
-      transfers: tokenList,
-    }
-    const account = await connectAccount();
-  await execute(
-    { account:account},
-    transfer(transferArgs),
-  );
-};
+          contractAddress: ART_BATTLE_CONTRACT,
+          transfers: tokenList,
+      };
 
+      const account = await connectAccount();
+      await execute(
+          { account: account },
+          transfer(transferArgs),
+      );
+  }
+};
 
 const selectRandomWinner = (votes: any[]): any => {
     if (votes.length === 0) return null;
@@ -161,14 +181,14 @@ const selectRandomWinner = (votes: any[]): any => {
     return votes[randomIndex];
 };
 
-      const mergeVoters = (votersA: any[],votersB:any[]): any => {
-          const voters:any[] = [];
-          for(const voter of votersA){
-            voters.push(voter);
-          }
-          for(const voter of votersB){
-            voters.push(voter);
-          }
+const mergeVoters = (votersA: any[],votersB:any[]): any => {
+    const voters:any[] = [];
+    for(const voter of votersA){
+      voters.push(voter);
+    }
+    for(const voter of votersB){
+      voters.push(voter);
+    }
 
-          return voters
-      };
+    return voters
+};
