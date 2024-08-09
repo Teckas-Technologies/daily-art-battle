@@ -36,14 +36,13 @@ export async function deleteAll(): Promise<void> {
   await Battle.deleteMany({});
 }
 
-export const findTodaysBattle = async (): Promise<any> => {
+export const findTodaysBattle = async (campaignId:any): Promise<any> => {
   await connectToDatabase();
   const now = new Date();
   const startOfDay = new Date(now.setHours(0, 0, 0, 0));
   const endOfDay = new Date(now.setHours(23, 59, 59, 999));
-
   return Battle.findOne({
-
+    campaignId:campaignId,
     startTime: { $lte: endOfDay },
     endTime: { $gte: startOfDay }
   });

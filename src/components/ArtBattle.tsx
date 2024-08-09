@@ -13,8 +13,8 @@ interface Artwork {
   artistId: string;
 } 
 
-const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
-  toggleUploadModal,
+const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId:string }> = ({
+  toggleUploadModal,campaignId
 }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { todayBattle, loading,battle, error, fetchTodayBattle } =
@@ -45,9 +45,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const[popupB,setPopUpB] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
   const [skeletonLoad,setSkeletonLoading] = useState(true);
-
-
-
   useEffect(() => {
    
     const fetchData = async () => {
@@ -61,7 +58,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
     };
 
     fetchData();
-    fetchTodayBattle();
+    fetchTodayBattle(campaignId);
   }, [todayBattle, fetchVotes, refresh]);
 
 

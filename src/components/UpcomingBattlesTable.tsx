@@ -12,7 +12,8 @@ import { useRouter } from 'next/navigation';
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
   uploadSuccess: boolean;
-}> = ({ toggleUploadModal, uploadSuccess }) => {
+  campaignId:string;
+}> = ({ toggleUploadModal, uploadSuccess,campaignId }) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const [refresh, setRefresh] = useState(false);
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
@@ -26,7 +27,7 @@ const UpcomingArtTable: React.FC<{
     const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
-    fetchMoreArts(sortType, 1);
+    fetchMoreArts(campaignId,sortType, 1);
   };
 
 
@@ -34,7 +35,7 @@ const UpcomingArtTable: React.FC<{
   useEffect(() => {
     const initializeData = async () => {
    
-      fetchMoreArts(sort,page);
+      fetchMoreArts(campaignId,sort,page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
@@ -56,13 +57,13 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(sort,page + 1);
+    fetchMoreArts(campaignId,sort,page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(sort,page - 1);
+      fetchMoreArts(campaignId,sort,page - 1);
     }
   };
 

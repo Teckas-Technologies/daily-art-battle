@@ -35,7 +35,7 @@ interface UseFetchTodayBattleResult {
   loading: boolean;
   error: string | null;
   battle:boolean;
-  fetchTodayBattle: () => Promise<void>; 
+  fetchTodayBattle: (campaignId: string) => Promise<void>; 
 }
 
 interface BattlesResponse {
@@ -91,12 +91,12 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   const [error, setError] = useState<string | null>(null);
   const [battle, setBattle] = useState<boolean>(false);
 
-  const fetchTodayBattle = async () => {
+  const fetchTodayBattle = async (campaignId:string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('/api/battle?queryType=Today');
+      const response = await fetch(`/api/battle?queryType=Today&campaignId=${campaignId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch today\'s battle data');
       }
@@ -112,11 +112,6 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchTodayBattle();
-  }, []);
-
 
   return { todayBattle,battle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
 };

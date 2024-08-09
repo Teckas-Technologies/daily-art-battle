@@ -18,9 +18,10 @@ interface Artwork {
 interface ArtworkUploadFormProps {
   onClose: () => void;
   onSuccessUpload: () => void; 
+  campaignId:string;
 }
 
-export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload }) => {
+export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload ,campaignId}) => {
   const defaultArtworks: Artwork[] = [
     { name: 'Upload Unique Rare', file: null, fileName: '',previewUrl: ''  },
   ];
@@ -205,6 +206,7 @@ useEffect(() => {
             break;
         }
       }
+      artBattle.campaignId = campaignId;
       await saveData(artBattle as ArtData);
       setToastMessage('All files uploaded successfully');
       setToast(true)

@@ -16,6 +16,7 @@ export interface ArtData {
   battleTime?: Date;
   endTime?: Date;
   tokenId:Number;
+  campaignId:string;
 }
 
 
@@ -73,11 +74,11 @@ export const useSaveData = (): UseSaveDataResult => {
       const [loading, setLoading] = useState<boolean>(false);
       const [error, setError] = useState<string | null>(null);
     
-      const fetchArts = async (sort:string,page: number, limit: number = 9) => {
+      const fetchArts = async (campaignId:string,sort:string,page: number, limit: number = 9) => {
         setLoading(true);
         setError(null);
         try {
-          const response = await fetch(`/api/art?page=${page}&limit=${limit}&sort=${sort}`);
+          const response = await fetch(`/api/art?page=${page}&limit=${limit}&sort=${sort}&campaignId=${campaignId}`);
           if (!response.ok) throw new Error('Network response was not ok');
           const data = await response.json();
           setArts(data.arts);
@@ -90,9 +91,6 @@ export const useSaveData = (): UseSaveDataResult => {
         }
       };
 
-      useEffect(() => {
-        fetchArts("date",1);
-      }, []);
     
       return { arts, totalPage,loading, error, fetchMoreArts: fetchArts };
     }
@@ -104,11 +102,11 @@ export const useSaveData = (): UseSaveDataResult => {
       const [error, setError] = useState<string | null>(null);
     
     
-          const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
+          const fetchBattles = async (campaignId:string,sort:string,page: number, limit: number = 10) => {
               setLoading(true);
               setError(null);
               try {
-                  const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
+                  const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}&campainId=${campaignId}`);
                   if (!response.ok) throw new Error('Network response was not ok');
                   const data: BattlesResponse = await response.json();
                
@@ -121,9 +119,7 @@ export const useSaveData = (): UseSaveDataResult => {
               }
           };
     
-          useEffect(() => {
-             fetchBattles("date",1);
-          }, []);
+        
          
     
       return { battles, loading, error,fetchMoreBattles: fetchBattles };

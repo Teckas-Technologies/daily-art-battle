@@ -74,10 +74,10 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         </video>
       )}
       <NearWalletConnector />
-      {showUploadModal && <ArtworkUploadForm onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
-      <ArtBattle toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <PreviousArtTable toggleUploadModal={toggleUploadModal}/>
+      {showUploadModal &&campaign?._id && <ArtworkUploadForm campaignId={campaign?._id} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      <ArtBattle campaignId={campaign?._id || ""} toggleUploadModal={toggleUploadModal} />
+      <UpcomingBattlesTable campaignId={campaign?._id || ""} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtTable campaignId={campaign?._id || ""} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
       
     </main>

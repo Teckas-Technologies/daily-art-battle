@@ -52,6 +52,53 @@ export const useFetchCampaignByTitle = () => {
                 setLoading(false);
             }
         };
+
+        const deleteCampaignById = async (id:any) => {
+            console.log("delete")
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(`/api/campaign?id=${id}`,{
+                    method:"DELETE"
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const res = await response.json();
+                
+                setCampaign(res.data);
+                return res.data;
+            } catch (err) {
+                console.error('Error deleting art:', err);
+                setError("Error deleting art!");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        
+        const updateCampaignById = async (id:any,data:any) => {
+            setLoading(true);
+            setError(null);
+            console.log("update")
+            try {
+                const response = await fetch(`/api/campaign?id=${id}`,{
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const res = await response.json();
+                console.log(res);
+                setCampaign(res.data);
+                return res.data;
+            } catch (err) {
+                console.error('Error updating art:', err);
+                setError("Error updating art!");
+            } finally {
+                setLoading(false);
+            }
+        };
   
         const saveCampaign = async (data:any) => {
             setLoading(true);
@@ -79,5 +126,5 @@ export const useFetchCampaignByTitle = () => {
         
        
   
-    return {fetchCampaignByTitle,saveCampaign,fetchCampaign};
+    return {fetchCampaignByTitle,saveCampaign,fetchCampaign,deleteCampaignById,updateCampaignById};
       }

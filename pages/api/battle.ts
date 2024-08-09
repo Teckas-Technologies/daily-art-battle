@@ -16,9 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { queryType } = req.query;
         //Here we'll fetch today battles
         if (queryType === 'Today') {
-         
+          const campaignId = req.query.campaignId as string;
           await timeout(1000);
-          const todayBattle = await findTodaysBattle();
+          const todayBattle = await findTodaysBattle(campaignId);
           return res.status(200).json(todayBattle);
         //Here we'll fetch battles with pagination
         } else if (queryType === 'battles') {
