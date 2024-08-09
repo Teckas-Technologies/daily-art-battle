@@ -125,6 +125,7 @@ const mintNFTsForParticipants = async (artVoters: number, grayScale: string, gra
   return tokenIds;
 };
 
+
 const mintBatch = async (artVoters:number, grayScale:string,grayScaleReference:string ) => {
         const  res =   await participationMint(artVoters, grayScale, grayScaleReference, false);
        let logs = res.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
