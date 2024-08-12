@@ -45,12 +45,13 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
     const date = new Date(timestamp);
     return date.toLocaleDateString();
   };
-
-  const handleSort = (sortType: string) => {
+  const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
     fetchMoreBattles(sortType, 1);
   };
+
 
   return (
     <section id="previous">
@@ -89,12 +90,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                     RARE OWNER
                   </th>
                   <th
-                    onClick={() => handleSort("vote")}
                     className="text-white text-center cursor-pointer font-normal hover:underline"
                   >
-                    <span className="flex items-center justify-center hover:underline">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span className="flex items-center justify-center hover:underline">
+                        {/* <svg
+                          xmlns="http://www.w3.org/2000/svg"
                         width="1.25em"
                         height="1em"
                         viewBox="0 0 640 512"
@@ -105,15 +105,26 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                           d="M608 320h-64v64h22.4c5.3 0 9.6 3.6 9.6 8v16c0 4.4-4.3 8-9.6 8H73.6c-5.3 0-9.6-3.6-9.6-8v-16c0-4.4 4.3-8 9.6-8H96v-64H32c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32h576c17.7 0 32-14.3 32-32v-96c0-17.7-14.3-32-32-32m-96 64V64.3c0-17.9-14.5-32.3-32.3-32.3H160.4C142.5 32 128 46.5 128 64.3V384zM211.2 202l25.5-25.3c4.2-4.2 11-4.2 15.2.1l41.3 41.6l95.2-94.4c4.2-4.2 11-4.2 15.2.1l25.3 25.5c4.2 4.2 4.2 11-.1 15.2L300.5 292c-4.2 4.2-11 4.2-15.2-.1l-74.1-74.7c-4.3-4.2-4.2-11 0-15.2"
                         />
                       </svg>
-                      VOTES
+                      VOTES */}
+                      <select
+                      onChange={handleSort}
+                            className="bg-white text-black   border border-gray-600 rounded-lg cursor-pointer"
+                          >
+
+                            <option value="voteDsc">Vote DSC</option>
+                            <option value="voteAsc">Vote ASC</option>
+                            
+                          </select>
+                      
                     </span>
+                 
                   </th>
                   <th
-                    onClick={() => handleSort("date")}
+                  
                     className="text-white text-center cursor-pointer font-normal hover:underline"
                   >
                     <span className="flex items-center justify-center ">
-                      <svg
+                      {/* <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="1em"
                         height="1em"
@@ -133,7 +144,14 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                           />
                         </g>
                       </svg>
-                      DATE
+                      DATE */}
+                           <select
+                                 onChange={handleSort}
+                            className="bg-white text-black border border-gray-600 rounded-lg cursor-pointer"
+                          >
+                            <option value="dateDsc">Date DSC</option>
+                            <option value="dateAsc">Date ASC</option>
+                          </select>
                     </span>
                   </th>
                 </tr>

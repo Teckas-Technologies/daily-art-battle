@@ -165,7 +165,7 @@ export const useFetchBattles = () => {
         }
     };
       useEffect(() => {
-         fetchBattles("date",1);
+         fetchBattles("dateDsc",1);
       }, []);
      
 

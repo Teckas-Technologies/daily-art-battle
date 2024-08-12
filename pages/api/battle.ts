@@ -1,6 +1,6 @@
 //battle.ts is used for creating battle,updating battle ,fetching battle and deleting battle.
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { scheduleBattle, deleteAll, findTodaysBattle, findPreviousBattles, findAllBattles, updateBattle, findPreviousBattlesByVotes } from '../../utils/battleUtils';
+import { scheduleBattle, deleteAll, findTodaysBattle, findPreviousBattles, findAllBattles, updateBattle,findPreviousBattlesByVotesAsc, findPreviousBattlesByVotes,findPreviousBattlesAsc } from '../../utils/battleUtils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -25,13 +25,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
           const sort = req.query.sort;
-          if(sort=='vote'){
+          if(sort=='voteDsc'){
             const battles = await findPreviousBattlesByVotes(page,limit);
             return res.status(200).json(battles);
-          }else{
-          
+          }
+          else if(sort=='voteAsc'){
+            const battles = await findPreviousBattlesByVotesAsc(page,limit);
+            return res.status(200).json(battles);
+          }else if(sort=='dateAsc'){
+            const battles = await findPreviousBattlesAsc(page,limit);
+          return res.status(200).json(battles);
+          }
+          else if(sort=='dateDsc'){
           const battles = await findPreviousBattles(page,limit);
           return res.status(200).json(battles);
+          }else{
+            const battles = await findPreviousBattles(page,limit);
+            return res.status(200).json(battles);
           }
         }
          else {
