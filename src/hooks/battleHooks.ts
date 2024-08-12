@@ -15,19 +15,20 @@ export interface BattleData {
   isNftMinted:Boolean;
   artAVotes:Number;
   artBVotes:Number;
-  artAgrayScale: string;
-  artBgrayScale: string;
+  grayScale?: string;
   artAcolouredArt: string;
   artBcolouredArt: string;
   artAcolouredArtReference: string;
   artBcolouredArtReference: string;
-  artAgrayScaleReference: string;
-  artBgrayScaleReference: string;
+  grayScaleReference?: string;
   winningArt?: 'Art A' | 'Art B';
+  specialWinner?: string;
   artAspecialWinner?: string;
   artBspecialWinner?: string;
   artAvoters?:string[];
   artBvoters?:string[];
+  isSpecialWinnerMinted?:Boolean;
+  tokenId:string;
 }
 
 interface UseFetchTodayBattleResult {
@@ -40,8 +41,10 @@ interface UseFetchTodayBattleResult {
 
 interface BattlesResponse {
   pastBattles: BattleData[];
-  upcomingBattles: BattleData[];
+  totalDocuments:any;
+  totalPages:any
 }
+
 
 interface UseSaveDataResult {
   saveData: (data: any) => Promise<void>;
@@ -128,11 +131,11 @@ export const useFetchBattles = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-      const fetchBattles = async (page: number, limit: number = 10) => {
+      const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
           setLoading(true);
           setError(null);
           try {
-              const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
+              const response = await fetch(`/api/battle?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
            
@@ -162,7 +165,7 @@ export const useFetchBattles = () => {
         }
     };
       useEffect(() => {
-         fetchBattles(1);
+         fetchBattles("dateDsc",1);
       }, []);
      
 
