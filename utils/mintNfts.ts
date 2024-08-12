@@ -20,11 +20,11 @@ export const mintNfts = async (): Promise<void> => {
         isNftMinted: false,
         isBattleEnded: true
     }); 
-    // const ress = await spinner();
-    // console.log("Uploading arweave")
-    // const response = await uploadArweave(ress);
-    // battle.grayScale = response.url;
-    // battle.grayScaleReference = response.referenceUrl;
+    const ress = await spinner();
+    console.log("Uploading arweave")
+    const response = await uploadArweave(ress);
+    battle.grayScale = response.url;
+    battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
       if(battle.artAVotes>0){
