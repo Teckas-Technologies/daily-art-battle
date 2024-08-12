@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import { BattleData, useFetchBattles } from '@/hooks/battleHooks';
-import { ArtData, useFetchBattles } from "@/hooks/artHooks";
+// import { ArtData, useFetchBattles } from "@/hooks/artHooks";
+import{BattleData,useFetchBattles} from '@/hooks/battleHooks'
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
@@ -8,7 +9,7 @@ import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
 const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
   toggleUploadModal,
 }) => {
-  const [previousBattles, setPreviousBattles] = useState<ArtData[]>([]);
+  const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
   const { battles, error, loading, fetchMoreBattles } = useFetchBattles();
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const [page, setPage] = useState(1);
@@ -173,7 +174,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                               }}
                             >
                               <Image
-                                src={battle.colouredArt}
+                                src={battle.winningArt=='Art A'?battle.artAcolouredArt as string:battle.artBcolouredArt}
                                 alt={"Art"}
                                 width={400} // Arbitrary value; the actual size will be controlled by CSS
                                 height={400} // Arbitrary value; the actual size will be controlled by CSS
@@ -190,10 +191,21 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                               />
                               <div className="absolute bottom-0 left-0 w-full p-4 text-center text-white gradient-shadow  bg-opacity-50">
                                 <p className="text-[5px] break-all md:text-xl sm:text-xs font-medium">
-                                  {battle.arttitle.length > 10
-                                    ? `${battle.arttitle.substring(0, 10)}...`
-                                    : battle.arttitle}{" "}
-                                  by {battle.artistId}
+                                {battle.winningArt=='Art A'?(
+                                  <>
+                                      {battle.artAtitle.length > 10
+                                        ? `${battle.artAtitle.substring(0, 10)}...`
+                                        : battle.artAtitle}{" "}
+                                      by {battle.artAartistId}
+                                      </>
+                                ):(
+                                  <>
+                                        {battle.artBtitle.length > 10
+                                        ? `${battle.artBtitle.substring(0, 10)}...`
+                                        : battle.artBtitle}{" "}
+                                      by {battle.artBartistId}
+                                      </>
+                                )}
                                 </p>
                               </div>
                             </div>
@@ -203,12 +215,36 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
 
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words break-all text-black text-center special-winner">
                         {battle.specialWinner == null
-                          ? `Insufficient votes`
-                          : battle.specialWinner}
+                          ? (
+                            <>
+                            {Number(battle.artAVotes)+Number(battle.artBVotes)!=0?(
+                              <>
+                              {battle.winningArt=='Art A'?(
+                                <>
+                                {battle.artAspecialWinner}
+                                </>
+                              ):(
+                                <>
+                                 {battle.artBspecialWinner}
+                                </>
+                              )}
+                              </>
+                            ):(
+                              <>
+                             Insufficient Votes
+                              </>
+                            )}
+                            </>
+                          )
+                          :(
+                            <>
+                            {battle.specialWinner}
+                            </>
+                          )}
                         <br />
                       </td>
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words  break-all text-black text-center special-winner">
-                        {`${battle.votes}`}
+                    {Number(battle.artAVotes) + Number(battle.artBVotes)}
                       </td>
                       <td
                         className="px-4 py-2 text-xs  sm:text-2xl font-medium break-words  break-all text-black text-center special-winner"
@@ -217,8 +253,8 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                           borderBottomRightRadius: 20,
                         }}
                       >
-                        {battle.battleTime
-                          ? formatDate(battle.battleTime)
+                        {battle.startTime
+                          ? formatDate(battle.startTime)
                           : "Date not available"}
                       </td>
                     </tr>
