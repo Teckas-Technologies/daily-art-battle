@@ -192,7 +192,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
                               }}
                             >
                               <Image
-                                src={battle.winningArt=='Art A'?battle.artAcolouredArt as string:battle.artBcolouredArt}
+                                src={battle.grayScale?(
+                                  battle.grayScale
+                                ):(
+                                  battle.winningArt=='Art A'?battle.artAcolouredArt as string:battle.artBcolouredArt
+                                )}
                                 alt={"Art"}
                                 width={400} // Arbitrary value; the actual size will be controlled by CSS
                                 height={400} // Arbitrary value; the actual size will be controlled by CSS
