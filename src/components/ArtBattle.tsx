@@ -5,7 +5,6 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
-import { useFetchTheme } from "@/hooks/themeHook";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -18,8 +17,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   toggleUploadModal,
 }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { todayBattle, loading, error, fetchTodayBattle } =
+  const { todayBattle, loading,battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
+
+
   const [artA, setArtA] = useState<Artwork>({
     id: "ArtA",
     name: "Art A",
@@ -37,14 +38,16 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [battleId, setBattleId] = useState<string>();
   const { votes, fetchVotes, submitVote } = useVoting();
-  const{fethcedThemeById}= useFetchTheme();
   const [success, setSuccess] = useState(false);
   const [votedFor, setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false);
   const[popupA,setPopUpA] = useState(false);
   const[popupB,setPopUpB] = useState(false);
-  const[title,setTitle] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
+  const [skeletonLoad,setSkeletonLoading] = useState(true);
+
+
+
   useEffect(() => {
    
     const fetchData = async () => {
@@ -56,33 +59,24 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         }
       }
     };
+
     fetchData();
     fetchTodayBattle();
-  }, [todayBattle, activeAccountId, fetchVotes, refresh]);
+  }, [todayBattle, fetchVotes, refresh]);
 
 
-  function getWeekOfYear(date: Date): number {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    const weekNumber = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-    return weekNumber;
-}
+  useEffect(()=>{
+    if(battle){
+      console.log(battle)
+      setSkeletonLoading(false);
+    }
+  },[battle])
 
 
-
-const getTheme =async(week:any)=>{
-const res = await fethcedThemeById(week);
-if(res){
-setTitle(res.holidayInspiredTheme);
-}
-
-}
   useEffect(() => {
-    const date = new Date();
-    const weekNumber: number = getWeekOfYear(date);
-    getTheme(weekNumber);
-   
+    if(!battle && todayBattle){
+      setSkeletonLoading(false);
+    }
     if (todayBattle) {
       const endTime = new Date(todayBattle.endTime).getTime();
       const now = new Date().getTime();
@@ -106,6 +100,8 @@ setTitle(res.holidayInspiredTheme);
   };
 
   useEffect(() => {
+
+  
     if (todayBattle) {
       setArtA({
         id: "Art A",
@@ -144,7 +140,7 @@ setTitle(res.holidayInspiredTheme);
       setToastMessage("Vote submitted successfully!");
     setTimeout(()=>{
       setToastMessage(null);
-    },5000)
+    },3000)
       setRefresh((prev) => !prev);
     } else {
     alert("Failed to submit vote. Maybe you already voted!");
@@ -187,17 +183,6 @@ setTitle(res.holidayInspiredTheme);
     setIsDragging(false);
   };
 
-  
-  const [skeletonLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 5000); 
-
-    return () => clearTimeout(timer); 
-  }, []);
-
   const handlePopUpB = ()=>{
     setPopUpB(true);
   }
@@ -222,38 +207,22 @@ setTitle(res.holidayInspiredTheme);
 
   return (
     <div className="mt-10 mx-8">
-        <a
-  href="https://sin.gfxvs.com/"
-  target="_blank"
-  className="text-green-600"
->
-  <h2
-    className="mt-10 text-2xl hover:cursor-pointer text-green-600 font-bold text-center justify-center items-center flex"
-  >
-  </h2>
-</a>
-
-     {/* <h2
-          className="mt-9 text-2xl font-bold text-white text-center justify-center items-center  text-center"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          {title}
-        </h2> */}
+      <div className="mt-9">
       {timeRemaining !== null && (
         <h2
-          className="mt-3 text-4xl font-bold text-white text-center justify-center items-center text-center"
+          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className="mt-3 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
+      <p className="mt-2 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
         Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
         vote to secure participation NFTs and a chance to win an exclusive 1:1
         masterpiece. Connect your NEAR wallet to join the thrilling competition!
       </p>
       
-      {skeletonLoading ? (
+      {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
         <div className="space-y-2">
           <Skeleton className="h-4 w-[300px]" />
@@ -513,8 +482,9 @@ setTitle(res.holidayInspiredTheme);
       </div>
       */}
         {toastMessage && (
-        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+        <Toast success={true} message={toastMessage} onClose={() => setToastMessage(null)} />
       )}
+      </div>
     </div>
     
   );

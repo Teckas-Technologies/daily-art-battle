@@ -1,6 +1,6 @@
 //art.ts is used for creating creating arts ,fetching arts and updating art by id.
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { scheduleArt,findAllArts,updateArtById ,findBattles,findPreviousArts,findPreviousArtsByVotes,findArtById} from '../../utils/artUtils';
+import { scheduleArt,findAllArts,updateArtById ,findBattles,findPreviousArts,findPreviousArtsByVotes,findArtById,findAllArtsByDate,findAllArtsByVoteAsc,findAllArtsByDateAsc} from '../../utils/artUtils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -35,10 +35,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               return res.status(200).json({battles,totalDocuments,totalPages});
             }
           }else{
+            const sort = req.query.sort;
+            if(sort=='voteDsc'){
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 9;
           const {arts,totalDocuments,totalPages} = await findAllArts(page, limit);
             return res.status(200).json({arts,totalDocuments,totalPages});
+            }else if(sort=='dateDsc'){
+              const page = parseInt(req.query.page as string) || 1;
+              const limit = parseInt(req.query.limit as string) || 9;
+              const {arts,totalDocuments,totalPages} = await findAllArtsByDate(page, limit);
+              return res.status(200).json({arts,totalDocuments,totalPages});  
+            }else if(sort=='voteAsc'){
+              const page = parseInt(req.query.page as string) || 1;
+              const limit = parseInt(req.query.limit as string) || 9;
+              const {arts,totalDocuments,totalPages} = await findAllArtsByVoteAsc(page, limit);
+              return res.status(200).json({arts,totalDocuments,totalPages});  
+            }
+            else if(sort=='dateAsc'){
+              const page = parseInt(req.query.page as string) || 1;
+              const limit = parseInt(req.query.limit as string) || 9;
+              const {arts,totalDocuments,totalPages} = await findAllArtsByDateAsc(page, limit);
+              return res.status(200).json({arts,totalDocuments,totalPages});  
+            }
+            else{
+              const page = parseInt(req.query.page as string) || 1;
+              const limit = parseInt(req.query.limit as string) || 9;
+              const {arts,totalDocuments,totalPages} = await findAllArtsByDate(page, limit);
+              return res.status(200).json({arts,totalDocuments,totalPages});  
+            }
           }
             
         //PUT method is used to update art by id.

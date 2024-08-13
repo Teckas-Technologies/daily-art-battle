@@ -15,32 +15,36 @@ export interface BattleData {
   isNftMinted:Boolean;
   artAVotes:Number;
   artBVotes:Number;
-  artAgrayScale: string;
-  artBgrayScale: string;
+  grayScale?: string;
   artAcolouredArt: string;
   artBcolouredArt: string;
   artAcolouredArtReference: string;
   artBcolouredArtReference: string;
-  artAgrayScaleReference: string;
-  artBgrayScaleReference: string;
+  grayScaleReference?: string;
   winningArt?: 'Art A' | 'Art B';
+  specialWinner?: string;
   artAspecialWinner?: string;
   artBspecialWinner?: string;
   artAvoters?:string[];
   artBvoters?:string[];
+  isSpecialWinnerMinted?:Boolean;
+  tokenId:string;
 }
 
 interface UseFetchTodayBattleResult {
   todayBattle: BattleData | null;
   loading: boolean;
   error: string | null;
+  battle:boolean;
   fetchTodayBattle: () => Promise<void>; 
 }
 
 interface BattlesResponse {
   pastBattles: BattleData[];
-  upcomingBattles: BattleData[];
+  totalDocuments:any;
+  totalPages:any
 }
+
 
 interface UseSaveDataResult {
   saveData: (data: any) => Promise<void>;
@@ -88,6 +92,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   const [todayBattle, setTodayBattle] = useState<BattleData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [battle, setBattle] = useState<boolean>(false);
 
   const fetchTodayBattle = async () => {
     setLoading(true);
@@ -99,7 +104,9 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
         throw new Error('Failed to fetch today\'s battle data');
       }
       const data: BattleData = await response.json();
-     
+     if(data==null){
+      setBattle(true)
+     }
       setTodayBattle(data);
     } catch (error) {
       console.error('Error fetching today\'s battle data:', error);
@@ -114,7 +121,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   }, []);
 
 
-  return { todayBattle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
+  return { todayBattle,battle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
 };
 
 //useFetchBattles is used to fetch battles with pagination
@@ -124,11 +131,11 @@ export const useFetchBattles = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-      const fetchBattles = async (page: number, limit: number = 10) => {
+      const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
           setLoading(true);
           setError(null);
           try {
-              const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`);
+              const response = await fetch(`/api/battle?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
            
@@ -158,7 +165,7 @@ export const useFetchBattles = () => {
         }
     };
       useEffect(() => {
-         fetchBattles(1);
+         fetchBattles("dateDsc",1);
       }, []);
      
 

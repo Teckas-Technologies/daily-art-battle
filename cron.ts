@@ -3,7 +3,7 @@ const { CronJob } = require('cron');
 const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
 const cronJob = new CronJob(
-    '0 * * * *',
+    '0 0 * * *',
     async function() {
         try {
             const response = await fetch(`${baseUrl}/api/mintNfts`, { 

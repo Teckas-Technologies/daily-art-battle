@@ -4,6 +4,7 @@ interface IVoting extends Document {
   participantId: string;
   battleId: string;
   votedFor: 'Art A' | 'Art B';
+  isMinted:boolean;
 }
 
 const votingSchema = new mongoose.Schema({
@@ -14,6 +15,9 @@ const votingSchema = new mongoose.Schema({
   battleId: {
     type: String,
     required: true,
+  },
+  isMinted: {
+    type: Boolean, default: false
   },
   votedFor: {
     type: String,

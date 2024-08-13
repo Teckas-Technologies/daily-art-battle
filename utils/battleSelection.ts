@@ -16,10 +16,24 @@ export async function getNextAvailableDate(): Promise<Date> {
   nextDay.setDate(nextDay.getDate() + 1);
   return nextDay;
 }
+
 export const findTopTwoArts = async (): Promise<any[]> => {
   await connectToDatabase();
-  const arts = await ArtTable.find({isCompleted:false}).sort({ upVotes: -1 }).limit(2).exec();
-  return arts;
+  const art = await ArtTable.aggregate([
+    { $match: { isCompleted: false } },  
+    { $sort: { upVotes: -1 } }, 
+    {
+      $group: {
+        _id: "$artistId",
+        topArt: { $first: "$$ROOT" }
+      }
+    },
+    { $sort: { "topArt.upVotes": -1 } },
+    { $limit: 2 },
+    { $replaceRoot: { newRoot: "$topArt" } }
+  ]).exec();
+  console.log(art)
+  return art;
 };
 
 export const createBattle = async (): Promise<any> => {
@@ -37,12 +51,8 @@ export const createBattle = async (): Promise<any> => {
       artBtitle: artB.arttitle,
       artAartistId:artA.artistId,
       artBartistId:artB.artistId,
-      artAgrayScale: artA.grayScale,
-      artBgrayScale: artB.grayScale,
       artAcolouredArt: artA.colouredArt,
       artBcolouredArt: artB.colouredArt,
-      artAgrayScaleReference: artA.grayScaleReference,
-      artBgrayScaleReference: artB.grayScaleReference,
       artAcolouredArtReference: artA.colouredArtReference,
       artBcolouredArtReference: artB.colouredArtReference,
       startTime: startDate,

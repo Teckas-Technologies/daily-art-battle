@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useFetchArts, ArtData } from "../hooks/artHooks";
+import { useFetchArts, ArtData,useFetchArtById } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
+import Overlay from "./Overlay";
 import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,16 +18,28 @@ const UpcomingArtTable: React.FC<{
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState("dateDsc");
+
+
+
+  const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortType = event.target.value
+    setSort(sortType);
+    setPage(1); // Reset to first page when sorting
+    fetchMoreArts(sortType, 1);
+  };
+
+
 
   useEffect(() => {
     const initializeData = async () => {
    
-      fetchMoreArts(page);
+      fetchMoreArts(sort,page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [page, refresh, uploadSuccess, fetchMoreArts]);
+  }, [sort,page, refresh, uploadSuccess, fetchMoreArts]);
 
   const [hasnext, setHasNext] = useState(false);
 
@@ -43,13 +56,13 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(page + 1);
+    fetchMoreArts(sort,page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(page - 1);
+      fetchMoreArts(sort,page - 1);
     }
   };
 
@@ -58,10 +71,10 @@ const UpcomingArtTable: React.FC<{
   return (
     <section id="upcoming">
     <div
-      className="battle-table mt-[50px] pb-10 flex flex-col items-center"
+      className="battle-table mt-[50px] pb-5 flex flex-col items-center"
       style={{ width: "100%", gap: 8 }}
     >
-      <div className="battle-table1 pb-10">
+      <div className="battle-table1">
         <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
           Upcoming Arts
         </h2>
@@ -83,10 +96,21 @@ const UpcomingArtTable: React.FC<{
             </Button>
           </div>
         </div>
+        <div className="mt-5 flex justify-end md:mr-20  lg:mr-20">
+        <select
+         onChange={handleSort}
+        className="bg-white mr-10 text-black border border-gray-600 rounded-lg p-2 cursor-pointer"
+      >
+        <option value="dateDsc">Date DSC</option>
+        <option value="dateAsc">Date ASC</option>
+        <option value="voteAsc">Vote ASC</option>
+        <option value="voteDsc">Vote DSC</option>
+      </select>
+        </div>
         <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
-        <nav className="flex justify-center flex-wrap gap-5 mt-2">
+        <nav className="flex justify-center flex-wrap gap-5 mt-5">
           <a
-          href="#upcoming"
+          href={page > 1 ? "#upcoming" : undefined}
             className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
                 ? "cursor-not-allowed"
@@ -97,12 +121,13 @@ const UpcomingArtTable: React.FC<{
             Previous
           </a>
           <a
-           href="#upcoming"
+           href={hasnext ?`#upcoming`:undefined}
             className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               hasnext
                 ? "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
                 : "cursor-not-allowed"
             }`}
+            
             onClick={hasnext ? handleNext : undefined}
           >
             Next
@@ -123,6 +148,45 @@ const BattleTable: React.FC<{
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
+  const{fetchArtById}=useFetchArtById();
+  const [selectedArtId, setSelectedArtId] = useState(null);
+  const[overlayArt,setoverlayArt] = useState<ArtData>();
+
+  const getQueryParam = (param: string): string | null => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(param);
+    }
+    return null;
+  };
+  const artId = getQueryParam('artId');
+
+  useEffect(()=>{
+    const fetchArt= async()=>{
+      if(artId){
+      const overlay = await fetchArtById(artId);
+      setoverlayArt(overlay);
+      }
+    }
+    fetchArt();
+  },[artId]);
+
+  const handleImageClick = async(id:any) => {
+    setSelectedArtId(id);
+    const overlay = await fetchArtById(id);
+    setoverlayArt(overlay);
+    const url = new URL(window.location.href);
+    url.searchParams.set('artId', id);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  const handleClose = () => {
+    setSelectedArtId(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('artId');
+    window.history.pushState({}, '', url.toString());
+  };
+
 
   useEffect(() => {
     const fetchUserVotes = async () => {
@@ -165,16 +229,21 @@ const BattleTable: React.FC<{
 
   return (
     <div
-      className="mx-8 overflow-hidden battle-table container my-12 mx-auto px-4 md:px-12"
+      className="mx-4 overflow-hidden battle-table container mt-4 mx-auto px-4 md:px-12"
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
+      {(selectedArtId|| artId) && overlayArt && (
+              <Overlay onClose={handleClose}  art={overlayArt} onVote={onVote} votes={votes}/>
+            )}
         {artData.map((art, index) => (
+           
           <div key={index} className="flex justify-center overflow-hidden">
+           
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
                 <img
-                onClick={()=>handleArt(art._id)}
+                 onClick={()=>handleImageClick(art._id)}
                   src={art.colouredArt}
                   alt="Art A"
                   className="w-full h-full object-cover hover:cursor-pointer"
