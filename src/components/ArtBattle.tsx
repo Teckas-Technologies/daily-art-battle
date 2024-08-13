@@ -230,7 +230,6 @@ setTitle(res.holidayInspiredTheme);
   <h2
     className="mt-10 text-2xl hover:cursor-pointer text-green-600 font-bold text-center justify-center items-center flex"
   >
-    🔔 Click here to Join SIN X GFXvs: Compete for a 200 $HONEY & $25 USDC Prize Pool in a 5-day Event!
   </h2>
 </a>
 
