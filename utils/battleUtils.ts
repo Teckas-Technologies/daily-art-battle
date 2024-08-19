@@ -48,21 +48,75 @@ export const findTodaysBattle = async (campaignId:any): Promise<any> => {
   });
 };
 
-export const findPreviousBattles = async (page: number, limit: number): Promise<any> => {
+export const findPreviousBattlesByCampaignId = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ startTime: -1 }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ startTime: -1,_id: 1  }).skip(skip).limit(limit);
   return { pastBattles };
 }
 
-export const findPreviousBattlesByVotes = async (page: number, limit: number): Promise<any> => {
+export const findPreviousBattlesAscByCampaignId = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ totalVotes: -1 }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
+  return { pastBattles };
+}
+
+export const findPreviousBattlesByVotesByCampaignId = async (page: number, limit: number): Promise<any> => {
+  await connectToDatabase();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const skip = (page - 1) * limit;
+  const pastBattles = await Battle.aggregate([
+    {
+      $match: { endTime: { $lt: today } }
+    },
+    {
+      $addFields: {
+        totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
+      }
+    },
+    {
+      $sort: { totalVotes: -1, _id: 1 }
+    },
+    {
+      $skip: skip
+    },
+    {
+      $limit: limit
+    }
+  ]);
+  return { pastBattles };
+}
+
+export const findPreviousBattlesByVotesAscByCampaignId = async (page: number, limit: number): Promise<any> => {
+  await connectToDatabase();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const skip = (page - 1) * limit;
+  const pastBattles = await Battle.aggregate([
+    {
+      $match: { endTime: { $lt: today } }
+    },
+    {
+      $addFields: {
+        totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
+      }
+    },
+    {
+      $sort: { totalVotes: 1, _id: 1 }
+    },
+    {
+      $skip: skip
+    },
+    {
+      $limit: limit
+    }
+  ]);
   return { pastBattles };
 }
 

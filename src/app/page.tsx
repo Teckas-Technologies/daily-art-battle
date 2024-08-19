@@ -19,8 +19,8 @@ const Home: NextPage = () => {
       <NearWalletConnector />
       {showUploadModal && <ArtworkUploadForm campaignId={"1234"} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <ArtBattle campaignId={"1234"} toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable campaignId={"1234"} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <PreviousArtTable campaignId={"1234"}toggleUploadModal={toggleUploadModal}/>
+      <UpcomingBattlesTable campaignId={""} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtTable campaignId={""}toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
   );

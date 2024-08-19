@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import { BattleData, useFetchBattles } from '@/hooks/battleHooks';
-import { ArtData, useFetchBattles } from "@/hooks/artHooks";
+// import { ArtData, useFetchBattles } from "@/hooks/artHooks";
+import{BattleData,useFetchBattles} from '@/hooks/battleHooks'
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
@@ -8,7 +9,7 @@ import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
 const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:string}> = ({
   toggleUploadModal,campaignId
 }) => {
-  const [previousBattles, setPreviousBattles] = useState<ArtData[]>([]);
+  const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
   const { battles, error, loading, fetchMoreBattles } = useFetchBattles();
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const [page, setPage] = useState(1);
@@ -40,16 +41,21 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
     }
   };
 
-  const formatDate = (timestamp: Date) => {
+  const formatDate = (timestamp: Date): string => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString();
+    return date.toLocaleDateString('en-US', {
+      month: 'short',  
+      day: '2-digit',  
+      year: 'numeric'  
+    });
   };
-
-  const handleSort = (sortType: string) => {
+  const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
     fetchMoreBattles(campaignId,sortType, 1);
   };
+
 
   return (
     <section id="previous">
@@ -88,31 +94,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
                     RARE OWNER
                   </th>
                   <th
-                    onClick={() => handleSort("vote")}
-                    className="text-white text-center cursor-pointer font-normal hover:underline"
-                  >
-                    <span className="flex items-center justify-center hover:underline">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1.25em"
-                        height="1em"
-                        viewBox="0 0 640 512"
-                        className="ml-1"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M608 320h-64v64h22.4c5.3 0 9.6 3.6 9.6 8v16c0 4.4-4.3 8-9.6 8H73.6c-5.3 0-9.6-3.6-9.6-8v-16c0-4.4 4.3-8 9.6-8H96v-64H32c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32h576c17.7 0 32-14.3 32-32v-96c0-17.7-14.3-32-32-32m-96 64V64.3c0-17.9-14.5-32.3-32.3-32.3H160.4C142.5 32 128 46.5 128 64.3V384zM211.2 202l25.5-25.3c4.2-4.2 11-4.2 15.2.1l41.3 41.6l95.2-94.4c4.2-4.2 11-4.2 15.2.1l25.3 25.5c4.2 4.2 4.2 11-.1 15.2L300.5 292c-4.2 4.2-11 4.2-15.2-.1l-74.1-74.7c-4.3-4.2-4.2-11 0-15.2"
-                        />
-                      </svg>
-                      VOTES
-                    </span>
-                  </th>
-                  <th
-                    onClick={() => handleSort("date")}
+                  
                     className="text-white text-center cursor-pointer font-normal hover:underline"
                   >
                     <span className="flex items-center justify-center ">
-                      <svg
+                      {/* <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="1em"
                         height="1em"
@@ -132,7 +118,16 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
                           />
                         </g>
                       </svg>
-                      DATE
+                      DATE */}
+                           <select
+                                 onChange={handleSort}
+                            className="bg-white lg:ml-10 md:ml-10 text-black border border-gray-600 rounded-lg cursor-pointer"
+                          >
+                              <option value="dateDsc">Date DSC</option>
+                              <option value="dateAsc">Date ASC</option>
+                               <option value="voteDsc">Vote DSC</option>
+                               <option value="voteAsc">Vote ASC</option>
+                          </select>
                     </span>
                   </th>
                 </tr>
@@ -173,7 +168,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
                               }}
                             >
                               <Image
-                                src={battle.colouredArt}
+                                src={battle.grayScale?(
+                                  battle.grayScale
+                                ):(
+                                  battle.winningArt=='Art A'?battle.artAcolouredArt as string:battle.artBcolouredArt
+                                )}
                                 alt={"Art"}
                                 width={400} // Arbitrary value; the actual size will be controlled by CSS
                                 height={400} // Arbitrary value; the actual size will be controlled by CSS
@@ -190,10 +189,21 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
                               />
                               <div className="absolute bottom-0 left-0 w-full p-4 text-center text-white gradient-shadow  bg-opacity-50">
                                 <p className="text-[5px] break-all md:text-xl sm:text-xs font-medium">
-                                  {battle.arttitle.length > 10
-                                    ? `${battle.arttitle.substring(0, 10)}...`
-                                    : battle.arttitle}{" "}
-                                  by {battle.artistId}
+                                {battle.winningArt=='Art A'?(
+                                  <>
+                                      {battle.artAtitle.length > 10
+                                        ? `${battle.artAtitle.substring(0, 10)}...`
+                                        : battle.artAtitle}{" "}
+                                      by {battle.artAartistId}
+                                      </>
+                                ):(
+                                  <>
+                                        {battle.artBtitle.length > 10
+                                        ? `${battle.artBtitle.substring(0, 10)}...`
+                                        : battle.artBtitle}{" "}
+                                      by {battle.artBartistId}
+                                      </>
+                                )}
                                 </p>
                               </div>
                             </div>
@@ -203,12 +213,33 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
 
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words break-all text-black text-center special-winner">
                         {battle.specialWinner == null
-                          ? `Insufficient votes`
-                          : battle.specialWinner}
+                          ? (
+                            <>
+                            {Number(battle.artAVotes)+Number(battle.artBVotes)!=0?(
+                              <>
+                              {battle.winningArt=='Art A'?(
+                                <>
+                                {battle.artAspecialWinner}
+                                </>
+                              ):(
+                                <>
+                                 {battle.artBspecialWinner}
+                                </>
+                              )}
+                              </>
+                            ):(
+                              <>
+                             Insufficient Votes
+                              </>
+                            )}
+                            </>
+                          )
+                          :(
+                            <>
+                            {battle.specialWinner}
+                            </>
+                          )}
                         <br />
-                      </td>
-                      <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words  break-all text-black text-center special-winner">
-                        {`${battle.votes}`}
                       </td>
                       <td
                         className="px-4 py-2 text-xs  sm:text-2xl font-medium break-words  break-all text-black text-center special-winner"
@@ -217,9 +248,11 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void ,campaignId:str
                           borderBottomRightRadius: 20,
                         }}
                       >
-                        {battle.battleTime
-                          ? formatDate(battle.battleTime)
+                        {battle.startTime
+                          ? formatDate(battle.startTime)
                           : "Date not available"}
+                          <br></br>
+                             {Number(battle.artAVotes) + Number(battle.artBVotes)} votes
                       </td>
                     </tr>
                   </>

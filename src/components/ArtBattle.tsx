@@ -5,6 +5,7 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
+
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -13,40 +14,25 @@ interface Artwork {
   artistId: string;
 } 
 
-const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId:string }> = ({
-  toggleUploadModal,campaignId
+const ArtBattle: React.FC<{ toggleUploadModal: () => void, campaignId: string }> = ({
+  toggleUploadModal, campaignId
 }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { todayBattle, loading,battle, error, fetchTodayBattle } =
-    useFetchTodayBattle();
-
-
-  const [artA, setArtA] = useState<Artwork>({
-    id: "ArtA",
-    name: "Art A",
-    imageUrl: "",
-    title: "",
-    artistId: "",
-  });
-  const [artB, setArtB] = useState<Artwork>({
-    id: "ArtB",
-    name: "Art B",
-    imageUrl: "",
-    title: "",
-    artistId: "",
-  });
+  const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
+  const [artA, setArtA] = useState<Artwork>({ id: "ArtA", name: "Art A", imageUrl: "", title: "", artistId: "" });
+  const [artB, setArtB] = useState<Artwork>({ id: "ArtB", name: "Art B", imageUrl: "", title: "", artistId: "" });
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [battleId, setBattleId] = useState<string>();
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
   const [votedFor, setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false);
-  const[popupA,setPopUpA] = useState(false);
-  const[popupB,setPopUpB] = useState(false);
+  const [popupA, setPopUpA] = useState(false);
+  const [popupB, setPopUpB] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null); 
-  const [skeletonLoad,setSkeletonLoading] = useState(true);
+  const [skeletonLoad, setSkeletonLoading] = useState(true);
+
   useEffect(() => {
-   
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
         const res = await fetchVotes(activeAccountId, todayBattle._id);
@@ -61,17 +47,15 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId:string }> =
     fetchTodayBattle(campaignId);
   }, [todayBattle, fetchVotes, refresh]);
 
-
-  useEffect(()=>{
-    if(battle){
+  useEffect(() => {
+    if (battle) {
       console.log(battle)
       setSkeletonLoading(false);
     }
-  },[battle])
-
+  }, [battle]);
 
   useEffect(() => {
-    if(!battle && todayBattle){
+    if (!battle && todayBattle) {
       setSkeletonLoading(false);
     }
     if (todayBattle) {
@@ -97,8 +81,6 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId:string }> =
   };
 
   useEffect(() => {
-
-  
     if (todayBattle) {
       setArtA({
         id: "Art A",
@@ -135,355 +117,192 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId:string }> =
     if (success) {
       setSuccess(true);
       setToastMessage("Vote submitted successfully!");
-    setTimeout(()=>{
-      setToastMessage(null);
-    },3000)
+      setTimeout(() => {
+        setToastMessage(null);
+      }, 3000);
       setRefresh((prev) => !prev);
     } else {
-    alert("Failed to submit vote. Maybe you already voted!");
+      alert("Failed to submit vote. Maybe you already voted!");
     }
   };
 
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
+  const [spin, setSpin] = useState(false);
 
-  const handleMove = (event: any) => {
-    if (!isDragging) return;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSpin((prev) => !prev);
+    }, 3000); // Spin every 3 seconds
 
-    let clientX;
-    if (event.type === "touchmove") {
-      clientX = event.touches[0].clientX;
-    } else {
-      clientX = event.clientX;
-    }
+    return () => clearInterval(interval);
+  }, []);
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
-
-    setSliderPosition(percent);
-  };
-
-  const handleMouseDown = () => {
-    setIsDragging(true);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleTouchStart = () => {
-    setIsDragging(true);
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
-  const handlePopUpB = ()=>{
+  const handlePopUpB = () => {
     setPopUpB(true);
   }
-  const closePopUpB = ()=>{
+  const closePopUpB = () => {
     setPopUpB(false);
   }
 
-  const handlePopUpA = ()=>{
+  const handlePopUpA = () => {
     setPopUpA(true);
   }
-  const closePopUpA = ()=>{
+  const closePopUpA = () => {
     setPopUpA(false);
   }
 
-
- 
-
- 
   if (error) return <p>Error fetching battle details: {error}</p>;
-  
-
 
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
-      {timeRemaining !== null && (
-        <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          {formatTime(timeRemaining)}
-        </h2>
-      )}
-      <p className="mt-2 text-center text-white font-mono  sm:font-thin mb-8 md:text-lg">
-        Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
-        vote to secure participation NFTs and a chance to win an exclusive 1:1
-        masterpiece. Connect your NEAR wallet to join the thrilling competition!
-      </p>
-      
-      {skeletonLoad ? (
-      <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[300px]" />
-          <Skeleton className="h-4 w-[300px]" />
-          <Skeleton className="h-40 w-[300px]" />
-        </div>
-      </div>
-    ):(
-      <>
-
-      {!todayBattle ?(
-      <div className="mt-4  mx-8 flex justify-center">
-        <div
-          className="no-battle flex mt-5"
-          style={{
-            width: 300,
-            height: 200,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            borderRadius: 8,
-          }}
-        >
-          <h2 style={{ color: "#000", fontWeight: 600, fontSize: 18 }}>
-            No Battles Today!
+        {timeRemaining !== null && (
+          <h2
+            className="text-4xl font-bold text-white text-center justify-center items-center text-black"
+            style={{ whiteSpace: "nowrap" }}
+          >
+            {formatTime(timeRemaining)}
           </h2>
-          <p className="px-5" style={{ color: "#000", textAlign: "justify" }}>
-            To start your battle by clicking the "Add Artwork" Button.
-          </p>
-          <div className="add-art-btn mt-5 text-center">
-            <button
-              onClick={toggleUploadModal}
-              disabled={!isConnected}
-              className={`px-4 py-2 vote-btn text-white bg-gray-900 rounded ${
-                !isConnected ? "cursor-not-allowed" : ""
-              }`}
-            >
-              Add Artwork
-            </button>
-          </div>
-        </div>
-      </div>
-    ):( 
-   <>
-      <div
-        className="w-full relative"
-        onMouseUp={handleMouseUp}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div
-          className="relative w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
-          onMouseMove={handleMove}
-          onMouseDown={handleMouseDown}
-          onTouchMove={handleMove}
-          onTouchStart={handleTouchStart}
-        >
-          <img
-            alt={artB.title}
-            draggable={false}
-            src={artB.imageUrl}
-            className="w-full h-full object-cover"
-          />
-          <div
-            className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
-            style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-          >
-            <img
-              draggable={false}
-              alt={artA.title}
-              src={artA.imageUrl}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div
-            className="absolute top-0 bottom-0 w-1   cursor-ew-resize"
-            style={{
-              left: `calc(${sliderPosition}% - 1px)`,
-              backgroundColor: "#30f216",
-            }}
-          >
-            <div
-              className="absolute flex items-center justify-center"
-              style={{
-                top: "calc(50% - 12px)",
-                transform: "translateX(-50%)",
-              }}
-            >
-              <svg
-                className="w-10 h-10 mr-[20px] rounded-full"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <path
-                  fill="#1c7813"
-                  d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
-                />
-              </svg>
-              <svg
-                className="w-10 h-10 ml-[25px]"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <path
-                  fill="#1c7813"
-                  d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"
-                />
-              </svg>
+        )}
+        <p className="mt-2 text-center text-white font-mono sm:font-thin mb-8 md:text-lg">
+          Welcome to GFXvs, where creators clash for daily cash prizes. Cast your
+          vote to secure participation NFTs and a chance to win an exclusive 1:1
+          masterpiece. Connect your NEAR wallet to join the thrilling competition!
+        </p>
+
+        {skeletonLoad ? (
+          <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[300px]" />
+              <Skeleton className="h-4 w-[300px]" />
+              <Skeleton className="h-40 w-[300px]" />
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-center px-4">
-      <div className="flex flex-col items-center px-4">
-          <p
-            className="mt-4 max-h-5 text-black py-2 text-xs sm:text-sm font-small break-words text-center lg:break-all sm:break-all md:break-all"
-            style={{ maxWidth: "300px" }}
-          > 
-          {popupA &&(
-              <div className="absolute pb-10 py-2">
-               <div className="bg-black border rounded-lg">
-           <div className="popup-content">
-            <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpA}>
-              &times;
-            </span>
-            <p className="text-white py-2 ">{artA.title} by {artA.artistId}</p>
-          </div>  
-        </div>
-              </div>
-            )}           
-         
-         {artA.title.length > 25 ? (
-                  <>
-                    <p className="text-white">{artA.title.substring(0, 25)}{' '}</p>
-                    <span
-                      className="text-sky-600 cursor-pointer hover:underline max-h-5"
-                     onClick={handlePopUpA}
+        ) : (
+          <>
+            {!todayBattle ? (
+              <div className="mt-4 mx-8 flex justify-center">
+                <div
+                  className="no-battle flex mt-5"
+                  style={{
+                    width: 300,
+                    height: 200,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#fff",
+                    borderRadius: 8,
+                  }}
+                >
+                  <h2 style={{ color: "#000", fontWeight: 600, fontSize: 18 }}>
+                    No Battles Today!
+                  </h2>
+                  <p className="px-5" style={{ color: "#000", textAlign: "justify" }}>
+                    To start your battle by clicking the "Add Artwork" Button.
+                  </p>
+                  <div className="add-art-btn mt-5 text-center">
+                    <button
+                      onClick={toggleUploadModal}
+                      disabled={!isConnected}
+                      className={`px-4 py-2 vote-btn text-white bg-gray-900 rounded ${
+                        !isConnected ? "cursor-not-allowed" : ""
+                      }`}
                     >
-                      read more
-                    </span>
-                  </>
-                ) : (
-                  <>
-                 <p className="text-white"> {artA.title} by  {artA.artistId}</p>
-                  </>
-                )}
-             
-           
-          
-          </p>
-      
-          <div className="flex items-center mt-10">
-            {votedFor === artA.name ? (
-              <button
-                onClick={() => onVote(artA.id)}
-                disabled={!isConnected || success}
-                className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
-                }`}
-              >
-                Voted {artA.name}
-              </button>
-            ) : (
-              <button
-                onClick={() => onVote(artA.id)}
-                disabled={!isConnected || success}
-                className={`px-2 text-xs py-3 font-semibold bg-white hover:bg-gray-300 text-black rounded ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
-                }`}
-              >
-                Pick {artA.name}
-              </button>
-            )}
-          </div>
-    
-        </div>
-        <div className="flex flex-col items-center px-4">
-          <p
-            className="mt-4  max-h-5  text-black py-2 text-xs sm:text-sm font-small break-words text-center sm:break-all md:break-normal"
-            style={{ maxWidth: "300px" }}
-          >
-            {popupB &&(
-              <div className="absolute pb-10  py-2">
-               <div className="bg-black border rounded-lg">
-           <div className="popup-content">
-            <span className="close text-xl justify-end text-orange-700 cursor-pointer" onClick={closePopUpB}>
-              &times;
-            </span>
-            <p className="text-white py-2 break-all">{artB.title} by {artB.artistId} </p>
-          </div>
-        </div>
+                      Add Artwork
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}           
-                {artB.title.length > 25 ? (
-                  <>
-                    <p className="text-white">{artB.title.substring(0, 25)}{' '}</p>
-                    <span
-                      className="text-sky-600 cursor-pointer hover:underline max-h-5"
-                     onClick={handlePopUpB}
-                    >
-                      read more
-                    </span>
-                  </>
-                ) : (
-                  <>
-                 <p className="text-white"> {artB.title} by {artB.artistId}</p>
-                  </>
-                )}
-             
-           
-        
-          </p>
-         
-          <div className="flex items-center  mt-10 max-h-10">
-           
-            {votedFor === artB.name ? (
-              <button
-                onClick={() => onVote(artB.id)}
-                disabled={!isConnected || success}
-                className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
-                }`}
-              >
-                Voted {artB.name}
-              </button>
             ) : (
-              <button
-                onClick={() => onVote(artB.id)}
-                disabled={!isConnected || success}
-                className={`px-2 text-xs py-3 font-semibold bg-white hover:bg-gray-300 text-black rounded  ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
-                }`}
-              >
-                Pick {artB.name}
-              </button>
+              <>
+                <div className="w-full relative">
+                  <div className={`relative w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none ${spin ? 'spin-animation' : ''}`}>
+                    <img
+                      alt={artB.title}
+                      draggable={false}
+                      src={artB.imageUrl}
+                      className="w-full h-full object-cover"
+                    />
+                    <div
+                      className="absolute top-0 left-0 right-0 w-full max-w-[700px] aspect-square m-auto overflow-hidden select-none"
+                      style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                    >
+                      <img
+                        draggable={false}
+                        alt={artA.title}
+                        src={artA.imageUrl}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 flex justify-between">
+                  <div className="flex-1">
+                    <button
+                      onClick={() => onVote("Art A")}
+                      disabled={success}
+                      className={`w-full py-2 px-4 text-white bg-green-500 rounded ${
+                        success && votedFor === "Art A" ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      Vote for Art A
+                    </button>
+                    <button
+                      onClick={() => handlePopUpA()}
+                      className="w-full py-2 px-4 text-white bg-blue-500 rounded mt-2"
+                    >
+                      More Info A
+                    </button>
+                  </div>
+                  <div className="flex-1">
+                    <button
+                      onClick={() => onVote("Art B")}
+                      disabled={success}
+                      className={`w-full py-2 px-4 text-white bg-red-500 rounded ${
+                        success && votedFor === "Art B" ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      Vote for Art B
+                    </button>
+                    <button
+                      onClick={() => handlePopUpB()}
+                      className="w-full py-2 px-4 text-white bg-blue-500 rounded mt-2"
+                    >
+                      More Info B
+                    </button>
+                  </div>
+                </div>
+
+                {popupA && (
+                  <div className="popup-modal">
+                    <div className="modal-content">
+                      <span className="close" onClick={closePopUpA}>&times;</span>
+                      <h2>{artA.title}</h2>
+                      <p>Artist ID: {artA.artistId}</p>
+                      <img src={artA.imageUrl} alt={artA.title} className="w-full" />
+                    </div>
+                  </div>
+                )}
+
+                {popupB && (
+                  <div className="popup-modal">
+                    <div className="modal-content">
+                      <span className="close" onClick={closePopUpB}>&times;</span>
+                      <h2>{artB.title}</h2>
+                      <p>Artist ID: {artB.artistId}</p>
+                      <img src={artB.imageUrl} alt={artB.title} className="w-full" />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
-         
-          </div>
-
-        </div>
-        </div>
-        </>
-         )
-}
-</>
-
-)
-}
-
-      {/* <div className='battle-img flex mt-2' style={{ justifyContent: 'center' }}>
-            <ArtPiece art={artA} onVote={() => onVote(artA.id)} battleEndTime={todayBattle.endTime} success={success} votedFor={votedFor}/>
-  
-            <ArtPiece art={artB} onVote={() => onVote(artB.id)} success={success} votedFor={votedFor}/>
-        
+          </>
+        )}
       </div>
-      */}
-        {toastMessage && (
-        <Toast success={true} message={toastMessage} onClose={() => setToastMessage(null)} />
-      )}
-      </div>
+
+      {toastMessage && <Toast message={toastMessage} />}
     </div>
-    
   );
 };
 

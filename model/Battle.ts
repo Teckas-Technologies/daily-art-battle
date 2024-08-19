@@ -22,12 +22,14 @@ interface Battle extends Document {
   artBcolouredArtReference: string;
   grayScaleReference?: string;
   winningArt?: 'Art A' | 'Art B';
+  specialWinner?: string;
   artAspecialWinner?: string;
   artBspecialWinner?: string;
   artAvoters?:string[];
   artBvoters?:string[];
   isSpecialWinnerMinted?:Boolean;
   campaignId:string;
+  tokenId:string;
 }
 
 const BattleSchema = new mongoose.Schema({
@@ -52,10 +54,12 @@ const BattleSchema = new mongoose.Schema({
   winningArt: { type: String, enum: ['Art A', 'Art B'], required: false },
   artAVotes: { type: Number, default: 0 },
   artBVotes: { type: Number, default: 0 },
+  specialWinner: { type: String, required: false },
   artAspecialWinner: { type: String, required: false },
   artBspecialWinner: { type: String, required: false },
   artAvoters: { type: [String], required: false },
   artBvoters: { type: [String], required: false },
+  tokenId: { type: String, required: false }
 });
 
 export default mongoose.models.Battle || model<Battle>('Battle', BattleSchema);

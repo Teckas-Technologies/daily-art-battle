@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useFetchArts, ArtData } from "../hooks/artHooks";
+import { useFetchArts, ArtData,useFetchArtById } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import Overlay from "./Overlay";
@@ -149,8 +149,9 @@ const BattleTable: React.FC<{
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
-  
+  const{fetchArtById}=useFetchArtById();
   const [selectedArtId, setSelectedArtId] = useState(null);
+  const[overlayArt,setoverlayArt] = useState<ArtData>();
 
   const getQueryParam = (param: string): string | null => {
     if (typeof window !== 'undefined') {
@@ -159,11 +160,22 @@ const BattleTable: React.FC<{
     }
     return null;
   };
-
   const artId = getQueryParam('artId');
 
-  const handleImageClick = (id:any) => {
+  useEffect(()=>{
+    const fetchArt= async()=>{
+      if(artId){
+      const overlay = await fetchArtById(artId);
+      setoverlayArt(overlay);
+      }
+    }
+    fetchArt();
+  },[artId]);
+
+  const handleImageClick = async(id:any) => {
     setSelectedArtId(id);
+    const overlay = await fetchArtById(id);
+    setoverlayArt(overlay);
     const url = new URL(window.location.href);
     url.searchParams.set('artId', id);
     window.history.pushState({}, '', url.toString());
@@ -222,12 +234,13 @@ const BattleTable: React.FC<{
       style={{ zIndex: "-1" }}
     >
       <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
+      {(selectedArtId|| artId) && overlayArt && (
+              <Overlay onClose={handleClose}  art={overlayArt} onVote={onVote} votes={votes}/>
+            )}
         {artData.map((art, index) => (
            
           <div key={index} className="flex justify-center overflow-hidden">
-             {(selectedArtId === art._id || artId === art._id) && (
-              <Overlay onClose={handleClose}  art={art} onVote={onVote} votes={votes}/>
-            )}
+           
             <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
               <div className="flex justify-center items-center flex-grow relative">
                 <img
