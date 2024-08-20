@@ -15,13 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   //POST method is used for creating upvote for the arts
   if (req.method === 'POST') {
     try {
-      const { participantId, artId } = req.body;
-      const existingVote = await UpVoting.findOne({ participantId, artId });
+      const { participantId, artId ,campaignId} = req.body;
+      const existingVote = await UpVoting.findOne({ participantId, artId ,campaignId});
       if (existingVote) {
         return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
       }else{
 
-      const result = await findAndupdateArtById(artId,participantId);
+      const result = await findAndupdateArtById(artId,participantId,campaignId);
       res.status(201).json({ success: true, data: result });
       }
     } catch (error) {
@@ -32,8 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   //GET method is used for fetching upvote by id
    if (req.method === 'GET') {
     try {
-      const { participantId } = req.query;
-      const existingVote = await UpVoting.find({participantId });
+      const { participantId,campaignId } = req.query;
+      const existingVote = await UpVoting.find({participantId,campaignId });
       res.status(200).json({ success: true, data: existingVote });
     } catch (error) {
       res.status(400).json({ success: false, error });

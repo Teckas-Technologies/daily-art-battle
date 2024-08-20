@@ -17,10 +17,10 @@ const Home: NextPage = () => {
   return (
     <main className="flex flex-col justify-center" style={{ width: '100vw',  backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
       <NearWalletConnector />
-      {showUploadModal && <ArtworkUploadForm onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
-      <ArtBattle toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <PreviousArtTable toggleUploadModal={toggleUploadModal}/>
+      {showUploadModal && <ArtworkUploadForm campaignId={"gfxvs"} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      <ArtBattle campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} />
+      <UpcomingBattlesTable campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtTable campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
   );

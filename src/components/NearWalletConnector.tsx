@@ -14,7 +14,7 @@ export const NearWalletConnector = () => {
   };
 
   const handleRoute = ()=>{
-    router.push(`/theme`);
+    router.push(`/admin`);
   }
   const url = ()=>{
     const url = window.location.origin;
@@ -63,7 +63,7 @@ export const NearWalletConnector = () => {
             alt="Disconnect"
             className="w-10 h-10 cursor-pointer"
           ></img>
-          {activeAccountId=="scalability-vega.testnet"&&(
+          {activeAccountId=="rapid_zuckerberg.testnet"&&(
         <label onClick ={handleRoute} className="ml-2 px-2 bg-green-600 border hover:bg-green-500 rounded-lg cursor-pointer">  admin</label>
           )}
         </div>

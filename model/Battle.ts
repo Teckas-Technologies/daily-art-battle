@@ -29,9 +29,11 @@ interface Battle extends Document {
   artBvoters?:string[];
   isSpecialWinnerMinted?:Boolean;
   tokenId:string;
+  campaignId:string;
 }
 
 const BattleSchema = new mongoose.Schema({
+  campaignId: { type: String, required: true },
   artAId: { type: String, required: true },
   artBId: { type: String, required: true },
   artAartistId: { type: String, required: true },

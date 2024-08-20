@@ -11,12 +11,12 @@ export async function scheduleArt(data: any): Promise<any> {
   return newArt.save();
 }
 
-export const findAllArts = async (page: number, limit: number): Promise<any> => {
+export const findAllArts = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
   const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false })
+  const arts = await ArtTable.find({ isStartedBattle: false ,campaignId:campaignId })
   .sort({ upVotes: -1,_id: 1 })
   .skip(skip)
   .limit(limit)
@@ -25,12 +25,12 @@ export const findAllArts = async (page: number, limit: number): Promise<any> => 
   return {arts,totalDocuments,totalPages};
 };
 
-export const findAllArtsByVoteAsc = async (page: number, limit: number): Promise<any> => {
+export const findAllArtsByVoteAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
   const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false })
+  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
   .sort({ upVotes: 1,_id: 1 })
   .skip(skip)
   .limit(limit)
@@ -39,12 +39,12 @@ export const findAllArtsByVoteAsc = async (page: number, limit: number): Promise
   return {arts,totalDocuments,totalPages};
 };
 
-export const findAllArtsByDate = async (page: number, limit: number): Promise<any> => {
+export const findAllArtsByDate = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
   const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false })
+  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
   .sort({ uploadedTime: -1,_id: 1 })
   .skip(skip)
   .limit(limit)
@@ -53,12 +53,12 @@ export const findAllArtsByDate = async (page: number, limit: number): Promise<an
   return {arts,totalDocuments,totalPages};
 };
 
-export const findAllArtsByDateAsc = async (page: number, limit: number): Promise<any> => {
+export const findAllArtsByDateAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false });
+  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
   const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false })
+  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
   .sort({ uploadedTime: 1,_id: 1 })
   .skip(skip)
   .limit(limit)
@@ -106,9 +106,9 @@ export const updateArtById = async (id: any): Promise<any> => {
 };
 
 
-export const findAndupdateArtById = async (id: any,participantId:any): Promise<any> => {
+export const findAndupdateArtById = async (id: any,participantId:any,campaignId:string): Promise<any> => {
   await connectToDatabase();
-  const vote = await UpVoting.create({ participantId, artId:id });
+  const vote = await UpVoting.create({ participantId, artId:id,campaignId });
    await ArtTable.findByIdAndUpdate(
     id,
     { $inc: { upVotes: 1 } },

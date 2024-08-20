@@ -6,8 +6,8 @@ import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
 
-const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
-  toggleUploadModal,
+const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: string }> = ({
+  toggleUploadModal,campaignId
 }) => {
   const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
   const { battles, error, loading, fetchMoreBattles } = useFetchBattles();
@@ -31,13 +31,13 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreBattles(sort, page + 1);
+    fetchMoreBattles(campaignId,sort, page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreBattles(sort, page - 1);
+      fetchMoreBattles(campaignId,sort, page - 1);
     }
   };
 
@@ -53,7 +53,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void }> = ({
     const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
-    fetchMoreBattles(sortType, 1);
+    fetchMoreBattles(campaignId,sortType, 1);
   };
 
 

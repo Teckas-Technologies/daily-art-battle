@@ -36,7 +36,7 @@ interface UseFetchTodayBattleResult {
   loading: boolean;
   error: string | null;
   battle:boolean;
-  fetchTodayBattle: () => Promise<void>; 
+  fetchTodayBattle: (campaignId: string) => Promise<void>; 
 }
 
 interface BattlesResponse {
@@ -94,12 +94,13 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
   const [error, setError] = useState<string | null>(null);
   const [battle, setBattle] = useState<boolean>(false);
 
-  const fetchTodayBattle = async () => {
+  const fetchTodayBattle = async (campaignId:string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('/api/battle?queryType=Today');
+      console.log(campaignId);
+      const response = await fetch(`/api/battle?queryType=Today&campaignId=${campaignId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch today\'s battle data');
       }
@@ -116,10 +117,6 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
     }
   };
 
-  useEffect(() => {
-    fetchTodayBattle();
-  }, []);
-
 
   return { todayBattle,battle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
 };
@@ -131,11 +128,11 @@ export const useFetchBattles = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-      const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
+      const fetchBattles = async (campaignId:string,sort:string,page: number, limit: number = 10) => {
           setLoading(true);
           setError(null);
           try {
-              const response = await fetch(`/api/battle?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
+              const response = await fetch(`/api/battle?queryType=battles&campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
            
@@ -164,9 +161,6 @@ export const useFetchBattles = () => {
             setLoading(false);
         }
     };
-      useEffect(() => {
-         fetchBattles("dateDsc",1);
-      }, []);
      
 
   return { battles, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };

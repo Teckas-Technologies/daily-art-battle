@@ -13,13 +13,14 @@ interface Artwork {
   artistId: string;
 }
 
-const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
-  toggleUploadModal,
+const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string }> = ({
+  toggleUploadModal,campaignId
 }) => {
+
+
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { todayBattle, loading,battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
-
 
   const [artA, setArtA] = useState<Artwork>({
     id: "ArtA",
@@ -52,17 +53,34 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
    
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
-        const res = await fetchVotes(activeAccountId, todayBattle._id);
+        const res = await fetchVotes(activeAccountId, todayBattle._id,campaignId);
         if (res) {
           setVoterFor(res.votedFor);
           setSuccess(true);
         }
       }
     };
-
     fetchData();
-    fetchTodayBattle();
   }, [todayBattle, fetchVotes, refresh]);
+
+  
+  
+  useEffect(() => {
+    console.log(campaignId);
+  
+    const fetchBattle = async () => {
+      await fetchTodayBattle(campaignId);
+    };
+  
+    const timeoutId = setTimeout(() => {
+      fetchBattle();
+    }, 5000); // 10 seconds in milliseconds
+  
+    // Cleanup function to clear the timeout if the component unmounts or campaignId changes
+    return () => clearTimeout(timeoutId);
+  
+  }, [campaignId]);
+  
 
 
   useEffect(()=>{
@@ -134,6 +152,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       participantId: activeAccountId,
       battleId: battleId,
       votedFor: id === "Art A" ? "Art A" : "Art B",
+      campaignId:campaignId
     });
     if (success) {
       setSuccess(true);

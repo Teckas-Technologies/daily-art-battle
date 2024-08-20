@@ -16,6 +16,7 @@ export interface ArtData {
   battleTime?: Date;
   endTime?: Date;
   tokenId:Number;
+  campaignId:string;
 }
 
 
@@ -73,11 +74,11 @@ export const useSaveData = (): UseSaveDataResult => {
       const [loading, setLoading] = useState<boolean>(false);
       const [error, setError] = useState<string | null>(null);
     
-      const fetchArts = async (sort:string,page: number, limit: number = 9) => {
+      const fetchArts = async (campaignId:string,sort:string,page: number, limit: number = 9) => {
         setLoading(true);
         setError(null);
         try {
-          const response = await fetch(`/api/art?page=${page}&limit=${limit}&sort=${sort}`);
+          const response = await fetch(`/api/art?campaignId=${campaignId}&page=${page}&limit=${limit}&sort=${sort}`);
           if (!response.ok) throw new Error('Network response was not ok');
           const data = await response.json();
           setArts(data.arts);
@@ -90,9 +91,6 @@ export const useSaveData = (): UseSaveDataResult => {
         }
       };
 
-      useEffect(() => {
-        fetchArts("date",1);
-      }, []);
     
       return { arts, totalPage,loading, error, fetchMoreArts: fetchArts };
     }
