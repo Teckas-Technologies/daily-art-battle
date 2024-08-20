@@ -29,6 +29,10 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: str
     }
   }, [battles]);
 
+  useEffect(()=>{
+    fetchMoreBattles(campaignId,sort, page);
+  },[campaignId])
+
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
     fetchMoreBattles(campaignId,sort, page + 1);
