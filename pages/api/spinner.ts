@@ -1,3 +1,4 @@
+
 // //mintNfts.ts is used to create battles and countVote and Update battles
 // import { NextApiRequest, NextApiResponse } from 'next';
 // import spinner from '../../utils/spinnerUtils';
@@ -11,3 +12,4 @@
 //     }
 //   }
 // }
+
