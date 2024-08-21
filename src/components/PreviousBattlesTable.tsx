@@ -17,7 +17,6 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: str
   const [selectedArtId, setSelectedArtId] = useState<string | null>(null);
   const [pop, setPopUp] = useState(false);
   const [sort, setSort] = useState("date");
-
   useEffect(() => {
     if (battles && battles.pastBattles) {
       if (page > battles.totalPages - 1) {
@@ -59,8 +58,7 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: str
     setPage(1); // Reset to first page when sorting
     fetchMoreBattles(campaignId,sortType, 1);
   };
-
-
+  
   return (
     <section id="previous">
     <div className="battle-table mt-8  md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center">
