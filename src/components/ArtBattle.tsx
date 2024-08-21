@@ -208,16 +208,20 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
+      <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
+        >
+      Theme : Near To the Moon
+        </h2>
       {timeRemaining !== null && (
         <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className=" mt-2 text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
       <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg">
-      Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
+      Welcome to "Near To the Moon"! Submit the theme based NFTs daily for a chance to win big! Total Prize Pool: $50 USD. Connect your NEAR wallet and join the race to the moon!
       </p>
       
       {skeletonLoad ? (
