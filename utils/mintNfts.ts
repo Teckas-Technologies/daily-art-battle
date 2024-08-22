@@ -22,11 +22,11 @@ export const mintNfts = async (): Promise<void> => {
     }); 
     for(const battle of battles){
     console.log(battle);
-    // const ress = await spinner(battle.artAcolouredArt,battle.artBcolouredArt);
-    // console.log("Uploading arweave")
-    // const response = await uploadArweave(ress);
-    // battle.grayScale = response.url;
-    // battle.grayScaleReference = response.referenceUrl;
+    const ress = await spinner(battle.artAcolouredArt,battle.artBcolouredArt);
+    console.log("Uploading arweave")
+    const response = await uploadArweave(ress);
+    battle.grayScale = response.url;
+    battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
       if(battle.artAVotes>0){
