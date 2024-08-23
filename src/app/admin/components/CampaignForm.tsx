@@ -159,7 +159,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onCampaignSaved, onClose, c
               />
             </div>
             <div className="mb-5">
-              <label htmlFor="video" className="block text-black mb-2 text-sm font-medium text-gray-900">Background Video</label>
+              <label htmlFor="video" className="block text-black mb-2 text-sm font-medium text-gray-900">Background Img or Video</label>
               <input
                 type="file"
                 id="video"
