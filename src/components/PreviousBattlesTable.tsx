@@ -6,8 +6,8 @@ import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
 
-const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: string }> = ({
-  toggleUploadModal,campaignId
+const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: string,fontColor:string }> = ({
+  toggleUploadModal,campaignId,fontColor
 }) => {
   const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
   const { battles, error, loading, fetchMoreBattles } = useFetchBattles();
@@ -62,10 +62,10 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: str
   return (
     <section id="previous">
     <div className="battle-table mt-8  md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center" style={{color:fontColor}}>
         Previous Battles
       </h2>
-      <p className="battle-table1 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
+      <p className="battle-table1 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg" style={{color:fontColor}}>
         <a
           href="https://wallet.mintbase.xyz/"
           target="_blank"

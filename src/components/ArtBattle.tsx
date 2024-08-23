@@ -14,8 +14,8 @@ interface Artwork {
 }
 
 
-const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string }> = ({
-  toggleUploadModal,campaignId
+const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fontColor:string,welcomeText:string,themeTitle:String }> = ({
+  toggleUploadModal,campaignId,fontColor,welcomeText,themeTitle
 }) => {
 
 
@@ -217,28 +217,37 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string }> 
     setPopUpA(false);
   }
 
-
- 
-
- 
   if (error) return <p>Error fetching battle details: {error}</p>;
   
-
-
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
+      <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
+         style={{ color:fontColor}} >
+          {campaignId!='gfxvs'&&(
+                  `Theme : ${themeTitle}`
+          )}
+     
+        </h2>
       {timeRemaining !== null && (
         <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
+          className="mt-2  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap" ,color:fontColor}}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg">
-      Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
-      </p>
+      <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
+        {campaignId=='gfxvs'?(
+          <>
+           Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
+          </>
+        ):(
+          <>
+          {welcomeText}
+          </>
+        )}
+           </p>
       
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>

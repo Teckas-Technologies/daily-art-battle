@@ -2,12 +2,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Campaign from "../../model/campaign";
 import { connectToDatabase } from '../../utils/mongoose';
+import uploadVideoToAzure from '../../utils/campaignUtils'
 export default async function handler( req: NextApiRequest,res: NextApiResponse) {
      if (req.method == 'POST') {
       try{
     await connectToDatabase();
     const data = req.body;
     const campaign = await Campaign.findOne({campaignTitle : data.campaignTitle})
+    if (data.video) {
+      const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
+      data.video = videoUrl; // Replace base64 with the video URL
+    }
+
     if(!campaign){
     await Campaign.create(data);
     return res.status(201).json({ success: true, message: "Campaign created Successfully" });
@@ -44,6 +50,10 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
         await connectToDatabase();
         const id = req.query.id;
         const data = req.body;
+        if (data.video) {
+          const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
+          data.video = videoUrl; // Replace base64 with the video URL
+        }    
         const updatedCampaign = await Campaign.findOneAndUpdate(
           { _id: id },
           { $set: data },

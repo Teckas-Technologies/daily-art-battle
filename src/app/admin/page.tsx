@@ -61,10 +61,10 @@ const Admin: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-center">
-        <div className="w-full p-4">
+        <div className="w-full">
           <button
             onClick={() => setShowForm(!showForm)}
-            className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+            className="mb-4 px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
           >
             {showForm ? "Show Campaigns" : "Add Campaign"}
           </button>

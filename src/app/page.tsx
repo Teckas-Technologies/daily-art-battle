@@ -18,9 +18,12 @@ const Home: NextPage = () => {
     <main className="flex flex-col justify-center" style={{ width: '100vw',  backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
       <NearWalletConnector />
       {showUploadModal && <ArtworkUploadForm campaignId={"gfxvs"} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
-      <ArtBattle campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <PreviousArtTable campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal}/>
+      <ArtBattle  
+        fontColor={""}
+        welcomeText={""}
+        themeTitle={""} campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} />
+      <UpcomingBattlesTable  fontColor={""} campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtTable   fontColor={""} campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
   );

@@ -54,10 +54,9 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onCampaignSaved, onClose, c
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result as string;
-      const base64Content = base64String.split(',')[1]; 
       setFormData((prevData) => ({
         ...prevData,
-        video: base64Content,
+        video: base64String,
       }));
     };
     reader.readAsDataURL(file);
