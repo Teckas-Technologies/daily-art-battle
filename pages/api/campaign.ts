@@ -49,11 +49,14 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
         try{
         await connectToDatabase();
         const id = req.query.id;
+        const existingCampaign = await Campaign.findById(id);
         const data = req.body;
         if (data.video) {
           const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
           data.video = videoUrl; // Replace base64 with the video URL
-        }    
+        }    else{
+          data.video = existingCampaign.video;
+        }
         const updatedCampaign = await Campaign.findOneAndUpdate(
           { _id: id },
           { $set: data },
