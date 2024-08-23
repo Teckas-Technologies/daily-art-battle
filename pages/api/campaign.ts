@@ -45,30 +45,41 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
     }
       }
 
-      if(req.method=='PUT'){
-        try{
-        await connectToDatabase();
-        const id = req.query.id;
-        const existingCampaign = await Campaign.findById(id);
-        const data = req.body;
-        if (data.video) {
-          const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
-          data.video = videoUrl; // Replace base64 with the video URL
-        }    else{
-          data.video = existingCampaign.video;
+      if (req.method == 'PUT') {
+        try {
+          await connectToDatabase();
+          const id = req.query.id;
+          const existingCampaign = await Campaign.findById(id);
+          const data = req.body;
+      
+          // Check if video is a base64 string before uploading
+          const isBase64 = (str: string) => {
+            return str.startsWith('data:') && str.includes('base64,');
+          };
+      
+          if (data.video && isBase64(data.video)) {
+            // If video is base64, upload to Azure and replace with the video URL
+            const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
+            data.video = videoUrl;
+          } else {
+            // If no video or video is not in base64, keep the existing video URL
+            data.video = existingCampaign?.video;
+          }
+      
+          // Update the campaign with the new or existing data
+          const updatedCampaign = await Campaign.findOneAndUpdate(
+            { _id: id },
+            { $set: data },
+            { new: true }
+          );
+      
+          return res.status(200).json({ success: true, data: updatedCampaign });
+        } catch (error) {
+          console.log(error);
+          return res.status(400).json({ success: false, message: 'Error updating campaign' });
         }
-        const updatedCampaign = await Campaign.findOneAndUpdate(
-          { _id: id },
-          { $set: data },
-          { new: true } 
-        );
-        return res.status(200).json({ success: true, data:updatedCampaign});
       }
-      catch(error){
-        console.log(error);
-        return res.status(400).json({ success: false, message: 'Error campaign' });
-      }
-      }
+      
     
       if (req.method == 'DELETE') {
         try{
