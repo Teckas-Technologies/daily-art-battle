@@ -3,6 +3,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import Campaign from "../../model/campaign";
 import { connectToDatabase } from '../../utils/mongoose';
 import uploadVideoToAzure from '../../utils/campaignUtils'
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb', // Adjust this to your needs
+    },
+    responseLimit: '100mb',
+  },
+};
+
 export default async function handler( req: NextApiRequest,res: NextApiResponse) {
      if (req.method == 'POST') {
       try{
