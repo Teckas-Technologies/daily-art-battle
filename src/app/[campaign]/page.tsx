@@ -17,23 +17,45 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     const fetchData = async () => {
       const data = await fetchCampaignByTitle(params.campaign);
       setCampaign(data);
+      setMediaUrl(data.video)
       
       if (data.video) {
-        const extension = data.video.split('.').pop()?.toLowerCase();
+        
         // Set media type based on the file extension
-        if (extension === "mp4" || extension === "webm" || extension === "ogg") {
-          setMediaType("video");
-          setMediaUrl(data.video)
-        } else if (extension === "jpg" || extension === "jpeg" || extension === "png" || extension === "gif") {
-          setMediaType("image");
-          setMediaUrl(data.video)
-         
-        }
+        const response = await fetch(data.video);
+        const blob = await response.blob();
+        const mimeType = await determineMimeType(blob);
+        const type = mimeType.split("/");
+        setMediaType(type[0]);
       }
     };
     fetchData();
     console.log(mediaUrl)
   }, [params.campaign]);
+
+  const determineMimeType = async (blob: Blob): Promise<string> => {
+    const reader = new FileReader();
+    
+    return new Promise((resolve, reject) => {
+        reader.onload = (event) => {
+            const arrayBuffer = event.target?.result as ArrayBuffer;
+            const bytes = new Uint8Array(arrayBuffer);
+            const signature = bytes.slice(0, 4).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+            
+            // Compare with known signatures
+            if (signature.startsWith('ffd8')) return resolve('image/jpeg');
+            if (signature.startsWith('8950')) return resolve('image/png');
+            if (signature.startsWith('4749')) return resolve('image/gif');
+            if (signature.startsWith('0000')) return resolve('video/mp4');
+            
+            // Fallback or unknown type
+            resolve('application/octet-stream');
+        };
+        
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(blob.slice(0, 4)); // Read the first 4 bytes
+    });
+};
 
 
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -55,7 +77,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         overflowY: "auto"
       }}
     >
-      {mediaUrl && mediaType === "video" && (
+      {mediaType === "video" && (
        <video autoPlay muted loop id="background-video" style={{ 
         position: 'fixed', 
         right: 0, 
@@ -66,13 +88,13 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         zIndex: -1,
         filter: 'blur(5px) brightness(50%)'
     }}>
-        <source src={mediaUrl} type="video/mp4" />
+        <source src={campaign?.video as string} type="video/mp4" />
         Your browser does not support the video tag.
     </video>
        )} 
-      {mediaUrl && mediaType === "image" && (
+      {mediaType === "image" && (
         <img
-          src={mediaUrl}
+          src={campaign?.video as string}
           alt="Campaign background"
           style={{
             position: "fixed",

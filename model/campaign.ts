@@ -7,6 +7,7 @@ interface Campaign extends Document {
   color:string;
   video:string;
   startDate:string;
+  logo:string;
   endDate:string;
 }
 
@@ -16,6 +17,7 @@ const campaignSchema = new mongoose.Schema({
     campaignWelcomeText: {type: String,required: true,},
     color: {type: String,required: false,},
     video: {type: String,required: false,},
+    logo: {type: String,required: false,},
     startDate: {type: String,required: true,},
     endDate: {type: String,required: true,},
 });

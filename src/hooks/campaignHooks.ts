@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import axios from "axios";
 
 
 
@@ -12,6 +12,7 @@ export interface CampaignData {
   video:string;
   startDate:string;
   endDate:string;
+  logo:string;
 }
 
 export const useFetchCampaignByTitle = () => {
@@ -43,6 +44,25 @@ export const useFetchCampaignByTitle = () => {
             setError(null);
             try {
                 const response = await fetch(`/api/campaign?queryType=campaigns`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const res = await response.json();
+                
+                setCampaign(res.data);
+                return res.data;
+            } catch (err) {
+                console.error('Error fetching art:', err);
+                setError("Error fetching art!");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+
+        const fetchAllCampaign = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(`/api/campaign?queryType=campaignsAll`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const res = await response.json();
                 
@@ -128,9 +148,29 @@ export const useFetchCampaignByTitle = () => {
                 setLoading(false);
             }
         };
-  
-        
+
        
+
+const uploadMediaToAzure = async (file: File): Promise<string> => {
+    try {
+        // Step 1: Get the SAS token from the backend
+        const response = await axios.get('/api/generateSasToken');
+        console.log(response.data);
+        const { blobUrl } = response.data;
+
+        // Step 2: Upload the file using the SAS token
+       const res = await axios.put(blobUrl, file, {
+            headers: {
+                "x-ms-blob-type": "BlockBlob",
+                "Content-Type": file.type
+            }
+        });
+        return blobUrl.split('?')[0];
+    } catch (error) {
+        console.error("Error uploading to Azure Blob Storage:", error);
+        throw error;
+    }
+};  
   
-    return {fetchCampaignByTitle,saveCampaign,fetchCampaign,deleteCampaignById,updateCampaignById};
-      }
+return {fetchCampaignByTitle,saveCampaign,fetchCampaign,deleteCampaignById,updateCampaignById,uploadMediaToAzure,fetchAllCampaign};
+}

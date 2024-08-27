@@ -8,6 +8,7 @@ import ArtBattle from '../components/ArtBattle';
 import UpcomingBattlesTable from '../components/UpcomingBattlesTable';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
+
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);

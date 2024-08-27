@@ -19,11 +19,7 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
     await connectToDatabase();
     const data = req.body;
     const campaign = await Campaign.findOne({campaignTitle : data.campaignTitle})
-    if (data.video) {
-      const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
-      data.video = videoUrl; // Replace base64 with the video URL
-    }
-
+    console.log(data);
     if(!campaign){
     await Campaign.create(data);
     return res.status(201).json({ success: true, message: "Campaign created Successfully" });
@@ -45,6 +41,15 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
         const campaign = await Campaign.find();
         return res.status(200).json({ success: true, data:campaign});
       }
+      if(queryType=='campaignsAll'){
+        const today = new Date().toISOString().split('T')[0];
+        const campaigns = await Campaign.find({
+          startDate: { $lte: today },
+          endDate: { $gte: today },
+        });
+      
+        return res.status(200).json({ success: true, data:campaigns});
+      }
       const title = req.query.title;
       const campaign = await Campaign.findOne({campaignTitle:title});
       return res.status(200).json({ success: true, data:campaign});
@@ -61,18 +66,9 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
           const id = req.query.id;
           const existingCampaign = await Campaign.findById(id);
           const data = req.body;
+    
       
-          // Check if video is a base64 string before uploading
-          const isBase64 = (str: string) => {
-            return str.startsWith('data:') && str.includes('base64,');
-          };
-      
-          if (data.video && isBase64(data.video)) {
-            // If video is base64, upload to Azure and replace with the video URL
-            const videoUrl = await uploadVideoToAzure(data.video, `${data.campaignTitle}.mp4`);
-            data.video = videoUrl;
-          } else {
-            // If no video or video is not in base64, keep the existing video URL
+          if (!data.video) {
             data.video = existingCampaign?.video;
           }
       
