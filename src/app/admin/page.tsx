@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useFetchCampaignByTitle } from "@/hooks/campaignHooks";
 import CampaignForm from "./components/CampaignForm";
 import CampaignTable from "./components/CampaignList";
-
 const Admin: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -61,6 +60,19 @@ const Admin: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-center">
+      <video autoPlay muted loop id="background-video" style={{ 
+    position: 'fixed', 
+    right: 0, 
+    bottom: 0, 
+    objectFit: 'cover', 
+    minWidth: '100%', 
+    minHeight: '100%', 
+    zIndex: -1,
+    filter: 'blur(5px) brightness(50%)'
+}}>
+    <source src="images/back.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+</video>
         <div className="w-full">
           <button
             onClick={() => setShowForm(!showForm)}

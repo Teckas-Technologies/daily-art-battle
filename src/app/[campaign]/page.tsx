@@ -7,6 +7,7 @@ import UpcomingBattlesTable from "@/components/UpcomingBattlesTable";
 import PreviousArtTable from "@/components/PreviousBattlesTable";
 import Footer from "@/components/Footer";
 import ArtworkUploadForm from "@/components/ArtworkUploadForm";
+import { Navbar } from "./Navbar";
 
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [campaign, setCampaign] = useState<CampaignData>();
@@ -108,7 +109,22 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           }}
         />
       )}
-      <NearWalletConnector />
+      {mediaType===""&&(
+              <video autoPlay muted loop id="background-video" style={{ 
+                position: 'fixed', 
+                right: 0, 
+                bottom: 0, 
+                objectFit: 'cover', 
+                minWidth: '100%', 
+                minHeight: '100%', 
+                zIndex: -1,
+                filter: 'blur(5px) brightness(50%)'
+            }}>
+                <source src="images/back.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+      )}
+      <Navbar/>
       {showUploadModal && campaign?._id && (
         <ArtworkUploadForm
           campaignId={campaign?._id}
