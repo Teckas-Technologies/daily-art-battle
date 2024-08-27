@@ -124,7 +124,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
                 Your browser does not support the video tag.
             </video>
       )}
-      <Navbar/>
+      <Navbar logo={campaign?.logo as string}/>
       {showUploadModal && campaign?._id && (
         <ArtworkUploadForm
           campaignId={campaign?._id}

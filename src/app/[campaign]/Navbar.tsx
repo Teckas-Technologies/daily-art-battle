@@ -3,7 +3,9 @@ import { useState } from "react";
 import { useMbWallet } from "@mintbase-js/react";
 import { useRouter } from 'next/navigation';
 
-export const Navbar: React.FC = () => {
+export const Navbar:React.FC<{ logo:string }> = ({
+    logo
+  }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -48,17 +50,25 @@ export const Navbar: React.FC = () => {
         padding: "10px 5vw",
       }}
     >
-      <div className="flex items-center flex-col md:flex-col">
+       <div className="flex items-center flex-row md:flex-row">
         <a onClick={url}>
-          <img
-            src="/images/logo.png"
-            alt="GFXvs"
-            width={50}
-            height={50}
-            className="md:mb-0" // Add margin bottom for smaller screens
-          />
-        </a>
-      </div>
+        <img
+          src="/images/logo.png"
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className=" md:mb-0" // Add margin bottom for smaller screens
+        />
+           </a>
+       <p style={{fontFamily:'saved-zero'}} className="ml-2 mr-2">x</p>
+        <img
+          src={logo}
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className="md:mb-0" // Add margin bottom for smaller screens
+        />
+        </div>
 
       
      
