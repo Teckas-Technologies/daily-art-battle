@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-
+import { useRouter } from 'next/navigation';
 const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => void, onDelete: (id: string) => void }> = ({ campaigns, onEdit, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState<any | null>(null);
+  const router = useRouter();
 
   const openModal = (campaign: any) => {
     setSelectedCampaign(campaign);
@@ -12,6 +13,10 @@ const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => voi
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedCampaign(null);
+  };
+
+  const handleOpen = () => {
+     router.push(`/${selectedCampaign.campaignTitle}`);
   };
 
   return (
@@ -54,7 +59,14 @@ const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => voi
             <p className="text-black text-sm sm:text-base"><strong>Video:</strong> {selectedCampaign.video ? "Video" : "No Video"}</p>
             <div className="mt-4 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4">
               <button onClick={() => onEdit(selectedCampaign)} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Edit</button>
-              <button onClick={() => onDelete(selectedCampaign._id)} className="px-4 py-2 bg-red-500 text-white rounded-lg">Delete</button>
+              <button onClick={() => {
+                  onDelete(selectedCampaign._id);
+                  closeModal();
+                }} className="px-4 py-2 bg-red-500 text-white rounded-lg">Delete</button>
+               
+                  <button onClick={handleOpen} className="px-4 py-2 bg-green-500 text-white rounded-lg">Open</button>
+             
+
               <button onClick={closeModal} className="px-4 py-2 bg-gray-500 text-white rounded-lg">Close</button>
             </div>
           </div>

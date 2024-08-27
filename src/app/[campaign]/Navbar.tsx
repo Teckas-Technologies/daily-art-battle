@@ -66,7 +66,10 @@ export const Navbar:React.FC<{ logo:string }> = ({
           alt="GFXvs"
           width={50}
           height={50}
-          className="md:mb-0" // Add margin bottom for smaller screens
+          className="md:mb-0" 
+          style={{
+            aspectRatio: "1/1"
+          }}
         />
         </div>
 

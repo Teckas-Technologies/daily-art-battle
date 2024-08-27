@@ -21,6 +21,19 @@ const CampaignTable: React.FC = () => {
   return (
     <div>
        <NearWalletConnector />
+       <video autoPlay muted loop id="background-video" style={{ 
+    position: 'fixed', 
+    right: 0, 
+    bottom: 0, 
+    objectFit: 'cover', 
+    minWidth: '100%', 
+    minHeight: '100%', 
+    zIndex: -1,
+    filter: 'blur(5px) brightness(50%)'
+}}>
+    <source src="images/back.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+</video>
         <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
          Campaigns
         </h2>
