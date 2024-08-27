@@ -3,7 +3,7 @@ import React, { useState,useEffect } from "react";
 import { CampaignData,useFetchCampaignByTitle } from "@/hooks/campaignHooks";
 import { NearWalletConnector } from "@/components/NearWalletConnector";
 
-const CampaignTable: React.FC< void> = () => {
+const CampaignTable: React.FC = () => {
  const[campaigns,setCampaign] = useState<CampaignData[]>([]);
  const {fetchAllCampaign} = useFetchCampaignByTitle();
 
