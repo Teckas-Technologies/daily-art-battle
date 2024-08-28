@@ -108,19 +108,25 @@ const Admin: React.FC = () => {
                <h2 className="mt-10 text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
        Campaign creation
       </h2>
-               <button
-            onClick={() => setShowForm(!showForm)}
-            className="mt-10  px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
-          >
-            {showForm ? "Show Campaigns" : "Add Campaign"}
-          </button>
+      <p className="battle-table1 md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
+       
+      Unleash your creativity and impact! Start your own campaign today by clicking the 'Add Campaign' button below. Share your vision, rally supporters, and drive meaningful change. Your campaign could be the next big initiative that makes a difference!  </p>
+       <div className="flex justify-center">
+  <button
+    onClick={() => setShowForm(!showForm)}
+    className=" px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
+  >
+    {showForm ? "Show Campaigns" : "Add Campaign"}
+  </button>
+</div>
+
             <CampaignTable 
               campaigns={campaigns} 
               onEdit={handleEdit} 
               onDelete={handleDelete} 
             />
             </div>
-            <nav className="flex justify-center flex-wrap gap-5 mt-6 mb-10 pb-3">
+            <nav className="flex justify-center flex-wrap gap-5 mt-2 mb-10 pb-3">
           <p
             className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
               page <= 1
