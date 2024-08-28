@@ -9,10 +9,12 @@ interface Campaign extends Document {
   startDate:string;
   logo:string;
   endDate:string;
+  creatorId:string;
 }
 
 const campaignSchema = new mongoose.Schema({
     campaignTitle: { type: String, required: true,},
+    creatorId: { type: String, required: true,},
     campaignTheme: {type: String,required: true,},
     campaignWelcomeText: {type: String,required: true,},
     color: {type: String,required: false,},

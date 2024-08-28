@@ -1,5 +1,6 @@
 import { useFetchCampaignByTitle } from "@/hooks/campaignHooks";
 import React, { useRef, useState, useEffect } from "react";
+import { useMbWallet } from "@mintbase-js/react";
 
 interface CampaignFormProps {
   onCampaignSaved: () => void;
@@ -21,10 +22,11 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
     startDate: "",
     endDate: "",
     logo: "",
+    creatorId:"",
   });
 
   const [disable,setDisabled] = useState(false);
-
+  const { isConnected, connect, activeAccountId } = useMbWallet();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const {
@@ -46,6 +48,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
         startDate: campaign.startDate || "",
         endDate: campaign.endDate || "",
         logo: campaign.logo || "",
+        creatorId : campaign.creatorId || ""
       });
     }
   }, [campaign]);
@@ -86,6 +89,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
           setLoading(false);
           return;
         }
+        formData.creatorId = activeAccountId as string;
         res = await saveCampaign(formData);
       }
       setLoading(false);
@@ -101,6 +105,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
           startDate: "",
           endDate: "",
           logo: "",
+          creatorId : ""
         });
         if (videoInputRef.current) videoInputRef.current.value = "";
         if (logoInputRef.current) logoInputRef.current.value = "";

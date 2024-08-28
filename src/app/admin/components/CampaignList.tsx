@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
+import { NearWalletConnector } from "@/components/NearWalletConnector";
+
 const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => void, onDelete: (id: string) => void }> = ({ campaigns, onEdit, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState<any | null>(null);
@@ -16,35 +18,40 @@ const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => voi
   };
 
   const handleOpen = () => {
-     router.push(`/${selectedCampaign.campaignTitle}`);
+    router.push(`/${selectedCampaign.campaignTitle}`);
   };
+
+ 
 
   return (
     <div className="mt-8 overflow-x-auto w-full">
       <table className="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
         <thead className="border bg-gray-50">
           <tr>
-            <th className="px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-900 uppercase tracking-wider">URL</th>
-            <th className="px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-900 uppercase tracking-wider">Title</th>
-            <th className="px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-900 uppercase tracking-wider">Actions</th>
+            <th className="px-6 py-4 text-left text-xs sm:text-sm font-medium text-gray-900 uppercase tracking-wider">URL</th>
+            <th className="px-6 py-4 text-left text-xs sm:text-sm font-medium text-gray-900 uppercase tracking-wider">Title</th>
+            <th className="px-6 py-4 text-left text-xs sm:text-sm font-medium text-gray-900 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
+        
         <tbody className="bg-white divide-y divide-gray-200">
           {campaigns.map((campaign) => (
             <tr key={campaign._id}>
-              <td className="px-4 py-2 text-xs sm:text-base font-medium text-gray-900 break-words">
+              <td className="px-6 py-4 text-xs sm:text-base font-medium text-gray-900 break-words">
                 <a href={`http://${window.location.host}/${campaign.campaignTitle}`} target="_blank" className="text-blue-500 hover:underline">
                   {campaign.campaignTitle}
                 </a>
               </td>
-              <td className="px-4 py-2 text-xs max-w-5 sm:max-w-full lg:max-w-full md:max-w-full sm:text-base text-gray-500 break-words">{campaign.campaignTitle}</td>
-              <td className="px-4 py-2 text-xs sm:text-base text-gray-500 break-words">
+              <td className="px-6 py-4 text-xs max-w-5 sm:max-w-full lg:max-w-full md:max-w-full sm:text-base text-gray-500 break-words">{campaign.campaignTitle}</td>
+              <td className="px-6 py-4 text-xs sm:text-base text-gray-500 break-words">
                 <button onClick={() => openModal(campaign)} className="text-blue-500 hover:underline mr-4">View</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+     
+
 
       {isModalOpen && selectedCampaign && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4">
@@ -63,10 +70,7 @@ const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => voi
                   onDelete(selectedCampaign._id);
                   closeModal();
                 }} className="px-4 py-2 bg-red-500 text-white rounded-lg">Delete</button>
-               
-                  <button onClick={handleOpen} className="px-4 py-2 bg-green-500 text-white rounded-lg">Open</button>
-             
-
+              <button onClick={handleOpen} className="px-4 py-2 bg-green-500 text-white rounded-lg">Open</button>
               <button onClick={closeModal} className="px-4 py-2 bg-gray-500 text-white rounded-lg">Close</button>
             </div>
           </div>

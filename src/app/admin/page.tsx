@@ -3,31 +3,55 @@ import React, { useState, useEffect } from "react";
 import { useFetchCampaignByTitle } from "@/hooks/campaignHooks";
 import CampaignForm from "./components/CampaignForm";
 import CampaignTable from "./components/CampaignList";
+import { NearWalletConnector } from "@/components/NearWalletConnector";
 const Admin: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [editingCampaign, setEditingCampaign] = useState<any>(null);
   const { fetchCampaign, deleteCampaignById, updateCampaignById } = useFetchCampaignByTitle();
+  const [hasnext, setHasNext] = useState(false);
+ const [page, setPage] = useState(1);
+
 
   // Fetch all campaigns on component mount
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = async (val:any) => {
     try {
-      const result = await fetchCampaign();
+      console.log(page);
+      const result = await fetchCampaign(val);
+      console.log(result);
       if (result) {
-        setCampaigns(result); // Assuming result.data contains the campaigns
+        if (page > result.totalPages - 1) {
+          setHasNext(true);
+        } else {
+          setHasNext(false);
+        }
+        setCampaigns(result.campaign); // Assuming result.data contains the campaigns
       }
     } catch (error) {
       console.error("Failed to fetch campaigns:", error);
     }
   };
 
+  const handleNext = () => {
+    setPage((prevPage) => prevPage + 1);
+  //  fetchCampaigns(page + 1);
+  };
+  
+  const handlePrevious = () => {
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1);
+   //   fetchCampaigns(page - 1);
+    }
+  };
+   
+
   useEffect(() => {
-    fetchCampaigns();
-  }, []);
+    fetchCampaigns(page);
+  }, [page]);
 
   // Handle campaign saved event from form
   const handleCampaignSaved = () => {
-    fetchCampaigns();
+    fetchCampaigns(page);
     setShowForm(false); // Hide the form after saving
     setEditingCampaign(null); // Reset the editing campaign
   };
@@ -50,7 +74,7 @@ const Admin: React.FC = () => {
       const result = await deleteCampaignById(id);
       console.log(result);
       if (result) {
-        fetchCampaigns();
+        fetchCampaigns(page);
       }
     } catch (error) {
       console.error("Failed to delete campaign:", error);
@@ -74,20 +98,50 @@ const Admin: React.FC = () => {
     Your browser does not support the video tag.
 </video>
         <div className="w-full">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="mb-4 px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
-          >
-            {showForm ? "Show Campaigns" : "Add Campaign"}
-          </button>
+        <h2 className="mt-10 text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
+       Campaign creation
+      </h2>
           {showForm ? (
             <CampaignForm onCampaignSaved={handleCampaignSaved} onClose={handleFormClose} campaign={editingCampaign} />
           ) : (
+            <>
+               <NearWalletConnector/>
+               <div className="mt-10">
+               <button
+            onClick={() => setShowForm(!showForm)}
+            className="mt-10  px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
+          >
+            {showForm ? "Show Campaigns" : "Add Campaign"}
+          </button>
             <CampaignTable 
               campaigns={campaigns} 
               onEdit={handleEdit} 
               onDelete={handleDelete} 
             />
+            </div>
+            <nav className="flex justify-center flex-wrap gap-5 mt-6 mb-10 pb-3">
+          <p
+            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+              page <= 1
+                ? "cursor-not-allowed"
+                : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
+            }`}
+            onClick={page > 1 ? handlePrevious : undefined}
+          >
+            Previous
+          </p>
+          <p
+            className={` shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
+              hasnext
+                ? "cursor-not-allowed"
+                : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
+            }`}
+            onClick={hasnext ? undefined : handleNext}
+          >
+            Next
+            </p>
+        </nav>
+</>
           )}
         </div>
       </div>

@@ -63,8 +63,10 @@ export const findPreviousBattlesAsc = async (page: number, limit: number,campaig
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.find({ endTime: { $lt: today },campaignId:campaignId}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
-  return { pastBattles };
+  return { pastBattles,totalDocuments,totalPages };
 }
 
 export const findPreviousBattlesByVotes = async (page: number, limit: number,campaignId:string): Promise<any> => {
@@ -72,6 +74,8 @@ export const findPreviousBattlesByVotes = async (page: number, limit: number,cam
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.aggregate([
     {
       $match: { endTime: { $lt: today },campaignId:campaignId }
@@ -91,7 +95,7 @@ export const findPreviousBattlesByVotes = async (page: number, limit: number,cam
       $limit: limit
     }
   ]);
-  return { pastBattles };
+  return { pastBattles,totalDocuments,totalPages };
 }
 
 export const findPreviousBattlesByVotesAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
@@ -99,6 +103,8 @@ export const findPreviousBattlesByVotesAsc = async (page: number, limit: number,
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.aggregate([
     {
       $match: { endTime: { $lt: today } ,campaignId:campaignId}
@@ -118,7 +124,7 @@ export const findPreviousBattlesByVotesAsc = async (page: number, limit: number,
       $limit: limit
     }
   ]);
-  return { pastBattles };
+  return { pastBattles,totalDocuments,totalPages };
 }
 
 export const findAllBattles = async (): Promise<any> => {

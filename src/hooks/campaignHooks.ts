@@ -13,6 +13,7 @@ export interface CampaignData {
   startDate:string;
   endDate:string;
   logo:string;
+  creatorId:string;
 }
 
 export const useFetchCampaignByTitle = () => {
@@ -39,11 +40,11 @@ export const useFetchCampaignByTitle = () => {
             }
         };
 
-        const fetchCampaign = async () => {
+        const fetchCampaign = async (page: number, limit: number = 10) => {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`/api/campaign?queryType=campaigns`);
+                const response = await fetch(`/api/campaign?queryType=campaigns&page=${page}&limit=${limit}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const res = await response.json();
                 
@@ -58,11 +59,11 @@ export const useFetchCampaignByTitle = () => {
         };
 
 
-        const fetchAllCampaign = async () => {
+        const fetchAllCampaign = async (page: number, limit: number = 10) => {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`/api/campaign?queryType=campaignsAll`);
+                const response = await fetch(`/api/campaign?queryType=campaignsAll&page=${page}&limit=${limit}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const res = await response.json();
                 
