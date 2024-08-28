@@ -22,17 +22,15 @@ const CampaignTable: React.FC = () => {
 
  useEffect(() => {
   fetchCampaign(page);
- }, [])
+ }, [page])
 
  const handleNext = () => {
   setPage((prevPage) => prevPage + 1);
-  fetchCampaign(page + 1);
 };
 
 const handlePrevious = () => {
   if (page > 1) {
     setPage((prevPage) => prevPage - 1);
-    fetchCampaign(page - 1);
   }
 };
  

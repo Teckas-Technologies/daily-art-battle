@@ -19,28 +19,31 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: str
   const [sort, setSort] = useState("date");
   useEffect(() => {
     if (battles && battles.pastBattles) {
+     
       if (page > battles.totalPages - 1) {
         setHasNext(true);
       } else {
         setHasNext(false);
       }
+     
+      console.log(battles.totalPages,page)
       setPreviousBattles(battles.pastBattles);
     }
   }, [battles]);
 
+
+
   useEffect(()=>{
     fetchMoreBattles(campaignId,sort, page);
-  },[campaignId])
+  },[campaignId,page])
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreBattles(campaignId,sort, page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreBattles(campaignId,sort, page - 1);
     }
   };
 

@@ -135,8 +135,8 @@ export const useFetchBattles = () => {
               const response = await fetch(`/api/battle?queryType=battles&campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`);
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
-           
               setBattles(data);
+              return data;
           } catch (err) {
               console.error('Error fetching battles:', err);
               setError("Error fetching battles!");
