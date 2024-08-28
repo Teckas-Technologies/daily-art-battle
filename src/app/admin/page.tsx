@@ -98,15 +98,16 @@ const Admin: React.FC = () => {
     Your browser does not support the video tag.
 </video>
         <div className="w-full">
-        <h2 className="mt-10 text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
-       Campaign creation
-      </h2>
+      
           {showForm ? (
             <CampaignForm onCampaignSaved={handleCampaignSaved} onClose={handleFormClose} campaign={editingCampaign} />
           ) : (
             <>
                <NearWalletConnector/>
-               <div className="mt-10">
+               <div className="mt-[70px]">
+               <h2 className="mt-10 text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
+       Campaign creation
+      </h2>
                <button
             onClick={() => setShowForm(!showForm)}
             className="mt-10  px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
