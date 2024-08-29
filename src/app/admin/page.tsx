@@ -4,6 +4,9 @@ import { useFetchCampaignByTitle } from "@/hooks/campaignHooks";
 import CampaignForm from "./components/CampaignForm";
 import CampaignTable from "./components/CampaignList";
 import { NearWalletConnector } from "@/components/NearWalletConnector";
+import { useMbWallet } from "@mintbase-js/react";
+
+
 const Admin: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -11,6 +14,7 @@ const Admin: React.FC = () => {
   const { fetchCampaign, deleteCampaignById, updateCampaignById } = useFetchCampaignByTitle();
   const [hasnext, setHasNext] = useState(false);
  const [page, setPage] = useState(1);
+ const { isConnected, connect, activeAccountId } = useMbWallet();
 
 
   // Fetch all campaigns on component mount
@@ -113,8 +117,9 @@ const Admin: React.FC = () => {
       Unleash your creativity and impact! Start your own campaign today by clicking the 'Add Campaign' button below. Share your vision, rally supporters, and drive meaningful change. Your campaign could be the next big initiative that makes a difference!  </p>
        <div className="flex justify-center">
   <button
+  disabled={!activeAccountId}
     onClick={() => setShowForm(!showForm)}
-    className=" px-4 py-2 bg-blue-500 text-sm text-white rounded-lg"
+    className={`px-4 py-2 bg-blue-500 text-sm text-white rounded-lg ${activeAccountId?"":"cursor-not-allowed"}`}
   >
     {showForm ? "Show Campaigns" : "Add Campaign"}
   </button>
