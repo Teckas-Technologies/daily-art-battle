@@ -268,7 +268,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                 className="block w-full text-black py-2 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500"
               />
                 {loadingLogo && (
-                  <div role="status" className="mt-2 ml-2">
+                  <div role="status" className="ml-2">
                     <svg
                       aria-hidden="true"
                       className="w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
