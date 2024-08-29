@@ -60,7 +60,9 @@ export const Navbar:React.FC<{ logo:string }> = ({
           className=" md:mb-0" // Add margin bottom for smaller screens
         />
            </a>
-       <p style={{fontFamily:'saved-zero'}} className="ml-2 mr-2">x</p>
+           {logo&&(
+            <>
+       <p  className="ml-2 mr-2">x</p>
         <img
           src={logo}
           alt="GFXvs"
@@ -71,6 +73,8 @@ export const Navbar:React.FC<{ logo:string }> = ({
             aspectRatio: "1/1"
           }}
         />
+        </>
+      )}
         </div>
 
       
