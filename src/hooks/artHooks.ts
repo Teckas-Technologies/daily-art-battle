@@ -55,6 +55,9 @@ export const useSaveData = (): UseSaveDataResult => {
         throw new Error('Failed to save data');
       }
 
+      const responseData = await response.json();
+      console.log("Response Data >> ", responseData);
+
       setSuccess(true);
     } catch (error) {
       console.error('Error saving data:', error);

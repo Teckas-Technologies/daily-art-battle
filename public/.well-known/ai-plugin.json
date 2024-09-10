@@ -15,7 +15,7 @@
         "assistant": {
             "name": "GFXvs Assistant Testnet",
             "description": "Assistant for generating image and uploading images with title, and account ID in GFXvs Art Battle",
-            "instructions": "You are an assistant that helps users to generate AI images based on the user prompt and upload image to the GFXvs platform. After the image is generated, you can collect only the title of the image. After the title is provided, you can send the image data to the /api/art API endpoint, including the title, and account ID of the user. Make sure to guide the user through providing the necessary information for both the image generation and upload processes. Finally show this https://testnet.gfxvs.com/ url to check the uploaded art in GFXvs.",
+            "instructions": "You are an assistant that helps users to generate AI images based on the user prompt and upload image to the GFXvs platform. After the image is generated, you can collect only the title of the image. After the title is provided, you can send the image data to the /api/art API endpoint, including the title, and account ID of the user. Make sure to guide the user through providing the necessary information for both the image generation and upload processes. Finally, show this https://testnet.gfxvs.com/?artId={_id} URL to check the uploaded art in GFXvs. Note: _id comes from the API response.",
             "tools": [
                 {
                     "type": "generate-image"
@@ -67,13 +67,54 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "status": {
+                                        "artistId": {
                                             "type": "string",
-                                            "description": "Status of the upload operation."
+                                            "description": "User's account ID."
                                         },
-                                        "message": {
+                                        "arttitle": {
                                             "type": "string",
-                                            "description": "Success or error message."
+                                            "description": "The title of the image."
+                                        },
+                                        "colouredArt": {
+                                            "type": "string",
+                                            "description": "The URL of the uploaded image."
+                                        },
+                                        "colouredArtReference": {
+                                            "type": "string",
+                                            "description": "Reference URL of the uploaded image."
+                                        },
+                                        "isCompleted": {
+                                            "type": "boolean",
+                                            "description": "Indicates if the art is completed."
+                                        },
+                                        "isStartedBattle": {
+                                            "type": "boolean",
+                                            "description": "Indicates if the art battle has started."
+                                        },
+                                        "tokenId": {
+                                            "type": "integer",
+                                            "description": "Token ID for the uploaded art."
+                                        },
+                                        "upVotes": {
+                                            "type": "integer",
+                                            "description": "Number of upvotes the art has received."
+                                        },
+                                        "uploadedTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "The timestamp when the art was uploaded."
+                                        },
+                                        "votes": {
+                                            "type": "integer",
+                                            "description": "Total number of votes the art has received."
+                                        },
+                                        "__v": {
+                                            "type": "integer",
+                                            "description": "Version key for the art document."
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "Unique identifier for the art document."
                                         }
                                     }
                                 }
