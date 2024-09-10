@@ -1,9 +1,21 @@
 import { connectToDatabase } from "./mongoose";
 import ArtTable from "../model/ArtTable";
 import UpVoting from "../model/UpVoting";
+import uploadArweaveUrl from "./uploadArweaveUrl";
+
 export async function scheduleArt(data: any): Promise<any> {
   await connectToDatabase();
   const startDate = new Date();
+  if(!data.artistId || !data.colouredArt){
+    return;
+  }
+  if(!data.arttitle) {
+    data.arttitle = "ART Battle"
+  }
+  if (!data.colouredArtReference && data.colouredArt) {
+    const res = await uploadArweaveUrl(data.colouredArt);
+    data.colouredArtReference = res.referenceUrl;
+  }
   const newArt = new ArtTable({
     ...data,
     uploadedTime: startDate,

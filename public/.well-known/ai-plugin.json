@@ -1,0 +1,87 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GFXvs API Testnet",
+        "description": "API for interacting with GFXvs operations including gfxvs art upload.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://testnet.gfxvs.com/"
+        }
+    ],
+    "x-mb": {
+        "account-id": "golden_comet.near",
+        "assistant": {
+            "name": "GFXvs Assistant Testnet",
+            "description": "Assistant for generating image and uploading images with title, and account ID in GFXvs Art Battle",
+            "instructions": "You are an assistant that helps users to generate AI images based on the user prompt and upload image to the GFXvs platform. After the image is generated, you can collect only the title of the image. After the title is provided, you can send the image data to the /api/art API endpoint, including the title, and account ID of the user. Make sure to guide the user through providing the necessary information for both the image generation and upload processes. Finally show this https://testnet.gfxvs.com/ url to check the uploaded art in GFXvs.",
+            "tools": [
+                {
+                    "type": "generate-image"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/api/art": {
+            "post": {
+                "summary": "Upload image data",
+                "description": "Uploads image data including colouredArt, arttitle and artistId.",
+                "operationId": "uploadImageData",
+                "requestBody": {
+                    "description": "Image upload request body",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "colouredArt": {
+                                        "type": "string",
+                                        "description": "The URL of the image."
+                                    },
+                                    "arttitle": {
+                                        "type": "string",
+                                        "description": "The title of the image."
+                                    },
+                                    "artistId": {
+                                        "type": "string",
+                                        "description": "User's account ID."
+                                    }
+                                },
+                                "required": [
+                                    "colouredArt",
+                                    "arttitle",
+                                    "artistId"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Image data uploaded successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "Status of the upload operation."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Success or error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
