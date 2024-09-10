@@ -108,7 +108,7 @@ export const updateArtById = async (id: any): Promise<any> => {
 
 export const findAndupdateArtById = async (id: any,participantId:any): Promise<any> => {
   await connectToDatabase();
-  const vote = await UpVoting.create({ participantId, artId:id });
+  const vote = await UpVoting.create({ participantId, artId:id,votesCount:1 });
    await ArtTable.findByIdAndUpdate(
     id,
     { $inc: { upVotes: 1 } },

@@ -154,3 +154,96 @@
   font-size: 12px;
   margin-top: 4px;
 }
+
+
+.color{
+  background-color: #00ff00;
+}
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 5s ease infinite;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.modal {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.section {
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+@keyframes shapeBlinker {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.slider__shapes {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Ensure images don't overflow */
+  z-index: 0; /* Set to 0 to stay behind content */
+}
+
+.slider__shapes img {
+  position: absolute;
+  animation: shapeBlinker 1.5s linear infinite;
+  filter: blur(5px) brightness(50%) grayscale(40%);
+  opacity: 0;
+  z-index: 0; /* Ensure it stays within the background layer */
+}
+
+.slider__shapes img:nth-child(1) {
+  left: 10%;
+  top: 7%;
+  animation-delay: 0.2s;
+}
+
+.slider__shapes img:nth-child(2) {
+  left: 40%;
+  top: 14%;
+  animation-delay: 0.4s;
+}
+
+.slider__shapes img:nth-child(3) {
+  left: 60%;
+  top: 7%;
+  animation-delay: 0.6s;
+}
+
+.slider__shapes img:nth-child(4) {
+  left: 80%;
+  top: 12%;
+  animation-delay: 0.8s;
+}
