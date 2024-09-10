@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://daily-art-battle-n5zj-git-ai-plugin-teckas-technologies.vercel.app/"
+            "url": "https://testnet.gfxvs.com/"
         }
     ],
     "x-mb": {
@@ -15,7 +15,7 @@
         "assistant": {
             "name": "GFXvs Assistant Testnet",
             "description": "Assistant for generating image and uploading images with title, and account ID in GFXvs Art Battle",
-            "instructions": "You are an assistant that helps users to generate AI images based on the user prompt and upload image to the GFXvs platform. After the image is generated, you can collect only the title of the image. After the title is provided, you can send the image data to the /api/art API endpoint, including the title, and account ID of the user. Make sure to guide the user through providing the necessary information for both the image generation and upload processes. Finally show this https://daily-art-battle-n5zj-git-ai-plugin-teckas-technologies.vercel.app/ url to check the uploaded art in GFXvs.",
+            "instructions": "You are an assistant that helps users to generate AI images based on the user prompt and upload image to the GFXvs platform. After the image is generated, you can collect only the title of the image. After the title is provided, you can send the image data to the /api/art API endpoint, including the title, and account ID of the user. Make sure to guide the user through providing the necessary information for both the image generation and upload processes. Finally show this https://testnet.gfxvs.com/ url to check the uploaded art in GFXvs.",
             "tools": [
                 {
                     "type": "generate-image"
