@@ -16,7 +16,7 @@ export async function scheduleArt(data: any): Promise<any> {
     console.log("Entered! ")
     // const res = await uploadArweaveUrl(data.colouredArt);
     // data.colouredArtReference = res.referenceUrl;
-    data.colouredArtReference = data.colouredArt;
+    data.colouredArtReference = "fgdmdgsfhshektsdsryddudtud655684mvhjf";
   }
   const newArt = new ArtTable({
     ...data,
