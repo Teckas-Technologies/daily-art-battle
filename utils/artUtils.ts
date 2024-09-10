@@ -13,11 +13,12 @@ export async function scheduleArt(data: any): Promise<any> {
     data.arttitle = "ART Battle"
   }
   if (!data.colouredArtReference && data.colouredArt) {
-    console.log("Entered! ")
-    // const res = await uploadArweaveUrl(data.colouredArt);
-    // data.colouredArtReference = res.referenceUrl;
-    data.colouredArtReference = data.colouredArt;
+    console.log("Entered! ", data.colouredArt)
+    const res = await uploadArweaveUrl(data.colouredArt);
+    data.colouredArtReference = res.referenceUrl;
+    // data.colouredArtReference = data.colouredArt;
   }
+  console.log("Setted! ", data.colouredArt)
   const newArt = new ArtTable({
     ...data,
     uploadedTime: startDate,
