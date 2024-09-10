@@ -13,6 +13,7 @@ export async function scheduleArt(data: any): Promise<any> {
     data.arttitle = "ART Battle"
   }
   if (!data.colouredArtReference && data.colouredArt) {
+    console.log("Entered! ")
     const res = await uploadArweaveUrl(data.colouredArt);
     data.colouredArtReference = res.referenceUrl;
   }
