@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://2739-2405-201-e062-f083-dcfc-f36d-bcff-62af.ngrok-free.app"
+            "url": "https://testnet.gfxvs.com"
         }
     ],
     "x-mb": {
