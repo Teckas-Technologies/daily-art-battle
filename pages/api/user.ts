@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse} from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
-import User from '../../model/User';
+import User ,{UserTable} from '../../model/User';
 import ArtTable from '../../model/ArtTable';
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
 
@@ -8,8 +8,38 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         try{
         await connectToDatabase();
         const data = req.body;
-        const response = await User.create(data);
-        res.status(201).json({message:"Profile created successfully"});
+        const existingUser = await User.findOne({
+            $or: [
+              { email: data.email },
+              { walletAddress: data.walletAddress }
+            ]
+          });
+        if (existingUser) {
+          return res.status(400).json({ error: 'User already exists' });
+        }
+        const referralCodeGenerated: string = Math.random().toString(36).substring(7);
+        let referrer : UserTable | null = null;
+        if (data.referralCode) {
+          referrer = await User.findOne({ referralCode:data.referralCode });
+          if (!referrer) {
+            return res.status(400).json({ error: 'Invalid referral code' });
+          }
+        }
+        const newUser = new User({
+            ...data,
+            referralCode: referralCodeGenerated,
+            referredBy: referrer ? referrer._id : null,
+          });
+    
+          if (referrer) {
+            referrer.referredUsers.push(newUser._id);
+            referrer.gfxCoin += 100;
+            await referrer.save();
+    
+            newUser.gfxCoin += 50; 
+          }
+          const response = await newUser.save();
+        res.status(201).json({user:response});
         }
         catch(error){
             res.status(500).json({error});

@@ -1,7 +1,7 @@
 
 import mongoose, { Document, model } from 'mongoose';
 
-interface UserTable extends Document {
+export interface UserTable extends Document {
   profileImg: string;
   firstName: string;
   lastName: string;
@@ -14,13 +14,16 @@ interface UserTable extends Document {
   isXConnected:boolean;
   isEmailVerified:boolean;
   isRegistered:boolean;
+  referralCode: string;
+  referredBy?: mongoose.Types.ObjectId;
+  referredUsers: mongoose.Types.ObjectId[];
 }
 
 const UserTableSchema = new mongoose.Schema({
   profileImg: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true ,unique:true},
   walletAddress: { type: String, required: true ,unique:true},
   gfxCoin:  { type: Number, default: 0 },
   isNearDropClaimed: { type: Boolean, default: false },
@@ -29,6 +32,14 @@ const UserTableSchema = new mongoose.Schema({
   isXConnected: { type: Boolean, default: false },
   isEmailVerified: { type: Boolean, default: false },
   isRegistered: { type: Boolean, default: false },
+  referralCode: {type: String,unique: true,},
+  referredBy: {type: mongoose.Schema.Types.ObjectId,ref: 'UserTable',},
+  referredUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserTable',
+    },
+  ],
 });
 
 export default mongoose.models.UserTable || model<UserTable>('UserTable', UserTableSchema);
