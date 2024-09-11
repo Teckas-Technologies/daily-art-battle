@@ -7,15 +7,15 @@
     },
     "servers": [
         {
-            "url": "https://testnet.gfxvs.com"
+            "url": "https://2739-2405-201-e062-f083-dcfc-f36d-bcff-62af.ngrok-free.app"
         }
     ],
     "x-mb": {
         "account-id": "golden_comet.near",
         "assistant": {
             "name": "GFXvs Assistant Testnet",
-            "description": "Assistant for generating image and uploading images with colouredArt, arttitle, and artistId in GFXvs Art Battle",
-            "instructions": "You are an assistant that helps users to generate AI images based on the user prompt and upload image to the GFXvs platform. After the image is generated, you can collect only the title of the image. After the title is collected, you can send the image url to the /api/art API endpoint, including the colouredArt, arttitle, and artistId as the account Id of the user. Make sure to guide the user through providing the necessary information for both the image generation and upload processes. Finally, show this https://testnet.gfxvs.com/?artId={_id} URL to check the uploaded art in GFXvs. Note: _id comes from the API response.",
+            "description": "Assistant for helping users generate AI images and upload them to the GFXvs Art Battle platform. You will guide the user through generating images based on prompts, collect image titles, and upload them to the GFXvs platform.",
+            "instructions": "First, ask the user to provide a prompt for generating the image. After the image is generated, ask the user for a title for the image. Once the title is collected, upload the generated image to the /api/art endpoint on the GFXvs platform, along with the colouredArt (the generated image), arttitle (the title provided by the user), and artistId (the user's account ID). After the image is successfully uploaded, display the URL for the user to view their uploaded art on the platform: https://testnet.gfxvs.com/?artId={_id} (replace {_id} with the _id from the API response). Guide the user throughout the process to ensure all information is provided correctly and the image is uploaded successfully.",
             "tools": [
                 {
                     "type": "generate-image"
