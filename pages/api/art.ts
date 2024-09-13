@@ -11,6 +11,8 @@ import {
   findAllArtsByDate,
   findAllArtsByVoteAsc,
   findAllArtsByDateAsc,
+  findMyArtworks,
+  fetchArtworksByArtistId,
 } from "../../utils/artUtils";
 import User from "../../model/User";
 
@@ -72,6 +74,25 @@ export default async function handler(
               .status(200)
               .json({ battles, totalDocuments, totalPages });
           }
+        } else if (queryType === "myartworks") {
+          const artistId = req.query.artistId as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 10;
+
+          const { artworks, totalDocuments, totalPages } = await findMyArtworks(
+            artistId,
+            page,
+            limit
+          );
+          return res.status(200).json({ artworks, totalDocuments, totalPages });
+        } else if (queryType === "fetchArtworksByArtistId") {
+          const artistId = req.query.artistId as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 10;
+
+          const { artworks, totalDocuments, totalPages } =
+            await fetchArtworksByArtistId(artistId, page, limit);
+          return res.status(200).json({ artworks, totalDocuments, totalPages });
         } else {
           const sort = req.query.sort;
           if (sort == "voteDsc") {

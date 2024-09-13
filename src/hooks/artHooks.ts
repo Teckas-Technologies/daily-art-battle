@@ -32,6 +32,19 @@ interface UseSaveDataResult {
   error: string | null; 
   success: boolean | null;
 }
+interface UseSearchArtistsResult {
+  artists: ArtData[];
+  loading: boolean;
+  error: string | null;
+  searchArtists: (searchTerm: string) => Promise<void>;
+}
+interface UseFetchArtByArtistIdResult {
+  arts: ArtData[];
+  loading: boolean;
+  error: string | null;
+  fetchArtByArtistId: (artistId: string, page: number, limit?: number) => Promise<void>;
+}
+
 export const useSaveData = (): UseSaveDataResult => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -161,4 +174,64 @@ export const useSaveData = (): UseSaveDataResult => {
         
           return { fetchArtById};
             }
-     
+            export const useFetchMyArtworks = (artistId: string) => {
+              const [artworks, setArtworks] = useState<ArtData[]>([]);
+              const [totalPages, setTotalPages] = useState<number>(0);
+              const [loading, setLoading] = useState<boolean>(false);
+              const [error, setError] = useState<string | null>(null);
+            
+              const fetchMyArtworks = async (page: number, limit: number = 10) => {
+                setLoading(true);
+                setError(null);
+            
+                try {
+                  const response = await fetch(`/api/art?queryType=myartworks&artistId=${artistId}&page=${page}&limit=${limit}`);
+                  if (!response.ok) {
+                    throw new Error('Failed to fetch artworks');
+                  }
+            
+                  const data = await response.json();
+                  setArtworks(data.artworks);
+                  setTotalPages(data.totalPages);
+                } catch (error) {
+                  console.error('Error fetching artworks:', error);
+                  setError('Error fetching artworks');
+                } finally {
+                  setLoading(false);
+                }
+              };
+            
+              useEffect(() => {
+                if (artistId) {
+                  fetchMyArtworks(1); 
+                }
+              }, [artistId]); 
+            
+              return { artworks, totalPages, loading, error, fetchMoreArtworks: fetchMyArtworks };
+            };
+            
+            export const useFetchArtByArtistId = (): UseFetchArtByArtistIdResult => {
+              const [arts, setArts] = useState<ArtData[]>([]);
+              const [loading, setLoading] = useState<boolean>(false);
+              const [error, setError] = useState<string | null>(null);
+              
+              const fetchArtByArtistId = async (artistId: string, page: number, limit: number = 10) => {
+                setLoading(true);
+                setError(null);
+                try {
+                  const response = await fetch(`/api/art?queryType=fetchArtworksByArtistId&artistId=${artistId}&page=${page}&limit=${limit}`);
+                  if (!response.ok) throw new Error('Network response was not ok');
+                  const data = await response.json();
+                  console.log("data-->",data);
+                  
+                  setArts(data.arts); 
+                } catch (err) {
+                  setError('Error fetching art by artist ID');
+                  console.error('Error fetching art by artist ID:', err);
+                } finally {
+                  setLoading(false);
+                }
+              };
+            
+              return { arts, loading, error, fetchArtByArtistId };
+            };
