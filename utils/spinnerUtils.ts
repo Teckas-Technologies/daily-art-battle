@@ -1,23 +1,13 @@
 import Battle from "../model/Battle";
 const axios = require('axios');
 import { connectToDatabase } from "./mongoose";
-export default async function spinner() {
-  await connectToDatabase();
-  const battle = await Battle.findOne({
-    isNftMinted: false,
-    isBattleEnded: true
-  });
-
-  if (!battle) {
-    console.log("No battle found");
-    return;
-  }
+export default async function spinner(artAcolouredArt:string,artBcolouredArt:string) {
 
   try {
     // Fetch images from Arweave URLs
     const [imageAResponse, imageBResponse] = await Promise.all([
-      axios.get(battle.artAcolouredArt, { responseType: 'arraybuffer' }),
-      axios.get(battle.artBcolouredArt, { responseType: 'arraybuffer' })
+      axios.get(artAcolouredArt, { responseType: 'arraybuffer' }),
+      axios.get(artBcolouredArt, { responseType: 'arraybuffer' })
     ]);
 
     const imageA = Buffer.from(imageAResponse.data).toString('base64');

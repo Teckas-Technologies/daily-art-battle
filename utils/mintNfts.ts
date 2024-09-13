@@ -16,15 +16,17 @@ interface Transfer {
 export const mintNfts = async (): Promise<void> => {
     await connectToDatabase();
     console.log("Minting nft");
-    const battle = await Battle.findOne({
+    const battles = await Battle.find({
         isNftMinted: false,
         isBattleEnded: true
     }); 
-    const ress = await spinner();
+    for(const battle of battles){
+    console.log(battle);
+    const ress = await spinner(battle.artAcolouredArt,battle.artBcolouredArt);
     console.log("Uploading arweave")
-    const response = await uploadArweave(ress);
-    battle.grayScale = response.url;
-    battle.grayScaleReference = response.referenceUrl;
+    // const response = await uploadArweave(ress);
+    battle.grayScale = 'https://arweave.net/Wkd3a8oocyNi07otNV0FAtgPIRl4jiicFksrIUqj5dg';
+    battle.grayScaleReference ='https://arweave.net/TPz5baoawMaRkcv1r4n3R0XyM6gvSd4APIib9-RFbFY';
     console.log("Fetching completed battles",battle);
     if(battle){
       if(battle.artAVotes>0){
@@ -70,6 +72,7 @@ export const mintNfts = async (): Promise<void> => {
        console.log("saved",res);
         }
     }
+  }
 }
 
 const mintNFTsForParticipants = async (artVoters: number, grayScale: string, grayScaleReference: string): Promise<string[]> => {

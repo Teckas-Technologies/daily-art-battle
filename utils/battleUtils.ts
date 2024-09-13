@@ -36,125 +36,117 @@ export async function deleteAll(): Promise<void> {
   await Battle.deleteMany({});
 }
 
-export const findTodaysBattle = async (): Promise<any> => {
+export const findTodaysBattle = async (campaignId:string): Promise<any> => {
   await connectToDatabase();
   const now = new Date();
   const startOfDay = new Date(now.setHours(0, 0, 0, 0));
   const endOfDay = new Date(now.setHours(23, 59, 59, 999));
 
   return Battle.findOne({
+    campaignId:campaignId,
     startTime: { $lte: endOfDay },
-    endTime: { $gte: startOfDay },
+    endTime: { $gte: startOfDay }
   });
 };
 
-export const findPreviousBattles = async (
-  page: number,
-  limit: number
-): Promise<any> => {
+export const findPreviousBattles = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } })
-    .sort({ startTime: -1, _id: 1 })
-    .skip(skip)
-    .limit(limit);
-  return { pastBattles };
-};
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } ,campaignId:campaignId}).sort({ startTime: -1,_id: 1  }).skip(skip).limit(limit);
+  return { pastBattles ,totalDocuments,totalPages};
+}
 
-export const findPreviousBattlesAsc = async (
-  page: number,
-  limit: number
-): Promise<any> => {
+export const findPreviousBattlesAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } })
-    .sort({ startTime: 1, _id: 1 })
-    .skip(skip)
-    .limit(limit);
-  return { pastBattles };
-};
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today },campaignId:campaignId}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
+  return { pastBattles,totalDocuments,totalPages };
+}
 
-export const findPreviousBattlesByVotes = async (
-  page: number,
-  limit: number
-): Promise<any> => {
+export const findPreviousBattlesByVotes = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.aggregate([
     {
-      $match: { endTime: { $lt: today } },
+      $match: { endTime: { $lt: today },campaignId:campaignId }
     },
     {
       $addFields: {
-        totalVotes: { $add: ["$artAVotes", "$artBVotes"] },
-      },
+        totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
+      }
     },
     {
-      $sort: { totalVotes: -1, _id: 1 },
+      $sort: { totalVotes: -1, _id: 1 }
     },
     {
-      $skip: skip,
+      $skip: skip
     },
     {
-      $limit: limit,
-    },
+      $limit: limit
+    }
   ]);
-  return { pastBattles };
-};
+  return { pastBattles,totalDocuments,totalPages };
+}
 
-export const findPreviousBattlesByVotesAsc = async (
-  page: number,
-  limit: number
-): Promise<any> => {
+export const findPreviousBattlesByVotesAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
+  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.aggregate([
     {
-      $match: { endTime: { $lt: today } },
+      $match: { endTime: { $lt: today } ,campaignId:campaignId}
     },
     {
       $addFields: {
-        totalVotes: { $add: ["$artAVotes", "$artBVotes"] },
-      },
+        totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
+      }
     },
     {
-      $sort: { totalVotes: 1, _id: 1 },
+      $sort: { totalVotes: 1, _id: 1 }
     },
     {
-      $skip: skip,
+      $skip: skip
     },
     {
-      $limit: limit,
-    },
+      $limit: limit
+    }
   ]);
-  return { pastBattles };
-};
+  return { pastBattles,totalDocuments,totalPages };
+}
 
 export const findAllBattles = async (): Promise<any> => {
   await connectToDatabase();
   return Battle.find({});
-};
+}
 
-export const updateBattle = async (battleId: any): Promise<any> => {
+
+export const updateBattle = async(battleId: any): Promise<any> => {
   await connectToDatabase();
   const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
+      yesterday.setDate(yesterday.getDate() - 1);
 
-  const updatedBattle = await Battle.findByIdAndUpdate(
-    battleId,
-    { endTime: yesterday },
-    { new: true }
-  );
-  console.log("Updated!");
-};
+      const updatedBattle = await Battle.findByIdAndUpdate(
+        battleId,
+        { endTime: yesterday },
+        { new: true }
+      );
+      console.log("Updated!");
+}
 
 export const findBattlesByArtist = async (artistId: string): Promise<any> => {
   try {

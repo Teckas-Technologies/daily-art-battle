@@ -1,6 +1,6 @@
 export const ART_UPLOAD = 50;
 export const ART_UPVOTE = 5;
-export const MAX_UPVOTE = 8;
+export const MAX_UPVOTE = 7;
 export const AI_IMAGE = 1;
 export const REFFERER = 100;
 export const REFFERED_USER = 50;
@@ -12,3 +12,4 @@ export const EMAIL_VERIFY = 10;
 export const REGISTERED = 100;
 export const RARE_NFT_BURN = 1000;
 export const PARTICIPATION_NFT_BURN =10;
+export const CAMPAIGN_CREATION_COST = 10000;

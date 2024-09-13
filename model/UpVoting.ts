@@ -3,7 +3,8 @@ import mongoose, { Document, Model } from 'mongoose';
 interface ArtVoting extends Document {
   participantId: string;
   artId: string;
-  votesCount:Number
+  votesCount:Number;
+  campaignId:string;
 }
 
 const votingSchema = new mongoose.Schema({
@@ -20,6 +21,7 @@ const votingSchema = new mongoose.Schema({
     required: true,
     default:0
   },
+  campaignId: { type: String, required: true },
 }, { timestamps: true });
 
 const UpVoting: Model<ArtVoting> = mongoose.models.UpVoting || mongoose.model<ArtVoting>('UpVoting', votingSchema);

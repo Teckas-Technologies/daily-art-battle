@@ -20,13 +20,14 @@ export default async function handler(
 
   if (req.method === "POST") {
     try {
-      const { participantId, battleId, votedFor } = req.body;
+      const { participantId, battleId, votedFor,campaignId } = req.body;
       const user = await User.findOne({ walletAddress: participantId });
       if (user) {
         if (user.gfxCoin >= ART_VOTE) {
           const existingVote = await Voting.findOne({
             participantId,
             battleId,
+            campaignId
           });
           if (existingVote) {
             return res
@@ -41,6 +42,7 @@ export default async function handler(
             participantId,
             battleId,
             votedFor,
+            campaignId
           });
           await User.updateOne(
             { walletAddress: participantId },
@@ -68,8 +70,8 @@ export default async function handler(
    //GET method is used to fetch vote by participantId and battleId.
   if (req.method === "GET") {
     try {
-      const { participantId, battleId } = req.query;
-      const existingVote = await Voting.findOne({ participantId, battleId });
+      const { participantId, battleId,campaignId } = req.query;
+      const existingVote = await Voting.findOne({ participantId, battleId ,campaignId});
       res.status(200).json({ success: true, data: existingVote });
     } catch (error) {
       res.status(400).json({ success: false, error });

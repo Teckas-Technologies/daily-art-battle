@@ -30,6 +30,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             ...data,
             referralCode: referralCodeGenerated,
             referredBy: referrer ? referrer._id : null,
+            createdAt : new Date(),
           });
     
           if (referrer) {

@@ -17,6 +17,7 @@ export interface UserTable extends Document {
   referralCode: string;
   referredBy?: mongoose.Types.ObjectId;
   referredUsers: mongoose.Types.ObjectId[];
+  createdAt:Date;
 }
 
 const UserTableSchema = new mongoose.Schema({
@@ -34,6 +35,7 @@ const UserTableSchema = new mongoose.Schema({
   isRegistered: { type: Boolean, default: false },
   referralCode: {type: String,unique: true,},
   referredBy: {type: mongoose.Schema.Types.ObjectId,ref: 'UserTable',},
+  createdAt: { type: Date, required: true },
   referredUsers: [
     {
       type: mongoose.Schema.Types.ObjectId,

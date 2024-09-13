@@ -16,6 +16,7 @@ import {
 } from "../../utils/artUtils";
 import User from "../../model/User";
 import { ART_UPLOAD } from "@/config/Points";
+import { connectToDatabase } from "../../utils/mongoose";
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,6 +26,7 @@ export default async function handler(
     switch (req.method) {
       //POST method is used to create art.
       case "POST":
+        await connectToDatabase();
         const art = req.body;
         const user = await User.findOne({ walletAddress: art.artistId });
         if (user) {
@@ -96,37 +98,38 @@ export default async function handler(
           return res.status(200).json({ artworks, totalDocuments, totalPages });
         } else {
           const sort = req.query.sort;
+          const campaignId = req.query.campaignId as string;
           if (sort == "voteDsc") {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 9;
             const { arts, totalDocuments, totalPages } = await findAllArts(
               page,
-              limit
+              limit,campaignId
             );
             return res.status(200).json({ arts, totalDocuments, totalPages });
           } else if (sort == "dateDsc") {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 9;
             const { arts, totalDocuments, totalPages } =
-              await findAllArtsByDate(page, limit);
+              await findAllArtsByDate(page, limit,campaignId);
             return res.status(200).json({ arts, totalDocuments, totalPages });
           } else if (sort == "voteAsc") {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 9;
             const { arts, totalDocuments, totalPages } =
-              await findAllArtsByVoteAsc(page, limit);
+              await findAllArtsByVoteAsc(page, limit,campaignId);
             return res.status(200).json({ arts, totalDocuments, totalPages });
           } else if (sort == "dateAsc") {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 9;
             const { arts, totalDocuments, totalPages } =
-              await findAllArtsByDateAsc(page, limit);
+              await findAllArtsByDateAsc(page, limit,campaignId);
             return res.status(200).json({ arts, totalDocuments, totalPages });
           } else {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 9;
             const { arts, totalDocuments, totalPages } =
-              await findAllArtsByDate(page, limit);
+              await findAllArtsByDate(page, limit,campaignId);
             return res.status(200).json({ arts, totalDocuments, totalPages });
           }
         }

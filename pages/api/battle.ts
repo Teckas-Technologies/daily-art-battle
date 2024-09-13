@@ -17,31 +17,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         //Here we'll fetch today battles
        
         if (queryType === 'Today') {
-         
+          const campaignId = req.query.campaignId as string;
           await timeout(1000);
-          const todayBattle = await findTodaysBattle();
+          const todayBattle = await findTodaysBattle(campaignId);
           return res.status(200).json(todayBattle);
         //Here we'll fetch battles with pagination
         } else if (queryType === 'battles') {
+          const campaignId = req.query.campaignId as string;
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
           const sort = req.query.sort;
           if(sort=='voteDsc'){
-            const battles = await findPreviousBattlesByVotes(page,limit);
+            const battles = await findPreviousBattlesByVotes(page,limit,campaignId);
             return res.status(200).json(battles);
           }
           else if(sort=='voteAsc'){
-            const battles = await findPreviousBattlesByVotesAsc(page,limit);
+            const battles = await findPreviousBattlesByVotesAsc(page,limit,campaignId);
             return res.status(200).json(battles);
           }else if(sort=='dateAsc'){
-            const battles = await findPreviousBattlesAsc(page,limit);
+            const battles = await findPreviousBattlesAsc(page,limit,campaignId);
           return res.status(200).json(battles);
           }
           else if(sort=='dateDsc'){
-          const battles = await findPreviousBattles(page,limit);
+          const battles = await findPreviousBattles(page,limit,campaignId);
           return res.status(200).json(battles);
           }else{
-            const battles = await findPreviousBattles(page,limit);
+            const battles = await findPreviousBattles(page,limit,campaignId);
             return res.status(200).json(battles);
           }
         
@@ -65,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       //PUT method is used to update battle by id
       case 'PUT':
-        const { battleId } = req.query;
+        const { battleId,campaignId  } = req.query;
         if (!battleId) {
           return res.status(400).json({ error: 'Battle ID is required' });
         }

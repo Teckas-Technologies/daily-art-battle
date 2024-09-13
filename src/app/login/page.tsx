@@ -1,4 +1,4 @@
-// "use client"
+"use client"
 // import { useState, useEffect } from 'react';
 
 // export default function Home() {
@@ -38,4 +38,52 @@
 //     </div>
 //   );
 // }
+// import React, { useEffect } from 'react';
+// import { initMainButton } from '@tma.js/sdk-react';
+// //import { WebApp } from '@tma.js/sdk';
 
+// const App: React.FC = () => {
+//   useEffect(() => {
+//     const initializeMainButton = async () => {
+//       try {
+//         // Ensure the WebApp is initialized
+//         // WebApp.ready();
+
+//         const [mainButton] = await initMainButton();
+        
+//         mainButton.show();
+//         console.log(mainButton.isVisible); // true  
+        
+//         mainButton.hide();
+//         console.log(mainButton.isVisible); // false
+        
+//         mainButton.showLoader();
+//         console.log(mainButton.isLoaderVisible); // true  
+    
+//         mainButton.hideLoader();
+//         console.log(mainButton.isLoaderVisible); // false
+        
+//         mainButton.enable();
+//         console.log(mainButton.isEnabled); // true  
+    
+//         mainButton.disable();
+//         console.log(mainButton.isEnabled); // false
+        
+//         mainButton.setText('Submit');
+//         console.log(mainButton.text); // 'Submit'
+//       } catch (error) {
+//         console.error('Error initializing main button:', error);
+//       }
+//     };
+
+//     initializeMainButton();
+//   }, []);
+
+//   return (
+//     <div>
+//       <h1>Telegram Mini App is Ready!</h1>
+//     </div>
+//   );
+// };
+
+// export default App;
