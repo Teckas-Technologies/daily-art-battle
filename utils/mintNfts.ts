@@ -20,6 +20,7 @@ export const mintNfts = async (): Promise<void> => {
         isNftMinted: false,
         isBattleEnded: true
     }); 
+    console.log("battle",battle);
     const ress = await spinner();
     console.log("Uploading arweave")
     const response = await uploadArweave(ress);

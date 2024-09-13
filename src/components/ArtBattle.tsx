@@ -208,17 +208,22 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
+      <h2
+          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap" }}
+        >
+        Theme: Republican Vs Democratic
+        </h2>
       {timeRemaining !== null && (
         <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          className=" mt-4 mb-4 text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
       <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg">
-      Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
-      </p>
+      Welcome to "Republican Vs Democratic"! Connect your NEAR wallet & Submit the theme based NFTs daily for a chance to win $100 in rewards!  </p>
       
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
