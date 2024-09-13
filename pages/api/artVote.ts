@@ -10,6 +10,7 @@ import {
   findAndupdateArtById,
 } from "../../utils/artUtils";
 import User from "../../model/User";
+import { ART_UPVOTE, MAX_UPVOTE } from "@/config/Points";
 interface ResponseData {
   success: boolean;
   data?: any;
@@ -28,9 +29,9 @@ export default async function handler(
       const { participantId, artId } = req.body;
       const user = await User.findOne({ walletAddress: participantId });
       if (user) {
-        if (user.gfxCoin >= 5) {
+        if (user.gfxCoin >= ART_UPVOTE) {
           const existingVote = await UpVoting.findOne({ participantId, artId });
-          if (existingVote?.votesCount==8) {
+          if (existingVote?.votesCount==MAX_UPVOTE) {
             return res
               .status(400)
               .json({
@@ -47,7 +48,7 @@ export default async function handler(
               { walletAddress: participantId },
               { 
                 $inc: { 
-                  gfxCoin: -5,} 
+                  gfxCoin: - ART_UPVOTE,} 
               },
             );
 
@@ -59,7 +60,7 @@ export default async function handler(
               { walletAddress: participantId },
               { 
                 $inc: { 
-                  gfxCoin: -5,} 
+                  gfxCoin: - ART_UPVOTE,} 
               },
             );
             return res.status(201).json({ success: true, data: result });

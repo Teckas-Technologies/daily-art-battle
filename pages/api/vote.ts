@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/mongoose";
 import Voting from "../../model/Voting";
 import User from "../../model/User";
+import { ART_VOTE } from "@/config/Points";
 
 interface ResponseData {
   success: boolean;
@@ -22,7 +23,7 @@ export default async function handler(
       const { participantId, battleId, votedFor } = req.body;
       const user = await User.findOne({ walletAddress: participantId });
       if (user) {
-        if (user.gfxCoin >= 1) {
+        if (user.gfxCoin >= ART_VOTE) {
           const existingVote = await Voting.findOne({
             participantId,
             battleId,
@@ -43,7 +44,7 @@ export default async function handler(
           });
           await User.updateOne(
             { walletAddress: participantId },
-            { $inc: { gfxCoin: -1 } }
+            { $inc: { gfxCoin: - ART_VOTE } }
           );
 
           res.status(201).json({ success: true, data: vote });

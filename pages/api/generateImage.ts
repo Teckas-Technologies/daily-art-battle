@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
 import { OPENAI } from '@/config/constants';
 import User from '../../model/User';
+import { AI_IMAGE } from '@/config/Points';
 
 const openai = new OpenAI({
   apiKey: OPENAI,
@@ -41,7 +42,7 @@ export default async function handler(
               { walletAddress: participantId },
               {
                 $inc: {
-                  gfxCoin: -1,
+                  gfxCoin: - AI_IMAGE,
                 }
               },
             );

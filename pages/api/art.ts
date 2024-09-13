@@ -11,8 +11,11 @@ import {
   findAllArtsByDate,
   findAllArtsByVoteAsc,
   findAllArtsByDateAsc,
+  findMyArtworks,
+  fetchArtworksByArtistId,
 } from "../../utils/artUtils";
 import User from "../../model/User";
+import { ART_UPLOAD } from "@/config/Points";
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,11 +28,11 @@ export default async function handler(
         const art = req.body;
         const user = await User.findOne({ walletAddress: art.artistId });
         if (user) {
-          if (user.gfxCoin >= 50) {
+          if (user.gfxCoin >= ART_UPLOAD) {
             const saveart = await scheduleArt(art);
             await User.updateOne(
               { walletAddress: art.artistId },
-              { $inc: { gfxCoin: -50 } }
+              { $inc: { gfxCoin: -ART_UPLOAD } }
             );
             return res.status(201).json(saveart);
           } else {
@@ -72,6 +75,25 @@ export default async function handler(
               .status(200)
               .json({ battles, totalDocuments, totalPages });
           }
+        } else if (queryType === "myartworks") {
+          const artistId = req.query.artistId as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 10;
+
+          const { artworks, totalDocuments, totalPages } = await findMyArtworks(
+            artistId,
+            page,
+            limit
+          );
+          return res.status(200).json({ artworks, totalDocuments, totalPages });
+        } else if (queryType === "fetchArtworksByArtistId") {
+          const artistId = req.query.artistId as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 10;
+
+          const { artworks, totalDocuments, totalPages } =
+            await fetchArtworksByArtistId(artistId, page, limit);
+          return res.status(200).json({ artworks, totalDocuments, totalPages });
         } else {
           const sort = req.query.sort;
           if (sort == "voteDsc") {

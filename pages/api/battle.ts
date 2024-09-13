@@ -1,6 +1,6 @@
 //battle.ts is used for creating battle,updating battle ,fetching battle and deleting battle.
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { scheduleBattle, deleteAll, findTodaysBattle, findPreviousBattles, findAllBattles, updateBattle,findPreviousBattlesByVotesAsc, findPreviousBattlesByVotes,findPreviousBattlesAsc } from '../../utils/battleUtils';
+import { scheduleBattle, deleteAll, findTodaysBattle, findPreviousBattles, findAllBattles, updateBattle,findPreviousBattlesByVotesAsc, findPreviousBattlesByVotes,findPreviousBattlesAsc, findBattlesByRaffleOwner, findBattlesByArtist } from '../../utils/battleUtils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -13,8 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       //GET method is used for fetching battles
       case 'GET':
         const timeout = (ms:any) => new Promise(resolve => setTimeout(resolve, ms));
-        const { queryType } = req.query;
+        const { queryType ,artistId,specialWinnerId } = req.query;
         //Here we'll fetch today battles
+       
         if (queryType === 'Today') {
          
           await timeout(1000);
@@ -43,8 +44,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const battles = await findPreviousBattles(page,limit);
             return res.status(200).json(battles);
           }
-        }
-         else {
+        
+        } else if (queryType === 'RaffleOwner') {
+          if (!specialWinnerId) {
+            return res.status(400).json({ error: 'Special winner ID is required' });
+          }
+          const specialWinnerBattles = await findBattlesByRaffleOwner(specialWinnerId as string);
+          return res.status(200).json(specialWinnerBattles);
+        }else if (queryType === 'ByArtist') {
+          if (!artistId) {
+            return res.status(400).json({ error: 'Artist ID is required' });
+          }
+          const artistBattles = await findBattlesByArtist(artistId as string);
+          return res.status(200).json(artistBattles);
+
+        // Fetch all battles
+        }else {
           const battles = await findAllBattles();
           return res.status(200).json(battles);
         }

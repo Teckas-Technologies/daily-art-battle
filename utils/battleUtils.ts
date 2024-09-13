@@ -43,99 +43,162 @@ export const findTodaysBattle = async (): Promise<any> => {
   const endOfDay = new Date(now.setHours(23, 59, 59, 999));
 
   return Battle.findOne({
-
     startTime: { $lte: endOfDay },
-    endTime: { $gte: startOfDay }
+    endTime: { $gte: startOfDay },
   });
 };
 
-export const findPreviousBattles = async (page: number, limit: number): Promise<any> => {
+export const findPreviousBattles = async (
+  page: number,
+  limit: number
+): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ startTime: -1,_id: 1  }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } })
+    .sort({ startTime: -1, _id: 1 })
+    .skip(skip)
+    .limit(limit);
   return { pastBattles };
-}
+};
 
-export const findPreviousBattlesAsc = async (page: number, limit: number): Promise<any> => {
+export const findPreviousBattlesAsc = async (
+  page: number,
+  limit: number
+): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const pastBattles = await Battle.find({ endTime: { $lt: today } }).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ endTime: { $lt: today } })
+    .sort({ startTime: 1, _id: 1 })
+    .skip(skip)
+    .limit(limit);
   return { pastBattles };
-}
+};
 
-export const findPreviousBattlesByVotes = async (page: number, limit: number): Promise<any> => {
+export const findPreviousBattlesByVotes = async (
+  page: number,
+  limit: number
+): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
   const pastBattles = await Battle.aggregate([
     {
-      $match: { endTime: { $lt: today } }
+      $match: { endTime: { $lt: today } },
     },
     {
       $addFields: {
-        totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
-      }
+        totalVotes: { $add: ["$artAVotes", "$artBVotes"] },
+      },
     },
     {
-      $sort: { totalVotes: -1, _id: 1 }
+      $sort: { totalVotes: -1, _id: 1 },
     },
     {
-      $skip: skip
+      $skip: skip,
     },
     {
-      $limit: limit
-    }
+      $limit: limit,
+    },
   ]);
   return { pastBattles };
-}
+};
 
-export const findPreviousBattlesByVotesAsc = async (page: number, limit: number): Promise<any> => {
+export const findPreviousBattlesByVotesAsc = async (
+  page: number,
+  limit: number
+): Promise<any> => {
   await connectToDatabase();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
   const pastBattles = await Battle.aggregate([
     {
-      $match: { endTime: { $lt: today } }
+      $match: { endTime: { $lt: today } },
     },
     {
       $addFields: {
-        totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
-      }
+        totalVotes: { $add: ["$artAVotes", "$artBVotes"] },
+      },
     },
     {
-      $sort: { totalVotes: 1, _id: 1 }
+      $sort: { totalVotes: 1, _id: 1 },
     },
     {
-      $skip: skip
+      $skip: skip,
     },
     {
-      $limit: limit
-    }
+      $limit: limit,
+    },
   ]);
   return { pastBattles };
-}
+};
 
 export const findAllBattles = async (): Promise<any> => {
   await connectToDatabase();
   return Battle.find({});
-}
+};
 
-
-export const updateBattle = async(battleId: any): Promise<any> => {
+export const updateBattle = async (battleId: any): Promise<any> => {
   await connectToDatabase();
   const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setDate(yesterday.getDate() - 1);
 
-      const updatedBattle = await Battle.findByIdAndUpdate(
-        battleId,
-        { endTime: yesterday },
-        { new: true }
-      );
-      console.log("Updated!");
-}
+  const updatedBattle = await Battle.findByIdAndUpdate(
+    battleId,
+    { endTime: yesterday },
+    { new: true }
+  );
+  console.log("Updated!");
+};
+
+export const findBattlesByArtist = async (artistId: string): Promise<any> => {
+  try {
+    await connectToDatabase();
+
+    console.log("artist:", artistId);
+
+    const query = {
+      $or: [{ artAartistId: artistId }, { artBartistId: artistId }],
+    };
+    console.log("query>>", query);
+
+    const battles = await Battle.find(query).sort({ startTime: -1 });
+
+    console.log("Battles:", battles);
+
+    return battles;
+  } catch (error) {
+    console.error("Error in findBattlesByArtist:", error);
+    throw error;
+  }
+};
+export const findBattlesByRaffleOwner = async (
+  artistId: string
+): Promise<any> => {
+  try {
+    console.log("Connecting to database...");
+    await connectToDatabase();
+    console.log("Database connected successfully.");
+
+    console.log("artistId:", artistId);
+
+    const query = {
+      specialWinner: artistId,
+    };
+    console.log("query >>:", query);
+
+    const battles = await Battle.find(query).sort({ startTime: -1 });
+
+    console.log("Battles:", battles);
+
+    return battles;
+  } catch (error) {
+    console.error("Error in findBattlesByRaffleOwner:", error);
+    throw error;
+  }
+};

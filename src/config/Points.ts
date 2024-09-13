@@ -1,0 +1,14 @@
+export const ART_UPLOAD = 50;
+export const ART_UPVOTE = 5;
+export const MAX_UPVOTE = 8;
+export const AI_IMAGE = 1;
+export const REFFERER = 100;
+export const REFFERED_USER = 50;
+export const ART_VOTE = 1;
+export const TELEGRAM_DROP = 2000;
+export const INSTA_CONNECT = 10;
+export const X_CONNECT = 10;
+export const EMAIL_VERIFY = 10;
+export const REGISTERED = 100;
+export const RARE_NFT_BURN = 1000;
+export const PARTICIPATION_NFT_BURN =10;

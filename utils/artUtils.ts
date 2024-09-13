@@ -127,3 +127,40 @@ export const findArtById = async (id:any): Promise<any> => {
   return await ArtTable.findOne({_id:id});
 };
 
+
+
+export const findMyArtworks = async (artistId: string, page: number, limit: number): Promise<any> => {
+  await connectToDatabase();
+  const skip = limit * (page === 1 ? 0 : page - 1); 
+  const totalDocuments = await ArtTable.countDocuments({ artistId });
+  const totalPages = Math.ceil(totalDocuments / limit);
+  console.log(`Fetching artworks for artist: ${artistId}, page: ${page}, limit: ${limit}`);
+  const artworks = await ArtTable.find({ artistId })
+    .sort({ uploadedTime: -1, _id: 1 })  
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+  return { artworks, totalDocuments, totalPages };
+};
+
+export const fetchArtworksByArtistId = async (artistId: string, page: number, limit: number = 10) => {
+  try {
+    await connectToDatabase();
+    
+    const skip = limit * (page === 1 ? 0 : page - 1); 
+    const totalDocuments = await ArtTable.countDocuments({ artistId });
+    const totalPages = Math.ceil(totalDocuments / limit);
+    
+    const artworks = await ArtTable.find({ artistId })
+      .sort({ uploadedTime: -1, _id: 1 })  
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return { artworks, totalDocuments, totalPages };
+  } catch (error) {
+    console.error('Error fetching artworks by artist ID:', error);
+    throw new Error('Error fetching artworks by artist ID');
+  }
+};

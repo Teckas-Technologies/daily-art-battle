@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse} from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import User ,{UserTable} from '../../model/User';
 import ArtTable from '../../model/ArtTable';
+import { REFFERED_USER, REFFERER } from '@/config/Points';
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
 
     if(req.method=='POST'){
@@ -33,10 +34,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     
           if (referrer) {
             referrer.referredUsers.push(newUser._id);
-            referrer.gfxCoin += 100;
+            referrer.gfxCoin += REFFERER;
             await referrer.save();
-    
-            newUser.gfxCoin += 50; 
+            newUser.gfxCoin += REFFERED_USER; 
           }
           const response = await newUser.save();
         res.status(201).json({user:response});

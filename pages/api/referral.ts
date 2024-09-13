@@ -4,9 +4,7 @@ import User from '../../model/User';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase();
-
   const { walletAddress } = req.body; // Assume userId is passed via JWT or request body
-
   try {
     console.log(walletAddress);
     const user= await User.findOne({walletAddress:walletAddress});

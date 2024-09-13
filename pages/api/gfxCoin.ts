@@ -4,18 +4,11 @@ import User from "../../model/User";
 import { graphQLService } from "@/data/graphqlService";
 import { ACCOUNT_DATE } from "@/data/queries/accountDate.graphql";
 import { providers, utils } from 'near-api-js';
+import { ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
+import Transactions from "../../model/Transactions";
+import { EMAIL_VERIFY, INSTA_CONNECT, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT } from "@/config/Points";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const gfxCoinHashMap: { [key: string]: number } = {
-        rareNft: 1000,
-        spinnerNft : 10, 
-        telegramDrop: 2000,
-        instaConnect: 10,
-        XConnect: 10,
-        emailVerify: 10,
-        registered: 100
-    };
-
     if (req.method === 'POST') {
         await connectToDatabase();
         const query = req.query.queryType as string;
@@ -28,22 +21,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         try {
             if (query === 'burnNft') {
                 try {
-                    const nftType = req.query.nftType as string;
-                    if (!(nftType in gfxCoinHashMap)) {
-                        return res.status(400).json({ message: "Invalid query type" });
-                    }
-                    const coins = gfxCoinHashMap[nftType];
                     const transactionHash = req.query.transactionHash;
+                    const existinghash = await Transactions.findOne({hash:transactionHash});
+                    if(existinghash){
+                        return res.status(500).json({error:"Hash already used"});
+                    }
                     const provider = new providers.JsonRpcProvider({ url: "https://rpc.testnet.near.org" });
                     const transaction = await provider.txStatus(transactionHash as string, 'unused') as providers.FinalExecutionOutcome;
-                    console.log(transaction);
                     if (isFinalExecutionStatusWithSuccessValue(transaction.status)) {
-                        const receiverId = transaction.transaction.receiver_id;
-                        if (receiverId === walletAddress) {
-                            await updateUserCoins(walletAddress, coins);
-                        } else {
-                            res.status(500).json({ error: "wallet address is not valid" });
+                        const signerId = transaction.transaction.signer_id;
+                        const receiver_id = transaction.transaction.receiver_id;
+                        console.log(signerId);
+                        console.log(receiver_id);
+                        if(receiver_id!=walletAddress){
+                            return res.status(500).json({error:"wallet doesn't match"});
                         }
+                        const contractAddress = transaction.transaction.actions[0].Delegate.delegate_action.receiver_id
+                        console.log(contractAddress)
+                        let coins =0;
+                        if(contractAddress === ART_BATTLE_CONTRACT){
+                            coins = PARTICIPATION_NFT_BURN;
+                        }else if(contractAddress === SPECIAL_WINNER_CONTRACT){
+                            coins = RARE_NFT_BURN;
+                        }else{
+                            return res.status(500).json({error:"transaction is not valid"});
+                        }
+                            await updateUserCoins(walletAddress, coins);
+                            const newHash = new Transactions({
+                                walletAddress:walletAddress,
+                                hash:transactionHash
+                            })
+                            await newHash.save();
+                       
                     } else {
                         res.status(500).json({ error: "transaction is not success" });
                     }
@@ -53,10 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
             }
             else if (query === 'emailVerify') {
-                if (!(query in gfxCoinHashMap)) {
-                    return res.status(400).json({ message: "Invalid query type" });
-                }
-                const coins = gfxCoinHashMap[query];
+                const coins = EMAIL_VERIFY;
                 let isClaimedField = 'isEmailVerified';
                 await handleDrop(walletAddress, coins, isClaimedField);
             }
@@ -65,46 +71,47 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const coins = await calculateNearDropCoins(walletAddress);
                 await handleDrop(walletAddress, coins, isClaimedField);
             } else if (query === 'telegramDrop') {
-                if (!(query in gfxCoinHashMap)) {
-                    return res.status(400).json({ message: "Invalid query type" });
-                }
-                const coins = gfxCoinHashMap[query];
+                const coins = TELEGRAM_DROP;
                 let isClaimedField = 'isTelegramDropClaimed';
                 await handleDrop(walletAddress, coins, isClaimedField);
             } else if (query === 'instaConnect') {
-                if (!(query in gfxCoinHashMap)) {
-                    return res.status(400).json({ message: "Invalid query type" });
-                }
-                const coins = gfxCoinHashMap[query];
+                const coins = INSTA_CONNECT;
                 let isClaimedField = 'isInstagramConnected';
                 await handleDrop(walletAddress, coins, isClaimedField);
             } else if (query === 'XConnect') {
-                if (!(query in gfxCoinHashMap)) {
-                    return res.status(400).json({ message: "Invalid query type" });
-                }
-                const coins = gfxCoinHashMap[query];
+                const coins = X_CONNECT;
                 let isClaimedField = 'isXConnected';
                 await handleDrop(walletAddress, coins, isClaimedField);
             }
             else if (query === 'registered') {
-                if (!(query in gfxCoinHashMap)) {
-                    return res.status(400).json({ message: "Invalid query type" });
-                }
-                const coins = gfxCoinHashMap[query];
+                const coins = REGISTERED;
                 let isClaimedField = 'isRegistered';
                 await handleDrop(walletAddress, coins, isClaimedField);
             }else if(query ==='nearTransfer'){
                 try {
                     const transactionHash = req.query.transactionHash;
+                    const existinghash = await Transactions.findOne({hash:transactionHash});
+                    if(existinghash){
+                        return res.status(500).json({error:"Hash already used"});
+                    }
                     const provider = new providers.JsonRpcProvider({ url: "https://rpc.testnet.near.org" });
                     const transaction = await provider.txStatus(transactionHash as string, 'unused') as providers.FinalExecutionOutcome;
-                   console.log(transaction);
                     if (isFinalExecutionStatusWithSuccessValue(transaction.status)) {
-                        const receiverId = transaction.transaction.receiver_id;
-                        const amount = transaction.transaction.actions[0].Transfer.deposit;
+                        const signerId = transaction.transaction.signer_id;
+                        const receiver_id = transaction.transaction.receiver_id;
+                        console.log(signerId);
+                        console.log(receiver_id);
+                        if(signerId!=walletAddress){
+                            return res.status(500).json({error:"wallet doesn't match"});
+                        }
+                        const amount = utils.format.formatNearAmount(transaction.transaction.actions[0].Transfer.deposit);
                         const coins = calculateGfxPoints(amount)
-                        console.log(amount);
                         await updateUserCoins(walletAddress, coins);
+                        const newHash = new Transactions({
+                            walletAddress:walletAddress,
+                            hash:transactionHash
+                        })
+                        await newHash.save();
                     } else {
                         res.status(500).json({ error: "transaction is not success" });
                     }
@@ -125,6 +132,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 // Helper function to update user coins
 async function updateUserCoins(walletAddress: string, coins: number) {
+    const user = await User.findOne({ walletAddress });
+    if(!user){
+       throw new Error(`User doesn't exist`);
+    }
     const response = await User.findOneAndUpdate(
         { walletAddress },
         { $inc: { gfxCoin: coins } },
@@ -136,7 +147,9 @@ async function updateUserCoins(walletAddress: string, coins: number) {
 // Helper function to handle drop claims
 async function handleDrop(walletAddress: string, coins: number, isClaimedField: string) {
     const user = await User.findOne({ walletAddress });
-
+     if(!user){
+        throw new Error(`User doesn't exist`);
+     }
     if (user && !user[isClaimedField]) {
         await updateUserCoins(walletAddress, coins);
         await User.findOneAndUpdate(
@@ -169,10 +182,8 @@ async function calculateNearDropCoins(walletAddress: string) {
 }
 
 
-function calculateGfxPoints(yoctoNear:any) {
-    const oneNearInYocto = 10 ** 24; 
+function calculateGfxPoints(nearAmount:any) {
     const gfxPointsPerNear = 1000; 
-    const nearAmount = yoctoNear / oneNearInYocto;
     const gfxPoints = nearAmount * gfxPointsPerNear;
     return gfxPoints;
   }
