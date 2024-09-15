@@ -208,9 +208,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
-      <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg"
-          
+      <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
         >
         Theme: Black Dragon
         </h2>
