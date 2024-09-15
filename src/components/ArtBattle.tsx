@@ -208,9 +208,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
-      <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
+      <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
         >
         Theme: Republican Vs Democratic
         </h2>
