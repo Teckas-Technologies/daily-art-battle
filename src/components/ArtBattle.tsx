@@ -214,6 +214,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         >
         Theme: Black Dragon
         </h2>
+        
       {timeRemaining !== null && (
         <h2
           className=" mt-4 mb-4 text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
