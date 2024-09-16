@@ -24,7 +24,15 @@ const UserTableSchema = new mongoose.Schema({
   profileImg: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  email: { type: String, required: true ,unique:true},
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    match: [
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+      'Please enter a valid email address'
+    ]
+  },
   walletAddress: { type: String, required: true ,unique:true},
   gfxCoin:  { type: Number, default: 0 },
   isNearDropClaimed: { type: Boolean, default: false },
@@ -35,7 +43,7 @@ const UserTableSchema = new mongoose.Schema({
   isRegistered: { type: Boolean, default: false },
   referralCode: {type: String,unique: true,},
   referredBy: {type: mongoose.Schema.Types.ObjectId,ref: 'UserTable',},
-  createdAt: { type: Date, required: true },
+  createdAt: { type: Date, required: true ,default: Date.now},
   referredUsers: [
     {
       type: mongoose.Schema.Types.ObjectId,

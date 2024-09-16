@@ -4,7 +4,7 @@ import User from "../../model/User";
 import { graphQLService } from "@/data/graphqlService";
 import { ACCOUNT_DATE } from "@/data/queries/accountDate.graphql";
 import { providers, utils } from 'near-api-js';
-import { ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
+import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import Transactions from "../../model/Transactions";
 import { EMAIL_VERIFY, INSTA_CONNECT, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT } from "@/config/Points";
 
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     if(existinghash){
                         return res.status(500).json({error:"Hash already used"});
                     }
-                    const provider = new providers.JsonRpcProvider({ url: "https://rpc.testnet.near.org" });
+                    const provider = new providers.JsonRpcProvider({ url: `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org` });
                     const transaction = await provider.txStatus(transactionHash as string, 'unused') as providers.FinalExecutionOutcome;
                     if (isFinalExecutionStatusWithSuccessValue(transaction.status)) {
                         const signerId = transaction.transaction.signer_id;
