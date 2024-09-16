@@ -208,6 +208,12 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
+      <a href="https://us-election.gfxvs.com/"><h1 style={{color:"#05f73e"}} className="mt-2 text-lg text-center text-white font-bold  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 ">
+      🔔 Cast Your Vote Make a Difference with the Election Campaign!
+      </h1></a>
+      <a href="https://blackdragon.gfxvs.com/"><h1 style={{color:"#05f73e"}} className="mt-4 text-lg mb-4 text-center text-white font-bold  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 ">
+      🐉 Awaken the Beast Conquer with the Black Dragon Campaign!
+      </h1></a>
       {timeRemaining !== null && (
         <h2
           className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
