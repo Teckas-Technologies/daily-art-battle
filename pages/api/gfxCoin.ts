@@ -94,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     if(existinghash){
                         return res.status(500).json({error:"Hash already used"});
                     }
-                    const provider = new providers.JsonRpcProvider({ url: "https://rpc.testnet.near.org" });
+                    const provider = new providers.JsonRpcProvider({ url: `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org` });
                     const transaction = await provider.txStatus(transactionHash as string, 'unused') as providers.FinalExecutionOutcome;
                     if (isFinalExecutionStatusWithSuccessValue(transaction.status)) {
                         const signerId = transaction.transaction.signer_id;
