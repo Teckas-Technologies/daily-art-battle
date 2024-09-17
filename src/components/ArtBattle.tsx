@@ -213,7 +213,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         Theme: Black Dragon
         </h2>
 
-      {timeRemaining !== null && (
+      {timeRemaining !== null && (  
         <h2
           className=" mt-4 mb-4 text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
           style={{ whiteSpace: "nowrap" }}
@@ -222,7 +222,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
         </h2>
       )}
       <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg">
-      Welcome to "Black Dragon"! Connect your NEAR wallet & Submit the theme based NFTs daily for a chance to win 10 NEAR in rewards! 
+      <span className="font-bold" style={{color:"#05f73e"}}>Welcome to "Black Dragon"! Submit BlackDragon Athletic Club Membership Card NFT</span> - Connect your NEAR wallet & Submit the theme based NFTs daily for a chance to win 10 NEAR in rewards! 
       </p>
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
