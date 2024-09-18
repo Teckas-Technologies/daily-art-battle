@@ -14,10 +14,13 @@ export async function scheduleArt(data: any): Promise<any> {
   }
   if (!data.colouredArtReference && data.colouredArt) {
     console.log("Entered! ", data.colouredArt)
+    if(!data.colouredArt.includes("https://")){
+      data.colouredArt = `https://arweave.net/${data.colouredArt}`;
+    }
     const res = await uploadArweaveUrl(data.colouredArt);
     data.colouredArtReference = res.referenceUrl;
-    // data.colouredArtReference = data.colouredArt
   }
+  console.log("Setted Art! ", data.colouredArt)
   console.log("Setted! ", data.colouredArtReference)
   const newArt = new ArtTable({
     ...data,
