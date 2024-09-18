@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       //POST method is used to create art.
        case 'POST':
         const art = req.body;
+        console.log("Art >> ", art)
         const saveart = await scheduleArt(art);
         return res.status(201).json(saveart);
         //GET method is used to fetch arts with pagination.
