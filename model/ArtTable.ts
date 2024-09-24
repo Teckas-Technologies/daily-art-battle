@@ -15,9 +15,11 @@ interface ArtTable extends Document {
   battleTime?: Date;
   endTime?: Date;
   tokenId:Number;
+  campaignId:string;
 }
 
 const ArtTableSchema = new mongoose.Schema({
+  campaignId: { type: String, required: true },
   artistId: { type: String, required: true },
   arttitle: { type: String, required: true },
   colouredArt: { type: String, required: true },

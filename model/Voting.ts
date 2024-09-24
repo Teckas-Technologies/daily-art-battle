@@ -5,6 +5,7 @@ interface IVoting extends Document {
   battleId: string;
   votedFor: 'Art A' | 'Art B';
   isMinted:boolean;
+  campaignId:string;
 }
 
 const votingSchema = new mongoose.Schema({
@@ -24,6 +25,7 @@ const votingSchema = new mongoose.Schema({
     required: true,
     enum: ['Art A', 'Art B'],
   },
+  campaignId: { type: String, required: true },
 }, { timestamps: true });
 
 const Voting: Model<IVoting> = mongoose.models.Voting || mongoose.model<IVoting>('Voting', votingSchema);

@@ -2,17 +2,19 @@
 import { useState } from "react";
 import { useMbWallet } from "@mintbase-js/react";
 import { useRouter } from 'next/navigation';
-import { ADMIN_ADDRESS } from "@/config/constants";
 
-export const NearWalletConnector: React.FC = () => {
+export const Navbar:React.FC<{ logo:string }> = ({
+    logo
+  }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
   const handleSignout = async () => {
     const wallet = await selector.wallet();
     return wallet.signOut();
   };
-  console.log(ADMIN_ADDRESS);
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -48,17 +50,32 @@ export const NearWalletConnector: React.FC = () => {
         padding: "10px 5vw",
       }}
     >
-      <div className="flex items-center flex-col md:flex-col">
+       <div className="flex items-center flex-row md:flex-row">
         <a onClick={url}>
-          <img
-            src="/images/logo.png"
-            alt="GFXvs"
-            width={50}
-            height={50}
-            className="md:mb-0" // Add margin bottom for smaller screens
-          />
-        </a>
-      </div>
+        <img
+          src="/images/logo.png"
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className=" md:mb-0" // Add margin bottom for smaller screens
+        />
+           </a>
+           {logo&&(
+            <>
+       <p  className="ml-2 mr-2">x</p>
+        <img
+          src={logo}
+          alt="GFXvs"
+          width={50}
+          height={50}
+          className="md:mb-0" 
+          style={{
+            aspectRatio: "1/1"
+          }}
+        />
+        </>
+      )}
+        </div>
 
       
      
@@ -83,7 +100,7 @@ export const NearWalletConnector: React.FC = () => {
             alt="Disconnect"
             className="w-10 h-10 cursor-pointer"
           />
-          {activeAccountId ===ADMIN_ADDRESS && (
+          {activeAccountId === "rapid_zuckerberg.testnet" && (
             <label
               onClick={handleRoute}
               className="ml-2 px-2 bg-green-600 border hover:bg-green-500 rounded-lg cursor-pointer"

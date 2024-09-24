@@ -3,13 +3,14 @@ import { useState, useCallback } from 'react';
 export interface Vote {
   participantId: string;
   artId: string;
+  campaignId:string;
 }
 
 interface UseVotingReturn {
   votes: Vote[];
   error: string | null;
   loading: boolean;
-  fetchVotes: ( artId: string) => Promise<Vote[]>;
+  fetchVotes: ( artId: string,campaignId:string) => Promise<Vote[]>;
   submitVote: (voteData: Vote) => Promise<boolean>;
 }
 
@@ -19,10 +20,10 @@ export const useVoting = (): UseVotingReturn => {
   const [loading, setLoading] = useState<boolean>(false);
 
   //fetchVotes is used to fetch artVote by participantId and artId
-  const fetchVotes = useCallback(async (participantId: string): Promise<Vote[]> => {
+  const fetchVotes = useCallback(async (participantId: string,campaignId:string): Promise<Vote[]> => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/artVote?participantId=${participantId}`);
+      const response = await fetch(`/api/artVote?participantId=${participantId}&campaignId=${campaignId}`);
       const data = await response.json();
       if (response.ok) {
         setError(null);
@@ -55,7 +56,7 @@ export const useVoting = (): UseVotingReturn => {
         body: JSON.stringify(voteData),
       });
       const data = await response.json();
-
+      
       if (response.ok) {
          return true;
       } else {

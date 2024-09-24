@@ -22,6 +22,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.24.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -46,6 +47,7 @@
     "clsx": "^2.1.1",
     "cron": "^3.1.7",
     "form-data": "^4.0.0",
+    "formidable": "^3.5.1",
     "install": "^0.13.0",
     "jimp": "^0.22.12",
     "lucide-react": "^0.394.0",
@@ -65,15 +67,18 @@
     "react-share": "^5.1.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0",
     "xlsx": "^0.18.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.5",
+    "@types/formidable": "^3.4.5",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "autoprefixer": "^10.0.1",

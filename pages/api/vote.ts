@@ -15,17 +15,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   if (req.method === 'POST') {
     try {
-    const { participantId, battleId, votedFor } = req.body;
+    const { participantId, battleId, votedFor,campaignId } = req.body;
 
     // Check if the participant has already voted for this battle
-    const existingVote = await Voting.findOne({ participantId, battleId });
+    const existingVote = await Voting.findOne({ participantId, battleId ,campaignId});
     if (existingVote) {
       return res.status(400).json({ success: false, message: "Participant has already voted for this battle." });
     }
 
     // Create a new vote
    
-      const vote = await Voting.create({ participantId, battleId, votedFor });
+      const vote = await Voting.create({ participantId, battleId, votedFor ,campaignId});
       res.status(201).json({ success: true, data: vote });
     } catch (error) {
       res.status(400).json({ success: false, error });
@@ -33,8 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     //GET method is used to fetch vote by participantId and battleId.
   } if (req.method === 'GET') {
     try {
-      const { participantId, battleId } = req.query;
-      const existingVote = await Voting.findOne({ participantId, battleId });
+      const { participantId, battleId,campaignId } = req.query;
+      const existingVote = await Voting.findOne({ participantId, battleId ,campaignId});
       res.status(200).json({ success: true, data: existingVote });
     } catch (error) {
       res.status(400).json({ success: false, error });

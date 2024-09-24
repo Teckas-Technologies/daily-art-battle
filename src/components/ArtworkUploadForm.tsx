@@ -8,6 +8,7 @@ import { useFetchImage } from "../hooks/testImageHook";
 import Badge from '../../public/images/badge.png';
 import { useFetchGeneratedImage } from "../hooks/generateImageHook";
 import Toast from './Toast'; 
+import campaign from '../../model/campaign';
 interface Artwork {
   name: string;
   file: File | null|undefined;
@@ -18,9 +19,10 @@ interface Artwork {
 interface ArtworkUploadFormProps {
   onClose: () => void;
   onSuccessUpload: () => void; 
+  campaignId:string
 }
 
-export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload }) => {
+export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, onSuccessUpload ,campaignId}) => {
   const defaultArtworks: Artwork[] = [
     { name: 'Upload Unique Rare', file: null, fileName: '',previewUrl: ''  },
   ];
@@ -205,6 +207,7 @@ useEffect(() => {
             break;
         }
       }
+      artBattle.campaignId = campaignId;
       await saveData(artBattle as ArtData);
       setToastMessage('All files uploaded successfully');
       setToast(true)

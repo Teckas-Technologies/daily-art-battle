@@ -2,17 +2,19 @@ import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import ArtTable from '../model/ArtTable';
 import Voting from '../model/Voting';
+import Campaign from '../model/campaign';
+
 
 export const countVotes = async (): Promise<void> => {
     await connectToDatabase();
     const battles = await Battle.find({
        endTime: { $lt: new Date() },
-        isBattleEnded: false
+        isBattleEnded: false,
     });
     if(battles){
     for (const battle of battles) {
         console.log(battle);
-        const votes = await Voting.find({ battleId: battle.id });
+        const votes = await Voting.find({ battleId: battle.id});
         const artAVotes = votes.filter(vote => vote.votedFor === 'Art A');
         const artBVotes = votes.filter(vote => vote.votedFor === 'Art B');
         const winningArt = artAVotes.length >= artBVotes.length ? 'Art A' : 'Art B';
