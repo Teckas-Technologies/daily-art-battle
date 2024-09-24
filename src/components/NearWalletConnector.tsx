@@ -2,12 +2,12 @@
 import { useState } from "react";
 import { useMbWallet } from "@mintbase-js/react";
 import { useRouter } from 'next/navigation';
+import { ADMIN_ADDRESS } from "@/config/constants";
 
 export const NearWalletConnector: React.FC = () => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-
   const handleSignout = async () => {
     const wallet = await selector.wallet();
     return wallet.signOut();
@@ -83,7 +83,7 @@ export const NearWalletConnector: React.FC = () => {
             alt="Disconnect"
             className="w-10 h-10 cursor-pointer"
           />
-          {activeAccountId === "rapid_zuckerberg.testnet" && (
+          {activeAccountId ===ADMIN_ADDRESS && (
             <label
               onClick={handleRoute}
               className="ml-2 px-2 bg-green-600 border hover:bg-green-500 rounded-lg cursor-pointer"

@@ -8,6 +8,7 @@ import ArtBattle from '../components/ArtBattle';
 import UpcomingBattlesTable from '../components/UpcomingBattlesTable';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
+import { GFX_CAMPAIGNID } from '@/config/constants';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -31,13 +32,13 @@ const Home: NextPage = () => {
     Your browser does not support the video tag.
 </video>
       <NearWalletConnector />
-      {showUploadModal && <ArtworkUploadForm campaignId={"gfxvs"} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <ArtBattle  
         fontColor={""}
         welcomeText={""}
-        themeTitle={""} campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable  fontColor={""} campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <PreviousArtTable   fontColor={""} campaignId = {"gfxvs"} toggleUploadModal={toggleUploadModal}/>
+        themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
+      <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
   );

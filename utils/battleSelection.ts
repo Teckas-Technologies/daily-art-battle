@@ -2,6 +2,7 @@ import { connectToDatabase } from "./mongoose";
 import ArtTable from "../model/ArtTable";
 import Battle from "../model/Battle";
 import Campaign from "../model/campaign";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 
 export async function getNextAvailableDate(campaignId:string): Promise<Date> {
   await connectToDatabase();
@@ -98,7 +99,8 @@ export const createBattle = async (): Promise<any> => {
 
 
 export const createGfxvsBattle = async (): Promise<any> => {
-  const  campaignId = "gfxvs";
+  
+  const  campaignId = GFX_CAMPAIGNID;
   const battles = await Battle.find({isBattleEnded:false,campaignId:campaignId});
   const [artA, artB] = await findTopTwoArts(campaignId);
   if(battles.length<=0 && (artA && artB)){

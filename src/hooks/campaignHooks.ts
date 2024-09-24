@@ -5,7 +5,7 @@ import axios from "axios";
 
 export interface CampaignData {
   _id: string;
-  campaignTitle: string;
+  campaignUrl: string;
   campaignTheme: string;
   campaignWelcomeText: string;
   color:string;

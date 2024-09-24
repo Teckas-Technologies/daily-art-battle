@@ -5,6 +5,7 @@ import CampaignForm from "./components/CampaignForm";
 import CampaignTable from "./components/CampaignList";
 import { NearWalletConnector } from "@/components/NearWalletConnector";
 import { useMbWallet } from "@mintbase-js/react";
+import { ADMIN_ADDRESS } from "@/config/constants";
 
 
 const Admin: React.FC = () => {
@@ -84,6 +85,9 @@ const Admin: React.FC = () => {
       console.error("Failed to delete campaign:", error);
     }
   };
+  if(activeAccountId!=ADMIN_ADDRESS){
+    return <div>Restricted</div>
+  }
 
   return (
     <>

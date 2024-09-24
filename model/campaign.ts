@@ -1,7 +1,7 @@
 import mongoose, { Document, model } from 'mongoose';
 
 interface Campaign extends Document {
-  campaignTitle: string;
+  campaignUrl: string;
   campaignTheme: string;
   campaignWelcomeText: string;
   color:string;
@@ -13,7 +13,7 @@ interface Campaign extends Document {
 }
 
 const campaignSchema = new mongoose.Schema({
-    campaignTitle: { type: String, required: true,},
+    campaignUrl: { type: String, required: true,},
     creatorId: { type: String, required: true,},
     campaignTheme: {type: String,required: true,},
     campaignWelcomeText: {type: String,required: true,},

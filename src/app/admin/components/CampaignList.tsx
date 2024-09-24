@@ -113,8 +113,8 @@ const CampaignTable: React.FC<{ campaigns: any[], onEdit: (campaign: any) => voi
                       </td>
 
                       <td className="px-4 py-2 text-xs sm:text-2xl font-medium break-words break-all text-black text-center special-winner">
-                      <a href={`http://${window.location.host}/${campaign.campaignTitle}`} target="_blank" className="text-blue-500 hover:underline">
-                  {campaign.campaignTitle}
+                      <a href={`http://${window.location.host}/${campaign.campaignUrl}`} target="_blank" className="text-blue-500 hover:underline">
+                  {campaign.campaignUrl}
                 </a>
                         <br />
                       </td>

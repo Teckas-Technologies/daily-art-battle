@@ -18,7 +18,7 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
       try{
     await connectToDatabase();
     const data = req.body;
-    const campaign = await Campaign.findOne({campaignTitle : data.campaignTitle})
+    const campaign = await Campaign.findOne({campaignUrl : data.campaignUrl})
     console.log(data);
     if(!campaign){
     await Campaign.create(data);
@@ -62,7 +62,7 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
         return res.status(200).json({ success: true, data:{campaigns,totalDocuments,totalPages}});
       }
       const title = req.query.title;
-      const campaign = await Campaign.findOne({campaignTitle:title});
+      const campaign = await Campaign.findOne({campaignUrl:title});
       return res.status(200).json({ success: true, data:campaign});
     }
     catch(error){
