@@ -86,7 +86,7 @@ const Admin: React.FC = () => {
     }
   };
   if(activeAccountId!=ADMIN_ADDRESS){
-    return <div>Restricted</div>
+    return <div className="text-black">Restricted</div>
   }
 
   return (

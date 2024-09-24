@@ -75,7 +75,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
         setLoadingVideo(false);
       } else if (id === "logo") {
         setLoadingLogo(false);
-      }
+      }//66f2577f410bd8a94434fe3f 66f25823410bd8a94434fef1
       setDisabled(false);
     } else {
       setFormData((prevData) => ({

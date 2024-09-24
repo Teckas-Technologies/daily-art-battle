@@ -13,10 +13,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [campaign, setCampaign] = useState<CampaignData>();
   const [mediaUrl, setMediaUrl] = useState<string>("");
   const [mediaType, setMediaType] = useState<string>("");
+  const [error, setError] = useState(false);
   const { fetchCampaignByTitle } = useFetchCampaignByTitle();
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchCampaignByTitle(params.campaign);
+      if(data){
       setCampaign(data);
       setMediaUrl(data.video)
       
@@ -29,6 +31,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         const type = mimeType.split("/");
         setMediaType(type[0]);
       }
+    }
     };
     fetchData();
     console.log(mediaUrl)
@@ -63,9 +66,9 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
-  // if(!campaign){
-  //   return <>No campaign</>
-  // }
+  if(!campaign){
+    return <div className="text-black">No campaign</div>
+  }
 
   return (
     <main
