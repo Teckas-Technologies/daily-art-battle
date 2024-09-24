@@ -5,6 +5,7 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
+import { GFX_CAMPAIGNID } from "@/config/constants";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -13,13 +14,15 @@ interface Artwork {
   artistId: string;
 }
 
-const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
-  toggleUploadModal,
+
+const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fontColor:string,welcomeText:string,themeTitle:String }> = ({
+  toggleUploadModal,campaignId,fontColor,welcomeText,themeTitle
 }) => {
+
+
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { todayBattle, loading,battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
-
 
   const [artA, setArtA] = useState<Artwork>({
     id: "ArtA",
@@ -52,17 +55,34 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
    
     const fetchData = async () => {
       if (todayBattle && activeAccountId) {
-        const res = await fetchVotes(activeAccountId, todayBattle._id);
+        const res = await fetchVotes(activeAccountId, todayBattle._id,campaignId);
         if (res) {
           setVoterFor(res.votedFor);
           setSuccess(true);
         }
       }
     };
-
     fetchData();
-    fetchTodayBattle();
   }, [todayBattle, fetchVotes, refresh]);
+
+  
+  
+  useEffect(() => {
+    console.log(campaignId);
+  
+    const fetchBattle = async () => {
+      await fetchTodayBattle(campaignId);
+    };
+  
+    const timeoutId = setTimeout(() => {
+      fetchBattle();
+    }, 5000); // 10 seconds in milliseconds
+  
+    // Cleanup function to clear the timeout if the component unmounts or campaignId changes
+    return () => clearTimeout(timeoutId);
+  
+  }, [campaignId]);
+  
 
 
   useEffect(()=>{
@@ -134,6 +154,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
       participantId: activeAccountId,
       battleId: battleId,
       votedFor: id === "Art A" ? "Art A" : "Art B",
+      campaignId:campaignId
     });
     if (success) {
       setSuccess(true);
@@ -197,28 +218,37 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void }> = ({
     setPopUpA(false);
   }
 
-
- 
-
- 
   if (error) return <p>Error fetching battle details: {error}</p>;
   
-
-
   return (
     <div className="mt-10 mx-8">
       <div className="mt-9">
+      <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
+         style={{ color:fontColor}} >
+          {campaignId!=GFX_CAMPAIGNID&&(
+                  `Theme : ${themeTitle}`
+          )}
+     
+        </h2>
       {timeRemaining !== null && (
         <h2
-          className="  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
-          style={{ whiteSpace: "nowrap" }}
+          className="mt-2  text-4xl font-bold text-white text-center justify-center items-center text-black text-center"
+          style={{ whiteSpace: "nowrap" ,color:fontColor}}
         >
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg">
-      Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
-      </p>
+      <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
+        {campaignId==GFX_CAMPAIGNID?(
+          <>
+           Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
+          </>
+        ):(
+          <>
+          {welcomeText}
+          </>
+        )}
+           </p>
       
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>

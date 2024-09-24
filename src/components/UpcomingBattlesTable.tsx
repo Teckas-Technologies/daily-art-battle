@@ -11,8 +11,8 @@ import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from 'next/navigation';
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
-  uploadSuccess: boolean;
-}> = ({ toggleUploadModal, uploadSuccess }) => {
+  uploadSuccess: boolean;campaignId: string;fontColor:string
+}> = ({ toggleUploadModal, uploadSuccess ,campaignId,fontColor}) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const [refresh, setRefresh] = useState(false);
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
@@ -21,12 +21,12 @@ const UpcomingArtTable: React.FC<{
   const [sort, setSort] = useState("dateDsc");
 
 
-
+//console.log(arts);
   const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
-    fetchMoreArts(sortType, 1);
+    fetchMoreArts(campaignId,sortType, 1);
   };
 
 
@@ -34,7 +34,7 @@ const UpcomingArtTable: React.FC<{
   useEffect(() => {
     const initializeData = async () => {
    
-      fetchMoreArts(sort,page);
+      fetchMoreArts(campaignId,sort,page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
@@ -56,13 +56,13 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(sort,page + 1);
+    fetchMoreArts(campaignId,sort,page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(sort,page - 1);
+      fetchMoreArts(campaignId,sort,page - 1);
     }
   };
 
@@ -75,10 +75,10 @@ const UpcomingArtTable: React.FC<{
       style={{ width: "100%", gap: 8 }}
     >
       <div className="battle-table1">
-        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center" style={{color:fontColor}}>
           Upcoming Arts
         </h2>
-        <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg">
+        <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg" style={{color:fontColor}}>
           Upvote your favorite artworks to influence what will be up for battle
           next. Think you’ve got what it takes? Upload your own masterpiece and
           join the competition!{" "}
@@ -107,7 +107,7 @@ const UpcomingArtTable: React.FC<{
         <option value="voteDsc">Vote DSC</option>
       </select>
         </div>
-        <BattleTable artData={upcomingArts} setRefresh={setRefresh} />
+        <BattleTable artData={upcomingArts} setRefresh={setRefresh} campaignId={campaignId} />
         <nav className="flex justify-center flex-wrap gap-5 mt-5">
           <a
           href={page > 1 ? "#upcoming" : undefined}
@@ -140,9 +140,9 @@ const UpcomingArtTable: React.FC<{
 };
 
 const BattleTable: React.FC<{
-  artData: ArtData[];
+  artData: ArtData[];campaignId:string;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ artData, setRefresh }) => {
+}> = ({ artData, setRefresh,campaignId }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
@@ -191,7 +191,7 @@ const BattleTable: React.FC<{
   useEffect(() => {
     const fetchUserVotes = async () => {
       if (activeAccountId) {
-        const votes = await fetchVotes(activeAccountId);
+        const votes = await fetchVotes(activeAccountId,campaignId);
         setVotes(votes);
       }
     };
@@ -215,10 +215,14 @@ const BattleTable: React.FC<{
     const success = await submitVote({
       participantId: activeAccountId,
       artId: id,
+      campaignId:campaignId
     });
+
+    console.log(success);
     if (success) {
       setSuccess(true);
-      const votes = await fetchVotes(activeAccountId);
+      const votes = await fetchVotes(activeAccountId,campaignId);
+      console.log(votes);
       setVotes(votes);
       //   alert('Vote submitted successfully!');
       setRefresh((prev) => !prev);

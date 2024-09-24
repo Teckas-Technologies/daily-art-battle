@@ -5,13 +5,14 @@ interface Vote {
   participantId: string;
   battleId: string;
   votedFor: 'Art A' | 'Art B';
+  campaignId:string;
 }
 
 interface UseVotingReturn {
   votes: Vote[];
   error: string | null;
   loading: boolean;
-  fetchVotes: (participantId: string, battleId: string) => Promise<Vote | null>;
+  fetchVotes: (participantId: string, battleId: string,campaignId:string) => Promise<Vote | null>;
   submitVote: (voteData: Vote) => Promise<boolean>;
 }
 
@@ -21,10 +22,10 @@ export const useVoting = (): UseVotingReturn => {
   const [loading, setLoading] = useState<boolean>(false);
 
   //fetchVotes is used for fetching votes by participantId and battle Id
-  const fetchVotes = useCallback(async (participantId: string, battleId: string): Promise<Vote | null> => {
+  const fetchVotes = useCallback(async (participantId: string, battleId: string,campaignId:string): Promise<Vote | null> => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/vote?participantId=${participantId}&battleId=${battleId}`);
+      const response = await fetch(`/api/vote?participantId=${participantId}&battleId=${battleId}&campaignId=${campaignId}`);
       const data = await response.json();
       if (response.ok) {
         setError(null);
