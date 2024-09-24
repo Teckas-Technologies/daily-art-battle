@@ -12,7 +12,7 @@ export const NearWalletConnector: React.FC = () => {
     const wallet = await selector.wallet();
     return wallet.signOut();
   };
-
+  console.log(ADMIN_ADDRESS);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };

@@ -5,6 +5,7 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
+import { GFX_CAMPAIGNID } from "@/config/constants";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -224,7 +225,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
       <div className="mt-9">
       <h2 className="md:text-4xl lg:text-5xl sm:text-2xl font-mono  font-bold text-white text-center justify-center items-center text-black text-center"
          style={{ color:fontColor}} >
-          {campaignId!='gfxvs'&&(
+          {campaignId!=GFX_CAMPAIGNID&&(
                   `Theme : ${themeTitle}`
           )}
      
@@ -238,7 +239,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
         </h2>
       )}
       <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
-        {campaignId=='gfxvs'?(
+        {campaignId==GFX_CAMPAIGNID?(
           <>
            Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
           </>
