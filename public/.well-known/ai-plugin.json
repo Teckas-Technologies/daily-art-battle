@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://gfxvs.com"
+            "url": "https://testnet.gfxvs.com"
         }
     ],
     "x-mb": {
