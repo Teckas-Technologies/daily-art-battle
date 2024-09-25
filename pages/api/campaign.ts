@@ -51,12 +51,26 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
         const skip = (page - 1) * limit;
-        const totalDocuments = await Campaign.countDocuments({  startDate: { $lte: today },
-          endDate: { $gte: today },});
+        const totalDocuments = await Campaign.countDocuments({    $or: [
+          { 
+            startDate: { $lte: today },  
+            endDate: { $gte: today }
+          },
+          {
+            startDate: { $gt: today } 
+          }
+        ]});
         const totalPages = Math.ceil(totalDocuments / limit);
         const campaigns = await Campaign.find({
-          startDate: { $lte: today },
-          endDate: { $gte: today },
+          $or: [
+            { 
+              startDate: { $lte: today },  
+              endDate: { $gte: today }
+            },
+            {
+              startDate: { $gt: today } 
+            }
+          ]
         }).skip(skip).limit(limit);
       
         return res.status(200).json({ success: true, data:{campaigns,totalDocuments,totalPages}});
