@@ -243,18 +243,18 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
+      <div className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
         {campaignId==GFX_CAMPAIGNID?(
           <div>
-          <a target="_blank" onClick={handleCampaign}><h1 className="text-2xl font-bold mb-2 text-amber-300">🔔 Click here to explore running campaigns and join the excitement!</h1></a>
-           Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
+          <h1 onClick={handleCampaign} className="text-xl md:text-2xl lg:text-2xl font-bold mb-2 text-amber-300 cursor-pointer">🔔 Click here to explore running campaigns and join the excitement!</h1>
+           <p>Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!</p>
           </div>
         ):(
-          <>
+          <p>
           {welcomeText}
-          </>
+          </p>
         )}
-           </p>
+           </div>
       
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
