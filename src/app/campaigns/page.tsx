@@ -93,6 +93,14 @@ if(loading){
                   </th>
                   <th
                   
+                  className="text-white text-center cursor-pointer font-normal"
+                >
+                  <span className="flex items-center justify-center ">
+                        Start Date
+                  </span>
+                </th>
+                  <th
+                  
                     className="text-white text-center cursor-pointer font-normal"
                   >
                     <span className="flex items-center justify-center ">
@@ -160,6 +168,11 @@ if(loading){
                   {campaign.campaignUrl}
                 </a>
                         <br />
+                      </td>
+                      <td
+                        className="px-4 py-2 text-xs  sm:text-2xl font-medium break-words  break-all text-black text-center special-winner"
+                      >
+                        {campaign.startDate}
                       </td>
                       <td
                         className="px-4 py-2 text-xs  sm:text-2xl font-medium break-words  break-all text-black text-center special-winner"
