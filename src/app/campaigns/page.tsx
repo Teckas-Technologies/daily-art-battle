@@ -8,14 +8,20 @@ const CampaignTable: React.FC = () => {
  const {fetchAllCampaign} = useFetchCampaignByTitle();
  const [hasnext, setHasNext] = useState(false);
  const [page, setPage] = useState(1);
+ const [hasCampaign,setHasCampaign] = useState(true);
+ const [loading,setLoading] = useState(true);
 
  const fetchCampaign=async(val:any)=>{
  const res =  await fetchAllCampaign(val);
+ setLoading(false);
  console.log(res);
  if (page > res.totalPages - 1) {
   setHasNext(true);
 } else {
   setHasNext(false);
+}
+if(res.totalDocuments<1){
+  setHasCampaign(false);
 }
   setCampaign(res.campaigns);
  }
@@ -33,6 +39,10 @@ const handlePrevious = () => {
     setPage((prevPage) => prevPage - 1);
   }
 };
+
+if(loading){
+  return <div className="text-black">Loading...</div>
+}
  
 
   return (
@@ -52,14 +62,17 @@ const handlePrevious = () => {
     Your browser does not support the video tag.
 </video>
 <section id="campaigns">
+{hasCampaign?(
     <div className="battle-table mt-8  md:ml-8 md:mr-8 lg:ml-20 lg:mr-20 my-12 flex flex-col items-center">
       <h2 className="mt-10 text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center">
        Campaigns
       </h2>
+     
       <p className="battle-table1 w-full overflow-x-auto text-center text-white font-mono mt-5 sm:font-thin md:text-lg">
        
       Explore the list of active campaigns below. By clicking on the provided URLs, you can join and contribute to these exciting initiatives. Don't miss your chance to participate and make a difference!
       </p>
+    
       <div className=" pb-10 w-full overflow-x-auto">
         <div className="flex items-center justify-between">
           <div className="px-5 w-full">
@@ -189,7 +202,21 @@ const handlePrevious = () => {
           </a>
         </nav>
       </div>
+     
     </div>
+     ):(
+<div className="max-w-lg mx-auto bg-gradient-to-br from-green-400 via-white to-green-500 p-8 md:p-8 p-4 rounded-2xl shadow-xl border-4 border-green-600 relative text-center">
+    <div className="flex justify-center items-center text-3xl text-green-800 mb-4">
+        <span className="font-bold">⚠️ No Active Campaigns</span>
+    </div>
+    <p className="text-lg text-gray-700 font-light mb-6">
+        Currently, there are no campaigns running. Stay tuned for exclusive NFT drops and updates!
+    </p>
+    <a href={`http://${window.location.host}`}><button className="bg-green-800 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+        Back to Home
+    </button></a>
+</div>
+    )}
     </section>
     </div>
   );

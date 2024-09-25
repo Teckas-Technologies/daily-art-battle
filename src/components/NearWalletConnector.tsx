@@ -64,15 +64,6 @@ export const NearWalletConnector: React.FC = () => {
      
       {isConnected ? (
         <div className="flex flex-row justify-center items-center hover-trigger">
-           <div className="relative">
-           <button
-        id="dropdownNavbarLink"
-        onClick={handleCampaign}
-        className="px-2 items-center text-xs sm:text-sm md:text-base hover:underline"
-      >
-        Campaings
-      </button>
-      </div>
           <p className="px-2 items-center text-xs sm:text-sm md:text-base">
             {activeAccountId}
           </p>
@@ -94,13 +85,6 @@ export const NearWalletConnector: React.FC = () => {
         </div>
       ) : (
         <div className="flex flex-row justify-center items-center hover-trigger">
-        <button
-        id="dropdownNavbarLink"
-        onClick={handleCampaign}
-        className="px-2 items-center text-xs sm:text-sm md:text-base hover:underline"
-      >
-        Campaings
-      </button>
         <img
           onClick={handleSignIn}
           src="/wallet open.png"

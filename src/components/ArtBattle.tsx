@@ -240,9 +240,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
       )}
       <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
         {campaignId==GFX_CAMPAIGNID?(
-          <>
+          <div>
+          <a target="_blank" href={`http://${window.location.host}/campaigns`}><h1 className="text-2xl font-bold mb-2 text-amber-300">🔔 Click here to explore running campaigns and join the excitement!</h1></a>
            Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
-          </>
+          </div>
         ):(
           <>
           {welcomeText}
