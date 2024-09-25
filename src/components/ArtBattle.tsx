@@ -6,6 +6,7 @@ import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
 import { GFX_CAMPAIGNID } from "@/config/constants";
+import { useRouter } from 'next/navigation';
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -23,6 +24,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
   const { isConnected, connect, activeAccountId } = useMbWallet();
   const { todayBattle, loading,battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
+    const router = useRouter();
 
   const [artA, setArtA] = useState<Artwork>({
     id: "ArtA",
@@ -66,7 +68,10 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
   }, [todayBattle, fetchVotes, refresh]);
 
   
-  
+  const handleCampaign = () => {
+    router.push(`/campaigns`);
+  };
+
   useEffect(() => {
     console.log(campaignId);
   
@@ -238,17 +243,18 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
           {formatTime(timeRemaining)}
         </h2>
       )}
-      <p className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
+      <div className="mt-2 text-center text-white font-mono  md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin mb-8 md:text-lg" style={{color:fontColor}}>
         {campaignId==GFX_CAMPAIGNID?(
-          <>
-           Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!
-          </>
+          <div>
+          <h1 onClick={handleCampaign} className="text-xl md:text-2xl lg:text-2xl font-bold mb-2 text-amber-300 cursor-pointer">🔔 Click here to explore running campaigns and join the excitement!</h1>
+           <p>Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!</p>
+          </div>
         ):(
-          <>
+          <p>
           {welcomeText}
-          </>
+          </p>
         )}
-           </p>
+           </div>
       
       {skeletonLoad ? (
       <div className="flex items-center justify-center space-x-4" style={{ marginTop: '50px' }}>
