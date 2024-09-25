@@ -102,13 +102,6 @@ export const Navbar:React.FC<{ logo:string }> = ({
         </div>
       ) : (
         <div className="flex flex-row justify-center items-center hover-trigger">
-        <button
-        id="dropdownNavbarLink"
-        onClick={handleCampaign}
-        className="px-2 items-center text-xs sm:text-sm md:text-base hover:underline"
-      >
-        Campaings
-      </button>
         <img
           onClick={handleSignIn}
           src="/wallet open.png"
