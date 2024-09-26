@@ -1,6 +1,17 @@
 import { connectToDatabase } from "./mongoose";
 import Battle from "../model/Battle";
 
+// Fetch today battle images for farcaster
+export async function fetchTodayBattle(): Promise<any[]> {
+  await connectToDatabase();
+  
+  return Battle.find({
+    campaignId: "gfxvs",
+    isBattleEnded: false,
+    isNftMinted: false
+  }).exec();
+}
+
 export async function getNextAvailableDate(): Promise<Date> {
   await connectToDatabase();
   const latestBattle = await Battle.findOne().sort({ battleEndTime: -1 });
