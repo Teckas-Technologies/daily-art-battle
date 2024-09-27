@@ -1,13 +1,13 @@
-//battlespinner.ts is used to fetch today battle and return spinner url
+//battlespinner.ts is used to fetch today battle and return spinner url with emoji
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { fetchTodayBattle } from '../../utils/battleUtils';
-import spinner from '../../utils/spinnerUtils';
+import spinnerWithEmoji from '../../utils/farcasterSpinnerUtil';
 import uploadArweave from '../../utils/uploadArweave';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         switch (req.method) {
-            //GET method is used to fetch today battle and return spinner
+            //GET method is used to fetch today battle and return spinner with emoji
             case 'GET':
                 const response = await fetchTodayBattle();
                 if (!response || response?.length === 0) {
@@ -15,11 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
                 const artA = response[0].artAcolouredArt;
                 const artB = response[0].artBcolouredArt;
-                const spinnerBase64 = await spinner(artA, artB);
-                console.log("Base64:", spinnerBase64)
-                const spinnerUrl = await uploadArweave(spinnerBase64);
+                const spinnerRes = await spinnerWithEmoji(artA, artB);
+                console.log("Base64:", spinnerRes?.gif);
+                const spinnerUrl = await uploadArweave(spinnerRes?.gif);
                 console.log("Url: ", spinnerUrl)
-                return res.status(200).json({ url: spinnerUrl });
+                return res.status(200).json({ spinnerUrl: spinnerUrl, emoji1: spinnerRes?.emoji1, emoji2: spinnerRes?.emoji2 });
             default:
                 res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
                 return res.status(405).end(`Method ${req.method} Not Allowed`);
