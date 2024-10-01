@@ -17,7 +17,9 @@ export const countVotes = async (): Promise<void> => {
         const votes = await Voting.find({ battleId: battle.id});
         const artAVotes = votes.filter(vote => vote.votedFor === 'Art A');
         const artBVotes = votes.filter(vote => vote.votedFor === 'Art B');
+
         const winningArt = artAVotes.length >= artBVotes.length ? 'Art A' : 'Art B';
+
         console.log(artAVotes.map(vote => vote.participantId));
         console.log(artBVotes.map(vote => vote.participantId));
         // Update battle information
@@ -26,8 +28,15 @@ export const countVotes = async (): Promise<void> => {
         battle.isBattleEnded = true;
         battle.winningArt = winningArt;
         battle.totalVotes = votes.length;
-        battle.artAvoters = artAVotes.map(vote => vote.participantId);
-        battle.artBvoters = artBVotes.map(vote => vote.participantId);
+
+        battle.artAvoters = artAVotes
+          .map(vote => vote.participantId)
+          .filter(participantId => participantId && participantId.trim() !== '' && participantId !== null);
+
+        battle.artBvoters = artBVotes
+          .map(vote => vote.participantId)
+          .filter(participantId => participantId && participantId.trim() !== '' && participantId !== null);
+
         console.log(battle.artBvoters);
        const res =  await battle.save();
        console.log("saved",res);

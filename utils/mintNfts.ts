@@ -29,12 +29,12 @@ export const mintNfts = async (): Promise<void> => {
     battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
-      if(battle.artAVotes>0){
-      const tokenIds =  await mintNFTsForParticipants(battle.artAVotes,battle.artAcolouredArt,battle.artAcolouredArtReference);
+      if(battle.artAvoters.length >0){
+      const tokenIds =  await mintNFTsForParticipants(battle.artAvoters.length,battle.artAcolouredArt,battle.artAcolouredArtReference);
       await handleTransfer(tokenIds,battle.artAvoters);
       }
-      if(battle.artBVotes>0){
-        const tokenIds =  await mintNFTsForParticipants(battle.artBVotes,battle.artBcolouredArt,battle.artBcolouredArtReference);
+      if(battle.artBvoters.length>0){
+        const tokenIds =  await mintNFTsForParticipants(battle.artBvoters.length,battle.artBcolouredArt,battle.artBcolouredArtReference);
         await handleTransfer(tokenIds,battle.artBvoters);
       }
       if(battle.isSpecialWinnerMinted==false){

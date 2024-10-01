@@ -15,17 +15,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   if (req.method === 'POST') {
     try {
-    const { participantId, battleId, votedFor,campaignId } = req.body;
+    const { participantId, battleId, votedFor,campaignId, fcId } = req.body;
+
+    if (!participantId && !fcId) {
+      return res.status(400).json({ success: false, message: "Either participantId or fcId must be provided." });
+    }
+
+    const query: any = { battleId, campaignId };
+    if (participantId) {
+      query.participantId = participantId;
+    } else {
+      query.fcId = fcId;
+    }
 
     // Check if the participant has already voted for this battle
-    const existingVote = await Voting.findOne({ participantId, battleId ,campaignId});
+    const existingVote = await Voting.findOne(query);
     if (existingVote) {
       return res.status(400).json({ success: false, message: "Participant has already voted for this battle." });
     }
 
     // Create a new vote
    
-      const vote = await Voting.create({ participantId, battleId, votedFor ,campaignId});
+      const vote = await Voting.create({ participantId, battleId, votedFor ,campaignId, fcId});
       res.status(201).json({ success: true, data: vote });
     } catch (error) {
       res.status(400).json({ success: false, error });
@@ -33,8 +44,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     //GET method is used to fetch vote by participantId and battleId.
   } if (req.method === 'GET') {
     try {
-      const { participantId, battleId,campaignId } = req.query;
-      const existingVote = await Voting.findOne({ participantId, battleId ,campaignId});
+      const { participantId, battleId,campaignId, fcId } = req.query;
+      if (!participantId && !fcId) {
+        return res.status(400).json({ success: false, message: "Either participantId or fcId must be provided." });
+      }
+      const query: any = { battleId, campaignId };
+      if (participantId) {
+        query.participantId = participantId;
+      } else {
+        query.fcId = fcId;
+      }
+      const existingVote = await Voting.findOne(query);
       res.status(200).json({ success: true, data: existingVote });
     } catch (error) {
       res.status(400).json({ success: false, error });
