@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const artB = response[0].artBcolouredArt;
                 const spinnerRes = await spinnerWithEmoji(artA, artB);
                 console.log("Base64:", spinnerRes?.gif);
-                const spinnerUrl = await uploadArweave(spinnerRes?.gif);
-                console.log("Url: ", spinnerUrl)
-                return res.status(200).json({ spinnerUrl: spinnerUrl, emoji1: spinnerRes?.emoji1, emoji2: spinnerRes?.emoji2, battleId: response[0]?._id.toString() });
+                const urlRes = await uploadArweave(spinnerRes?.gif);
+                console.log("Url: ", urlRes)
+                return res.status(200).json({ spinnerUrl: urlRes?.url, metadata: urlRes?.referenceUrl, emoji1: spinnerRes?.emoji1, emoji2: spinnerRes?.emoji2, battleId: response[0]?._id.toString() });
             default:
                 res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
                 return res.status(405).end(`Method ${req.method} Not Allowed`);
