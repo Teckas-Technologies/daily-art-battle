@@ -17,7 +17,6 @@ export default async function spinnerWithEmoji(artAcolouredArt:string,artBcolour
       image2: imageB,
       transition_type: 'rotate'
     });
-    console.log("Res:",response);
     return response?.data;
 
   } catch (error) {

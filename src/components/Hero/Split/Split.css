@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
+.spartan {
+    font-family: "League Spartan", sans-serif;
+}
+
+.arta,
+.artb {
+    border: 1px solid #464646;
+}
+
+.art-overlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 19.15%, #000000 71.59%);
+}
