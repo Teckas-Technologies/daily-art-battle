@@ -42,9 +42,6 @@ export const useTodayBattleSpinner = (): UseTdyBatSpinnerReturn => {
         }
     }, []);
 
-    return {
-        error,
-        loading,
-        fetchTodayBattleSpinner
+    return { error, loading, fetchTodayBattleSpinner
     };
 };

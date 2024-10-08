@@ -205,7 +205,7 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
         <>
             <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[2rem] flex flex-col items-center justify-center bg-black">
 
-                <div className="bottom-hero w-full h-auto" style={{ backgroundImage: "url('/images/Hero-Bg.png')", backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                <div className="bottom-hero w-full h-auto">
                     <div className="top-hero flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] md:px-[16.5rem] px-3">
                         {timeRemaining !== null ? (<div className="top-hero-left md:w-auto w-full flex items-center md:justify-center justify-between md:gap-[2.5rem]">
                             <h3 className='font-semibold spartan text-xl timer'>Time left to vote</h3>

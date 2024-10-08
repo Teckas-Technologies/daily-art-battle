@@ -13,12 +13,12 @@
 .welcome-text {
     color: #CFCFCF;
 }
-/* .bottom-hero {
-    background-image: url('/images/Hero-Bg.png');
+.bottom-hero {
+    background-image: url('https://arweave.net/QT7n91-9G5j6m66BYYjzsmr5T5odXMkyFG79Sw6FovU');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-} */
+}
 
 .view-bar {
     border: 1px solid #464646;
