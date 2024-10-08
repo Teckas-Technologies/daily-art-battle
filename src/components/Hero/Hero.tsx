@@ -205,7 +205,7 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
         <>
             <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[2rem] flex flex-col items-center justify-center bg-black">
 
-                <div className="bottom-hero w-full h-auto">
+                <div className="bottom-hero w-full h-auto" style={{ backgroundImage: "url('/images/Hero-Bg.png')", backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
                     <div className="top-hero flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] md:px-[16.5rem] px-3">
                         {timeRemaining !== null ? (<div className="top-hero-left md:w-auto w-full flex items-center md:justify-center justify-between md:gap-[2.5rem]">
                             <h3 className='font-semibold spartan text-xl timer'>Time left to vote</h3>
@@ -235,12 +235,12 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
                     </div>
 
                     {todayBattle && <div className={`battle-vote-btns w-full flex items-center h-auto mt-5 pb-5 px-3`}>
-                        <div className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active ? "md:pr-[8rem]": "md:pr-[12.5rem]"}`}>
+                        <div className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active ? "md:pr-[8rem]" : "md:pr-[12.5rem]"}`}>
                             <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-2 border border-green-600 rounded-3xl cursor-pointer`}>
                                 <h2 className='spartan font-bold text-sm'>{votedFor === artA.name ? "Voted ART A" : viewTools[1].active || viewTools[2].active ? "Vote for Art A" : "Vote here"}</h2>
                             </button>
                         </div>
-                        <div className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active ? "md:pl-[8rem]": "md:pl-[12.5rem]"} `}>
+                        <div className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active ? "md:pl-[8rem]" : "md:pl-[12.5rem]"} `}>
                             <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-2 border border-green-600 rounded-3xl cursor-pointer`}>
                                 <h2 className='spartan font-bold text-sm'>{votedFor === artB.name ? "Voted ART B" : viewTools[1].active || viewTools[2].active ? "Vote for Art B" : "Vote here"}</h2>
                             </button>

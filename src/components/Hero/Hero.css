@@ -13,12 +13,12 @@
 .welcome-text {
     color: #CFCFCF;
 }
-.bottom-hero {
+/* .bottom-hero {
     background-image: url('/images/Hero-Bg.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-}
+} */
 
 .view-bar {
     border: 1px solid #464646;
