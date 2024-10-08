@@ -18,7 +18,7 @@ const Home: NextPage = () => {
 
   return (
     <main className="flex flex-col justify-center" style={{ width: '100vw',  backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
-     <video autoPlay muted loop id="background-video" style={{ 
+     {/* <video autoPlay muted loop id="background-video" style={{ 
     position: 'fixed', 
     right: 0, 
     bottom: 0, 
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
 }}>
     <source src="images/back.mp4" type="video/mp4" />
     Your browser does not support the video tag.
-</video>
+</video> */}
       <NearWalletConnector />
       {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <ArtBattle  
