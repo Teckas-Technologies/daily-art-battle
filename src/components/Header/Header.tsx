@@ -1,14 +1,18 @@
 "use client";
 import InlineSVG from 'react-inlinesvg';
 import './Header.css';
+import { useRouter, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const navs = [
-    { id: "leaderboard", label: "Leaderboard" },
-    { id: "campaigns", label: "Campaigns" },
-    { id: "artbattles", label: "Art Battles" },
+    { id: "leaderboard", label: "Leaderboard", path: "/leaderboard" },
+    { id: "campaigns", label: "Campaigns", path: "/campaigns" },
+    { id: "artbattles", label: "Art Battles", path: "/" },
 ];
 
 export const Header: React.FC = () => {
+    const pathName = usePathname();
+
     return (
         <div className="header fixed bg-black h-[7rem] w-full z-50 top-0 left-0 flex items-center justify-between md:px-[7rem] px-3">
             <div className="header-left flex items-center justify-center px-4 gap-5 rounded-[7rem] md:px-10 py-2">
@@ -16,7 +20,7 @@ export const Header: React.FC = () => {
                     <div className="img md:h-11 md:w-11 h-9 w-9">
                         <img src="/images/logo.png" alt="logo" className="w-full h-full" />
                     </div>
-                    <h2 className="text-white hidden md:block spartan font-bold text-lg">GFXvs</h2>
+                    <h2 className="text-white hidden md:block spartan-bold font-bold text-lg">GFXvs</h2>
                     <div className="header-menu md:hidden">
                         <InlineSVG
                             src="/icons/menu.svg"
@@ -26,7 +30,7 @@ export const Header: React.FC = () => {
                 </div>
                 <div className="nav-links hidden md:flex gap-5">
                     {navs.map((nav, index) => (
-                        <h3 key={index} className="text-white cursor-pointer font-semibold spartan"> {/* add "active" class for active menu */}
+                        <h3 key={index} className={`text-white cursor-pointer font-semibold spartan-semibold text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
                             {nav?.label}
                         </h3>
                     ))}
@@ -38,9 +42,9 @@ export const Header: React.FC = () => {
                     className="md:h-11 md:w-11 h-8 w-8"
                 />
                 {/* <div className="header-actions flex items-center gap-3">
-                    <h2 className='font-semibold spartan'>Login |</h2>
+                    <h2 className='font-semibold spartan-semibold'>Login |</h2>
                     <div className="register-btn px-5 py-2 border rounded-3xl cursor-pointer">
-                        <h2 className='font-bold spartan'>Get Started</h2>
+                        <h2 className='font-bold spartan-semibold'>Get Started</h2>
                     </div>
                     
                 </div> */}
@@ -53,8 +57,8 @@ export const Header: React.FC = () => {
                         />
                     </div>
                     <div className="name-id hidden md:block">
-                        <h2 className='spartan font-bold text-md text-center'>Johnson</h2>
-                        <h4 className='spartan text-sm text-center email'>johnson794544@gmail.com</h4>
+                        <h2 className='spartan-bold font-bold text-md text-center'>Johnson</h2>
+                        <h4 className='spartan-light text-sm text-center email'>johnson794544@gmail.com</h4>
                     </div>
                     <div className="gfx-points flex md:flex-col md:gap-0 gap-1">
                         <div className="point-name flex items-center gap-1">
@@ -62,10 +66,10 @@ export const Header: React.FC = () => {
                                 src="/icons/gfx-point.svg"
                                 className="h-5 w-5"
                             />
-                            <h2 className='spartan hidden md:block'>GFXvs</h2>
+                            <h2 className='spartan-semibold hidden md:block'>GFXvs</h2>
                         </div>
                         <div className="points">
-                            <h2 className='spartan text-center font-bold'>2000</h2>
+                            <h2 className='md:spartan-bold spartan-semibold text-center font-bold'>2000</h2>
                         </div>
                     </div>
                 </div>
