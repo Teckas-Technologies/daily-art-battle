@@ -1,149 +1,152 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
-  @layer base {
-    :root {
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
-      --radius: 0.5rem;
-    }
-
-    .dark {
-      --background: 222.2 84% 4.9%;
-      --foreground: 210 40% 98%;
-
-      --card: 222.2 84% 4.9%;
-      --card-foreground: 210 40% 98%;
-
-      --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
-
-      --primary: 210 40% 98%;
-      --primary-foreground: 222.2 47.4% 11.2%;
-
-      --secondary: 217.2 32.6% 17.5%;
-      --secondary-foreground: 210 40% 98%;
-
-      --muted: 217.2 32.6% 17.5%;
-      --muted-foreground: 215 20.2% 65.1%;
-
-      --accent: 217.2 32.6% 17.5%;
-      --accent-foreground: 210 40% 98%;
-
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-
-      --border: 217.2 32.6% 17.5%;
-      --input: 217.2 32.6% 17.5%;
-      --ring: 212.7 26.8% 83.9%;
-    }
+    --radius: 0.5rem;
   }
 
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
-  }
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 50; /* Ensure the z-index is lower than the z-index of your grid container */
-  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    width: 100%;
-    color: rgb(var(--foreground-rgb));
-    background-position: top;
-    background-size: cover;
-    /* background: linear-gradient(
+    @apply bg-background text-foreground;
+  }
+}
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50; /* Ensure the z-index is lower than the z-index of your grid container */
+}
+
+body {
+  width: 100%;
+  color: rgb(var(--foreground-rgb));
+  background-position: top;
+  background-size: cover;
+  /* background: linear-gradient(
         to bottom,
         transparent,
         rgb(var(--background-end-rgb))
       )
       rgb(var(--background-start-rgb)); */
-  }
+}
 
-  .close-button {
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: black;
-  }
+.close-button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: black;
+}
 
-  .connect-btn{
-    background-color: #fff;
-    color: #000;
-  }
-  .connect-btn:hover{
-    background-color: #ffffffc1;
-    color: #000;
-  }
-  
+.connect-btn {
+  background-color: #fff;
+  color: #000;
+}
+.connect-btn:hover {
+  background-color: #ffffffc1;
+  color: #000;
+}
 
-  body {
-    overflow-x: hidden; /* Hide horizontal scrollbar */
-  }
+body {
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
 
-  .hover-trigger:hover .hover-target{
-    color: rgb(248, 91, 91);
-  }
+.hover-trigger:hover .hover-target {
+  color: rgb(248, 91, 91);
+}
 
-  .custom-text-size {
-    max-width: 8rem; /* matches w-24 */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.custom-text-size {
+  max-width: 8rem; /* matches w-24 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (min-width: 640px) {
-    .custom-text-size {
-        max-width: 9rem; /* matches sm:w-36 */
-    }
+  .custom-text-size {
+    max-width: 9rem; /* matches sm:w-36 */
+  }
 }
 
 @media (min-width: 768px) {
-    .custom-text-size {
-        max-width: 15rem; /* matches md:w-60 */
-    }
+  .custom-text-size {
+    max-width: 15rem; /* matches md:w-60 */
+  }
 }
 .shadow-bottom {
   box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 }
 .gradient-shadow {
-  background: linear-gradient(to bottom, rgba(15, 15, 15, 0) 0%, rgba(0, 0, 0, 0.849) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 15, 15, 0) 0%,
+    rgba(0, 0, 0, 0.849) 100%
+  );
   border-bottom-left-radius: 20px;
 }
 .textarea-error {
@@ -153,4 +156,28 @@
   color: red; /* Error message color */
   font-size: 12px;
   margin-top: 4px;
+}
+@font-face {
+  font-family: "Spartan";
+  src: url("/fonts/spartan-mb/SpartanMB-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Spartan";
+  src: url("/fonts/spartan-mb/SpartanMB-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Spartan";
+  src: url("/fonts/spartan-mb/SpartanMB-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Spartan";
+  src: url("/fonts/spartan-mb/SpartanMB-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
 }

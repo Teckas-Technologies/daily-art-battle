@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { NearWalletConnector } from '../components/NearWalletConnector';
 import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
 import ArtBattle from '../components/ArtBattle';
-import UpcomingBattlesTable from '../components/UpcomingBattlesTable';
+import UpcomingHeader from '../components/Upcoming Arts/UpcomingHeader';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
@@ -37,7 +37,7 @@ const Home: NextPage = () => {
         fontColor={""}
         welcomeText={""}
         themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <UpcomingHeader  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>

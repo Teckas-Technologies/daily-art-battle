@@ -1,0 +1,157 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
+.spartan-bold {
+  font-family: "Spartan", sans-serif;
+  font-weight: 700;
+}
+.spartan-semibold {
+  font-family: "Spartan", sans-serif;
+  font-weight: 600;
+}
+
+.spartan {
+  font-family: "League Spartan", sans-serif;
+}
+.spartan-medium {
+  font-family: "Spartan", sans-serif;
+  font-weight: 400;
+}
+.spartan-light {
+  font-family: "Spartan", sans-serif;
+  font-weight: 300;
+}
+.upcoming-header {
+  height: 430.5px;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, #000000 102.7%),
+    url("/images/image7.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  text-align: center;
+}
+
+.upcoming-subHeading {
+  font-family: "Spartan";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20.16px;
+  margin-bottom: 5px;
+  letter-spacing: -3%;
+}
+
+.upcoming-heading {
+  font-family: "Spartan";
+  font-size: 58.5px;
+  font-weight: 600;
+  letter-spacing: -6%;
+  margin-bottom: 20px;
+  background: linear-gradient(180deg, #ffffff 40%, #999999 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.upcoming-heading span {
+  background: linear-gradient(180deg, #00ff00 50%, #007200 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 58.5px;
+  font-weight: 600;
+  letter-spacing: -6%;
+}
+
+.description {
+  font-family: "Spartan";
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 auto 30px;
+  line-height: 21.2px;
+  letter-spacing: -6%;
+  align-items: center;
+}
+
+.uploadButtonWrapper {
+  position: relative;
+  width: 193.38px;
+  height: 57px;
+  margin: 10px auto;
+  padding: 1px;
+  border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.uploadButton {
+  width: 100%;
+  height: 100%;
+  padding: 12.41px 27.69px;
+  border-radius: 47.1px;
+  background: radial-gradient(
+    128.13% 128.13% at 50% 50%,
+    #000000 25%,
+    rgba(0, 255, 0, 0) 100%
+  );
+  position: relative;
+  z-index: 2;
+  border-radius: 47.1px;
+  color: #ffffff;
+  font-family: "Spartan";
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19.25px;
+  letter-spacing: -6%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadButtonBorder {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 47.1px;
+  background: linear-gradient(
+    99.76deg,
+    #00ff00 8.86%,
+    rgba(0, 153, 0, 0) 91.14%
+  );
+  z-index: 0;
+  padding: 1.27px;
+  box-sizing: border-box;
+}
+
+.uploadButtonOverlay {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 47.1px;
+  background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .upcoming-heading {
+    font-size: 32px;
+  }
+  .upcoming-heading span {
+    font-size: 32px;
+  }
+  .upcoming-subHeading {
+    font-size: 16px;
+  }
+  .description {
+    font-size: 14px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
