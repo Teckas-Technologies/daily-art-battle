@@ -74,6 +74,36 @@
       @apply bg-background text-foreground;
     }
   }
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+
   .navbar {
     position: fixed;
     top: 0;

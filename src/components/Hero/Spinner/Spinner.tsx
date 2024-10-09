@@ -25,7 +25,7 @@ export const Spinner: React.FC = () => {
         <>
             {/* Spinner battle starts */}
             <div className="flex w-full justify-center mt-5">
-                <div className="spinner-img relative w-full md:max-w-[25rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none">
+                <div className="spinner-img relative w-full md:max-w-[26.5rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none">
                     <img
                         alt="spinner"
                         draggable={false}

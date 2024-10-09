@@ -1,7 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
 
-.spartan {
-    font-family: "League Spartan", sans-serif;
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
 }
 
 .timer {
@@ -13,6 +27,7 @@
 .welcome-text {
     color: #CFCFCF;
 }
+
 .bottom-hero {
     background-image: url('https://arweave.net/QT7n91-9G5j6m66BYYjzsmr5T5odXMkyFG79Sw6FovU');
     background-position: center;
@@ -30,5 +45,5 @@
 
 .battle-vote-btn {
     border: 1px solid #00F900;
-    background: radial-gradient(circle, rgba(0,0,0,0.9052871148459384) 0%, rgba(0,255,0,0.17699579831932777) 100%);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.9052871148459384) 0%, rgba(0, 255, 0, 0.17699579831932777) 100%);
 }

@@ -1,12 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
 
-.spartan {
-    font-family: "League Spartan", sans-serif;
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
 }
 
 .arta,
 .artb {
-    border: 1px solid #464646;
+    border: 1px solid #5F5F5F;
+    overflow: hidden;
 }
 
 .art-overlay {
