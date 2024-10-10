@@ -9,6 +9,7 @@ import UpcomingHeader from '../components/Upcoming Arts/UpcomingHeader';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
+import PreviousArtHeader from '@/components/PreviousArtHeader/PreviousArtHeader';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -38,6 +39,7 @@ const Home: NextPage = () => {
         welcomeText={""}
         themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
       <UpcomingHeader  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtHeader/>
       <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>

@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
+* {
+  font-family: "Spartan";
+}
+.previous-container {
+  background: #000000;
+}
+.previous-arts {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 281.25px;
+  background: linear-gradient(90deg, #000000 52.23%, rgba(0, 0, 0, 0) 77.42%),
+    url("/images/PreviousHeader.png");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: contain;
+}
+
+.previous-heading h1 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20.16px;
+  letter-spacing: -3%;
+  background: linear-gradient(180deg, #ffffff 47.78%, #cfcfcf 79.63%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.previous-text {
+  font-size: 58.5px;
+  font-weight: 600;
+  line-height: 72.27px;
+  letter-spacing: -6%;
+  background: linear-gradient(180deg, #ffffff 40%, #999999 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  display: inline-block;
+  gap:2px;
+}
+
+.previous-text span {
+  font-size: 58.5px;
+  font-weight: 600;
+  line-height: 72.27px;
+  letter-spacing: -6%;
+  background: linear-gradient(180deg, #00ff00 50%, #007200 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.previous-heading p {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 21.2px;
+  letter-spacing: -6%;
+}
+
+@media (max-width: 768px) {
+  .previous-heading h1 {
+    font-size: 16px;
+  }
+  .previous-text {
+    font-size: 32px;
+  }
+  .previous-heading span {
+    font-size: 32px;
+  }
+  .previous-subHeading p {
+    font-size: 14px;
+  }
+  .previous-arts {
+    background: linear-gradient(90deg, #000000 45.22%, rgba(0, 0, 0, 0) 77.42%),
+      url("/images/image.png");
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    height: 206px;
+    padding: 10px;
+  }
+  .previous-heading {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+}
