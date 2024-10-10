@@ -66,21 +66,51 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
   }
-  body {
-    @apply bg-background text-foreground;
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
   }
-}
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 50; /* Ensure the z-index is lower than the z-index of your grid container */
-}
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Spartan';
+    src: url('/fonts/spartan-mb/SpartanMB-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50; /* Ensure the z-index is lower than the z-index of your grid container */
+  }
 
 body {
   width: 100%;

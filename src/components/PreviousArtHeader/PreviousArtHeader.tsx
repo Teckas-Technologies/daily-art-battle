@@ -3,6 +3,7 @@ import "./PreviousArtHeader.css";
 
 const PreviousArtHeader = () => {
   return (
+    
     <div className="previous-container">
       <div className="previous-arts">
         <div className="previous-heading md:px-[7.8rem] px-3 ">
@@ -18,6 +19,7 @@ const PreviousArtHeader = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

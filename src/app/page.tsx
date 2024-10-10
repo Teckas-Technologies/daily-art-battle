@@ -9,8 +9,10 @@ import UpcomingHeader from '../components/Upcoming Arts/UpcomingHeader';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
+import { Header } from '@/components/Header/Header';
+import { Hero } from '@/components/Hero/Hero';
+import UpcomingBattlesTable from "@/components/UpcomingBattlesTable";
 import PreviousArtHeader from '@/components/PreviousArtHeader/PreviousArtHeader';
-
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -19,7 +21,7 @@ const Home: NextPage = () => {
 
   return (
     <main className="flex flex-col justify-center" style={{ width: '100vw',  backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
-     {/* <video autoPlay muted loop id="background-video" style={{ 
+     <video autoPlay muted loop id="background-video" style={{ 
     position: 'fixed', 
     right: 0, 
     bottom: 0, 
@@ -31,13 +33,15 @@ const Home: NextPage = () => {
 }}>
     <source src="images/back.mp4" type="video/mp4" />
     Your browser does not support the video tag.
-</video> */}
-      <NearWalletConnector />
+</video>
+      <Header />
+      <Hero campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
+      {/* <NearWalletConnector /> */}
       {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <ArtBattle  
         fontColor={""}
         welcomeText={""}
-        themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
+        themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} /> */
       <UpcomingHeader  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <PreviousArtHeader/>
       <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
