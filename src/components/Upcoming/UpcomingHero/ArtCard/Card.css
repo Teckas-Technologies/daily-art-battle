@@ -1,0 +1,69 @@
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
+
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.card {
+    background: #272727;
+}
+
+.count {
+    background: linear-gradient(180deg, #00FF00 0%, #009900 100%);
+}
+
+.outside {
+    background: linear-gradient(90deg, #00FF00 0%, #007200 100%);
+}
+
+.upvote-btn button {
+    background: #272727;
+}
+
+.upvote-btn button h2 {
+    background: linear-gradient(90deg, rgba(0, 255, 0, 1) 0%, rgba(0, 153, 0, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.art-bottom .upvote-btn button {
+    background: black;
+}
+
+/* ART popup in Card Holder */
+
+.upcoming-popup-holder {
+    background-color: #000000B2;
+}
+
+.upcoming-popup {
+    border: 1px solid #6D6D6D;
+}
+
+.close-icon {
+    background: #00FF0024;
+    border: 0.71px solid #00FF00
+}
+
+.text-green {
+    color: #00FF00;
+}
+
+.description-text {
+    color: #FFFFFFB5;
+
+}

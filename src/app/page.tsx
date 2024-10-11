@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { Header } from '@/components/Header/Header';
 import { Hero } from '@/components/Hero/Hero';
+import { UpcomingHero } from '@/components/Upcoming/UpcomingHero/UpcomingHero';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -35,13 +36,14 @@ const Home: NextPage = () => {
 </video>
       <Header />
       <Hero campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
+      <UpcomingHero fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       {/* <NearWalletConnector /> */}
       {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       {/* <ArtBattle  
         fontColor={""}
         welcomeText={""}
         themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} /> */}
-      <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      {/* <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} /> */}
       <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
