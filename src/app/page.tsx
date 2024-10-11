@@ -39,11 +39,11 @@ const Home: NextPage = () => {
       <UpcomingHero fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       {/* <NearWalletConnector /> */}
       {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
-      {/* <ArtBattle  
+      <ArtBattle  
         fontColor={""}
         welcomeText={""}
-        themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} /> */}
-      {/* <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} /> */}
+        themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
+      <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
