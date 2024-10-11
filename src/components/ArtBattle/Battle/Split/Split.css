@@ -1,0 +1,29 @@
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
+
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.arta,
+.artb {
+    border: 1px solid #5F5F5F;
+    overflow: hidden;
+}
+
+.art-overlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 19.15%, #000000 71.59%);
+}

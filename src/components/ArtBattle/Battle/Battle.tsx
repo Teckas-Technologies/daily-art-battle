@@ -9,8 +9,8 @@ import { useRouter } from 'next/navigation';
 import { useVoting } from '@/hooks/useVoting';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { NoBattle } from './NoBattle/NoBattle';
-import Toast from '../Toast';
-import './Hero.css';
+import Toast from '../../Toast';
+import './Battle.css';
 import { Split } from './Split/Split';
 
 interface Artwork {
@@ -35,7 +35,7 @@ const initialViewTools = [
     { id: "spinner", path: "/icons/spinner.svg", active: false },
 ];
 
-export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor, welcomeText, themeTitle }) => {
+export const Battle: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor, welcomeText, themeTitle }) => {
 
     const { isConnected, connect, activeAccountId } = useMbWallet();
     const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
@@ -203,15 +203,15 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
 
     return (
         <>
-            <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[2rem] flex flex-col items-center justify-center bg-black">
+            <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[3rem] flex flex-col items-center justify-center bg-black">
 
                 <div className="bottom-hero w-full h-auto">
-                    <div className="top-hero flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] md:px-[16.5rem] px-3">
+                    <div className="top-hero md:mt-5 mt-0 flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] md:px-[16.5rem] px-3 py-[0.5rem]">
                         {timeRemaining !== null ? (<div className="top-hero-left md:w-auto w-full flex items-center md:justify-center justify-between md:gap-[2.5rem]">
-                            <h3 className='font-semibold spartan text-xl timer'>Time left to vote</h3>
-                            <h2 className='font-semibold spartan text-3xl timer'> {formatTime(timeRemaining)} </h2>
+                            <h3 className='font-semibold spartan-semibold text-lg md:text-xl timer'>Time left to vote</h3>
+                            <h2 className='font-semibold spartan-bold text-2xl md:text-3xl timer'> {formatTime(timeRemaining)} </h2>
                         </div>) : <div></div>}
-                        <div className="top-hero-right md:w-auto w-full flex md:justify-center justify-start md:py-0 py-3 gap-3">
+                        <div className="top-hero-right md:w-auto w-full flex md:justify-center justify-start md:py-0 py-4 gap-3">
                             {viewTools.map((tool) => (
                                 <div key={tool.id} onClick={() => handleToolClick(tool.id)} className={`view-bar cursor-pointer rounded-md p-2 ${tool.active ? "active" : ""}`}>
                                     <InlineSVG
@@ -223,9 +223,9 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
                             ))}
                         </div>
                     </div>
-                    <div className="welcome-note w-full md:px-[18rem] px-3">
-                        {campaignId == GFX_CAMPAIGNID ? (<h2 className='text-white text-center md:text-xl text-sm font-small spartan welcome-text'>Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!</h2>)
-                            : (<h2 className='text-white md:text-center text-justify md:text-xl text-sm font-small spartan welcome-text'>{welcomeText}</h2>)}
+                    <div className="welcome-note md:mt-5 w-full md:px-[11.5rem] px-3">
+                        {campaignId == GFX_CAMPAIGNID ? (<h2 className='text-white text-center md:text-xl text-sm font-small spartan-light welcome-text'>Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!</h2>)
+                            : (<h2 className='text-white md:text-center text-justify md:text-xl text-sm font-small spartan-light welcome-text'>{welcomeText}</h2>)}
                     </div>
                     <div className="arts flex w-full px-3">
                         {!todayBattle && <NoBattle />}
@@ -234,18 +234,39 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
                         {todayBattle && viewTools[2].active && <Spinner />}
                     </div>
 
-                    {todayBattle && <div className={`battle-vote-btns w-full flex items-center h-auto mt-5 pb-5 px-3`}>
+                    {todayBattle && <div className={`battle-vote-btns w-full flex items-center h-auto mt-8 pb-5 px-3`}>
                         <div className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active ? "md:pr-[8rem]" : "md:pr-[12.5rem]"}`}>
-                            <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-2 border border-green-600 rounded-3xl cursor-pointer`}>
-                                <h2 className='spartan font-bold text-sm'>{votedFor === artA.name ? "Voted ART A" : viewTools[1].active || viewTools[2].active ? "Vote for Art A" : "Vote here"}</h2>
+                            <div className="outside w-auto h-auto rounded-3xl">
+                                <div className="second-layer w-auto h-auto rounded-3xl">
+                                    <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 rounded-3xl cursor-pointer`}>
+                                        <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artA.name ? "Voted Art A" : viewTools[1].active || viewTools[2].active ? "Vote for Art A" : "Vote here"}</h2>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active ? "md:pl-[8rem]" : "md:pl-[12.5rem]"} `}>
+                            <div className="outside2 w-auto h-auto rounded-3xl">
+                                <div className="second-layer2 w-auto h-auto rounded-3xl">
+                                    <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}>
+                                        <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artB.name ? "Voted Art B" : viewTools[1].active || viewTools[2].active ? "Vote for Art B" : "Vote here"}</h2>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>}
+
+                    {/* {todayBattle && <div className={`battle-vote-btns w-full flex items-center h-auto mt-8 pb-5 px-3`}>
+                        <div className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active ? "md:pr-[8rem]" : "md:pr-[12.5rem]"}`}>
+                            <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}>
+                                <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artA.name ? "Voted ART A" : viewTools[1].active || viewTools[2].active ? "Vote for Art A" : "Vote here"}</h2>
                             </button>
                         </div>
                         <div className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active ? "md:pl-[8rem]" : "md:pl-[12.5rem]"} `}>
-                            <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-2 border border-green-600 rounded-3xl cursor-pointer`}>
-                                <h2 className='spartan font-bold text-sm'>{votedFor === artB.name ? "Voted ART B" : viewTools[1].active || viewTools[2].active ? "Vote for Art B" : "Vote here"}</h2>
+                            <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}>
+                                <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artB.name ? "Voted ART B" : viewTools[1].active || viewTools[2].active ? "Vote for Art B" : "Vote here"}</h2>
                             </button>
                         </div>
-                    </div>}
+                    </div>} */}
 
                 </div>
             </div>

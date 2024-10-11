@@ -77,7 +77,7 @@ export const useSaveData = (): UseSaveDataResult => {
       const [loading, setLoading] = useState<boolean>(false);
       const [error, setError] = useState<string | null>(null);
     
-      const fetchArts = async (campaignId:string,sort:string,page: number, limit: number = 9) => {
+      const fetchArts = async (campaignId:string,sort:string,page: number, limit: number = 8) => {
         setLoading(true);
         setError(null);
         try {

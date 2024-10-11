@@ -1,0 +1,23 @@
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
+
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.slider-img {
+    border: 1px solid #5F5F5F;
+}

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useFetchArts, ArtData,useFetchArtById } from "../hooks/artHooks";
+import { useFetchArts, ArtData, useFetchArtById } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import Overlay from "./Overlay";
@@ -8,11 +8,13 @@ import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
-  uploadSuccess: boolean;campaignId: string;fontColor:string
-}> = ({ toggleUploadModal, uploadSuccess ,campaignId,fontColor}) => {
+  uploadSuccess: boolean;
+  campaignId: string;
+  fontColor: string;
+}> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const [refresh, setRefresh] = useState(false);
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
@@ -20,26 +22,22 @@ const UpcomingArtTable: React.FC<{
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("dateDsc");
 
-
-//console.log(arts);
+  //console.log(arts);
   const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const sortType = event.target.value
+    const sortType = event.target.value;
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
-    fetchMoreArts(campaignId,sortType, 1);
+    fetchMoreArts(campaignId, sortType, 1);
   };
-
-
 
   useEffect(() => {
     const initializeData = async () => {
-   
-      fetchMoreArts(campaignId,sort,page);
+      fetchMoreArts(campaignId, sort, page);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [sort,page, refresh, uploadSuccess, fetchMoreArts]);
+  }, [sort, page, refresh, uploadSuccess, fetchMoreArts]);
 
   const [hasnext, setHasNext] = useState(false);
 
@@ -56,142 +54,358 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(campaignId,sort,page + 1);
+    fetchMoreArts(campaignId, sort, page + 1);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(campaignId,sort,page - 1);
+      fetchMoreArts(campaignId, sort, page - 1);
     }
   };
 
-
-  
   return (
     <section id="upcoming">
-    <div
-      className="battle-table mt-[50px] pb-5 flex flex-col items-center"
-      style={{ width: "100%", gap: 8 }}
-    >
-      <div className="battle-table1">
-        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center" style={{color:fontColor}}>
-          Upcoming Arts
-        </h2>
-        <p className="px-4 text-center text-white font-mono mt-5 md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 sm:font-thin md:text-lg" style={{color:fontColor}}>
-          Upvote your favorite artworks to influence what will be up for battle
-          next. Think you’ve got what it takes? Upload your own masterpiece and
-          join the competition!{" "}
-        </p>
-        <div className="flex justify-between items-center">
-          <div className="mt-3 add-art-btn flex-auto text-center py-1  justify-center">
-            <Button
-              onClick={toggleUploadModal}
-              disabled={!isConnected}
-              className={`px-4 md:mr-5 py-2 vote-btn text-black bg-white hover:bg-gray-300 rounded ${
-                !isConnected ? "cursor-not-allowed" : ""
-              }`}
+      <div className="main w-[1921px] h-[2157px]">
+        <div
+          className="rect w-[1920px] h-[574px]"
+          style={{
+            backgroundImage:
+              'linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, #000000 102.7%), url("/images/image7.png")',
+            backgroundSize: "cover",
+            width: "1920px",
+            height: "571px",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            className="content"
+            style={{
+              width: "934px",
+              height: "236px",
+              gap: "0px",
+              top: "141px",
+              left: "494px",
+              opacity: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div
+              className="head-text"
+              style={{
+                width: "423px",
+                height: "56px",
+                padding: "13.07px 0px 13.07px 0px",
+                gap: "0px",
+                borderRadius: "37.19px 0px 0px 0px",
+                opacity: "0px",
+              }}
             >
-              Add Artwork
-            </Button>
+              <p
+                style={{
+                  width: "389px",
+                  height: "22px",
+                  gap: "0px",
+                  opacity: 1,
+                  fontFamily: "'Spartan', sans-serif",
+                  fontSize: "24px",
+                  fontWeight: 700,
+                  lineHeight: "26.88px",
+                  letterSpacing: "-0.03em",
+                  textAlign: "center",
+                  background:
+                    "linear-gradient(180deg, #FFFFFF 47.78%, #CFCFCF 79.63%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                UPVOTE YOUR FAVORITE ARTS
+              </p>
+            </div>
+            <div
+              className="body-text"
+              style={{
+                width: "934px",
+                height: "192px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0px",
+                opacity: 1,
+              }}
+            >
+              <div
+                className="title"
+                style={{
+                  width: "821px",
+                  height: "116px",
+                  display: "flex",
+                  padding: "0 50px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "418px",
+                    height: "116px",
+                    padding: "0px",
+                    gap: "0px",
+                    flexDirection: "row",
+                    display: "flex",
+                    justifyContent: "flex-end", 
+                  }}
+                >
+                  <p
+                    style={{
+                      width: "398px",
+                      height: "96px",
+                      margin: "0", 
+                      fontFamily: "'Spartan', sans-serif",
+                      fontSize: "78px",
+                      fontWeight: "600",
+                      lineHeight: "96.36px",
+                      letterSpacing: "-0.06em",
+                      textAlign: "left",
+                      background:
+                        "background: linear-gradient(180deg, #FFFFFF 40%, #999999 100%)",
+                      WebkitBackgroundClip: "text",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Upcoming
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    width: "414px",
+                    height: "116px",
+                    padding: "0px", 
+                    gap: "0px", 
+                    flexDirection: "row",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <p
+                    style={{
+                      width: "394px",
+                      height: "96px",
+                      margin: "0", 
+                      fontFamily: "'Spartan', sans-serif",
+                      fontSize: "78px",
+                      fontWeight: "600",
+                      lineHeight: "96.36px",
+                      letterSpacing: "-0.06em",
+                      textAlign: "left",
+                      background:
+                        "linear-gradient(180deg, #00FF00 50%, #007200 100%)",
+                      WebkitBackgroundClip: "text",
+                      color: "transparent",
+                    }}
+                  >
+                    Art Battles
+                  </p>
+                </div>
+              </div>
+              <div
+                style={{
+                  width: "934px",
+                  height: "76px",
+                  padding: "0px 15px 0px 15px",
+                  gap: "0px",
+                  opacity: "0px",
+                  flexDirection: "column",
+                }}
+              >
+                <div
+                  className="py-0 px-[50px]"
+                  style={{
+                    width: "904px",
+                    height: "76px",
+                    // padding: '10px 0px 0px 0px',
+                    gap: "10px",
+                    opacity: "0px",
+                    padding: "0 50px",
+                  }}
+                >
+                  <p
+                    style={{
+                      width: "713px",
+                      height: "56px",
+                      gap: "0px",
+                      opacity: "0px",
+                      fontFamily: "'Spartan', sans-serif",
+                      fontSize: "18px",
+                      fontWeight: "500",
+                      lineHeight: "28.26px",
+                      letterSpacing: "-0.06em",
+                      textAlign: "center",
+                      color: "rgba(255, 255, 255, 0.75)",
+                    }}
+                  >
+                    Upvote your favorite artworks to influence what will be up
+                    for battle next. Think you’ve got what it takes? Upload your
+                    own masterpiece and join the competition!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              position: "relative", 
+              width: "257.84px",
+              height: "76px",
+            }}
+          >
+            <button
+              style={{
+                width: "100%", 
+                height: "100%",
+                padding: "16.55px 36.92px",
+                borderRadius: "47.1px",
+                background:
+                  "radial-gradient(128.13% 128.13% at 50% 50%, #000000 25%, rgba(0, 255, 0, 0) 100%)", 
+                position: "relative", 
+                zIndex: 2, 
+                border: "none", 
+                color: "rgba(255, 255, 255, 1)",
+                fontFamily: "'Spartan', sans-serif",
+                fontSize: "22.91px",
+                fontWeight: "700",
+                lineHeight: "25.66px",
+                letterSpacing: "-0.06em",
+                textAlign: "left",
+                display: "flex", 
+                alignItems: "center",
+                justifyContent: "center", 
+              }}
+            >
+              Upload your Art
+            </button>
+
+            <div
+              style={{
+                content: '""', 
+                position: "absolute",
+                top: "0",
+                left: "0",
+                width: "100%",
+                height: "100%",
+                borderRadius: "47.1px", 
+                padding: "1.27px", 
+                background:
+                  "linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%)", 
+                zIndex: 0,
+              }}
+            />
+
+            <div
+              style={{
+                content: '""', 
+                position: "absolute",
+                top: "0",
+                left: "0",
+                width: "100%",
+                height: "100%",
+                borderRadius: "47.1px", 
+                background:
+                  "linear-gradient(to left, rgba(0, 255, 0, 0.5), transparent 50%)", 
+                zIndex: 1, 
+              }}
+            />
           </div>
         </div>
-        <div className="mt-5 flex justify-end md:mr-20  lg:mr-20">
-        <select
-         onChange={handleSort}
-        className="bg-white mr-10 text-black border border-gray-600 rounded-lg p-2 cursor-pointer"
-      >
-        <option value="dateDsc">Date DSC</option>
-        <option value="dateAsc">Date ASC</option>
-        <option value="voteAsc">Vote ASC</option>
-        <option value="voteDsc">Vote DSC</option>
-      </select>
+        <div className="cont" style={{position:"relative", padding: "0 50px",width:  "1718px",height: "1300px",top: "100px",left: "101px",gap: "77px",opacity: "0px",}}>
+            <div className="search" style={{width: '1718px', height: '84px', gap: '444px',opacity: '0px',}}>
+              <div style={{
+                    width: '906px',
+                    height: '84px',
+                    padding: '11px 37px 11px 29px',
+                    gap: '0px',
+                    borderRadius: '78px',
+                    // border: '1px 0px 0px 0px',
+                    opacity: '0px',
+                    background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.03) 100%)',
+                    border: '1px solid #535353'
+                    }}>
+                      <div style={{
+                        width:  '326px',
+                        height: '62px',
+                        top: '11px',
+                        left: '29px',
+                        gap: '21px',
+                        opacity: '0px',
+                        }}>
+                          
+                      </div>
+              </div>
+          </div>
         </div>
-        <BattleTable artData={upcomingArts} setRefresh={setRefresh} campaignId={campaignId} />
-        <nav className="flex justify-center flex-wrap gap-5 mt-5">
-          <a
-          href={page > 1 ? "#upcoming" : undefined}
-            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
-              page <= 1
-                ? "cursor-not-allowed"
-                : "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
-            }`}
-            onClick={page > 1 ? handlePrevious : undefined}
-          >
-            Previous
-          </a>
-          <a
-           href={hasnext ?`#upcoming`:undefined}
-            className={`shadow-md flex items-center justify-center py-2 px-3 rounded font-medium select-none border text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors ${
-              hasnext
-                ? "hover:border-gray-600 hover:bg-gray-400 hover:text-white dark:hover:text-white"
-                : "cursor-not-allowed"
-            }`}
-            
-            onClick={hasnext ? handleNext : undefined}
-          >
-            Next
-          </a>
-        </nav>
       </div>
-    </div>
     </section>
   );
 };
 
 const BattleTable: React.FC<{
-  artData: ArtData[];campaignId:string;
+  artData: ArtData[];
+  campaignId: string;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ artData, setRefresh,campaignId }) => {
+}> = ({ artData, setRefresh, campaignId }) => {
   const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const { votes, fetchVotes, submitVote } = useVoting();
   const [success, setSuccess] = useState(false);
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
-  const{fetchArtById}=useFetchArtById();
+  const { fetchArtById } = useFetchArtById();
   const [selectedArtId, setSelectedArtId] = useState(null);
-  const[overlayArt,setoverlayArt] = useState<ArtData>();
+  const [overlayArt, setoverlayArt] = useState<ArtData>();
 
   const getQueryParam = (param: string): string | null => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
       return url.searchParams.get(param);
     }
     return null;
   };
-  const artId = getQueryParam('artId');
+  const artId = getQueryParam("artId");
 
-  useEffect(()=>{
-    const fetchArt= async()=>{
-      if(artId){
-      const overlay = await fetchArtById(artId);
-      setoverlayArt(overlay);
+  useEffect(() => {
+    const fetchArt = async () => {
+      if (artId) {
+        const overlay = await fetchArtById(artId);
+        setoverlayArt(overlay);
       }
-    }
+    };
     fetchArt();
-  },[artId]);
+  }, [artId]);
 
-  const handleImageClick = async(id:any) => {
+  const handleImageClick = async (id: any) => {
     setSelectedArtId(id);
     const overlay = await fetchArtById(id);
     setoverlayArt(overlay);
     const url = new URL(window.location.href);
-    url.searchParams.set('artId', id);
-    window.history.pushState({}, '', url.toString());
+    url.searchParams.set("artId", id);
+    window.history.pushState({}, "", url.toString());
   };
 
   const handleClose = () => {
     setSelectedArtId(null);
     const url = new URL(window.location.href);
-    url.searchParams.delete('artId');
-    window.history.pushState({}, '', url.toString());
+    url.searchParams.delete("artId");
+    window.history.pushState({}, "", url.toString());
   };
-
 
   useEffect(() => {
     const fetchUserVotes = async () => {
       if (activeAccountId) {
-        const votes = await fetchVotes(activeAccountId,campaignId);
+        const votes = await fetchVotes(activeAccountId, campaignId);
         setVotes(votes);
       }
     };
@@ -199,9 +413,9 @@ const BattleTable: React.FC<{
     fetchUserVotes();
   }, [activeAccountId, fetchVotes]);
 
-  const handleArt = (id:any)=>{
+  const handleArt = (id: any) => {
     router.push(`/art/${id}`);
-  }
+  };
 
   const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
@@ -215,13 +429,13 @@ const BattleTable: React.FC<{
     const success = await submitVote({
       participantId: activeAccountId,
       artId: id,
-      campaignId:campaignId
+      campaignId: campaignId,
     });
 
     console.log(success);
     if (success) {
       setSuccess(true);
-      const votes = await fetchVotes(activeAccountId,campaignId);
+      const votes = await fetchVotes(activeAccountId, campaignId);
       console.log(votes);
       setVotes(votes);
       //   alert('Vote submitted successfully!');
@@ -231,70 +445,6 @@ const BattleTable: React.FC<{
     }
   };
 
-  return (
-    <div
-      className="mx-4 overflow-hidden battle-table container mt-4 mx-auto px-4 md:px-12"
-      style={{ zIndex: "-1" }}
-    >
-      <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
-      {(selectedArtId|| artId) && overlayArt && (
-              <Overlay onClose={handleClose}  art={overlayArt} onVote={onVote} votes={votes}/>
-            )}
-        {artData.map((art, index) => (
-           
-          <div key={index} className="flex justify-center overflow-hidden">
-           
-            <div className="w-full flex flex-col h-full px-2 p-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-200 shadow-md overflow-hidden relative">
-              <div className="flex justify-center items-center flex-grow relative">
-                <img
-                 onClick={()=>handleImageClick(art._id)}
-                  src={art.colouredArt}
-                  alt="Art A"
-                  className="w-full h-full object-cover hover:cursor-pointer"
-                  loading="lazy"
-                  style={{
-                    height: "100%", // Ensuring the image takes the full height of its container
-                    aspectRatio: "1/1",
-                    boxShadow:
-                      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                  }}
-                />
-                <button
-                  onClick={() => onVote(art._id)}
-                  className={`
-    absolute bottom-0 right-1 text-white text-md sm:text-xl md:text-2xl h-6 right-0
-    ${
-      votes.some(
-        (vote) =>
-          vote.artId === art._id && vote.participantId === activeAccountId
-      )
-        ? "bg-green-800"
-        : "bg-blue-700 hover:bg-blue-400"
-    }
-    text-white rounded-md px-2 py-1 text-xs sm:px-3 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base sm:h-12 md:h-15
-  `}
-                  disabled={votes.some(
-                    (vote) =>
-                      vote.artId === art._id &&
-                      vote.participantId === activeAccountId
-                  )}
-                >
-                  <div className="flex items-center">
-                    <FontAwesomeIcon
-                      icon={faArrowUp}
-                      className="text-white mr-1 flex-shrink-0"
-                    />
-                    <h2 className="text-white text-md sm:text-xl md:text-xl flex-shrink-0">{`${art.upVotes}`}</h2>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <></>;
 };
 export default UpcomingArtTable;

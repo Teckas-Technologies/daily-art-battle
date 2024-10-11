@@ -1,0 +1,67 @@
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
+
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.timer {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(153, 153, 153, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-text {
+    color: #CFCFCF;
+}
+
+.bottom-hero {
+    background-image: url('https://arweave.net/QT7n91-9G5j6m66BYYjzsmr5T5odXMkyFG79Sw6FovU');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.view-bar {
+    border: 1px solid #464646;
+}
+
+.view-bar.active {
+    border: 1px solid #00F900;
+}
+
+.battle-vote-btn {
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.9052871148459384) 0%, rgba(0, 255, 0, 0.17699579831932777) 100%);
+}
+
+.outside {
+    padding: 1.20px;
+    background: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.second-layer {
+    background: #000;
+}
+
+.outside2 {
+    padding: 1.20px;
+    background: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.second-layer2 {
+    /* padding: 0.01px; */
+    background: #000;
+}

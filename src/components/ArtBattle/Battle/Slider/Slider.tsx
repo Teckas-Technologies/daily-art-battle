@@ -72,7 +72,7 @@ export const Slider: React.FC<Props> = ({ artA, artB }) => {
                     onTouchEnd={handleTouchEnd}
                 >
                     <div
-                        className="slider-img relative w-full md:max-w-[25rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none"
+                        className="slider-img relative w-full md:max-w-[26.5rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none"
                         onMouseMove={handleMove}
                         onMouseDown={handleMouseDown}
                         onTouchMove={handleMove}
@@ -85,10 +85,10 @@ export const Slider: React.FC<Props> = ({ artA, artB }) => {
                                 src={artB?.imageUrl}
                                 className="w-full h-full object-cover rounded-2xl"
                             />
-                            <h2 className='absolute bottom-7 left-7 spartan font-bold'>Art B</h2>
+                            <h2 className='absolute bottom-7 right-7 spartan-bold font-bold'>Art B</h2>
                         </div>
                         <div
-                            className="slider-img absolute top-0 left-0 right-0 w-full md:max-w-[25rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none"
+                            className="slider-img absolute top-0 left-0 right-0 w-full md:max-w-[26.5rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none"
                             style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
                         >
                             <div className="relative w-full h-full">
@@ -98,7 +98,7 @@ export const Slider: React.FC<Props> = ({ artA, artB }) => {
                                     src={artA?.imageUrl}
                                     className="w-full h-full object-cover rounded-2xl"
                                 />
-                                <h2 className='absolute bottom-7 left-7 spartan font-bold'>Art A</h2>
+                                <h2 className='absolute bottom-7 left-7 spartan-bold font-bold'>Art A</h2>
                             </div>
                         </div>
                         <div
