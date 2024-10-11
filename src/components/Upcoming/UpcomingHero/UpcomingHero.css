@@ -1,0 +1,133 @@
+.spartan-bold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 700;
+}
+
+.spartan-semibold {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 600;
+}
+
+.spartan-medium {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 400;
+}
+
+.spartan-light {
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.filters-left,
+.filters-center,
+.options {
+    border: 1px solid #535353
+}
+
+.filters-center,
+.options {
+    backdrop-filter: blur(20px);
+    background-color: #000000;
+    z-index: 49;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.104) 0%, rgba(255, 255, 255, 0.104) 100%);
+}
+
+.option::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.104) 0%, rgba(255, 255, 255, 0.104) 100%);
+    border-radius: inherit;
+    /* Match border radius */
+    z-index: 0;
+}
+
+.option {
+    position: relative;
+    z-index: 1;
+    background-color: #000000;
+}
+
+.search-input::placeholder {
+    color: #FFFFFFA3;
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.pagination {
+    padding: 0.8px 0.8px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+.page-numbers .active {
+    background: #0C450C;
+    border: 0.75px solid #00FF00;
+    border-radius: 50%;
+}
+
+/* Gradiant button starts */
+
+.uploadButtonWrapper {
+    position: relative;
+    width: 172.38px;
+    height: 63px;
+    margin: 10px auto;
+    padding: 1px;
+    border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.uploadButton {
+    width: 100%;
+    height: 100%;
+    padding: 12.41px 27.69px;
+    border-radius: 47.1px;
+    background: radial-gradient(128.13% 128.13% at 50% 50%,
+            #000000 25%,
+            rgba(0, 255, 0, 0) 100%);
+    position: relative;
+    z-index: 2;
+    border-radius: 47.1px;
+    color: #ffffff;
+    font-family: "Spartan";
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19.25px;
+    letter-spacing: -6%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.uploadButtonBorder {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 47.1px;
+    background: linear-gradient(99.76deg,
+            #00ff00 8.86%,
+            rgba(0, 153, 0, 0) 91.14%);
+    z-index: 0;
+    padding: 1.27px;
+    box-sizing: border-box;
+}
+
+.uploadButtonOverlay {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 47.1px;
+    background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+    z-index: 1;
+}
+
+/* Gradiant button ends */
