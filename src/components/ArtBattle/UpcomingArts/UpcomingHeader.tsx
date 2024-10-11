@@ -64,7 +64,7 @@ const UpcomingHeader: React.FC<{
   };
 
   return (
-    <section id="upcoming">
+    <section id="upcoming-header">
       <div className="upcoming-header">
         <div className="content">
           <p className="upcoming-subHeading">UPVOTE YOUR FAVORITE ARTS</p>
@@ -79,7 +79,10 @@ const UpcomingHeader: React.FC<{
           </p>
 
           <div className="uploadButtonWrapper">
-            <button className="uploadButton">Upload your Art</button>
+            <button onClick={toggleUploadModal}
+              disabled={!isConnected}
+              className={`uploadButton px-4 md:mr-5 py-2 vote-btn text-black bg-white hover:bg-gray-300 rounded ${!isConnected ? "cursor-not-allowed" : ""
+                }`}>Upload your Art</button>
 
             <div className="uploadButtonBorder" />
 
