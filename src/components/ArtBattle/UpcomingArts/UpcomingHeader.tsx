@@ -3,14 +3,12 @@ import React, { useState, useEffect } from "react";
 import { useFetchArts, ArtData, useFetchArtById } from "@/hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
-import Overlay from "../Overlay";
 import { useVoting, Vote } from "@/hooks/useArtVoting";
-import { Button } from "../ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import "./UpcomingHeader.css";
-const UpcomingArtTable: React.FC<{
+const UpcomingHeader: React.FC<{
   toggleUploadModal: () => void;
   uploadSuccess: boolean;
   campaignId: string;
@@ -187,4 +185,4 @@ const BattleTable: React.FC<{
 
   return <></>;
 };
-export default UpcomingArtTable;
+export default UpcomingHeader;

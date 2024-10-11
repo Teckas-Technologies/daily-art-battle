@@ -1,12 +1,12 @@
 // CardHolder.tsx
 import React, { useEffect, useState } from 'react';
 import { ArtData, useFetchArtById } from '@/hooks/artHooks';
-import Card from './Card';
 import { useMbWallet } from '@mintbase-js/react';
 import { useVoting, Vote } from '@/hooks/useArtVoting';
 import { useRouter } from 'next/navigation';
 import './Card.css';
 import InlineSVG from 'react-inlinesvg';
+import Card from './Card';
 
 interface CardHolderProps {
     artData: ArtData[];
@@ -55,7 +55,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
         if (upcomingSection) {
             const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
             const isMobile = window.innerWidth < 768 ? true : false;
-            const rem = isMobile ? 1 : 3;
+            const rem = isMobile ? 1 : 5;
             const offset = rem * 16;
             window.scrollTo({
                 top: !isMobile ? sectionPosition + offset : sectionPosition - 150,
@@ -143,7 +143,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                 ))}
             </div>
             {selectedArtId && overlayArt && <div className="upcoming-popup-holder absolute w-full h-full flex items-center justify-center px-3">
-                <div className="upcoming-popup md:w-[43.5rem] w-full h-[30rem] md:h-[33.5rem] p-10 rounded-2xl bg-black">
+                <div className="upcoming-popup lg:w-[43.5rem] lg:h-[33.5rem] md:w-[40.5rem] md:h-[30.5rem] w-full h-[30rem] lg:p-10 md:p-8  p-6 rounded-2xl bg-black">
                     <div className="close-art w-full flex justify-end">
                         <div className="close-icon w-[1.9rem] h-[1.9rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleClose}>
                             <InlineSVG
@@ -165,9 +165,9 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                             <h2 className='spartan-bold text-lg'>{overlayArt.artistId}</h2>
                         </div>
                     </div>
-                    <div className="art-center w-full h-auto flex items-center justify-between py-4">
+                    <div className="art-center w-full h-auto flex items-center justify-between lg:py-4 md:py-2 py-1">
                         <div className="art-img w-[50%] flex  gap-7">
-                            <div className="img-holder w-[18rem] h-[18rem] rounded-xl">
+                            <div className="img-holder lg:w-[18rem] lg:h-[18rem] md:w-[16rem] md:h-[16rem] w-[15rem] h-[15rem] rounded-xl">
                                 <img src={overlayArt.colouredArt} alt={overlayArt.arttitle} className='w-full h-full rounded-xl' />
                             </div>
                         </div>
@@ -197,7 +197,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                         </div>
                     </div>
                     <div className="art-bottom w-full h-auto pt-2">
-                        <div className="upvote-btn w-[18rem] flex justify-center">
+                        <div className="upvote-btn lg:w-[18rem] md:w-[16rem] w-[15rem] flex justify-center">
                             <div className="outside w-full rounded-lg p-[0.08rem]">
                                 <button className={`w-full md:py-3 py-1 rounded-lg ${hasUpvoted ? "cursor-not-allowed" : "cursor-pointer"}`} onClick={() => onVote(overlayArt._id)} disabled={hasUpvoted}>
                                     <h2 className='spartan-bold text-md'>{hasUpvoted ? 'Upvoted' : 'Upvote Art'}</h2>

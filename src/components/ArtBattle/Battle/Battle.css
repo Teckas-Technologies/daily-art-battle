@@ -44,6 +44,24 @@
 }
 
 .battle-vote-btn {
-    border: 1px solid #00F900;
     background: radial-gradient(circle, rgba(0, 0, 0, 0.9052871148459384) 0%, rgba(0, 255, 0, 0.17699579831932777) 100%);
+}
+
+.outside {
+    padding: 1.20px;
+    background: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.second-layer {
+    background: #000;
+}
+
+.outside2 {
+    padding: 1.20px;
+    background: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.second-layer2 {
+    /* padding: 0.01px; */
+    background: #000;
 }
