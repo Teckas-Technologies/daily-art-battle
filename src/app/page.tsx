@@ -5,13 +5,17 @@ import { useState } from 'react';
 import { NearWalletConnector } from '../components/NearWalletConnector';
 import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
 import ArtBattle from '../components/ArtBattle';
-import UpcomingBattlesTable from '../components/UpcomingBattlesTable';
+import UpcomingHeader from '../components/UpcomingArts/UpcomingHeader';
 import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { Header } from '@/components/Header/Header';
 import { Hero } from '@/components/Hero/Hero';
 import { UpcomingHero } from '@/components/Upcoming/UpcomingHero/UpcomingHero';
+
+
+import UpcomingBattlesTable from "@/components/UpcomingBattlesTable";
+import PreviousArtHeader from '@/components/PreviousArtHeader/PreviousArtHeader';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -43,7 +47,8 @@ const Home: NextPage = () => {
         fontColor={""}
         welcomeText={""}
         themeTitle={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
-      <UpcomingBattlesTable  fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+        <UpcomingHeader fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtHeader />
       <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
       <Footer/>
     </main>
