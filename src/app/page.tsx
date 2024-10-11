@@ -11,12 +11,28 @@ import PreviousArtHeader from '@/components/ArtBattle/PreviousArts/PreviousArtHe
 import { Battle } from '@/components/ArtBattle/Battle/Battle';
 import UpcomingHeader from '@/components/ArtBattle/UpcomingArts/UpcomingHeader';
 import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid';
+import { signIn } from 'next-auth/react';
 
-const Home: NextPage = () => {
+const Home = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
-  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (status === "unauthenticated") {
+        // Trigger login with Azure B2C provider
+        signIn('azure-ad-b2c',{ callbackUrl: '/' });
+    }
+    console.log(status);
+    console.log(session);
+  }, [status, router]);
+
+  // Show loading state while session status is being determined
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
