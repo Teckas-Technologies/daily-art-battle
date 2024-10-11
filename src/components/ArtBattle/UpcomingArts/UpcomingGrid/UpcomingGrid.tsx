@@ -89,7 +89,14 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
             const upcomingSection = document.getElementById('upcoming');
             if (upcomingSection) {
-                upcomingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+                const isMobile = window.innerWidth < 768 ? true : false;
+                const rem = isMobile ? 1 : 3;
+                const offset = rem * 16;
+                window.scrollTo({
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+                    behavior: 'smooth',
+                });
             }
         }
     };
@@ -102,7 +109,15 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
             const upcomingSection = document.getElementById('upcoming');
             if (upcomingSection) {
-                upcomingSection.scrollIntoView({ behavior: 'smooth' });
+                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+                const isMobile = window.innerWidth < 768 ? true : false;
+                const rem = isMobile ? 1 : 3;
+                const offset = rem * 16;
+                window.scrollTo({
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+                    behavior: 'smooth',
+                });
+                // upcomingSection.scrollIntoView({ behavior: 'smooth' });
             }
         }
     };
@@ -115,7 +130,14 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
             const upcomingSection = document.getElementById('upcoming');
             if (upcomingSection) {
-                upcomingSection.scrollIntoView({ behavior: 'smooth' });
+                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+                const isMobile = window.innerWidth < 768 ? true : false;
+                const rem = isMobile ? 1 : 3;
+                const offset = rem * 16;
+                window.scrollTo({
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+                    behavior: 'smooth',
+                });
             }
         }
     };

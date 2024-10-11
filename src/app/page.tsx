@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
   return (
-    <main className="flex flex-col justify-center" style={{ width: '100vw',  backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
+    <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
      <video autoPlay muted loop id="background-video" style={{ 
     position: 'fixed', 
     right: 0, 
