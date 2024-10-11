@@ -12,9 +12,12 @@ interface CardHolderProps {
     artData: ArtData[];
     campaignId: string;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+    setSelectedArt: (e: any) => void;
+    currentPage: number;
+    totalPage: number;
 }
 
-const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh }) => {
+const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh, setSelectedArt, currentPage, totalPage }) => {
     const { isConnected, selector, connect, activeAccountId } = useMbWallet();
     const { votes, fetchVotes, submitVote } = useVoting();
     const [success, setSuccess] = useState(false);
@@ -47,26 +50,56 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
         setSelectedArtId(id);
         const overlay = await fetchArtById(id);
         setoverlayArt(overlay);
+        setSelectedArt(overlayArt); // For pass the selected art to upcoming grid component
         const url = new URL(window.location.href);
         url.searchParams.set('artId', id);
         window.history.pushState({}, '', url.toString());
 
-        const upcomingSection = document.getElementById('upcoming-grid');
-        if (upcomingSection) {
-            const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
-            const isMobile = window.innerWidth < 768 ? true : false;
-            const rem = isMobile ? 1 : 5;
-            const offset = rem * 16;
-            window.scrollTo({
-                top: !isMobile ? sectionPosition + offset : sectionPosition - 150,
-                behavior: 'smooth',
-            });
+        if (currentPage !== totalPage) {
+            const upcomingSection = document.getElementById('upcoming-grid');
+            if (upcomingSection) {
+                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+                const isMobile = window.innerWidth < 768 ? true : false;
+                const rem = isMobile ? 1 : 5;
+                const offset = rem * 16;
+                window.scrollTo({
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 150,
+                    behavior: 'smooth',
+                });
+            }
+        } else {
+            if (artData.length > 4) {
+                const upcomingSection = document.getElementById('upcoming-grid');
+                if (upcomingSection) {
+                    const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+                    const isMobile = window.innerWidth < 768 ? true : false;
+                    const rem = isMobile ? 1 : 5;
+                    const offset = rem * 16;
+                    window.scrollTo({
+                        top: !isMobile ? sectionPosition + offset : sectionPosition - 150,
+                        behavior: 'smooth',
+                    });
+                }
+            } else {
+                const upcomingSection = document.getElementById('upcoming');
+                if (upcomingSection) {
+                    const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+                    const isMobile = window.innerWidth < 768 ? true : false;
+                    const rem = isMobile ? 1 : 1;
+                    const offset = rem * 16;
+                    window.scrollTo({
+                        top: !isMobile ? sectionPosition + offset : sectionPosition - 150,
+                        behavior: 'smooth',
+                    });
+                }
+            }
         }
 
     };
 
     const handleClose = () => {
         setSelectedArtId(null);
+        setSelectedArt(null);
         const url = new URL(window.location.href);
         url.searchParams.delete('artId');
         window.history.pushState({}, '', url.toString());
@@ -142,7 +175,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                     </div>
                 ))}
             </div>
-            {selectedArtId && overlayArt && <div className="upcoming-popup-holder absolute w-full h-full flex items-center justify-center px-3">
+            {selectedArtId && overlayArt && <div className="upcoming-popup-holder absolute z-40 w-full h-full flex items-center justify-center px-3">
                 <div className="upcoming-popup lg:w-[43.5rem] lg:h-[33.5rem] md:w-[40.5rem] md:h-[30.5rem] w-full h-[30rem] lg:p-10 md:p-8  p-6 rounded-2xl bg-black">
                     <div className="close-art w-full flex justify-end">
                         <div className="close-icon w-[1.9rem] h-[1.9rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleClose}>

@@ -68,6 +68,10 @@
     border-radius: 50%;
 }
 
+.pagination-blur {
+    background-color: #000000B2;
+}
+
 /* Gradiant button starts */
 
 .uploadButtonWrapper {

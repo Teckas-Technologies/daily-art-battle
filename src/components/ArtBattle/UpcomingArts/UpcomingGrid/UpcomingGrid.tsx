@@ -27,6 +27,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     const [sort, setSort] = useState("dateDsc");
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const [selectedArt, setSelectedArt] = useState();
 
     const handleToggle = () => {
         setIsOpen((prev) => !prev);
@@ -161,7 +162,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
     return (
         <>
-            <div className="upcoming-hero w-full h-auto bg-black pt-4 pb-6" id="upcoming">
+            <div className="upcoming-hero w-full h-auto bg-black md:pt-4 pt-0 pb-6" id="upcoming">
 
                 {/* Filters top section */}
                 <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:px-[7.8rem] px-3 pb-5 pt-10">
@@ -230,11 +231,11 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
                 {/* Upcoming arts grid view section */}
                 <div className="relative grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
-                    <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} />
+                    <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} setSelectedArt={setSelectedArt} currentPage={page} totalPage={totalPage} />
                 </div>
 
                 {/* Pagination for upcoming arts */}
-                <div className="pagination-section w-full flex justify-center py-5">
+                <div className="pagination-section relative w-full flex justify-center py-5">
                     <div className="pagination rounded-[7rem]">
                         <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
                             <div className={`previous flex items-center gap-1 ${page === 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`} onClick={page !== 1 ? handlePrevious : undefined}>
@@ -265,6 +266,9 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
                         </div>
                     </div>
+                    {page === totalPage && upcomingArts.length < 5 && selectedArt && <div className="pagination-blur absolute w-full h-full z-0">
+
+                    </div>}
                 </div>
             </div>
         </>
