@@ -9,8 +9,8 @@ import { useRouter } from 'next/navigation';
 import { useVoting } from '@/hooks/useVoting';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { NoBattle } from './NoBattle/NoBattle';
-import Toast from '../Toast';
-import './Hero.css';
+import Toast from '../../Toast';
+import './Battle.css';
 import { Split } from './Split/Split';
 
 interface Artwork {
@@ -35,7 +35,7 @@ const initialViewTools = [
     { id: "spinner", path: "/icons/spinner.svg", active: false },
 ];
 
-export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor, welcomeText, themeTitle }) => {
+export const Battle: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor, welcomeText, themeTitle }) => {
 
     const { isConnected, connect, activeAccountId } = useMbWallet();
     const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
@@ -203,7 +203,7 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
 
     return (
         <>
-            <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[2rem] flex flex-col items-center justify-center bg-black">
+            <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[3rem] flex flex-col items-center justify-center bg-black">
 
                 <div className="bottom-hero w-full h-auto">
                     <div className="top-hero md:mt-5 mt-0 flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] md:px-[16.5rem] px-3 py-[0.5rem]">
@@ -236,16 +236,37 @@ export const Hero: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor
 
                     {todayBattle && <div className={`battle-vote-btns w-full flex items-center h-auto mt-8 pb-5 px-3`}>
                         <div className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active ? "md:pr-[8rem]" : "md:pr-[12.5rem]"}`}>
-                            <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-2 border border-green-600 rounded-3xl cursor-pointer`}>
+                            <div className="outside w-auto h-auto rounded-3xl">
+                                <div className="second-layer w-auto h-auto rounded-3xl">
+                                    <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 rounded-3xl cursor-pointer`}>
+                                        <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artA.name ? "Voted Art A" : viewTools[1].active || viewTools[2].active ? "Vote for Art A" : "Vote here"}</h2>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active ? "md:pl-[8rem]" : "md:pl-[12.5rem]"} `}>
+                            <div className="outside2 w-auto h-auto rounded-3xl">
+                                <div className="second-layer2 w-auto h-auto rounded-3xl">
+                                    <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}>
+                                        <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artB.name ? "Voted Art B" : viewTools[1].active || viewTools[2].active ? "Vote for Art B" : "Vote here"}</h2>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>}
+
+                    {/* {todayBattle && <div className={`battle-vote-btns w-full flex items-center h-auto mt-8 pb-5 px-3`}>
+                        <div className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active ? "md:pr-[8rem]" : "md:pr-[12.5rem]"}`}>
+                            <button onClick={() => onVote(artA.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}>
                                 <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artA.name ? "Voted ART A" : viewTools[1].active || viewTools[2].active ? "Vote for Art A" : "Vote here"}</h2>
                             </button>
                         </div>
                         <div className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active ? "md:pl-[8rem]" : "md:pl-[12.5rem]"} `}>
-                            <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-2 border border-green-600 rounded-3xl cursor-pointer`}>
+                            <button onClick={() => onVote(artB.id)} disabled={!isConnected || success} className={`${!isConnected || success ? "cursor-not-allowed" : ""} battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}>
                                 <h2 className='md:spartan-bold spartan-semibold font-bold text-xs md:text-sm'>{votedFor === artB.name ? "Voted ART B" : viewTools[1].active || viewTools[2].active ? "Vote for Art B" : "Vote here"}</h2>
                             </button>
                         </div>
-                    </div>}
+                    </div>} */}
 
                 </div>
             </div>

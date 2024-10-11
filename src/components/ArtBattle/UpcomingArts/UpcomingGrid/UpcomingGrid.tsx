@@ -1,7 +1,7 @@
 "use client";
 
 import InlineSVG from "react-inlinesvg";
-import './UpcomingHero.css';
+import './UpcomingGrid.css';
 import Card from "./ArtCard/Card";
 import { useEffect, useState, useRef } from "react";
 import { useMbWallet } from "@mintbase-js/react";
@@ -18,7 +18,7 @@ interface Props {
 const MOBILE_LIMIT = 4;
 const DESKTOP_LIMIT = 8;
 
-export const UpcomingHero: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
+export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
     const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
     const [refresh, setRefresh] = useState(false);
     const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
@@ -139,7 +139,7 @@ export const UpcomingHero: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
     return (
         <>
-            <div className="upcoming-hero w-full h-auto bg-black" id="upcoming">
+            <div className="upcoming-hero w-full h-auto bg-black pt-4 pb-6" id="upcoming">
 
                 {/* Filters top section */}
                 <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:px-[7.8rem] px-3 pb-5 pt-10">

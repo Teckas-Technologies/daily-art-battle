@@ -21,8 +21,8 @@ const Card: React.FC<CardProps> = ({ art, onVote, votes, onImageClick }) => {
     );
 
     return (
-        <div className="card md:w-[18.5rem] md:h-[26.5rem] w-[10rem] h-[15.5rem] gap-0 rounded-[1.25rem] md:mt-5 mt-0 shadow-md p-[0.5rem] flex flex-col items-center">
-            <div className="art-img md:w-[17.5rem] md:h-[17.5rem] w-[9rem] h-[9rem] rounded-[1.25rem] cursor-pointer" onClick={() => onImageClick(art._id)}>
+        <div className="card lg:w-[18.5rem] lg:h-[26.5rem] md:w-[17rem] md:h-[25rem] w-[10rem] h-[15.5rem] gap-0 rounded-[1.25rem] md:mt-5 mt-0 shadow-md p-[0.5rem] flex flex-col items-center">
+            <div className="art-img lg:w-[17.5rem] lg:h-[17.5rem] md:w-[16rem] md:h-[16rem] w-[9rem] h-[9rem] rounded-[1.25rem] cursor-pointer" onClick={() => onImageClick(art._id)}>
                 <img src={art?.colouredArt} alt={art?.arttitle} className="w-full h-full object-cover rounded-[1.25rem]" />
             </div>
             <div className="art-info w-full h-auto flex justify-between items-center md:py-5 py-3 px-1">
