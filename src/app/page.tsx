@@ -3,7 +3,7 @@
 import type { NextPage } from 'next';
 import { useState } from 'react';
 import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
-import Footer from '@/components/Footer';
+import Footer from '@/components/Footer/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { Header } from '@/components/Header/Header';
 import PreviousArtHeader from '@/components/ArtBattle/PreviousArts/PreviousArtHeader';
@@ -40,7 +40,7 @@ const Home: NextPage = () => {
       {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <PreviousArtHeader />
       <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
-      <Footer/>
+      <Footer />
     </main>
   );
 };
