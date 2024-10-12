@@ -31,7 +31,7 @@ const Card: React.FC<CardProps> = ({ battle }) => {
             </div>
             <div className="battle-info w-full h-auto flex flex-col justify-between md:px-2 px-0 lg:py-4 md:py-3 py-2">
                 <div className="top date">
-                    <h2 className='lg:spartan-semibold md:spartan-medium md:text-md text-sm date'>{formattedDate ? formattedDate : "Date not provided"}</h2>
+                    <h2 className='lg:spartan-semibold md:spartan-medium md:text-md text-xs date'>{formattedDate ? formattedDate : "Date not provided"}</h2>
                 </div>
                 <div className="bottom flex flex-col md:flex-row justify-between md:items-center gap-2 md:py-2 pt-1 pb-2">
                     <div className="rare-owner lg:w-[12rem] md:w-[10rem] w-[8rem] flex items-center md:gap-2 gap-1">
