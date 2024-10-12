@@ -71,6 +71,34 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+          <div className="footer-column-mobile">
+            <div className="footer-mobile">
+              <h2>Social Media links</h2>
+              <ul className="social-icons">
+                <li>
+                  <a href="#">
+                    <img src="/images/telegram.png" alt="telegram" />
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="/images/twitter.png" alt="Twitter" />
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="/images/insta.png" alt="Instagram" />
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="/images/facebook.png" alt="facebook" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <h3>Mail us : founders@gfxvs.com</h3>
+          </div>
         </div>
       </div>
       <div className="footer-bottom">
