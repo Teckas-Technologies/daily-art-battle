@@ -3,7 +3,6 @@
 import type { NextPage } from 'next';
 import { useState } from 'react';
 import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
-import PreviousArtTable from '@/components/PreviousBattlesTable';
 import Footer from '@/components/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { Header } from '@/components/Header/Header';
@@ -11,6 +10,7 @@ import PreviousArtHeader from '@/components/ArtBattle/PreviousArts/PreviousArtHe
 import { Battle } from '@/components/ArtBattle/Battle/Battle';
 import UpcomingHeader from '@/components/ArtBattle/UpcomingArts/UpcomingHeader';
 import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid';
+import { PreviousGrid } from '@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
       <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <PreviousArtHeader />
-      <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
+      <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
       <Footer/>
     </main>
   );

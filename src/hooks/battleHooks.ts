@@ -124,11 +124,12 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
 //useFetchBattles is used to fetch battles with pagination
 export const useFetchBattles = () => {
   const [battles, setBattles] = useState<BattlesResponse | null>(null);
+  const [totalPage, setTotalPage] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
 
-      const fetchBattles = async (campaignId:string,sort:string,page: number, limit: number = 10) => {
+      const fetchBattles = async (campaignId:string,sort:string,page: number, limit: number = 6) => {
           setLoading(true);
           setError(null);
           try {
@@ -136,6 +137,7 @@ export const useFetchBattles = () => {
               if (!response.ok) throw new Error('Network response was not ok');
               const data: BattlesResponse = await response.json();
               setBattles(data);
+              setTotalPage(data.totalPages);
               return data;
           } catch (err) {
               console.error('Error fetching battles:', err);
@@ -163,5 +165,5 @@ export const useFetchBattles = () => {
     };
      
 
-  return { battles, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };
+  return { battles, totalPage, loading, error,fetchMoreBattles: fetchBattles,fetchBattlesbyVotes:fetchBattlesByVotes };
 };
