@@ -3,8 +3,6 @@
 import InlineSVG from "react-inlinesvg";
 import './PreviousGrid.css';
 import { useEffect, useState, useRef } from "react";
-import { useMbWallet } from "@mintbase-js/react";
-import { ArtData, useFetchArts } from "@/hooks/artHooks";
 import CardHolder from "./BattleCard/CarHolder";
 import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 
@@ -20,8 +18,8 @@ const DESKTOP_LIMIT = 6;
 export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor }) => {
     const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
     const { battles, error, loading, fetchMoreBattles, totalPage } = useFetchBattles();
-    const { isConnected, selector, connect, activeAccountId } = useMbWallet();
     const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(MOBILE_LIMIT);
     const [hasnext, setHasNext] = useState(false);
     const [pop, setPopUp] = useState(false);
     const [sort, setSort] = useState("date");
@@ -55,7 +53,7 @@ export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, f
     useEffect(() => {
         const limit = getLimitBasedOnScreenSize();
         fetchMoreBattles(campaignId, sort, page, limit);
-    }, [campaignId, page])
+    }, [campaignId, page, limit])
 
     const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const sortType = event.target.value
@@ -69,7 +67,7 @@ export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, f
         if (page < totalPage) {
             setPage((prevPage) => prevPage + 1);
             const limit = getLimitBasedOnScreenSize();
-            fetchMoreBattles(campaignId, sort, page, limit);
+            setLimit(limit);
 
             const previousSection = document.getElementById('previous');
             if (previousSection) {
@@ -89,7 +87,7 @@ export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, f
         if (page > 1) {
             setPage((prevPage) => prevPage - 1);
             const limit = getLimitBasedOnScreenSize();
-            fetchMoreBattles(campaignId, sort, page, limit);
+            setLimit(limit);
 
             const previousSection = document.getElementById('previous');
             if (previousSection) {
@@ -106,10 +104,12 @@ export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, f
     };
 
     const handlePageClick = (pageNumber: number) => {
+        console.log(`${pageNumber}, ${page}`);
         if (pageNumber !== page) {
             setPage(pageNumber);
             const limit = getLimitBasedOnScreenSize();
-            fetchMoreBattles(campaignId, sort, page, limit);
+            // fetchMoreBattles(campaignId, sort, page, limit);
+            setLimit(limit);
 
             const previousSection = document.getElementById('previous');
             if (previousSection) {
