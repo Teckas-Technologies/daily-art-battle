@@ -1,16 +1,47 @@
 //art.ts is used for creating creating arts ,fetching arts and updating art by id.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { scheduleArt,findAllArts,updateArtById ,findBattles,findPreviousArts,findPreviousArtsByVotes,findArtById,findAllArtsByDate,findAllArtsByVoteAsc,findAllArtsByDateAsc} from '../../utils/artUtils';
+import { verifyToken } from '../../utils/verifyToken';
+import JwtPayload from '../../utils/verifyToken';
+import User from '../../model/User';
+import { ART_UPLOAD } from '@/config/points';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+          return res.status(401).json({ success: false, error: 'Authorization token is required' });
+        }
+  
+        // Verify the token
+        const { valid, decoded } = await verifyToken(token);
+        if (!valid) {
+          return res.status(401).json({ success: false, error: 'Invalid token' });
+        }
+        const payload = decoded as JwtPayload; // Cast the decoded token
+        const email = payload?.emails?.[0]; // Safely access the first email
     switch (req.method) {
       //POST method is used to create art.
        case 'POST':
         const art = req.body;
+        const user = await User.findOne({ email:email });
+        if (!user) {
+          return res.status(404).json({ success: false, error: "User profile not found." });
+        }
+
+        if (user.gfxCoin < ART_UPLOAD) {
+          return res.status(400).json({ success: false, error: "Insufficient balance to upload." });
+        }
         console.log("Art >> ", art)
         const saveart = await scheduleArt(art);
+        await User.updateOne(
+          {email:email },
+          { $inc: { gfxCoin: -ART_UPLOAD } }
+        );
         return res.status(201).json(saveart);
+
+
         //GET method is used to fetch arts with pagination.
         case 'GET':
           

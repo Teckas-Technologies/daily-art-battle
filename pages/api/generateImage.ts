@@ -2,8 +2,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
 import { OPENAI } from '@/config/constants';
-
-
+import User from '../../model/User';
+import { verifyToken } from '../../utils/verifyToken';
+import JwtPayload from '../../utils/verifyToken';
+import { AI_IMAGE } from '@/config/points';
 const openai = new OpenAI({
   apiKey: OPENAI,
 });
@@ -13,7 +15,36 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method == 'POST') {
+  
   const { prompt } = req.body;
+  const token = req.headers['authorization']?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ success: false, error: 'Authorization token is required' });
+  }
+
+  // Verify the token
+  const { valid, decoded } = await verifyToken(token);
+  if (!valid) {
+    return res.status(401).json({ success: false, error: 'Invalid token' });
+  }
+
+  const payload = decoded as JwtPayload; // Cast the decoded token
+  const email = payload?.emails?.[0]; // Safely access the first email
+
+  if (!email) {
+    return res.status(400).json({ success: false, error: 'Email not found in the token.' });
+  }
+
+  // Find the user by email
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ success: false, error: "User profile not found." });
+  }
+  if (user.gfxCoin < AI_IMAGE) {
+    return res.status(400).json({ success: false, error: "Insufficient balance to generate." });
+  }
+
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt is required' });
   }
@@ -36,6 +67,7 @@ export default async function handler(
   
       // Send image as Blob in response
       const blob = Buffer.from(buffer).toString('base64'); // Convert buffer to base64-encoded string
+      await User.updateOne({ email }, { $inc: { gfxCoin: -AI_IMAGE } });
       res.status(200).json({ imageUrl,imageBlob: blob });
     }
   } catch (error) {

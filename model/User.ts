@@ -11,18 +11,32 @@ export interface UserTable extends Document {
   isTelegramDropClaimed: boolean;
   isInstagramConnected:boolean;
   isXConnected:boolean;
-  isEmailVerified:boolean;
+  isEmailConnected:boolean;
   isRegistered:boolean;
   referralCode: string;
   referredBy?: mongoose.Types.ObjectId;
   referredUsers: mongoose.Types.ObjectId[];
   createdAt:Date;
+  nearAddress:string;
+  instagram?: {
+    username?: string;
+    userId?: string;
+  };
+  xPlatform?: {
+    username?: string;
+    userId?: string;
+  };
+  telegram?: {
+    username?: string;
+    userId?: string;
+  };
 }
 
 const UserTableSchema = new mongoose.Schema({
 //   profileImg: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
+  nearAddress: { type: String, required: true },
   email: { 
     type: String, 
     required: true, 
@@ -37,7 +51,7 @@ const UserTableSchema = new mongoose.Schema({
   isTelegramDropClaimed: { type: Boolean, default: false },
   isInstagramConnected: { type: Boolean, default: false },
   isXConnected: { type: Boolean, default: false },
-  isEmailVerified: { type: Boolean, default: false },
+  isEmailConnected: { type: Boolean, default: false },
   isRegistered: { type: Boolean, default: false },
   referralCode: {type: String,unique: true,},
   referredBy: {type: mongoose.Schema.Types.ObjectId,ref: 'UserTable',},
@@ -48,6 +62,18 @@ const UserTableSchema = new mongoose.Schema({
       ref: 'UserTable',
     },
   ],
+  instagram: {
+    username: { type: String },
+    userId: { type: String },
+  },
+  xPlatform: {
+    username: { type: String },
+    userId: { type: String },
+  },
+  telegram: {
+    username: { type: String },
+    userId: { type: String },
+  },
 });
 
 

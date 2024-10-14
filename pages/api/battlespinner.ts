@@ -3,9 +3,19 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { fetchTodayBattle } from '../../utils/battleUtils';
 import spinnerWithEmoji from '../../utils/farcasterSpinnerUtil';
 import uploadArweave from '../../utils/uploadArweave';
+import { verifyToken } from '../../utils/verifyToken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+          return res.status(401).json({ success: false, error: 'Authorization token is required' });
+        }
+        // Verify the token
+        const { valid, decoded } = await verifyToken(token);
+        if (!valid) {
+          return res.status(401).json({ success: false, error: 'Invalid token' });
+        }
         switch (req.method) {
             //GET method is used to fetch today battle and return spinner with emoji
             case 'GET':

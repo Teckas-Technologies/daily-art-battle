@@ -1,6 +1,6 @@
 export const ART_UPLOAD = 50;
 export const ART_UPVOTE = 5;
-export const MAX_UPVOTE = 7;
+export const MAX_UPVOTE = 8;
 export const AI_IMAGE = 1;
 export const REFFERER = 100;
 export const REFFERED_USER = 50;

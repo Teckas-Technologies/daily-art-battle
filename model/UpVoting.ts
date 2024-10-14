@@ -4,6 +4,7 @@ interface ArtVoting extends Document {
   participantId: string;
   artId: string;
   campaignId:string;
+  votesCount:Number;
 }
 
 const votingSchema = new mongoose.Schema({
@@ -14,6 +15,11 @@ const votingSchema = new mongoose.Schema({
   artId: {
     type: String,   
     required: true,
+  },
+  votesCount: {
+    type: Number,   
+    required: true,
+    default:0
   },
   campaignId: { type: String, required: true },
 }, { timestamps: true });

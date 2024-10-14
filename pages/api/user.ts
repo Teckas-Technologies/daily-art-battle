@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     try {
       await connectToDatabase();
+      const {walletAddress} = req.body;
       const token = req.headers['authorization']?.split(' ')[1];
       if (!token) {
         return res.status(401).json({ error: 'Authorization token is required' });
@@ -44,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         referralCode: referralCodeGenerated,
         referredBy: referrer ? referrer._id : null,
         createdAt: new Date(),
-        isEmailVerified: true,
+        nearAddress:walletAddress, 
       });
 
       if (referrer) {
@@ -56,6 +57,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const response = await newUser.save();
       res.status(201).json({ user: response });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+  else if (req.method === 'GET') {
+    try {
+      await connectToDatabase();
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ error: 'Authorization token is required' });
+      }
+      
+      const { valid, decoded } = await verifyToken(token);
+      if (!valid) {
+        return res.status(401).json({ error: 'Invalid token' });
+      }
+
+      const payload = decoded as JwtPayload; // Cast the decoded token
+      const email = payload.emails[0]; // Extract email from the decoded token
+
+      const user = await User.findOne({ email: email });
+      res.status(201).json({ user: user });
     } catch (error) {
       res.status(500).json({ error });
     }

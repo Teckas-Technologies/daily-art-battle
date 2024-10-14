@@ -1,9 +1,23 @@
 //battle.ts is used for creating battle,updating battle ,fetching battle and deleting battle.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { scheduleBattle, deleteAll, findTodaysBattle, findPreviousBattles, findAllBattles, updateBattle,findPreviousBattlesByVotesAsc, findPreviousBattlesByVotes,findPreviousBattlesAsc } from '../../utils/battleUtils';
+import { verifyToken } from '../../utils/verifyToken';
+import JwtPayload from '../../utils/verifyToken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+          return res.status(401).json({ success: false, error: 'Authorization token is required' });
+        }
+  
+        // Verify the token
+        const { valid, decoded } = await verifyToken(token);
+        if (!valid) {
+          return res.status(401).json({ success: false, error: 'Invalid token' });
+        }
+        const payload = decoded as JwtPayload; // Cast the decoded token
+        const email = payload?.emails?.[0]; // Safely access the first email
     switch (req.method) {
       //POST method is used for creating battle
       case 'POST':
@@ -16,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { queryType } = req.query;
         //Here we'll fetch today battles
         if (queryType === 'Today') {
+          
           const campaignId = req.query.campaignId as string;
           await timeout(1000);
           const todayBattle = await findTodaysBattle(campaignId);
