@@ -2,7 +2,7 @@
 "use client"
 import type { NextPage } from 'next';
 import { useState } from 'react';
-import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
+import ArtUploadForm from '@/components/ArtUpload/ArtUploadForm';
 import Footer from '@/components/Footer/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { Header } from '@/components/Header/Header';
@@ -37,7 +37,7 @@ const Home: NextPage = () => {
       <Battle campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
       <UpcomingHeader fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <PreviousArtHeader />
       <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
       <Footer />
