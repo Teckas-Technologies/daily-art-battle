@@ -212,8 +212,8 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                                 <h2 className='spartan-semibold md:text-lg text-xs'>Upvotes</h2>
                             </div>
                             <h2 className='spartan-medium text-lg py-4 text-green'>Description</h2>
-                            {/* <h6 className='saprtan-medium description-text py-1'>{overlayArt.arttitle}</h6> */}
-                            <h6 className='saprtan-medium description-text py-1'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6>
+                            <h6 className='saprtan-medium description-text py-1'>{overlayArt.arttitle}</h6>
+                            {/* <h6 className='saprtan-medium description-text py-1'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6> */}
                             <div className="upload-date flex items-center gap-3 py-2">
                                 <div className="date flex items-center gap-2">
                                     <InlineSVG
