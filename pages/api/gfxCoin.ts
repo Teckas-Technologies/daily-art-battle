@@ -6,27 +6,14 @@ import { ACCOUNT_DATE } from "@/data/queries/accountDate.graphql";
 import { providers, utils } from 'near-api-js';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import Transactions from "../../model/Transactions";
-import JwtPayload from "../../utils/verifyToken";
+import  { authenticateUser } from "../../utils/verifyToken";
 import { EMAIL_VERIFY, INSTA_CONNECT, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT } from "@/config/points";
-import { verifyToken } from "../../utils/verifyToken";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        await connectToDatabase();
-        const token = req.headers['authorization']?.split(' ')[1];
-        if (!token) {
-          return res.status(401).json({ success: false, error: 'Authorization token is required' });
-        }
-  
-        // Verify the token
-        const { valid, decoded } = await verifyToken(token);
-        if (!valid) {
-          return res.status(401).json({ success: false, error: 'Invalid token' });
-        }
-        const payload = decoded as JwtPayload; // Cast the decoded token
-        const email = payload?.emails?.[0]; // Safely access the first email
-
-        
+        await connectToDatabase()
+        try{
+        const email = await authenticateUser(req);
         const query = req.query.queryType as string;
         const walletAddress = req.query.walletAddress as string;
 
@@ -141,6 +128,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(500).json({ error: error.message });
         }
     }
+    catch(error:any){
+        return res.status(400).json({error:error});
+    }
+    }
     else {
         return res.status(405).json({ message: "Method not allowed" });
     }
@@ -203,7 +194,7 @@ function calculateGfxPoints(nearAmount:any) {
     const gfxPoints = nearAmount * gfxPointsPerNear;
     return gfxPoints;
   }
-
+    
 async function findCreationDate(walletAddress: string) {
     const response = await graphQLService({
         query: ACCOUNT_DATE,

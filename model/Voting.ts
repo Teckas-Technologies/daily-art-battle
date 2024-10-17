@@ -1,6 +1,7 @@
 import mongoose, { Document, Model } from 'mongoose';
 
 interface IVoting extends Document {
+  email:string;
   participantId?: string;
   battleId: string;
   votedFor: 'Art A' | 'Art B';
@@ -10,6 +11,10 @@ interface IVoting extends Document {
 }
 
 const votingSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: false,
+  },
   participantId: {
     type: String,
     required: false,

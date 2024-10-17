@@ -2,26 +2,30 @@ import mongoose, { Document, model } from 'mongoose';
 
 interface Campaign extends Document {
   campaignUrl: string;
-  campaignTheme: string;
+  campaignName: string;
   campaignWelcomeText: string;
-  color:string;
-  video:string;
   startDate:string;
-  logo:string;
   endDate:string;
   creatorId:string;
+  createdAt:Date;
+  email:string;
+  specialRewards:number;
+  publiclyVisible:boolean;
+  isSpecialRewards:boolean
 }
 
 const campaignSchema = new mongoose.Schema({
-    campaignUrl: { type: String, required: true,},
-    creatorId: { type: String, required: true,},
-    campaignTheme: {type: String,required: true,},
-    campaignWelcomeText: {type: String,required: true,},
-    color: {type: String,required: false,},
-    video: {type: String,required: false,},
-    logo: {type: String,required: false,},
-    startDate: {type: String,required: true,},
-    endDate: {type: String,required: true,},
+  campaignUrl: {type: String,required: true,},
+  campaignName: {type: String,required: true,},
+  campaignWelcomeText: {type: String,required: true,},
+  startDate: {type: Date,required: true,},
+  endDate: {type: Date,required: true,},
+  creatorId: {type: String,required: true,},
+  createdAt: { type: Date, default: Date.now,},
+  email: {type: String,required: true,},
+  specialRewards: {type: Number,required: false,default:false},
+  publiclyVisible: {type: Boolean,default: true,},
+  isSpecialRewards: {type: Boolean,default: false,},
 });
 
 export default mongoose.models.Campaign || model<Campaign>('Campaign', campaignSchema);

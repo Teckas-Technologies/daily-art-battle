@@ -2,6 +2,7 @@ import NextAuth, { NextAuthOptions, Session, DefaultSession } from "next-auth";
 import AzureADB2CProvider from "next-auth/providers/azure-ad-b2c";
 import axios from "axios";
 import jwt from 'jsonwebtoken';
+import { JWT } from "next-auth/jwt";
 
 interface CustomToken {
   idToken?: string;
@@ -70,8 +71,10 @@ const options: NextAuthOptions = {
           
           const refreshedToken = await refreshIdToken(token as CustomToken); // Assume `refreshIdToken` function exists
           // console.log(refreshedToken)
-          console.log("ID Token refreshed successfully");
-          return refreshedToken;
+          if (refreshedToken) {
+            console.log("ID Token refreshed successfully");
+            return refreshedToken as unknown as JWT; // Cast refreshedToken to JWT
+          }
         }
     
         // Return token if it's still valid

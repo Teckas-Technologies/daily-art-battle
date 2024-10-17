@@ -2,27 +2,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import Voting from '../../model/Voting';
-import JwtPayload from '../../utils/verifyToken';
+import JwtPayload, { authenticateUser } from '../../utils/verifyToken';
 import { verifyToken } from '../../utils/verifyToken';
 import User from '../../model/User';
 import { ART_VOTE } from '@/config/points';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase();
-
+  try{
+    const email = await authenticateUser(req);
   if (req.method === 'POST') {
     try {
-    const token = req.headers['authorization']?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ error: 'Authorization token is required' });
-    }
-    
-    const { valid, decoded } = await verifyToken(token);
-    if (!valid) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-    const payload = decoded as JwtPayload; // Cast the decoded token
-    const email = payload.emails[0];
     const { participantId, battleId, votedFor,campaignId, fcId } = req.body;
 
     if (!participantId && !fcId) {
@@ -49,13 +39,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ success: false, message: "User profile not found." });
     }
 
+    if(user.nearAddress!=participantId){
+      return res
+      .status(404)
+      .json({ success: false, error: "User wallet address not matched" });
+    }
+
+
     // Check if the user has enough gfxCoin to vote
     if (user.gfxCoin < ART_VOTE) {
       return res.status(400).json({ success: false, message: "Insufficient balance to vote." });
     }
-      const vote = await Voting.create({ participantId, battleId, votedFor ,campaignId, fcId});
+      const vote = await Voting.create({ email,participantId, battleId, votedFor ,campaignId, fcId});
       await User.updateOne(
         { email: email },
+        
         { $inc: { gfxCoin: - ART_VOTE } }
       );
       res.status(201).json({ success: true, data: vote });
@@ -65,19 +63,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //GET method is used to fetch vote by participantId and battleId.
   } if (req.method === 'GET') {
     try {
-      const token = req.headers['authorization']?.split(' ')[1];
-      if (!token) {
-        return res.status(401).json({ error: 'Authorization token is required' });
-      }
-      
-      const { valid, decoded } = await verifyToken(token);
-      if (!valid) {
-        return res.status(401).json({ error: 'Invalid token' });
-      }
+      const user = await User.findOne({ email: email });
       const { participantId, battleId,campaignId, fcId } = req.query;
       if (!participantId && !fcId) {
         return res.status(400).json({ success: false, message: "Either participantId or fcId must be provided." });
       }
+
+      if(user.nearAddress!=participantId){
+        return res
+        .status(404)
+        .json({ success: false, error: "User wallet address not matched" });
+      }
+  
       const query: any = { battleId, campaignId };
       if (participantId) {
         query.participantId = participantId;
@@ -93,4 +90,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // res.setHeader('Allow', ['GET', 'POST']);
     // res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+}
+catch(error:any){
+  return res.status(400).json({error:error.message});
+}
 }

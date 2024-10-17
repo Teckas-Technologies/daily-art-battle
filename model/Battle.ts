@@ -3,6 +3,8 @@
 import mongoose, { Document, model } from 'mongoose';
 
 interface Battle extends Document {
+  artAartistEmail:string;
+  artBartistEmail:string;
   artAId:string;
   artBId:string;
   artAartistId:string;
@@ -33,6 +35,8 @@ interface Battle extends Document {
 }
 
 const BattleSchema = new mongoose.Schema({
+  artAartistEmail: { type: String, required: true },
+  artBartistEmail: { type: String, required: true },
   campaignId: { type: String, required: true },
   artAId: { type: String, required: true },
   artBId: { type: String, required: true },

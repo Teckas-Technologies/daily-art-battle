@@ -85,6 +85,21 @@ export const findAllArtsByDateAsc = async (page: number, limit: number,campaignI
   return {arts,totalDocuments,totalPages};
 };
 
+export const findAllArtsByCampaign = async (page: number, limit: number,campaignId:string): Promise<any> => {
+  await connectToDatabase();
+  const skip = limit * (page === 1 ? 0 : page - 1); 
+  const totalDocuments = await ArtTable.countDocuments({campaignId:campaignId });
+  const totalPages = Math.ceil(totalDocuments / limit);
+  const arts = await ArtTable.find({campaignId:campaignId })
+  .sort({_id: 1 })
+  .skip(skip)
+  .limit(limit)
+  .exec();
+
+  return {arts,totalDocuments,totalPages};
+};
+
+
 export const findPreviousArts = async (page: number, limit: number): Promise<any> => {
   await connectToDatabase();
   const today = new Date();

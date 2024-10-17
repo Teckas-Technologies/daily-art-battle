@@ -1,6 +1,7 @@
 import mongoose, { Document, Model } from 'mongoose';
 
 interface ArtVoting extends Document {
+  email:string;
   participantId: string;
   artId: string;
   campaignId:string;
@@ -8,6 +9,10 @@ interface ArtVoting extends Document {
 }
 
 const votingSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+  },
   participantId: {
     type: String,
     required: true,
