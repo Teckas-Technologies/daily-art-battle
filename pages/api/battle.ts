@@ -63,10 +63,11 @@ export default async function handler(
               campaignId
             );
             return res.status(200).json(battles);
-          } else if (sort == "dateDsc") {
+          } else if (sort == "dateDsc") { 
             const battles = await findPreviousBattles(page, limit, campaignId);
             return res.status(200).json(battles);
-          } else {
+          }
+           else {
             const battles = await findPreviousBattles(page, limit, campaignId);
             return res.status(200).json(battles);
           }

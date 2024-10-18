@@ -4,6 +4,7 @@ import { connectToDatabase } from "../../utils/mongoose";
 import User from "../../model/User";
 import JwtPayload, { authenticateUser } from "../../utils/verifyToken";
 import { calculateCampaignCoins } from "../../utils/campaignUtils";
+import Transactions from "../../model/Transactions";
 
 export const config = {
   api: {
@@ -59,11 +60,25 @@ export default async function handler(
               { email: email },
               { $inc: { gfxCoin: - (calculatedCoins + data.specialRewards) } }
             );
+            const newTransaction = new Transactions({
+              email: email,
+              gfxCoin: (calculatedCoins + data.specialRewards),  
+              transactionType: "spent"  
+            });
+            
+            await newTransaction.save();
           }else{
           await User.updateOne(
             { email: email },
             { $inc: { gfxCoin: -calculatedCoins } }
           );
+          const newTransaction = new Transactions({
+            email: email,
+            gfxCoin: calculatedCoins,  
+            transactionType: "spent"  
+          });
+          
+          await newTransaction.save();
         }
           return res
             .status(201)

@@ -15,6 +15,7 @@ import {
 } from "../../utils/artUtils";
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import User from "../../model/User";
+import Transactions from "../../model/Transactions";
 import { ART_UPLOAD } from "@/config/points";
 
 export default async function handler(
@@ -50,6 +51,13 @@ export default async function handler(
           { email: email },
           { $inc: { gfxCoin: -ART_UPLOAD } }
         );
+        const newTransaction = new Transactions({
+          email: email,
+          gfxCoin: ART_UPLOAD,  
+          transactionType: "spent"  
+        });
+        
+        await newTransaction.save();
         return res.status(201).json(saveart);
 
       //GET method is used to fetch arts with pagination.

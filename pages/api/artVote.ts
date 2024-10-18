@@ -6,6 +6,7 @@ import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import User from "../../model/User";
 import { ART_UPVOTE, MAX_UPVOTE } from "@/config/points";
 import ArtTable from "../../model/ArtTable";
+import Transactions from "../../model/Transactions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -80,7 +81,13 @@ export default async function handler(
         );
       }
       await User.updateOne({ email }, { $inc: { gfxCoin: -ART_UPVOTE } });
-
+      const newTransaction = new Transactions({
+        email: email,
+        gfxCoin: ART_UPVOTE,  
+        transactionType: "spent"  
+      });
+      
+      await newTransaction.save();
       return res
         .status(200)
         .json({

@@ -6,6 +6,7 @@ import JwtPayload, { authenticateUser } from '../../utils/verifyToken';
 import { verifyToken } from '../../utils/verifyToken';
 import User from '../../model/User';
 import { ART_VOTE } from '@/config/points';
+import Transactions from '../../model/Transactions';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase();
@@ -56,6 +57,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         { $inc: { gfxCoin: - ART_VOTE } }
       );
+      const newTransaction = new Transactions({
+        email: email,
+        gfxCoin: ART_VOTE,  
+        transactionType: "spent"  
+      });
+      
+      await newTransaction.save();
       res.status(201).json({ success: true, data: vote });
     } catch (error) {
       res.status(400).json({ success: false, error });

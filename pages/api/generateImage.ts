@@ -6,6 +6,8 @@ import User from "../../model/User";
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import JwtPayload from "../../utils/verifyToken";
 import { AI_IMAGE } from "@/config/points";
+import Transactions from "../../model/Transactions";
+
 const openai = new OpenAI({
   apiKey: OPENAI,
 });
@@ -60,6 +62,13 @@ export default async function handler(
         // Send image as Blob in response
         const blob = Buffer.from(buffer).toString("base64"); // Convert buffer to base64-encoded string
         await User.updateOne({ email }, { $inc: { gfxCoin: -AI_IMAGE } });
+        const newTransaction = new Transactions({
+          email: email,
+          gfxCoin: AI_IMAGE,  
+          transactionType: "spent"  
+        });
+        
+        await newTransaction.save();
         res.status(200).json({ imageUrl, imageBlob: blob });
       }
     } catch (error) {

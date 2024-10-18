@@ -5,9 +5,9 @@ import { graphQLService } from "@/data/graphqlService";
 import { ACCOUNT_DATE } from "@/data/queries/accountDate.graphql";
 import { providers, utils } from 'near-api-js';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
-import Transactions from "../../model/Transactions";
+import Hashes from "../../model/Hashes";
 import  { authenticateUser } from "../../utils/verifyToken";
-import { EMAIL_VERIFY, INSTA_CONNECT, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT } from "@/config/points";
+import { EMAIL_VERIFY, GFXCOIN_PER_NEAR, INSTA_CONNECT, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT } from "@/config/points";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (query === 'burnNft') {
                 try {
                     const transactionHash = req.query.transactionHash;
-                    const existinghash = await Transactions.findOne({hash:transactionHash});
+                    const existinghash = await Hashes.findOne({hash:transactionHash});
                     if(existinghash){
                         return res.status(500).json({error:"Hash already used"});
                     }
@@ -50,7 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             return res.status(500).json({error:"transaction is not valid"});
                         }
                             await updateUserCoins(email, coins);
-                            const newHash = new Transactions({
+                            const newHash = new Hashes({
+                                email: email,
                                 walletAddress:walletAddress,
                                 hash:transactionHash
                             })
@@ -93,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }else if(query ==='nearTransfer'){
                 try {
                     const transactionHash = req.query.transactionHash;
-                    const existinghash = await Transactions.findOne({hash:transactionHash});
+                    const existinghash = await Hashes.findOne({hash:transactionHash});
                     if(existinghash){
                         return res.status(500).json({error:"Hash already used"});
                     }
@@ -110,7 +111,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         const amount = utils.format.formatNearAmount(transaction.transaction.actions[0].Transfer.deposit);
                         const coins = calculateGfxPoints(amount)
                         await updateUserCoins(walletAddress, coins);
-                        const newHash = new Transactions({
+                        const newHash = new Hashes({
+                            email:email,
                             walletAddress:walletAddress,
                             hash:transactionHash
                         })
@@ -190,7 +192,7 @@ async function calculateNearDropCoins(walletAddress: string) {
 
 
 function calculateGfxPoints(nearAmount:any) {
-    const gfxPointsPerNear = 1000; 
+    const gfxPointsPerNear = GFXCOIN_PER_NEAR; 
     const gfxPoints = nearAmount * gfxPointsPerNear;
     return gfxPoints;
   }

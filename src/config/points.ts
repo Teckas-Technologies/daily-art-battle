@@ -13,3 +13,4 @@ export const REGISTERED = 100;
 export const RARE_NFT_BURN = 1000;
 export const PARTICIPATION_NFT_BURN =10;
 export const CAMPAIGN_CREATION_COST = 10000;
+export const GFXCOIN_PER_NEAR = 1000;
