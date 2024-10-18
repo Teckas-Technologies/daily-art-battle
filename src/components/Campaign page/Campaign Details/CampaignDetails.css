@@ -1,0 +1,227 @@
+* {
+  font-family: "spartan";
+}
+.campaign-details-container {
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+  margin-top: 100px;
+}
+
+.campaign-details-container h1 {
+  margin-bottom: 30px;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 40.32px;
+  letter-spacing: -6%;
+  text-align: center;
+}
+
+.art-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+}
+.art img {
+  width: 274.5px;
+  height: 274.5px;
+  border-radius: 10.5px;
+}
+.art {
+  border: 0.75px solid #ccc;
+  border-radius: 25.5px;
+  padding: 20px;
+}
+.art-details h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20.16px;
+  letter-spacing: -6%;
+  color: #ffffff;
+}
+.art-details p {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 53.76px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  margin-top: 15px;
+}
+.special-winner h2 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 35.84px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  text-align: center;
+  margin-top: 55px;
+}
+.winnersGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 30px;
+}
+.winner {
+  border: 0.75px solid #ccc;
+  border-radius: 25.5px;
+  height: 400px;
+  padding: 20px;
+}
+.winner img {
+  width: 274.5px;
+  height: 274.5px;
+  border-radius: 10.5px;
+}
+
+.daywise-winners h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 35.84px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  margin-top: 55px;
+}
+.profile-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.art-image {
+  width: 274.5px;
+  height: 274.5px;
+  border-radius: 10.5px;
+}
+
+.daywise-winners-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  padding: 50px 230px;
+  gap: 40px;
+}
+
+.daywise-winner {
+  border: 0.75px solid #ccc;
+  border-radius: 25.5px;
+  padding: 20px;
+  width: 100%;
+  max-width: 300px;
+  height: 400px;
+}
+.summary {
+  display: flex;
+  gap: 50px;
+  padding:40px 90px;
+  align-items: center;
+  justify-content: center;
+}
+
+.participants {
+  width: 20%;
+  height: 80vh;
+  background: #171717bd;
+  border: 0.75px solid #ffffff33;
+  padding: 20px;
+  border-radius: 22.5px;
+  overflow-y: auto; 
+  box-sizing: border-box; 
+  scroll-behavior: smooth;
+}
+
+
+.participants::-webkit-scrollbar {
+  width: 8px;
+  
+}
+
+.participants::-webkit-scrollbar-track {
+  background: #171717bd;
+}
+
+.participants::-webkit-scrollbar-thumb {
+  background-color: green; 
+  border-radius: 10px;
+}
+
+
+.participant {
+  margin: 8px 0;
+  padding: 15px;
+  border-radius: 10.5px;
+  border: 0.75px solid #ffffff33;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 15.12px;
+  letter-spacing: -6%;
+  color: #ffffff;
+  text-align: center;
+}
+.participants h2 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 26.88px;
+  letter-spacing: -6%;
+  color: #ffffff;
+}
+.summary-arts {
+  width: 75%;
+}
+.summary-arts h2{
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 26.88px;
+  letter-spacing: -6%;
+  color: #ffffff;
+}
+.arts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 20px;
+}
+
+.art-card {
+  background-color: #222;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.reward-btn {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 0 0 8px 8px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button.active {
+  background-color: green;
+}
+
+.pagination button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}

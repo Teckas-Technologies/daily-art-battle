@@ -1,0 +1,225 @@
+* {
+  font-family: "Spartan";
+  box-sizing: border-box;
+}
+.campaign-header {
+  background: linear-gradient(90deg, #000000 68.23%, rgba(0, 0, 0, 0) 77.42%),
+    url("/images/campaignbg.png") no-repeat right center;
+  background-size: contain;
+  width: 100%;
+  height: 187.2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 20px 50px;
+  color: white;
+  border: 0.53px solid #939393;
+  border-radius: 11.2px;
+}
+
+.campaign-content {
+  text-align: center;
+}
+
+.campaign-title {
+  text-align: left;
+  font-size: 38.4px;
+  font-weight: 600;
+  letter-spacing: -6%;
+  background: linear-gradient(180deg, #00ff00 45.93%, #009900 76.54%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.campaign-description {
+  text-align: left;
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 14.34px;
+  letter-spacing: -6%;
+  background: #9b9b9b;
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-top: 15px;
+}
+.create-campaign {
+  background-color: black;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 70px 180px;
+}
+.create-campaign-title {
+  font-size: 23.75px;
+  font-weight: 600;
+  line-height: 26.6px;
+  letter-spacing: -6%;
+  color: #00ff00;
+}
+.create-campaign-coinsButton {
+  background: linear-gradient(180deg, #00ff00 0%, #007200 100%);
+  border-radius: 11px;
+  padding: 15px 30px;
+}
+.create-campaign-firstrow {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.create-campaign-firstrow label {
+  font-size: 17.81px;
+  line-height: 19.95px;
+  font-weight: 600;
+  letter-spacing: -6%;
+}
+.create-campaign-firstrow input {
+  width: 100%;
+  padding: 15px 50px;
+  height: 53.44px;
+  border-radius: 37.86px;
+  border: 0.74px solid #7b7b7b;
+  outline: 0;
+  background: transparent;
+}
+.create-campaign-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  height: 53.44px;
+}
+.create-campaign-input label {
+  font-size: 17.81px;
+  line-height: 19.95px;
+  font-weight: 600;
+  color: #ffffff;
+  min-width: 200px;
+}
+.create-campaign-input input {
+  width: 100%;
+  height: 53.44px;
+  background: transparent;
+  border: 0.74px solid #7b7b7b;
+  border-radius: 37.86px;
+  padding: 15px;
+  outline: 0;
+}
+.create-campaign-left,
+.create-campaign-right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.create-campaign-left input,
+.create-campaign-right input {
+  width: 100%;
+  height: 53.44px;
+  background: transparent;
+  border: 0.74px solid #7b7b7b;
+  border-radius: 37.86px;
+  padding: 15px;
+  color: #00ff00;
+}
+
+.submitButton {
+  background: #aaaaaa;
+  color: black;
+  padding: 16.28px 20.4px;
+  border: none;
+  border-radius: 34.96px;
+  cursor: pointer;
+  width: 205px;
+  color: #ffffff;
+  margin: 60px auto;
+  display: block;
+  font-size: 17.01px;
+  font-weight: 700;
+  line-height: 19.05px;
+  letter-spacing: -6%;
+}
+.create-campaign-toggle {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 20px;
+  height: 53.44px;
+}
+.create-campaign-toggle-label {
+  font-size: 17.81px;
+  line-height: 19.95px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  border-radius: 34px;
+  transition: 0.4s;
+  border: 1px solid #7b7b7b;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #707070;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  border-color: #00ff00;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+  background-color: #00ff00; 
+}
+
+.custom-date-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  background-color: white;
+  cursor: pointer;
+
+  text-align: left;
+  outline: none;
+}
+
+.custom-date-input::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.custom-date-input::-webkit-inner-spin-button,
+.custom-date-input::-webkit-clear-button {
+  display: none;
+}

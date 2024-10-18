@@ -1,0 +1,159 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-container {
+  background: #000000;
+  border: 1px solid #8b8b8b;
+  border-radius: 15.85px;
+  padding: 18px 60px;
+  width: 720px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.edit-popup-header {
+  text-align: center;
+  font-size: 19.51px;
+  font-weight: 600;
+  line-height: 21.85px;
+  letter-spacing: -6%;
+  margin-bottom: 20px;
+  color: #00ff00;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.create-campaign-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  height: 41.46px;
+}
+.create-campaign-input label {
+  font-size: 14.63px;
+  line-height: 16.39px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -6%;
+  min-width: 200px;
+}
+.create-campaign-input input {
+  width: 100%;
+  height: 41.46px;
+  background: transparent;
+  border: 0.74px solid #7b7b7b;
+  border-radius: 37.86px;
+  padding: 15px;
+  outline: 0;
+}
+.submitButton {
+  background: #aaaaaa;
+  color: black;
+  padding: 16.28px 20.4px;
+  border: none;
+  border-radius: 34.96px;
+  cursor: pointer;
+  width: 205px;
+  color: #ffffff;
+  margin: 60px auto;
+  display: block;
+  font-size: 17.01px;
+  font-weight: 700;
+  line-height: 19.05px;
+  letter-spacing: -6%;
+}
+.create-campaign-toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  height: 41.46px;
+}
+.create-campaign-toggle-label {
+  font-size: 14.63px;
+  line-height: 16.39px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -6%;
+  min-width: 200px;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  border-radius: 34px;
+  transition: 0.4s;
+  border: 1px solid #7b7b7b;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #707070;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  border-color: #00ff00;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+  background-color: #00ff00; 
+}
+.btn-group button {
+  height: 47.7px;
+  border-radius: 33.53px;
+  padding: 9.75px 25.61px;
+  font-size: 14.63px;
+  font-weight: 600;
+  line-height: 16.39px;
+  letter-spacing: -6%;
+}
+.save-btn {
+  background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
+  color: #ffffff;
+}
+.discard-btn {
+  border: 0.61px solid #00ff00;
+  color: #00ff00;
+}
