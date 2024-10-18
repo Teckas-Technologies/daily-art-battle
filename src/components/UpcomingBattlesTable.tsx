@@ -19,27 +19,44 @@ const UpcomingArtTable: React.FC<{
   const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("dateDsc");
-
+  const [limit, setLimit] = useState(9);
 
 //console.log(arts);
   const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const sortType = event.target.value
     setSort(sortType);
     setPage(1); // Reset to first page when sorting
-    fetchMoreArts(campaignId,sortType, 1);
+    fetchMoreArts(campaignId,sortType, 1,limit);
   };
 
+  const updateLimitBasedOnScreenSize = () => {
+    if (window.innerWidth >= 1536) {
+      setLimit(18); 
+    } else if (window.innerWidth >= 1024) {
+      setLimit(12); 
+    } else {
+      setLimit(9); 
+    }
+  };
+  
+  useEffect(() => {
+    updateLimitBasedOnScreenSize();
+    window.addEventListener("resize", updateLimitBasedOnScreenSize);
+  
+    return () => window.removeEventListener("resize", updateLimitBasedOnScreenSize);
+  }, []);
+  
 
 
   useEffect(() => {
     const initializeData = async () => {
    
-      fetchMoreArts(campaignId,sort,page);
+      fetchMoreArts(campaignId,sort,page,limit);
     };
     const timeoutId = setTimeout(initializeData, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [sort,page, refresh, uploadSuccess, fetchMoreArts]);
+  }, [sort,page, refresh, uploadSuccess, fetchMoreArts,limit]);
 
   const [hasnext, setHasNext] = useState(false);
 
@@ -56,13 +73,13 @@ const UpcomingArtTable: React.FC<{
 
   const handleNext = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreArts(campaignId,sort,page + 1);
+    fetchMoreArts(campaignId,sort,page + 1,limit);
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
-      fetchMoreArts(campaignId,sort,page - 1);
+      fetchMoreArts(campaignId,sort,page - 1,limit);
     }
   };
 
@@ -96,7 +113,7 @@ const UpcomingArtTable: React.FC<{
             </Button>
           </div>
         </div>
-        <div className="mt-5 flex justify-end md:mr-20  lg:mr-20">
+        <div className="mt-5 flex justify-end md:ml-20 md:mr-20  lg:ml-20 lg:mr-20 ">
         <select
          onChange={handleSort}
         className="bg-white mr-10 text-black border border-gray-600 rounded-lg p-2 cursor-pointer"
@@ -236,7 +253,11 @@ const BattleTable: React.FC<{
       className="mx-4 overflow-hidden battle-table container mt-4 mx-auto px-4 md:px-12"
       style={{ zIndex: "-1" }}
     >
-      <div className="battle-table grid grid-cols-3 gap-4 justify-center overflow-hidden">
+        <p className="hidden 2xl:block px-4 text-4xl mb-4 text-center text-white font-bold mt-5 md:ml-20 md:mr-20 lg:ml-20 lg:mr-20" style={{color:"#00ff15"}}>
+        Visit GFXvs.com on your phone to participate in the live art battle
+      </p>
+
+      <div className=" grid grid-cols-3 gap-4  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6  justify-center overflow-hidden">
       {(selectedArtId|| artId) && overlayArt && (
               <Overlay onClose={handleClose}  art={overlayArt} onVote={onVote} votes={votes}/>
             )}
