@@ -253,7 +253,7 @@ const BattleTable: React.FC<{
       className="mx-4 overflow-hidden battle-table container mt-4 mx-auto px-4 md:px-12"
       style={{ zIndex: "-1" }}
     >
-        <p className="hidden 2xl:block px-4 text-4xl mb-4 text-center text-white font-bold mt-5 md:ml-20 md:mr-20 lg:ml-20 lg:mr-20" style={{color:"#00ff15"}}>
+        <p className="hidden 2xl:block px-4 text-4xl mb-4 text-center text-white font-bold mt-5 md:ml-10 md:mr-10 lg:ml-10 lg:mr-10" style={{color:"#00ff15"}}>
         Visit GFXvs.com on your phone to participate in the live art battle
       </p>
 
