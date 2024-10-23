@@ -270,9 +270,10 @@ export const Battle: React.FC<Props> = ({
             )}
           </div>
           <div className="arts flex w-full px-3">
-            {!todayBattle && <Loader />}
+            {!todayBattle && !loading && <NoBattle />}
+            {loading && <Loader />}
             {todayBattle && viewTools[0].active && (
-              <Split artA={artA} artB={artB} />
+              <Split artA={artA} artB={artB} onVote={onVote} success={success} votedFor={votedFor} viewTools={viewTools} />
             )}
             {todayBattle && viewTools[1].active && (
               <Slider artA={artA} artB={artB} />
@@ -283,9 +284,7 @@ export const Battle: React.FC<Props> = ({
           </div>
 
           {todayBattle && (
-            <div
-              className={`battle-vote-btns w-full flex items-center h-auto mt-8 pb-5 px-3`}
-            >
+            <div className={`battle-vote-btns md:flex ${viewTools[0].active ? "hidden" : "flex" } w-full flex items-center h-auto mt-8 pb-5 px-3`}>
               <div
                 className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${
                   viewTools[1].active || viewTools[2].active
@@ -298,9 +297,7 @@ export const Battle: React.FC<Props> = ({
                     <button
                       onClick={() => onVote(artA.id)}
                       disabled={!isConnected || success}
-                      className={`${
-                        !isConnected || success ? "cursor-not-allowed" : ""
-                      } battle-vote-btn px-5 py-3 rounded-3xl cursor-pointer`}
+                      className={`${!isConnected || success ? "cursor-not-allowed" : "cursor-pointer"} battle-vote-btn px-5 py-3 rounded-3xl`}
                     >
                       <h2 className="md:spartan-bold spartan-semibold font-bold text-xs md:text-sm">
                         {votedFor === artA.name
@@ -326,8 +323,8 @@ export const Battle: React.FC<Props> = ({
                       onClick={() => onVote(artB.id)}
                       disabled={!isConnected || success}
                       className={`${
-                        !isConnected || success ? "cursor-not-allowed" : ""
-                      } battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl cursor-pointer`}
+                        !isConnected || success ? "cursor-not-allowed" : "cursor-pointer"
+                      } battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl`}
                     >
                       <h2 className="md:spartan-bold spartan-semibold font-bold text-xs md:text-sm">
                         {votedFor === artB.name
