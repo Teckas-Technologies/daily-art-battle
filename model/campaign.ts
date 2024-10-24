@@ -11,7 +11,9 @@ interface Campaign extends Document {
   email:string;
   specialRewards:number;
   publiclyVisible:boolean;
-  isSpecialRewards:boolean
+  isSpecialRewards:boolean;
+  specialRewardsArtId?:string[];
+  distributedRewards:boolean;
 }
 
 const campaignSchema = new mongoose.Schema({
@@ -26,6 +28,8 @@ const campaignSchema = new mongoose.Schema({
   specialRewards: {type: Number,required: false,default:false},
   publiclyVisible: {type: Boolean,default: true,},
   isSpecialRewards: {type: Boolean,default: false,},
+  distributedRewards: {type: Boolean,default: false,},
+  specialRewardsArtId: { type: [String], required: false },
 });
 
 export default mongoose.models.Campaign || model<Campaign>('Campaign', campaignSchema);

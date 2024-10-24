@@ -6,6 +6,10 @@ import { authenticateUser, verifyToken } from '../../utils/verifyToken';
 import JwtPayload from '../../utils/verifyToken';
 import Transactions from '../../model/Transactions';
 import Voting from '../../model/Voting';
+import { TOTAL_REWARDS } from '@/data/queries/totalrewards.graphql';
+import { graphQLService } from '@/data/graphqlService';
+import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from '@/config/constants';
+import { error } from 'console';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -25,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const payload = decoded as JwtPayload; // Cast the decoded token
       const email = payload.emails[0]; // Extract email from the decoded token
 
-      const existingUser = await User.findOne({ email: email });
+      const existingUser = await User.findOne({ email: email,nearAddress:walletAddress });
       if (existingUser) {
         return res.status(400).json({ error: 'User already exists' });
       }
@@ -78,23 +82,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   else if (req.method === 'GET') {
     try {
       await connectToDatabase();
-      const token = req.headers['authorization']?.split(' ')[1];
-      if (!token) {
-        return res.status(401).json({ error: 'Authorization token is required' });
-      }
-      
-      const { valid, decoded } = await verifyToken(token);
-      if (!valid) {
-        return res.status(401).json({ error: 'Invalid token' });
-      }
-
-      const payload = decoded as JwtPayload; // Cast the decoded token
-      const email = payload.emails[0]; // Extract email from the decoded token
+      const email = await authenticateUser(req);
+      console.log(email);
       const user = await User.findOne({ email: email });
-      const voting = (await Voting.find({email:email})).length;
-      res.status(200).json({user ,voting});
-    } catch (error) { 
-      res.status(500).json({ error });
+      if(!user){
+        return res.status(400).json({error:"User not found"})
+      }
+      const voting = (await Voting.find({email:email})).length; 
+      const owner = user.nearAddress;
+        const rewards = await graphQLService({
+            query: TOTAL_REWARDS,
+            variables: {
+              nft_contract_ids: [ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT],
+              owner,
+            },
+            network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+          });
+      res.status(200).json({user ,voting,rewards});
+    } catch (error:any) { 
+      res.status(400).json({ error:error.message });
     }
   }
   if(req.method=='PUT'){

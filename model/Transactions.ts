@@ -8,7 +8,7 @@ interface Transactions extends Document {
 
 const TransactionsSchema = new mongoose.Schema({
     email: {type: String, required: true},
-    gfxCoin: {type: String,required: true,unique:true},
+    gfxCoin: {type: Number,required: true},
     transactionType: {
       type: String,
       enum: ['received', 'spent'],

@@ -19,7 +19,7 @@ export default async function spinner(artAcolouredArt:string,artBcolouredArt:str
       image2: imageB,
       transition_type: 'rotate'
     });
-    const base64Gif = response.data.gif;
+    const base64Gif = response.data;
     return base64Gif;
 
   } catch (error) {

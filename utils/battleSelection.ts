@@ -3,6 +3,8 @@ import ArtTable from "../model/ArtTable";
 import Battle from "../model/Battle";
 import Campaign from "../model/campaign";
 import { GFX_CAMPAIGNID } from "@/config/constants";
+import spinner from "./spinnerUtils";
+import uploadArweave from "./uploadArweave";
 
 export async function getNextAvailableDate(campaignId:string): Promise<Date> {
   await connectToDatabase();
@@ -57,11 +59,18 @@ export const createBattle = async (): Promise<any> => {
         startDate.setHours(0, 0, 0, 0);
         const endDate = new Date(startDate);
         endDate.setHours(23, 59, 59, 999);
-
+        const ress = await spinner(artA.colouredArt,artB.colouredArt);
+        console.log("Uploading arweave")
+        const response = await uploadArweave(ress.gif);
+        const videoResponse = await uploadArweave(ress.video);
         const battleData = {
           campaignId: campaign._id,
           artAId: artA._id.toString(),
           artBId: artB._id.toString(),
+          emoji1:ress.emoji1,
+          emoji2:ress.emoji2,
+          videoSpinner: videoResponse.url,
+          videoSpinnerReference : videoResponse.referenceUrl,
           artAartistEmail: artA.email,
           artBartistEmail: artB.email,
           artAtitle: artA.arttitle,
@@ -78,6 +87,8 @@ export const createBattle = async (): Promise<any> => {
           isNftMinted: false,
           artAVotes: 0,
           artBVotes: 0,
+          grayScale : response.url,
+          grayScaleReference : response.referenceUrl,
         };
 
         const newBattle = new Battle(battleData);
@@ -110,10 +121,18 @@ export const createGfxvsBattle = async (): Promise<any> => {
     startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(startDate);
     endDate.setHours(23, 59, 59, 999);
+    const ress = await spinner(artA.colouredArt,artB.colouredArt);
+    console.log("Uploading arweave")
+    const response = await uploadArweave(ress.gif);
+    const videoResponse = await uploadArweave(ress.video);
     const battleData = {
       campaignId : campaignId,
       artAId: artA._id.toString(),
       artBId: artB._id.toString(),
+      emoji1:ress.emoji1,
+      emoji2:ress.emoji2,
+      videoSpinner: videoResponse.url,
+      videoSpinnerReference : videoResponse.referenceUrl,
       artAartistEmail: artA.email,
       artBartistEmail: artB.email,
       artAtitle: artA.arttitle,
@@ -130,6 +149,8 @@ export const createGfxvsBattle = async (): Promise<any> => {
       isNftMinted: false,
       artAVotes: 0,
       artBVotes: 0,
+      grayScale : response.url,
+      grayScaleReference : response.referenceUrl,
     };
     console.log(battleData);
     const newBattle = new Battle(battleData);

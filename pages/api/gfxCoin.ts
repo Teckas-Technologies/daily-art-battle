@@ -7,15 +7,22 @@ import { providers, utils } from 'near-api-js';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import Hashes from "../../model/Hashes";
 import  { authenticateUser } from "../../utils/verifyToken";
-import { EMAIL_VERIFY, GFXCOIN_PER_NEAR, INSTA_CONNECT, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT } from "@/config/points";
+import { BEFORE_MAY_2021, DEFAULT, EMAIL_VERIFY, GFXCOIN_PER_NEAR, INSTA_CONNECT, MAY_2021_AND_AFTER, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT, YEAR_2022, YEAR_2023 } from "@/config/points";
+import { error } from "console";
+import Transactions from "../../model/Transactions";
+import axios from "axios";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         await connectToDatabase()
         try{
         const email = await authenticateUser(req);
+        const user = await User.findOne({email:email});
+        if(!user){
+            res.status(400).json({error:"User profile not found"});
+        }
         const query = req.query.queryType as string;
-        const walletAddress = req.query.walletAddress as string;
+        const walletAddress = user.nearAddress;
 
         if (!walletAddress || !query) {
             return res.status(400).json({ message: "Invalid request parameters" });
@@ -34,8 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     if (isFinalExecutionStatusWithSuccessValue(transaction.status)) {
                         const signerId = transaction.transaction.signer_id;
                         const receiver_id = transaction.transaction.receiver_id;
-                        console.log(signerId);
-                        console.log(receiver_id);
                         if(receiver_id!=walletAddress){
                             return res.status(500).json({error:"wallet doesn't match"});
                         }
@@ -46,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             coins = PARTICIPATION_NFT_BURN;
                         }else if(contractAddress === SPECIAL_WINNER_CONTRACT){
                             coins = RARE_NFT_BURN;
-                        }else{
+                        }else{  
                             return res.status(500).json({error:"transaction is not valid"});
                         }
                             await updateUserCoins(email, coins);
@@ -56,6 +61,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 hash:transactionHash
                             })
                             await newHash.save();
+                            const newTransaction = new Transactions({
+                                email: email,
+                                gfxCoin: coins,
+                                transactionType: "received"
+                            });
+                            await newTransaction.save();
                        
                     } else {
                         res.status(500).json({ error: "transaction is not success" });
@@ -68,29 +79,67 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             else if (query === 'emailVerify') {
                 const coins = EMAIL_VERIFY;
                 let isClaimedField = 'isEmailVerified';
-                await handleDrop(walletAddress, coins, isClaimedField);
+                await handleDrop(email, coins, isClaimedField);
+                const newTransaction = new Transactions({
+                    email: email,
+                    gfxCoin: coins,
+                    transactionType: "received"
+                });
+                await newTransaction.save();
             }
             else if (query === 'nearDrop') {
                 let isClaimedField = 'isNearDropClaimed';
                 const coins = await calculateNearDropCoins(walletAddress);
-                await handleDrop(walletAddress, coins, isClaimedField);
+                await handleDrop(email, coins, isClaimedField);
+                const newTransaction = new Transactions({
+                    email: email,
+                    gfxCoin: coins,
+                    transactionType: "received"
+                });
+                await newTransaction.save();
             } else if (query === 'telegramDrop') {
-                const coins = TELEGRAM_DROP;
+                const {userId} = req.body; 
+                const coins = await calculateTelegramDropCoins(userId);
+                console.log(coins);
                 let isClaimedField = 'isTelegramDropClaimed';
-                await handleDrop(walletAddress, coins, isClaimedField);
+                const newTransaction = new Transactions({
+                    email: email,
+                    gfxCoin: coins,
+                    transactionType: "received"
+                });
+                await newTransaction.save();
+                await handleDrop(email, coins, isClaimedField);
             } else if (query === 'instaConnect') {
                 const coins = INSTA_CONNECT;
                 let isClaimedField = 'isInstagramConnected';
-                await handleDrop(walletAddress, coins, isClaimedField);
+                await handleDrop(email, coins, isClaimedField);
+                const newTransaction = new Transactions({
+                    email: email,
+                    gfxCoin: coins,
+                    transactionType: "received"
+                });
+                await newTransaction.save();
             } else if (query === 'XConnect') {
                 const coins = X_CONNECT;
                 let isClaimedField = 'isXConnected';
-                await handleDrop(walletAddress, coins, isClaimedField);
+                await handleDrop(email, coins, isClaimedField);
+                const newTransaction = new Transactions({
+                    email: email,
+                    gfxCoin: coins,
+                    transactionType: "received"
+                });
+                await newTransaction.save();
             }
             else if (query === 'registered') {
                 const coins = REGISTERED;
                 let isClaimedField = 'isRegistered';
-                await handleDrop(walletAddress, coins, isClaimedField);
+                await handleDrop(email, coins, isClaimedField);
+                const newTransaction = new Transactions({
+                    email: email,
+                    gfxCoin: coins,
+                    transactionType: "received"
+                });
+                await newTransaction.save();
             }else if(query ==='nearTransfer'){
                 try {
                     const transactionHash = req.query.transactionHash;
@@ -110,13 +159,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         }
                         const amount = utils.format.formatNearAmount(transaction.transaction.actions[0].Transfer.deposit);
                         const coins = calculateGfxPoints(amount)
-                        await updateUserCoins(walletAddress, coins);
+                        await updateUserCoins(email, coins);
                         const newHash = new Hashes({
                             email:email,
                             walletAddress:walletAddress,
                             hash:transactionHash
                         })
                         await newHash.save();
+                        const newTransaction = new Transactions({
+                            email: email,
+                            gfxCoin: coins,
+                            transactionType: "received"
+                        });
+                        await newTransaction.save();
                     } else {
                         res.status(500).json({ error: "transaction is not success" });
                     }
@@ -131,7 +186,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     }
     catch(error:any){
-        return res.status(400).json({error:error});
+        return res.status(400).json({error:error.message});
     }
     }
     else {
@@ -150,19 +205,26 @@ async function updateUserCoins(email: string, coins: number) {
         { $inc: { gfxCoin: coins } },
         { new: true }
     );
-    console.log(response);
+
+    const newTransaction = new Transactions({
+        email: email,
+        gfxCoin: coins, 
+        transactionType: "received"
+      });
+      await newTransaction.save();
+      console.log(response);
 }
 
 // Helper function to handle drop claims
-async function handleDrop(walletAddress: string, coins: number, isClaimedField: string) {
-    const user = await User.findOne({ walletAddress });
+async function handleDrop(email: string, coins: number, isClaimedField: string) {
+    const user = await User.findOne({ email });
      if(!user){
         throw new Error(`User doesn't exist`);
      }
     if (user && !user[isClaimedField]) {
-        await updateUserCoins(walletAddress, coins);
+        await updateUserCoins(email, coins);
         await User.findOneAndUpdate(
-            { walletAddress },
+            { email },
             { [isClaimedField]: true },
             { new: true }
         );
@@ -171,6 +233,25 @@ async function handleDrop(walletAddress: string, coins: number, isClaimedField: 
     }
 }
 
+async function calculateTelegramDropCoins(userId: any) {
+    const response = await axios.get(`http://127.0.0.1:5000/airdrop/${userId}`)
+    const creationDate = response.data.date;
+    console.log(creationDate);
+    const accountCreationYear = new Date(creationDate).getFullYear();
+    const accountCreationMonth = new Date(creationDate).getMonth() + 1;
+
+    if (accountCreationYear < 2021 || (accountCreationYear === 2021 && accountCreationMonth < 5)) {
+        return BEFORE_MAY_2021;
+    } else if (accountCreationYear === 2021 && accountCreationMonth >= 5) {
+        return MAY_2021_AND_AFTER;
+    } else if (accountCreationYear === 2022) {
+        return YEAR_2022;
+    } else if (accountCreationYear === 2023) {
+        return YEAR_2023;
+    } else {
+        return DEFAULT;
+    }
+}
 
 async function calculateNearDropCoins(walletAddress: string) {
     const creationDate = await findCreationDate(walletAddress);
@@ -178,15 +259,15 @@ async function calculateNearDropCoins(walletAddress: string) {
     const accountCreationMonth = new Date(creationDate).getMonth() + 1;
 
     if (accountCreationYear < 2021 || (accountCreationYear === 2021 && accountCreationMonth < 5)) {
-        return 2000;
+        return BEFORE_MAY_2021;
     } else if (accountCreationYear === 2021 && accountCreationMonth >= 5) {
-        return 1500;
+        return MAY_2021_AND_AFTER;
     } else if (accountCreationYear === 2022) {
-        return 1000;
+        return YEAR_2022;
     } else if (accountCreationYear === 2023) {
-        return 500;
+        return YEAR_2023;
     } else {
-        return 10;
+        return DEFAULT;
     }
 }
 

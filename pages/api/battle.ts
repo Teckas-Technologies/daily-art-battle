@@ -12,6 +12,7 @@ import {
   findPreviousBattlesAsc,
 } from "../../utils/battleUtils";
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
+import Battle from "../../model/Battle";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +38,12 @@ export default async function handler(
           const todayBattle = await findTodaysBattle(campaignId);
           return res.status(200).json(todayBattle);
           //Here we'll fetch battles with pagination
-        } else if (queryType === "battles") {
+        } else if (queryType=="byid"){
+          const id = req.query.id as string;
+          const battle = await Battle.findOne({_id:id});
+          return res.status(200).json(battle);
+        }
+        else if (queryType === "battles") {
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
           const sort = req.query.sort;

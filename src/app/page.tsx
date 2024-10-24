@@ -12,6 +12,7 @@ import UpcomingHeader from '@/components/ArtBattle/UpcomingArts/UpcomingHeader';
 import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid';
 import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
+import { getProfileEditUrl } from '../../pages/api/auth/[...nextauth]';
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -25,6 +26,7 @@ const Home: NextPage = () => {
     }
     console.log(status);
     console.log(session);
+    console.log(getProfileEditUrl());
   }, [status]);
   // Show loading state while session status is being determined
   if (status === "loading") {
