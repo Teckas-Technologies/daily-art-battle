@@ -11,7 +11,11 @@ import {
   findAllArtsByDate,
   findAllArtsByVoteAsc,
   findAllArtsByDateAsc,
-  findAllArtsByCampaign
+  findAllArtsByCampaign,
+  findCompletedArtsByArtist,
+  findCompletedArtsByName,
+  findcomingArtsByName,
+  findcomingArtsByArtist
 } from "../../utils/artUtils";
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import User from "../../model/User";
@@ -74,6 +78,47 @@ export default async function handler(
           const limit = parseInt(req.query.limit as string) || 9;
           const battles = await findAllArtsByCampaign(page, limit,id);
           return res.status(200).json(battles);
+        }
+
+        if(queryType=="coming"){
+          const search = req.query.search
+          if(search=="artsName"){
+          const campaignId = req.query.campaignId as string;
+           const name = req.query.name as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 9;
+          const battles = await findcomingArtsByName(page, limit,name,campaignId);
+          return res.status(200).json(battles);
+          }
+          else if(search=="artistName"){
+            const campaignId = req.query.campaignId as string;
+            const name = req.query.name as string;
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 9;
+            const battles = await findcomingArtsByArtist(page, limit,name,campaignId);
+            return res.status(200).json(battles);
+          }
+       
+        }
+        if(queryType=="completed"){
+          const search = req.query.search
+          if(search=="artsName"){
+            const campaignId = req.query.campaignId as string;
+           const name = req.query.name as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 9;
+          const battles = await findCompletedArtsByName(page, limit,name,campaignId);
+          return res.status(200).json(battles);
+          }
+          else if(search=="artistName"){
+            const campaignId = req.query.campaignId as string;
+            const name = req.query.name as string;
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 9;
+            const battles = await findCompletedArtsByArtist(page, limit,name,campaignId);
+            return res.status(200).json(battles);
+          }
+       
         }
 
         if (queryType === "battles") {

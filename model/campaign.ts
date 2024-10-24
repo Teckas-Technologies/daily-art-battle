@@ -14,9 +14,11 @@ interface Campaign extends Document {
   isSpecialRewards:boolean;
   specialRewardsArtId?:string[];
   distributedRewards:boolean;
+  specialWinnerCount:number;
 }
 
 const campaignSchema = new mongoose.Schema({
+  specialWinnerCount: {type: Number,required: true,},
   campaignUrl: {type: String,required: true,},
   campaignName: {type: String,required: true,},
   campaignWelcomeText: {type: String,required: true,},

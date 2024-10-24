@@ -19,7 +19,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         if(campaigns.distributedRewards){
           res.status(400).json({error:"rewards is distributed"});
       }
-         const rewardPerUser = campaigns.specialRewards / artList.length;
+         const rewardPerUser = campaigns.specialRewards / campaigns.specialWinnerCount;
          await Promise.all(
           artList.map(async (art: any) => {
               const userEmail = art.email;

@@ -132,7 +132,7 @@ async function refreshIdToken(token: CustomToken) {
 
 export async function getProfileEditUrl() {
   const csrfToken = await getCsrfToken();
-  const url = `https://${process.env.AZURE_AD_B2C_TENANT_NAME}.b2clogin.com/${process.env.AZURE_AD_B2C_TENANT_NAME}.onmicrosoft.com/oauth2/v2.0/authorize?p=${process.env.AZURE_AD_B2C_PROFILE_EDIT_POLICY}&client_id=${process.env.AZURE_AD_B2C_CLIENT_ID}&nonce=defaultNonce&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/azure-ad-b2c&scope=openid&response_type=id_token`;
+  const url = `https://${process.env.AZURE_AD_B2C_TENANT_NAME}.b2clogin.com/${process.env.AZURE_AD_B2C_TENANT_NAME}.onmicrosoft.com/oauth2/v2.0/authorize?p=${process.env.AZURE_AD_B2C_PROFILE_EDIT_POLICY}&client_id=${process.env.AZURE_AD_B2C_CLIENT_ID}&nonce=defaultNonce&redirect_uri=http://localhost:3000/api/auth/callback/azure-ad-b2c&scope=openid&response_type=id_token`;
   console.log(url);
   return url;
 }

@@ -19,3 +19,5 @@ export const MAY_2021_AND_AFTER = 1500;
 export const YEAR_2022 = 1000;
 export const YEAR_2023 = 500;
 export const DEFAULT = 10;
+export const SPECIAL_WINNER = 1000;
+export const PARTICIPANT = 10
