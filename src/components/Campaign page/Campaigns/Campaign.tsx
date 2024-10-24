@@ -135,37 +135,27 @@ const CampaignBanner = () => {
   };
   return (
     <div className="campaign-container">
-      <div className="flex gap-2 items-center" style={{ paddingTop: "60px" }}>
-        <button
-          style={{
-            height: "30.75px",
-            padding: "7.5px 18px",
-            borderRadius: "35.25px",
-            border: "0.75px solid #00ff00",
-            background:
-              "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%)",
-            textAlign: "center",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          GFXvs
-        </button>
+       <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG>
+      <div
+        className="flex gap-2 items-center camapign-path"
+        style={{ paddingTop: "80px" }}
+      >
+        <button className="camapign-path-button">GFXvs</button>
         <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
         <h3
           style={{
             color: "#00ff00",
             textDecoration: "underline",
+            cursor: "pointer",
           }}
         >
-          {capitalizeFirstLetter(path)}
+          Campaigns
         </h3>
       </div>
       <div className="campaign-header">
         <div className="campaign-content">
           <h1 className="campaign-title">GFXvs Campaigns</h1>
-          <p className="campaign-description md:w-[400px]">
+          <p className="campaign-description md:w-[480px]">
             Create campaigns publicly or among your friends, participate in the
             campaigns and win exclusive rewards
           </p>
@@ -181,56 +171,45 @@ const CampaignBanner = () => {
         </div>
       </div>
 
-      <div className="campaign-tabs">
-        <button onClick={handleCurrentCampaign}>Current Campaigns</button>
-        <button onClick={handleUpcomingCampaign}>Upcoming Campaigns</button>
-        <button>Previous Campaigns</button>
-        <button>My Campaigns</button>
-      </div>
+      <div className="button-table-container ">
+       
 
-      <div className="table-container">
-        <InlineSVG src="/icons/blur-effect.svg" className="effect">
-          
-        </InlineSVG>
-        <table className="campaign-table">
-          
-          <thead>
-            <tr>
-              <th>Campaign Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Rewards</th>
-              <th className=" flex items-center justify-center">
-                <button className="filter-button flex items-center justify-between ">
-                  Filter Campaigns
-                  <InlineSVG src="/icons/down-arrow.svg" />
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaigns.map((campaign, index) => (
-              <tr key={index} className="border border-4">
-                <td>{campaign.name}</td>
-                <td>{campaign.startDate}</td>
-                <td>{campaign.endDate}</td>
-                <td>
-                  {" "}
-                  <span className="flex items-center justify-center gap-[5px]">
-                    <InlineSVG
-                      src="/icons/coin.svg"
-                      className="w-[19.1px] h-[19.1px]"
-                    />
-                    {campaign.rewards}
-                  </span>
-                </td>
-                <td>
-                  <button className="view-details-btn">View Details</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="campaign-tabs">
+          <button onClick={handleCurrentCampaign}>Current Campaigns</button>
+          <button onClick={handleUpcomingCampaign}>Upcoming Campaigns</button>
+          <button>Previous Campaigns</button>
+          <button>My Campaigns</button>
+        </div>
+
+        <div className="table-container">
+          <div className="table-header">
+            <div className="header-cell">Campaign Name</div>
+            <div className="header-cell">Start Date</div>
+            <div className="header-cell">End Date</div>
+            <div className="header-cell">Rewards</div>
+            <div className="header-cell"></div>
+          </div>
+
+          {campaigns.map((campaign, index) => (
+            <div key={index} className="campaign-row">
+              <div className="cell">{campaign.name}</div>
+              <div className="cell">{campaign.startDate}</div>
+              <div className="cell">{campaign.endDate}</div>
+              <div className="cell">
+                <span className="flex items-center justify-center gap-[5px]">
+                  <InlineSVG
+                    src="/icons/coin.svg"
+                    className="w-[19.1px] h-[19.1px]"
+                  />
+                  {campaign.rewards}
+                </span>
+              </div>
+              <div className="cell">
+                <button className="view-details-btn">View Details</button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="pagination-section relative w-full flex justify-center py-5">
         <div className="pagination rounded-[7rem]">

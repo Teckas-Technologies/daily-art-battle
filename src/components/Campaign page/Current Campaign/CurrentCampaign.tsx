@@ -1,39 +1,22 @@
 "use client";
 import React from "react";
-import CampaignHeader from "../Campaign Header/CampaignHeader";
-import { Battle } from "@/components/ArtBattle/Battle/Battle";
-import { Header } from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
-
-interface Props {
-  toggleUploadModal: () => void;
-  campaignId: string;
-  fontColor: string;
-  welcomeText: string;
-  themeTitle: string;
-}
-
-const CurrentCampaign: React.FC<Props> = ({
-  toggleUploadModal,
-  campaignId,
-  fontColor,
-  welcomeText,
-  themeTitle,
-}) => {
+import './CurrentCampaign.css'
+const CurrentCampaigUploadArt = () => {
   return (
-    <div className="current-campaign-container">
-      <Header />
-      <CampaignHeader />
-      <Battle
-        toggleUploadModal={toggleUploadModal}
-        campaignId={campaignId}
-        fontColor={fontColor}
-        welcomeText={welcomeText}
-        themeTitle={themeTitle}
-      />
-      <Footer/>
-    </div>
-  );
+    <div className="current-campaign-uploadart">
+      <p className="current-uploadart-text w-full sm:w-[100px] md:w-[500px] text-center">
+       Want to show your Talent?! Upload your own masterpiece and join the competition!
+     </p>
+     <div className="currentButtonWrapper">
+       <button className="currentbtn">Upload Art</button>
+
+       <div className="currentButtonBorder" />
+
+       <div className="currentButtonOverlay" />
+     </div>
+ </div>
+  )
+ 
 };
 
-export default CurrentCampaign;
+export default CurrentCampaigUploadArt;

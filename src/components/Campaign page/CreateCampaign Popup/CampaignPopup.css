@@ -1,0 +1,166 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-container {
+  background-color: #000000;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 700px;
+  text-align: center;
+  position: relative;
+  border: 1px solid #ccc;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.popup-title {
+  color: #00ff00;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.section-title {
+  color: #ffff;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.breakdown-content {
+  margin-bottom: 2rem;
+  background: #0d0d0d;
+  padding: 30px;
+  border-radius: 15px;
+  display: grid;
+  gap: 15px;
+}
+
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 4fr 1fr 1fr;
+  align-items: center;
+  color: #fff;
+  margin-top: 15px;
+}
+.description {
+  text-align: left;
+}
+.calculation {
+  text-align: right;
+  color:#00ff00;
+  font-weight: 600;
+}
+.total-cost{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:50px;
+}
+.highlight {
+  color: #00ff00;
+  font-weight: 600;
+  text-align: right;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: #333;
+  margin: 1rem 0;
+}
+
+.total-cost {
+  font-weight: 600;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 20px;
+}
+
+.cancel-button {
+  background: transparent;
+  border: 1.27px solid #00ff00;
+  padding: 14.41px 22.69px;
+  border-radius: 55.1px;
+}
+
+.campaignpopup-btn-Wrapper {
+  position: relative;
+  padding-left: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.campaignpopup-btn {
+  width: 100%;
+  height: 100%;
+  padding: 14.41px 22.69px;
+  border-radius: 55.1px;
+  background: radial-gradient(
+    128.13% 128.13% at 50% 50%,
+    #000000 25%,
+    rgba(0, 255, 0, 0) 100%
+  );
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  font-size: 14.9px;
+  font-weight: 600;
+  line-height: 19.25px;
+  letter-spacing: -6%;
+  text-align: center;
+}
+
+.campaignpopup-btn-Border {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(
+    99.76deg,
+    #00ff00 8.86%,
+    rgba(0, 153, 0, 0) 91.14%
+  );
+  z-index: 0;
+  padding: 1.27px;
+  box-sizing: border-box;
+}
+
+.campaignpopup-btn-Overlay {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+  z-index: 1;
+}

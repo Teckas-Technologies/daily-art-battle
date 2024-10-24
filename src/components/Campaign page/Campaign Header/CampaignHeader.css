@@ -2,7 +2,6 @@
   width: 100vw;
   background-color: black;
   padding: 30px 120px;
-  margin-top: 80px;
 }
 
 .campaign-header-card {
@@ -21,15 +20,13 @@
   align-items: center;
 }
 .campaign-details h1 {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 600;
   line-height: 40.32px;
   letter-spacing: -6%;
   margin-bottom: 20px;
   color: #ffffff;
 }
-
-
 
 .row {
   display: flex;
@@ -40,28 +37,39 @@
 }
 
 .row span:first-child {
-    position: relative;
-    padding-bottom: 5px; 
-  }
-  
-  .row span:first-child::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 0.5px; 
-    background: linear-gradient(90deg, #000000 0%, #FFFFFF 10%, #FFFFFF 90%, #000000 100%);
-  }
-  .span-text{
-    font-size: 13.5px;
-    font-weight: 600;
-    line-height: 15.12px;
-    letter-spacing: -6%;
-    color: #00FF00;
-    margin-top: 10px;
+  position: relative;
+  padding-bottom: 10px;
+}
 
-  }
+.row span:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0.5px;
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #ffffff 10%,
+    #ffffff 90%,
+    #000000 100%
+  );
+}
+.span-date{
+  font-size: 15px;
+  font-weight: 600;
+
+}
+.span-text {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 15.12px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  margin-top: 10px;
+}
+
 .linkSection {
   display: flex;
   align-items: center;
@@ -72,30 +80,42 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #222;
   border-radius: 45.74px;
-  padding: 6px 7.5px;
+  padding: 5px 7.5px;
   border: 0.75px solid #7a7a7a;
-  height: 47px;
-  width:415.5px;
+  height: 45px;
+  width:340px;
+ 
+}
+.campaign-header-input p{
+  font-size: 15px;
 }
 .campaign-header-input button {
   border: 0.75px solid #444444;
-  height: 34.5px;
+  height: 32.5px;
   border-radius: 21px;
-  padding: 8.25px 12.75px;
-  font-size: 13.5px;
+  padding: 8.25px 10.75px;
+  font-size: 10.5px;
   font-weight: 500;
   line-height: 15.12px;
   letter-spacing: -6%;
   color: #00ff00;
+  gap: 3px;
+}
+.copy-icon{
+  width:17px;
+  height:17px;
 }
 .share-span {
-  font-size: 13.5px;
+  font-size: 11.5px;
   font-weight: 600;
   line-height: 15.12px;
   letter-spacing: -6%;
   color: #ffffff;
+}
+.header-social-share{
+  width:22px;
+  height:22px;
 }
 .linkInput {
   border: none;
@@ -103,8 +123,9 @@
   color: #fff;
   width: 80%;
 }
-.campaign-status {
-  font-size: 18px;
+
+.campaign-status span{
+  font-size: 16px;
   font-weight: 600;
   line-height: 20.16px;
   letter-spacing: -6%;
@@ -113,15 +134,274 @@
 
 .publicStatus {
   background: #00ff001a;
-  border: 0.75px solid #00FF99;
-  padding: 7.5px 22.5px;
+  border: 0.75px solid #00ff99;
+  padding: 6.5px 22.5px;
   border-radius: 5px;
-  height:35px;
+  height: 33px;
   border-radius: 41.25px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 20.16px;
   letter-spacing: -6%;
-  color: #FFFFFF;
+  color: #ffffff;
+}
+.camapign-path-button {
+  height: 30.75px;
+  padding: 7.5px 18px;
+  border-radius: 35.25px;
+  border: 0.75px solid #00ff00;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+}
+@media screen and (max-width: 768px) {
+  .campaign-details h1 {
+    display: block;
+    font-size: 25.04px;
+    line-height: 33.65px;
+    text-align: center;
+  }
+  .campaign-details {
+    flex-direction: column;
 
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .campaign-header-input {
+    width: 349.5px;
+    height: 39.53px;
+    padding: 5.01px 6.26px;
+  }
+  .campaign-header-input p {
+    font-size: 13px;
+    line-height: 16px;
+  }
+  .campaign-header-input .copyButton {
+    padding: 6px 10px;
+    font-size: 11px;
+    height: 28px;
+  }
+  .copy-icon {
+    width: 15px;
+    height: 15px;
+  }
+  .share-span {
+    font-size: 10.08px;
+    line-height: 11.29px;
+  }
+ 
+  .header-social-share {
+    width: 17.91px;
+    height: 17.91px;
+  }
+  .campaign-status span {
+    font-size: 13.44px;
+    line-height: 15.05px;
+  }
+  .publicStatus {
+    height: 26.2px;
+    padding: 5px 16px;
+    font-size: 13px;
+    line-height: 15px;
+  }
+  .span-date {
+    font-size: 10.02px;
+    text-align: right;
+  }
+  .span-text {
+    font-size: 9.27px;
+    text-align: left;
+  }
+  .campaign-header-container {
+    padding: 5px 20px;
+  }
+  .mob-vertical {
+    display: none;
+  }
+  .mobile-row {
+    margin-left: -15px;
+  }
+  .campaign-details .row {
+    align-items: flex-start;
+  }
+  .camapign-path button {
+    font-size: 11.2px;
+    padding: 5.5px 13.2px;
+    height: 22.55px;
+  }
+  .camapign-path h3 {
+    font-size: 11.2px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .campaign-header-container {
+    width: 100vw;
+    background-color: black;
+    padding: 30px 30px;
+    margin: 0 auto;
+  }
+  
+  .campaign-header-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .campaign-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .campaign-details .row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .campaign-details h1 {
+    font-size: 23px;
+    font-weight: 600;
+    line-height: 40.32px;
+    letter-spacing: -6%;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  .row span:first-child {
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .row span:first-child::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0.5px;
+    background: linear-gradient(
+      90deg,
+      #000000 0%,
+      #ffffff 10%,
+      #ffffff 90%,
+      #000000 100%
+    );
+  }
+  .span-date{
+    font-size: 15px;
+    font-weight: 600;
+  
+  }
+  .span-text {
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 15.12px;
+    letter-spacing: -6%;
+    color: #00ff00;
+    margin-top: 10px;
+  }
+  
+  .linkSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  .campaign-header-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 45.74px;
+    padding: 5px 7.5px;
+    border: 0.75px solid #7a7a7a;
+    height: 45px;
+    width:340px;
+   
+  }
+  .campaign-header-input p{
+    font-size: 15px;
+  }
+  .campaign-header-input button {
+    border: 0.75px solid #444444;
+    height: 32.5px;
+    border-radius: 21px;
+    padding: 8.25px 10.75px;
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 15.12px;
+    letter-spacing: -6%;
+    color: #00ff00;
+    gap: 3px;
+  }
+  .copy-icon{
+    width:17px;
+    height:17px;
+  }
+  .share-span {
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 15.12px;
+    letter-spacing: -6%;
+    color: #ffffff;
+  }
+  .header-social-share{
+    width:22px;
+    height:22px;
+  }
+  .linkInput {
+    border: none;
+    background: none;
+    color: #fff;
+    width: 80%;
+  }
+  
+  .campaign-status span{
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.16px;
+    letter-spacing: -6%;
+    color: #ffffff;
+  }
+  
+  .publicStatus {
+    background: #00ff001a;
+    border: 0.75px solid #00ff99;
+    padding: 6.5px 22.5px;
+    border-radius: 5px;
+    height: 33px;
+    border-radius: 41.25px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.16px;
+    letter-spacing: -6%;
+    color: #ffffff;
+  }
+  .camapign-path-button {
+    height: 30.75px;
+    padding: 7.5px 18px;
+    border-radius: 35.25px;
+    border: 0.75px solid #00ff00;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.15) 100%
+    );
+  }
 }

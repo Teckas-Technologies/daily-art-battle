@@ -27,18 +27,7 @@ const Loader = () => {
 
   return (
     <div className="loader-container">
-      <div className="logo">
-        <img src="/images/logo.png" alt="Logo" className="logo-image" />
-      </div>
-      <div className="count-progress-wrapper">
-        <div className="progress-count">{count < 10 ? `0${count}` : count}</div>
-        <div className="progress-bar">
-          <div
-            className="progress"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-      </div>
+      <img src="/images/loader.gif" alt="Loading..." className="loader-gif" />
     </div>
   );
 };

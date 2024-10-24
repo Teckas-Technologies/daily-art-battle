@@ -2,9 +2,10 @@
   background-color: #000000;
   width: 100vw;
   padding: 40px;
+  margin-top: 20px;
 }
 .campaign-timings h3 {
-  font-size: 36px;
+  font-size: 25px;
   font-weight: 600;
   line-height: 40.32px;
   letter-spacing: -6%;
@@ -13,20 +14,20 @@
   
 }
 .campaign-timings h1{
-    font-size: 75px;
+    font-size: 55px;
     font-weight: 600;
     line-height: 84px;
     letter-spacing: -6%;
     text-align: center;
     color: #00FF00;
-    margin-top: 20px;
-    margin-bottom: 50px;
+    margin-top: 15px;
+    margin-bottom: 35px;
 }
 
 .CampaignButtonWrapper {
     position: relative;
-    width: 224.38px;
-    height: 57px;
+    width: 190.38px;
+    height: 48px;
     margin: 10px auto;
     padding: 1px;
     border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
@@ -35,7 +36,7 @@
   .Campaignbtn {
     width: 100%;
     height: 100%;
-    padding: 12.41px 23.69px;
+    padding: 10.41px 15.69px;
     border-radius: 35.33px;
     background: radial-gradient(
       128.13% 128.13% at 50% 50%,
@@ -47,7 +48,7 @@
     border-radius: 47.1px;
     color: #ffffff;
     font-family: "Spartan";
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 19.25px;
     letter-spacing: -6%;
@@ -85,4 +86,80 @@
     border-radius: 35.33px;
     background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
     z-index: 1;
+  }
+  @media screen and (max-width: 768px) {
+    .campaign-timings{
+      padding: 20px;
+    }
+    .campaign-timings h3{
+      font-size: 22.06px;
+      line-height: 26.95px;
+    }
+    .campaign-timings h1{
+      font-size: 40.13px;
+      line-height: 56.14px;
+    }
+    .CampaignButtonWrapper {
+      position: relative;
+      width: 150.01px;
+      height: 38.1px;
+      margin: 10px auto;
+      padding: 1px;
+      border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+    }
+    
+    .Campaignbtn {
+      width: 100%;
+      height: 100%;
+      padding: 8.3px 14.51px;
+      border-radius: 23.61px;
+      background: radial-gradient(
+        128.13% 128.13% at 50% 50%,
+        #000000 25%,
+        rgba(0, 255, 0, 0) 100%
+      );
+      position: relative;
+      z-index: 2;
+      border-radius: 47.1px;
+      color: #ffffff;
+      font-family: "Spartan";
+      font-size: 10.49px;
+      font-weight: 700;
+      line-height: 12.86px;
+      letter-spacing: -6%;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .CampaignButtonBorder {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 23.61px;
+      background: linear-gradient(
+        99.76deg,
+        #00ff00 8.86%,
+        rgba(0, 153, 0, 0) 91.14%
+      );
+      z-index: 0;
+      padding: 1.27px;
+      box-sizing: border-box;
+    }
+    
+    .CampaignButtonOverlay {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 23.61px;
+      background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+      z-index: 1;
+    }
   }

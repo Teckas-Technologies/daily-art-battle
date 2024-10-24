@@ -46,6 +46,7 @@
   justify-content: space-between;
   margin-bottom: 20px;
   height: 41.46px;
+  position: relative;
 }
 .create-campaign-input label {
   font-size: 14.63px;
@@ -138,7 +139,7 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(24px);
-  background-color: #00ff00; 
+  background-color: #00ff00;
 }
 .btn-group button {
   height: 47.7px;
@@ -156,4 +157,81 @@ input:checked + .slider:before {
 .discard-btn {
   border: 0.61px solid #00ff00;
   color: #00ff00;
+}
+.datepicker-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  width: max-content;
+  transform: translate(-250px, -90px);
+}
+
+.custom-date-input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.input-icon {
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .popup-container {
+    padding: 15px 20px;
+    width: 320px;
+  }
+
+  .create-campaign-input label {
+    min-width: 90px;
+    font-size: 9.5px;
+  }
+
+  .create-campaign-toggle-label {
+    min-width: 90px;
+    font-size: 9.5px;
+  }
+
+  .social-share {
+    width: 24px;
+    height: 24px;
+  }
+  .btn-group button {
+    height: 26.61px;
+    padding: 5px 14px;
+    font-size: 8px;
+    line-height: 9px;
+  }
+  .edit-popup-header h2 {
+    font-size: 14px;
+    line-height: 15px;
+  }
+  .create-campaign-input {
+    margin-bottom: 10px;
+  }
+  .create-campaign-toggle {
+    margin-bottom: 10px;
+  }
+  .icons {
+    width: 14px;
+    height: 14px;
+  }
+  .switch {
+    width: 40px;
+    height: 20px;
+  }
+
+  .slider:before {
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+  }
+  input:checked + .slider:before {
+    transform: translateX(18px);
+    background-color: #00ff00;
+  }
 }

@@ -2,12 +2,12 @@
   font-family: "Spartan";
   box-sizing: border-box;
 }
-.campaign-header {
-  background: linear-gradient(90deg, #000000 68.23%, rgba(0, 0, 0, 0) 77.42%),
+.create-campaign-header {
+  background: linear-gradient(90deg, #000000 55%, rgba(0, 0, 0, 0) 100%),
     url("/images/campaignbg.png") no-repeat right center;
   background-size: contain;
   width: 100%;
-  height: 187.2px;
+  height: 230px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,13 +18,13 @@
   border-radius: 11.2px;
 }
 
-.campaign-content {
+.create-campaign-content {
   text-align: center;
 }
 
-.campaign-title {
+.create-campaign-header h1 {
   text-align: left;
-  font-size: 38.4px;
+  font-size: 46px;
   font-weight: 600;
   letter-spacing: -6%;
   background: linear-gradient(180deg, #00ff00 45.93%, #009900 76.54%);
@@ -32,25 +32,42 @@
   color: transparent;
 }
 
-.campaign-description {
+.create-campaign-header p {
   text-align: left;
-  font-size: 12.8px;
+  font-size: 16px;
   font-weight: 500;
-  line-height: 14.34px;
+  line-height: 18.16px;
   letter-spacing: -6%;
   background: #9b9b9b;
   -webkit-background-clip: text;
   color: transparent;
-  margin-top: 15px;
+  margin-top: 10px;
+}
+.camapign-path-button {
+  height: 30.75px;
+  padding: 7.5px 18px;
+  border-radius: 35.25px;
+  border: 0.75px solid #00ff00;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
 }
 .create-campaign {
   background-color: black;
   width: 100vw;
+  max-width: 100%;
   min-height: 100vh;
-  padding: 70px 180px;
+  padding: 70px 120px;
+  box-sizing: border-box;
 }
 .create-campaign-title {
-  font-size: 23.75px;
+  font-size: 20.75px;
   font-weight: 600;
   line-height: 26.6px;
   letter-spacing: -6%;
@@ -59,7 +76,11 @@
 .create-campaign-coinsButton {
   background: linear-gradient(180deg, #00ff00 0%, #007200 100%);
   border-radius: 11px;
-  padding: 15px 30px;
+  padding: 18px 43px;
+}
+.coin-btn-icon {
+  width: 18px;
+  height: 18px;
 }
 .create-campaign-firstrow {
   display: flex;
@@ -67,7 +88,7 @@
   gap: 25px;
 }
 .create-campaign-firstrow label {
-  font-size: 17.81px;
+  font-size: 14.81px;
   line-height: 19.95px;
   font-weight: 600;
   letter-spacing: -6%;
@@ -86,14 +107,15 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  height: 53.44px;
+  height: 50.44px;
+  position: relative;
 }
 .create-campaign-input label {
-  font-size: 17.81px;
+  font-size: 14.81px;
   line-height: 19.95px;
   font-weight: 600;
   color: #ffffff;
-  min-width: 200px;
+  min-width: 170px;
 }
 .create-campaign-input input {
   width: 100%;
@@ -113,7 +135,7 @@
 .create-campaign-left input,
 .create-campaign-right input {
   width: 100%;
-  height: 53.44px;
+  height: 46.44px;
   background: transparent;
   border: 0.74px solid #7b7b7b;
   border-radius: 37.86px;
@@ -145,7 +167,7 @@
   height: 53.44px;
 }
 .create-campaign-toggle-label {
-  font-size: 17.81px;
+  font-size: 14.81px;
   line-height: 19.95px;
   font-weight: 600;
   color: #ffffff;
@@ -193,33 +215,179 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(24px);
-  background-color: #00ff00; 
+  transform: translateX(23px);
+  background-color: #00ff00;
+}
+
+.datepicker-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  width: max-content;
+  transform: translate(-250px, -90px);
 }
 
 .custom-date-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  font-size: 16px;
   width: 100%;
-  background-color: white;
+  padding-right: 40px;
+}
+
+.input-icon {
   cursor: pointer;
-
-  text-align: left;
-  outline: none;
 }
 
-.custom-date-input::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
+@media (max-width: 768px) {
+  .create-campaign-header {
+    background: linear-gradient(180deg, #000000 40.23%, rgba(0, 0, 0, 0.6) 100%),
+      url("/images/campaignbg.png") no-repeat center bottom;
+    background-size: cover;
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
+
+    height: 250px;
+  }
+
+  .create-campaign-header h1 {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .create-campaign-header p {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .campaign-content {
+    width: 100%;
+    max-width: 100%;
+  }
+  .create-campaign {
+    padding: 20px;
+  }
+  .campaign-title {
+    font-size: 36.96px;
+    text-align: center;
+  }
+  .campaign-description {
+    text-align: center;
+    font-size: 12.32px;
+  }
+  .create-campaign-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 15.68px;
+    letter-spacing: -6%;
+  }
+  .create-campaign-coinsButton {
+    border-radius: 5.82px;
+    font-size: 7.42px;
+    font-weight: 600;
+    line-height: 10.55px;
+    letter-spacing: -6%;
+    padding: 10px 19px;
+    gap: 5px;
+  }
+  .coin-btn-icon {
+    width: 10px;
+    height: 10px;
+  }
+  .submitButton {
+    width: 128px;
+    height: 35.27px;
+    border-radius: 21.86px;
+    padding: 7.68px 10.13px;
+    font-size: 10.63px;
+    font-weight: 600;
+    line-height: 11.91px;
+    margin: 25px auto;
+  }
+  .create-campaign-firstrow label {
+    font-size: 11.81px;
+    font-weight: 600;
+    line-height: 15.47px;
+  }
+  .create-campaign-firstrow input {
+    font-size: 9.3px;
+    font-weight: 500;
+    line-height: 10.42px;
+    letter-spacing: -6%;
+    height: 41.43px;
+  }
+  .create-campaign-input {
+    height: 41.43px;
+  }
+  .create-campaign-input input {
+    height: 41.43px;
+  }
+  .create-campaign-input label {
+    font-size: 10.81px;
+    font-weight: 600;
+    line-height: 15.47px;
+    min-width: 125px;
+  }
+  .create-campaign-toggle {
+    gap: 0;
+    height: 41.43px;
+  }
+  .create-campaign-toggle-label {
+    font-size: 10.81px;
+    font-weight: 600;
+    line-height: 15.47px;
+    min-width: 125px;
+  }
+  .input-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .camapign-path {
+    margin-top: 20px;
+  }
+  .camapign-path h3 {
+    font-size: 11.2px;
+  }
+  .camapign-path-button {
+    font-size: 11.2px;
+    padding: 5.5px 13.2px;
+    height: 22.55px;
+  }
 }
 
-.custom-date-input::-webkit-inner-spin-button,
-.custom-date-input::-webkit-clear-button {
-  display: none;
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .create-campaign-header {
+    height: auto;
+    padding: 20px;
+  }
+
+  .create-campaign-header h1 {
+    font-size: 36px;
+    text-align: center;
+  }
+
+  .create-campaign-header p {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .create-campaign {
+    padding: 40px 80px;
+  }
+
+  .create-campaign-title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .submitButton {
+    width: 160px;
+    height: 40px;
+    padding: 10px 15px;
+    font-size: 14px;
+  }
 }

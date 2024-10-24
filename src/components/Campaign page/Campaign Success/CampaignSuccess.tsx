@@ -1,24 +1,58 @@
-'use client';
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import "./CampaignSuccess.css";
 import InlineSVG from "react-inlinesvg";
 const CampaignSuccess = () => {
   const fullLink = "http://localhost:3000/campaign/createcampaign";
+  const [buttonText, setButtonText] = useState("Copy link");
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(fullLink)
+    navigator.clipboard
+      .writeText(fullLink)
       .then(() => {
-        alert("Link copied to clipboard!");
+        setButtonText("Copied");
+        setTimeout(() => {
+          setButtonText("Copy link");
+        }, 2000);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Failed to copy: ", err);
       });
   };
+  const handleNavigation = () => {
+    window.location.href = "/campaign";
+  };
   return (
     <div className="campaign-success-container">
-      <div className="campaign-header">
-        <div className="campaign-content">
-          <h1 className="campaign-title">Create Campaign</h1>
-          <p className="campaign-description md:w-[400px]">
+      <div
+        className="flex gap-2 items-center camapign-path"
+        style={{ paddingTop: "80px" }}
+      >
+        <button className="camapign-path-button">GFXvs</button>
+        <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
+        <h3
+          style={{
+            color: "#00ff00",
+            textDecoration: "underline",
+            cursor: "pointer",
+          }}
+          onClick={handleNavigation}
+        >
+          Campaigns
+        </h3>
+        <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
+        <h3
+          style={{
+            color: "#00ff00",
+            textDecoration: "underline",
+          }}
+        >
+          Create Campaign
+        </h3>
+      </div>
+      <div className="success-campaign-header">
+        <div className="success-campaign-content">
+          <h1>Create Campaign</h1>
+          <p className=" md:w-[460px]">
             Create campaigns publicly or among your friends, participate in the
             campaigns and win exclusive rewards
           </p>
@@ -30,21 +64,33 @@ const CampaignSuccess = () => {
         <div className="campaign-link-box">
           <div className="campaign-link-inputbox">
             <p>
-              {fullLink.length > 15 ? `${fullLink.slice(0, 15)}...` : fullLink}
+              {fullLink.length > 15
+                ? `${fullLink.slice(0, 15)}.............`
+                : fullLink}
             </p>
-            <button className="copy-link-btn flex items-center gap-1"  onClick={handleCopyLink}>
-              <InlineSVG src="/icons/copy.svg" /> Copy link
+            <button
+              className="copy-link-btn flex items-center"
+              onClick={handleCopyLink}
+            >
+              <InlineSVG src="/icons/copy.svg" className="copy-icon" />
+              {buttonText}
             </button>
           </div>
 
           <div className="share-section">
             <span>Share</span>
             <div className="social-icons">
-              <InlineSVG src="/icons/whatsapp.svg" />
-              <InlineSVG src="/icons/facebook-icon.svg" />
-              <InlineSVG src="/icons/tele-icon.svg" />
-              <InlineSVG src="/icons/insta-icon.svg" />
-              <InlineSVG src="/icons/twitter-icon.svg" />
+              <InlineSVG className="social-icon" src="/icons/whatsapp.svg" />
+              <InlineSVG
+                className="social-icon"
+                src="/icons/facebook-icon.svg"
+              />
+              <InlineSVG className="social-icon" src="/icons/tele-icon.svg" />
+              <InlineSVG className="social-icon" src="/icons/insta-icon.svg" />
+              <InlineSVG
+                className="social-icon"
+                src="/icons/twitter-icon.svg"
+              />
             </div>
           </div>
         </div>
