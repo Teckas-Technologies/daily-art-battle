@@ -10,6 +10,11 @@ interface Props {
   fontColor: string;
 }
 const CampaignBanner = () => {
+  const [activeTab, setActiveTab] = useState("Current Campaigns");
+  const [isFormValid, setIsFormValid] = useState(false);
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+  };
   const campaigns = Array(10).fill({
     name: "Raghuvaran's Campaign",
     startDate: "12 Oct 2024",
@@ -127,17 +132,15 @@ const CampaignBanner = () => {
   const handleCreateCampaign = () => {
     router.push("/campaign/create");
   };
-  const handleUpcomingCampaign = () => {
-    router.push("/campaign/upcoming");
-  };
-  const handleCurrentCampaign = () => {
-    router.push("/campaign/current");
+
+  const handleNavigation = () => {
+    window.location.href = "/campaign";
   };
   return (
     <div className="campaign-container">
-       <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG>
+      {/* <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG> */}
       <div
-        className="flex gap-2 items-center camapign-path"
+        className="flex gap-1 items-center camapign-path md:mb-9"
         style={{ paddingTop: "80px" }}
       >
         <button className="camapign-path-button">GFXvs</button>
@@ -148,37 +151,48 @@ const CampaignBanner = () => {
             textDecoration: "underline",
             cursor: "pointer",
           }}
+          onClick={handleNavigation}
         >
           Campaigns
         </h3>
       </div>
-      <div className="campaign-header">
-        <div className="campaign-content">
-          <h1 className="campaign-title">GFXvs Campaigns</h1>
-          <p className="campaign-description md:w-[480px]">
-            Create campaigns publicly or among your friends, participate in the
-            campaigns and win exclusive rewards
-          </p>
-        </div>
-        <div className="campaign-btn-Wrapper">
-          <button className="campaign-btn " onClick={handleCreateCampaign}>
-            Create Campaign
-          </button>
+      <div style={{}}>
+        <div className="campaign-header">
+          <div className="campaign-content">
+            <h1 className="campaign-title">GFXvs Campaigns</h1>
+            <p className="campaign-description md:w-[480px]">
+              Create campaigns publicly or among your friends, participate in
+              the campaigns and win exclusive rewards
+            </p>
+          </div>
+          <div className="campaign-btn-Wrapper">
+            <button className="campaign-btn " onClick={handleCreateCampaign}>
+              Create Campaign
+            </button>
 
-          <div className="campaign-btn-Border" />
+            <div className="campaign-btn-Border" />
 
-          <div className="campaign-btn-Overlay" />
+            <div className="campaign-btn-Overlay" />
+          </div>
         </div>
       </div>
 
-      <div className="button-table-container ">
-       
-
+      
         <div className="campaign-tabs">
-          <button onClick={handleCurrentCampaign}>Current Campaigns</button>
-          <button onClick={handleUpcomingCampaign}>Upcoming Campaigns</button>
-          <button>Previous Campaigns</button>
-          <button>My Campaigns</button>
+          {[
+            "Current Campaigns",
+            "Upcoming Campaigns",
+            "Previous Campaigns",
+            "My Campaigns",
+          ].map((tab) => (
+            <button
+              key={tab}
+              className={`tab-button ${activeTab === tab ? "active" : ""}`}
+              onClick={() => handleTabClick(tab)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
         <div className="table-container">
@@ -210,7 +224,7 @@ const CampaignBanner = () => {
             </div>
           ))}
         </div>
-      </div>
+     
       <div className="pagination-section relative w-full flex justify-center py-5">
         <div className="pagination rounded-[7rem]">
           <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">

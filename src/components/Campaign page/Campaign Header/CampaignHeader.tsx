@@ -60,7 +60,7 @@ export default function CampaignHeader() {
               <InlineSVG src="/icons/vertical-line.svg" />
               <div className="row">
                 <span className="flex items-center span-date">
-                  <InlineSVG src="/icons/white-calender.svg" />
+                  <InlineSVG src="/icons/person.svg" />
                   Rewards
                 </span>
                 <span className="span-text flex items-center gap-1 sm:gap-2 sm:self-start">
@@ -90,7 +90,7 @@ export default function CampaignHeader() {
               {buttonText}
             </button>
           </div>
-          <div className="flex flex-row items-center justify-center sm:justify-between mt-4 sm:mt-0 gap-4 sm:gap-0 md:gap-[240px]">
+          <div className="flex flex-row items-center justify-center sm:justify-between mt-4 sm:mt-0 gap-4 sm:gap-0 md:gap-[235px]">
             <div className="flex items-center gap-2 sm:gap-3">
               <span className="share-span">Share</span>
               <InlineSVG src="/icons/whatsapp.svg" className="header-social-share" />

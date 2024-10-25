@@ -8,13 +8,15 @@ import "react-datepicker/dist/react-datepicker.css";
 interface CampaignCreationProps {
   toggleCampaignModal: () => void;
 }
-const CreateCampaign: React.FC<CampaignCreationProps> = ({ toggleCampaignModal }) => {
+const CreateCampaign: React.FC<CampaignCreationProps> = ({
+  toggleCampaignModal,
+}) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isStartDatePickerOpen, setStartDatePickerOpen] = useState(false);
   const [isEndDatePickerOpen, setEndDatePickerOpen] = useState(false);
   const [isCampaignCreated, setIsCampaignCreated] = useState(false);
-
+  const [isFormValid, setIsFormValid] = useState(false);
   const handleCreateCampaign = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -37,7 +39,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({ toggleCampaignModal }
       {!isCampaignCreated ? (
         <div className="create-campaign">
           <div
-            className="flex gap-2 items-center camapign-path"
+            className="flex gap-1 items-center camapign-path md:mb-9"
             style={{ paddingTop: "80px" }}
           >
             <button className="camapign-path-button">GFXvs</button>
@@ -47,8 +49,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({ toggleCampaignModal }
             />
             <h3
               style={{
-                color: "#00ff00",
-                textDecoration: "underline",
+                color: "#ffffff",
                 cursor: "pointer",
               }}
               onClick={handleNavigation}
@@ -254,9 +255,19 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({ toggleCampaignModal }
               </div>
             </div>
 
-            <button type="submit" className="submitButton" onClick={toggleCampaignModal}>
-              Create Campaign
-            </button>
+            {isFormValid ? (
+              <div className="submit-btn-Wrapper">
+                <button className="submit-btn" type="submit">
+                  Create Campaign
+                </button>
+                <div className="submit-btn-Border" />
+                <div className="submit-btn-Overlay" />
+              </div>
+            ) : (
+              <button className="submitButton" onClick={toggleCampaignModal}>
+                Create Campaign
+              </button>
+            )}
           </form>
         </div>
       ) : (

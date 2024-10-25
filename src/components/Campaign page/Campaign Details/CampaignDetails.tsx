@@ -39,7 +39,9 @@ const arts = [
   "/images/uploadart2.png",
   "/images/uploadart2.png",
 ];
-const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal }) => {
+const CampaignDetails: React.FC<CampaignDetailsProps> = ({
+  toggleDistributeModal,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const MOBILE_LIMIT = 4;
@@ -143,65 +145,73 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
         <div className="flex items-center justify-center gap-[25px] md:gap-[30px]">
           <div className="art-container">
             <h3 className="art-heading">Most Voted Art</h3>
-            <div className="art">
-              <div
-                className="flex items-center"
-                style={{ marginBottom: "10px" }}
-              >
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
-                  alt="Profile"
-                  className="profile-image"
-                />
-                <h4 style={{ margin: 0 }}>Raghuvaran</h4>
-              </div>
+            <div className="common">
+              <div className="art">
+                <div
+                  className="flex items-center"
+                  style={{ marginBottom: "10px" }}
+                >
+                  <img
+                    src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
+                    alt="Profile"
+                    className="profile-image"
+                  />
+                  <h4 style={{ margin: 0 }}>Raghuvaran</h4>
+                </div>
 
-              <img src="/images/uploadart1.png" alt="" className="art-image" />
-              <p
-                className="flex items-center justify-end"
-                style={{ width: "100%", marginTop: "15px" }}
-              >
-                <InlineSVG
-                  className="heart-icon"
-                  src="/icons/heart.svg"
-                  style={{ marginRight: "2px" }}
+                <img
+                  src="/images/uploadart1.png"
+                  alt=""
+                  className="art-image"
                 />
-                9 Upvotes
-              </p>
+                <p
+                  className="flex items-center justify-end"
+                  style={{ width: "100%", marginTop: "15px" }}
+                >
+                  <InlineSVG
+                    className="heart-icon"
+                    src="/icons/heart.svg"
+                    style={{ marginRight: "2px" }}
+                  />
+                  9 Upvotes
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="art-container">
             <h3 className="art-heading">Most Upvoted Art</h3>
-            <div className="art">
-              <div
-                className="flex items-center"
-                style={{ marginBottom: "10px" }}
-              >
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
-                  alt="Profile"
-                  className="profile-image"
-                />
-                <h4 style={{ margin: 0 }}>Raghuvaran</h4>
-              </div>
+            <div className="common">
+              <div className="art">
+                <div
+                  className="flex items-center"
+                  style={{ marginBottom: "10px" }}
+                >
+                  <img
+                    src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
+                    alt="Profile"
+                    className="profile-image"
+                  />
+                  <h4 style={{ margin: 0 }}>Raghuvaran</h4>
+                </div>
 
-              <img
-                src="/images/uploadart1.png"
-                alt="Raghuvaran"
-                className="art-image"
-              />
-              <p
-                className="flex items-center justify-end"
-                style={{ width: "100%", marginTop: "15px" }}
-              >
-                <InlineSVG
-                  src="/icons/heart.svg"
-                  className="heart-icon"
-                  style={{ marginRight: "2px" }}
+                <img
+                  src="/images/uploadart1.png"
+                  alt="Raghuvaran"
+                  className="art-image"
                 />
-                9 Upvotes
-              </p>
+                <p
+                  className="flex items-center justify-end"
+                  style={{ width: "100%", marginTop: "15px" }}
+                >
+                  <InlineSVG
+                    src="/icons/heart.svg"
+                    className="heart-icon"
+                    style={{ marginRight: "2px" }}
+                  />
+                  9 Upvotes
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -230,7 +240,8 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
         <h2>Special Rewards Winners</h2>
         <div className="winnersGrid">
           {artworks.map((art, index) => (
-            <div className="winner" key={index}>
+           <div className="common">
+             <div className="winner" key={index}>
               <div
                 className="flex items-center"
                 style={{ marginBottom: "10px" }}
@@ -260,6 +271,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
                 9 upvotes
               </p>
             </div>
+           </div>
           ))}
         </div>
       </div>
@@ -267,8 +279,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
         <h2>Day Wise Winners</h2>
         <div className="daywise-winners-grid">
           {daywinners.map((art, index) => (
-            <div className="daywise-winner" key={index}>
-              <h3 >Winner: Day {art.day}</h3>
+           <div className="common">
+             <div className="daywise-winner" key={index}>
+              <h3>Winner: Day {art.day}</h3>
               <div className="profile-section">
                 <img
                   src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
@@ -294,6 +307,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
                 9 Upvotes
               </p>
             </div>
+           </div>
           ))}
         </div>
       </div>
@@ -303,7 +317,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
           Distribute special rewards before 7 days of campaign ending date
         </p>
         <div className="distribute-btn-Wrapper">
-          <button className="distribute-btn " onClick={toggleDistributeModal}>Distribute Rewards</button>
+          <button className="distribute-btn " onClick={toggleDistributeModal}>
+            Distribute Rewards
+          </button>
 
           <div className="distribute-btn-Border" />
 
@@ -313,7 +329,11 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
           <div className="participants">
             <h2>Participants</h2>
             {participants.map((participant, index) => (
-              <div key={index} className="participant" style={{display:"flex",alignItems:"center"}}>
+              <div
+                key={index}
+                className="participant"
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <span className="participant-number">{index + 1}</span>
                 <span className="participant-name">{participant}</span>
               </div>
@@ -381,5 +401,5 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ toggleDistributeModal
       </div>
     </div>
   );
-}
+};
 export default CampaignDetails;

@@ -24,15 +24,15 @@ const CampaignSuccess = () => {
   return (
     <div className="campaign-success-container">
       <div
-        className="flex gap-2 items-center camapign-path"
+        className="flex gap-2 items-center camapign-path md:mb-9"
         style={{ paddingTop: "80px" }}
       >
         <button className="camapign-path-button">GFXvs</button>
         <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
         <h3
           style={{
-            color: "#00ff00",
-            textDecoration: "underline",
+            color: "#FFFFFF",
+         
             cursor: "pointer",
           }}
           onClick={handleNavigation}

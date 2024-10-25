@@ -2,6 +2,11 @@
   font-family: "spartan";
   box-sizing: border-box;
 }
+.common{
+  background: linear-gradient(180deg, #959595 0%, #2F2F2F 100%);
+  padding: 1px;
+  border-radius: 25.5px;
+}
 .campaign-details-container {
   background-color: black;
   color: white;
@@ -38,9 +43,9 @@
   gap: 80px;
 }
 .art {
-  border: 0.75px solid #ccc;
   border-radius: 25.5px;
   padding: 18px 28px;
+  background: #000000;
 }
 .art .art-image {
   width: 230px;
@@ -109,7 +114,7 @@
   margin: 0 auto;
 }
 .winner {
-  border: 0.75px solid #ccc;
+ background: #000000;
   border-radius: 25.5px;
   padding: 18px 28px;
 }
@@ -155,7 +160,7 @@
 }
 
 .daywise-winner {
-  border: 0.75px solid #ccc;
+ background: #000000;
   border-radius: 25.5px;
   padding: 18px 28px;
 }
@@ -333,12 +338,12 @@
   font-size: 16px;
 }
 .participants h2 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   line-height: 26.88px;
   letter-spacing: -6%;
   color: #ffffff;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   margin-top: 15px;
   grid-column: 1 / -1;
 }
@@ -392,6 +397,11 @@
   background-color: #000000b2;
 }
 @media (max-width: 768px) {
+  .common{
+    background: linear-gradient(180deg, #959595 0%, #2F2F2F 100%);
+    padding: 1px;
+    border-radius: 15px;
+  }
   .campaign-details-container {
     padding: 20px;
   }

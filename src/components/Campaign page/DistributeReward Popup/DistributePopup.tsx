@@ -2,10 +2,12 @@ import { useState } from "react";
 import "./DistributePopup.css";
 import InlineSVG from "react-inlinesvg";
 interface DistributeRewardPopupProps {
+  onDistribute: () => void;
   onClose: () => void;
 }
 
 const DistributeRewardPopup: React.FC<DistributeRewardPopupProps> = ({
+  onDistribute,
   onClose,
 }) => {
   const users = Array(9).fill({ name: "Raghuvaran", upvotes: 9 });
@@ -32,7 +34,7 @@ const DistributeRewardPopup: React.FC<DistributeRewardPopupProps> = ({
             onClick={() => toggleSelection(index)}
           >
             <img
-              src="/images/uploadart3.png"
+              src="/images/image.png"
               alt="User"
               className="user-image"
             />
@@ -59,16 +61,21 @@ const DistributeRewardPopup: React.FC<DistributeRewardPopupProps> = ({
           </div>
         ))}
       </div>
-      <div className="actions">
-        <button className="cancel-btn" onClick={onClose}>
-          Cancel
-        </button>
-        <div className="distributepopup-btn-Wrapper">
-          <button className="distributepopup-btn ">Distribute Rewards</button>
+      <div className="footer">
+        <div className="reward-result">Selected 2 out of 5 Participants</div>
+        <div className="actions">
+          <button className="cancel-btn" onClick={onClose}>
+            Cancel
+          </button>
+          <div className="distributepopup-btn-Wrapper">
+            <button className="distributepopup-btn " onClick={onDistribute}>
+              Distribute Rewards
+            </button>
 
-          <div className="distributepopup-btn-Border" />
+            <div className="distributepopup-btn-Border" />
 
-          <div className="distributepopup-btn-Overlay" />
+            <div className="distributepopup-btn-Overlay" />
+          </div>
         </div>
       </div>
     </div>

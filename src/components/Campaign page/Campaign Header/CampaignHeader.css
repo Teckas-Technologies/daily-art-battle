@@ -20,7 +20,7 @@
   align-items: center;
 }
 .campaign-details h1 {
-  font-size: 28px;
+  font-size: 28.5px;
   font-weight: 600;
   line-height: 40.32px;
   letter-spacing: -6%;
@@ -83,8 +83,8 @@
   border-radius: 45.74px;
   padding: 5px 7.5px;
   border: 0.75px solid #7a7a7a;
-  height: 45px;
-  width:340px;
+  height: 40px;
+  width:350px;
  
 }
 .campaign-header-input p{
@@ -92,7 +92,7 @@
 }
 .campaign-header-input button {
   border: 0.75px solid #444444;
-  height: 32.5px;
+  height: 30.5px;
   border-radius: 21px;
   padding: 8.25px 10.75px;
   font-size: 10.5px;
@@ -135,12 +135,12 @@
 .publicStatus {
   background: #00ff001a;
   border: 0.75px solid #00ff99;
-  padding: 6.5px 22.5px;
+  padding: 3px 17.5px;
   border-radius: 5px;
-  height: 33px;
+ 
   border-radius: 41.25px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   line-height: 20.16px;
   letter-spacing: -6%;
   color: #ffffff;
