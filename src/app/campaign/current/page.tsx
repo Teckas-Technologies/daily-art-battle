@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import CampaignHeader from "@/components/Campaign page/Campaign Header/CampaignHeader";
 import { Battle } from "@/components/ArtBattle/Battle/Battle";
 import { Header } from "@/components/Header/Header";
@@ -7,27 +7,18 @@ import Footer from "@/components/Footer/Footer";
 import PreviousArtHeader from "@/components/ArtBattle/PreviousArts/PreviousArtHeader";
 import { PreviousGrid } from "@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid";
 import { UpcomingGrid } from "@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid";
-
+import { GFX_CAMPAIGNID } from "@/config/constants";
 import InlineSVG from "react-inlinesvg";
 import CurrentCampaigUploadArt from "@/components/Campaign page/Current Campaign/CurrentCampaign";
 
-interface Props {
-  toggleUploadModal: () => void;
-  campaignId: string;
-  fontColor: string;
-  welcomeText: string;
-  themeTitle: string;
-}
 const handleNavigation = () => {
   window.location.href = "/campaign";
 };
-const CurrentCampaign: React.FC<Props> = ({
-  toggleUploadModal,
-  campaignId,
-  fontColor,
-  welcomeText,
-  themeTitle,
-}) => {
+
+const CurrentCampaign = () => {
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   return (
     <div style={{ backgroundColor: "#000000" }}>
       <Header />
@@ -37,7 +28,7 @@ const CurrentCampaign: React.FC<Props> = ({
         <h3
           style={{
             color: "#ffffff",
-            
+
             cursor: "pointer",
           }}
           onClick={handleNavigation}
@@ -50,26 +41,12 @@ const CurrentCampaign: React.FC<Props> = ({
         </h3>
       </div>
       <CampaignHeader />
-      <Battle
-        toggleUploadModal={toggleUploadModal}
-        campaignId={campaignId}
-        fontColor={fontColor}
-        welcomeText={welcomeText}
-        themeTitle={themeTitle}
-      />
- <CurrentCampaigUploadArt/>
-      <UpcomingGrid
-        toggleUploadModal={toggleUploadModal}
-        uploadSuccess={false}
-        campaignId={campaignId}
-        fontColor={fontColor}
-      />
-      <PreviousArtHeader />
-      <PreviousGrid
-        toggleUploadModal={toggleUploadModal}
-        campaignId={campaignId}
-        fontColor={fontColor}
-      /> 
+      <Battle campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
+      <CurrentCampaigUploadArt/>
+      <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <PreviousArtHeader/>
+      <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
+
       <Footer />
     </div>
   );

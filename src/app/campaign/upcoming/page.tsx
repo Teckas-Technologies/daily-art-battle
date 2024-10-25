@@ -5,6 +5,7 @@ import CampaignTime from "@/components/Campaign page/Campaign Timing/CampaignTim
 import EditCampaignPopup from "@/components/Campaign page/Edit Campaign Details/EditCampaign";
 import Footer from "@/components/Footer/Footer";
 import { Header } from "@/components/Header/Header";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 import React, { useState } from "react";
 import InlineSVG from "react-inlinesvg";
 interface Props {
@@ -17,15 +18,11 @@ interface Props {
 const handleNavigation = () => {
   window.location.href = "/campaign";
 };
-const UpcomingCampaign: React.FC<Props> = ({
-  toggleUploadModal,
-  campaignId,
-  fontColor,
-  welcomeText,
-  themeTitle,
-}) => {
+const UpcomingCampaign = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const toggleUEditModal = () => setShowEditModal(!showEditModal);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   return (
     <div style={{ backgroundColor: "#000000" }}>
       <Header />
@@ -50,11 +47,7 @@ const UpcomingCampaign: React.FC<Props> = ({
       <CampaignHeader />
        <CampaignTime toggleUEditModal={toggleUEditModal} />
       {showEditModal && <EditCampaignPopup onClose={() => setShowEditModal(false)}/>}
-      <PreviousGrid
-        toggleUploadModal={toggleUploadModal}
-        campaignId={campaignId}
-        fontColor={fontColor}
-      /> 
+      <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
       
       <Footer />
     </div>
