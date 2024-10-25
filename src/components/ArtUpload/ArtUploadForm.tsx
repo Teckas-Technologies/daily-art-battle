@@ -56,14 +56,14 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
       const newArtworks = [...artworks];
 
       if (file) {
-        const previewUrl = URL.createObjectURL(file); 
+        const previewUrl = URL.createObjectURL(file);
         newArtworks[index] = {
           ...newArtworks[index],
           file,
           fileName: file.name,
           previewUrl,
         };
-        setIsAiGenerated(false); 
+        setIsAiGenerated(false);
       } else {
         newArtworks[index] = {
           ...newArtworks[index],
@@ -113,7 +113,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
     event.preventDefault();
     const newArtworks = [...artworks];
     newArtworks[0] = { ...newArtworks[0], previewUrl: null };
-    setArtworks(newArtworks); 
+    setArtworks(newArtworks);
     setPrompt(true);
     setMessage("");
   };
@@ -130,7 +130,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
         previewUrl: res?.imageUrl,
         file: res.file,
       };
-      setIsAiGenerated(true); 
+      setIsAiGenerated(true);
       setArtworks(newArtworks);
       setPrompt(false);
       setImageCreating(false);
@@ -325,9 +325,8 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
               Cancel
             </button>
             <button
-               className={`continueButton ${isFormValid ? "success" : ""}`} 
+              className={`continueButton ${isFormValid ? "success" : ""}`}
               onClick={onSuccessUpload}
-             
             >
               Continue
             </button>

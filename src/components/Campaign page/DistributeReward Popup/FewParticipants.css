@@ -1,0 +1,134 @@
+.participant-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .participant-popup-content {
+    background: #000000;
+    padding: 50px 50px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+    color: white;
+    border: 0.56px solid #7A7A7A;
+  }
+  
+  .participant-popup-title {
+    font-size: 23px;
+    color: #00ff00;
+    font-weight: 600;
+    margin-bottom: 45px;
+  }
+  
+  .main-text {
+    font-size: 21px;
+    font-weight: 600;
+    color:#FFFFFF;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .highlight {
+    color: #00ff00;
+  }
+  
+  .description-text  {
+    font-size: 13px;
+    color: #FFFFFF;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: 200;
+    line-height: 15.16px;
+    letter-spacing: -6%;
+    margin-top: 30px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 60px;
+  }
+  
+  .cancel-btn,
+  .distribute-popup-btn {
+    border-radius: 35.65px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 180px;
+  }
+  .cancel-btn {
+    background: transparent;
+    border: 1.27px solid #00ff00;
+    padding: 12.41px 25.69px;
+    color: #00ff00;
+  }
+  .distributepopup-btn-Wrapper {
+    position: relative;
+    padding-left: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+  }
+  
+  .distributepopup-btn {
+    width: 100%;
+    height: 100%;
+    padding: 14.41px 22.69px;
+    border-radius: 55.1px;
+    background: radial-gradient(
+      128.13% 128.13% at 50% 50%,
+      #000000 25%,
+      rgba(0, 255, 0, 0) 100%
+    );
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 14.9px;
+    font-weight: 600;
+    line-height: 19.25px;
+    letter-spacing: -6%;
+    text-align: center;
+  }
+  
+  .distributepopup-btn-Border {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 55.1px;
+    background: linear-gradient(
+      99.76deg,
+      #00ff00 8.86%,
+      rgba(0, 153, 0, 0) 91.14%
+    );
+    z-index: 0;
+    padding: 1.27px;
+    box-sizing: border-box;
+  }
+  
+  .distributepopup-btn-Overlay {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 55.1px;
+    background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+    z-index: 1;
+  }
+  
