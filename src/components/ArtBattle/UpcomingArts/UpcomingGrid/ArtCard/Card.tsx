@@ -31,7 +31,7 @@ const Card: React.FC<CardProps> = ({ art, onVote, votes, onImageClick }) => {
                         src='/icons/profile.svg'
                         className='md:w-4 md:h-4 w-3 h-3'
                     />
-                    <h2 className='text-xs spartan-medium md:w-[9rem] w-[2.5rem] truncate overflow-hidden whitespace-nowraps'>{art?.artistId}</h2>
+                    <h2 className='lg:text-md md:text-sm text-xs spartan-medium md:w-[9rem] w-[2.5rem] truncate overflow-hidden whitespace-nowraps'>{art?.artistId}</h2>
                 </div>
                 <div className="upvotes w-auto flex items-center md:gap-2 gap-1">
                     <div className="count flex justify-center items-center p-1 rounded-md md:min-w-[1.5rem] md:min-h-[1.5rem] min-w-[1.2rem] min-h-[1.2rem]" style={{ aspectRatio: '1' }}>

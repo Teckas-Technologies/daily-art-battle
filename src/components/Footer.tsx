@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Footer = () => {
+const FooterOld = () => {
 
     return (
 <footer className=" bg-gray-950  shadow ">
@@ -18,4 +18,4 @@ const Footer = () => {
     )
 }
 
-export default Footer;
+export default FooterOld;

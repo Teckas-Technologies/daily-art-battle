@@ -45,7 +45,7 @@ export default async function handler(
         }
         else if (queryType === "battles") {
           const page = parseInt(req.query.page as string) || 1;
-          const limit = parseInt(req.query.limit as string) || 10;
+          const limit = parseInt(req.query.limit as string) || 6;
           const sort = req.query.sort;
           const campaignId = req.query.campaignId as string;
           if (sort == "voteDsc") {

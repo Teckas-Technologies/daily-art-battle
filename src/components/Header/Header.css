@@ -29,22 +29,26 @@
     text-underline-offset: 3px;
 }
 
+.outside {
+    background: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+    /* padding: 1.27px; */
+    padding-left: 1.35px;
+    padding-right: 1.30px;
+    padding-bottom: 1.27px;
+    padding-top: 1.27px;
+}
+
+.layer2 {
+    background-color: #000;
+}
+
 .register-btn {
-    border: 1px solid #00F900;
-    /* border: 1px solid;
-    border-image: linear-gradient(90deg, rgba(0,255,0,1) 0%, rgba(0,153,0,1) 100%);
-    border-image-slice: 1;
-    border-radius: 1.5rem; */
+    /* background: radial-gradient(128.13% 128.13% at 50% 50%, #000000 25%, rgba(0, 255, 0, 0.096) 100%); */
     background: radial-gradient(circle, rgba(0, 0, 0, 0.9052871148459384) 0%, rgba(0, 255, 0, 0.17699579831932777) 100%);
 }
 
 .header-info {
-    /* border: 1.27px solid transparent;
-    border-image-source: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0) 91.14%);
-    border-image-slice: 1;
-    border-radius: 15px;  */
-
-    border: 1px solid #00F900;
+    /* border: 1px solid #00F900; */
     background: radial-gradient(circle, rgba(0, 0, 0, 0.9052871148459384) 0%, rgba(0, 255, 0, 0.17699579831932777) 100%);
 }
 

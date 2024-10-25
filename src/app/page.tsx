@@ -1,46 +1,23 @@
+// pages/index.tsx
 "use client"
 import type { NextPage } from 'next';
-import { useState ,useEffect} from 'react';
-import { ArtworkUploadForm } from '../components/ArtworkUploadForm';
-import PreviousArtTable from '@/components/PreviousBattlesTable';
-import Footer from '@/components/Footer';
+import { useState } from 'react';
+import ArtUploadForm from '@/components/ArtUpload/ArtUploadForm';
+import Footer from '@/components/Footer/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
 import { Header } from '@/components/Header/Header';
 import PreviousArtHeader from '@/components/ArtBattle/PreviousArts/PreviousArtHeader';
 import { Battle } from '@/components/ArtBattle/Battle/Battle';
 import UpcomingHeader from '@/components/ArtBattle/UpcomingArts/UpcomingHeader';
 import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid';
-import { useSession } from 'next-auth/react';
-import { signIn } from 'next-auth/react';
-import { getProfileEditUrl } from '../../pages/api/auth/[...nextauth]';
+import { PreviousGrid } from '@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid';
+
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const { data: session, status } = useSession();
+
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
-  useEffect(() => {
-    // Redirect to login if not authenticated
-    if (status === "unauthenticated") {
-        // Trigger login with Azure B2C provider
-        signIn('azure-ad-b2c',{ callbackUrl: '/' });
-    }
-    console.log(status);
-    console.log(session);
-    // console.log(getProfileEditUrl());  
-  }, [status]);
 
-
-  useEffect(() => {
-    console.log("asdadad ");
-    console.log(status);
-    console.log(session);
-    // console.log(getProfileEditUrl());  
-  }, [status]);
-
-  // Show loading state while session status is being determined
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
   return (
     <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
      <video autoPlay muted loop id="background-video" style={{ 
@@ -60,10 +37,10 @@ const Home: NextPage = () => {
       <Battle campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
       <UpcomingHeader fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      {showUploadModal && <ArtworkUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <PreviousArtHeader />
-      <PreviousArtTable   fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal}/>
-      <Footer/>
+      <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} />
+      <Footer />
     </main>
   );
 };

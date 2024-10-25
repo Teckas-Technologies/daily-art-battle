@@ -1,33 +1,31 @@
 "use client";
 
 import InlineSVG from "react-inlinesvg";
-import './UpcomingGrid.css';
-import Card from "./ArtCard/Card";
+import './PreviousGrid.css';
 import { useEffect, useState, useRef } from "react";
-import { useMbWallet } from "@mintbase-js/react";
-import { ArtData, useFetchArts } from "@/hooks/artHooks";
-import CardHolder from "./ArtCard/CardHolder";
+import CardHolder from "./BattleCard/CarHolder";
+import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 
 interface Props {
     toggleUploadModal: () => void;
-    uploadSuccess: boolean;
     campaignId: string;
     fontColor: string
 }
 
 const MOBILE_LIMIT = 4;
-const DESKTOP_LIMIT = 8;
+const DESKTOP_LIMIT = 6;
 
-export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
-    const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
-    const [refresh, setRefresh] = useState(false);
-    const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
-    const { isConnected } = useMbWallet();
+export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, fontColor }) => {
+    const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
+    const { battles, error, loading, fetchMoreBattles, totalPage } = useFetchBattles();
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState("dateDsc");
+    const [limit, setLimit] = useState(MOBILE_LIMIT);
+    const [hasnext, setHasNext] = useState(false);
+    const [pop, setPopUp] = useState(false);
+    const [sort, setSort] = useState("date");
+    const [refresh, setRefresh] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
-    const [selectedArt, setSelectedArt] = useState();
 
     const handleToggle = () => {
         setIsOpen((prev) => !prev);
@@ -39,63 +37,46 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     };
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
+        if (battles && battles.pastBattles) {
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+            if (page > battles.totalPages - 1) {
+                setHasNext(true);
+            } else {
+                setHasNext(false);
+            }
+
+            console.log(battles.totalPages, page)
+            setPreviousBattles(battles.pastBattles);
+        }
+    }, [battles]);
+
+    useEffect(() => {
+        const limit = getLimitBasedOnScreenSize();
+        fetchMoreBattles(campaignId, sort, page, limit);
+    }, [campaignId, page, limit])
 
     const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const sortType = event.target.value
         setSort(sortType);
         setPage(1); // Reset to first page when sorting
         const limit = getLimitBasedOnScreenSize();
-        fetchMoreArts(campaignId, sortType, 1, limit);
+        fetchMoreBattles(campaignId, sortType, 1, limit);
     };
-
-    useEffect(() => {
-        const initializeData = async () => {
-            const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, page, limit);
-        };
-        const timeoutId = setTimeout(initializeData, 1000);
-
-        return () => clearTimeout(timeoutId);
-    }, [sort, page, refresh, uploadSuccess, fetchMoreArts]);
-
-    const [hasnext, setHasNext] = useState(false);
-
-    useEffect(() => {
-        if (arts) {
-            if (page <= totalPage - 1) {
-                setHasNext(true);
-            } else {
-                setHasNext(false);
-            }
-        }
-        setUpcomingArts(arts);
-    }, [arts]);
 
     const handleNext = () => {
         if (page < totalPage) {
             setPage((prevPage) => prevPage + 1);
             const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, page + 1, limit);
+            setLimit(limit);
 
-            const upcomingSection = document.getElementById('upcoming');
-            if (upcomingSection) {
-                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+            const previousSection = document.getElementById('previous');
+            if (previousSection) {
+                const sectionPosition = previousSection.getBoundingClientRect().top + window.scrollY;
                 const isMobile = window.innerWidth < 768 ? true : false;
-                const rem = isMobile ? 1 : 3;
+                const rem = isMobile ? 1 : 2.5;
                 const offset = rem * 16;
                 window.scrollTo({
-                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
                     behavior: 'smooth',
                 });
             }
@@ -106,37 +87,38 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         if (page > 1) {
             setPage((prevPage) => prevPage - 1);
             const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, page - 1, limit);
+            setLimit(limit);
 
-            const upcomingSection = document.getElementById('upcoming');
-            if (upcomingSection) {
-                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+            const previousSection = document.getElementById('previous');
+            if (previousSection) {
+                const sectionPosition = previousSection.getBoundingClientRect().top + window.scrollY;
                 const isMobile = window.innerWidth < 768 ? true : false;
-                const rem = isMobile ? 1 : 3;
+                const rem = isMobile ? 1 : 2.5;
                 const offset = rem * 16;
                 window.scrollTo({
-                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
                     behavior: 'smooth',
                 });
-                // upcomingSection.scrollIntoView({ behavior: 'smooth' });
             }
         }
     };
 
     const handlePageClick = (pageNumber: number) => {
+        console.log(`${pageNumber}, ${page}`);
         if (pageNumber !== page) {
             setPage(pageNumber);
             const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, pageNumber, limit);
+            // fetchMoreBattles(campaignId, sort, page, limit);
+            setLimit(limit);
 
-            const upcomingSection = document.getElementById('upcoming');
-            if (upcomingSection) {
-                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+            const previousSection = document.getElementById('previous');
+            if (previousSection) {
+                const sectionPosition = previousSection.getBoundingClientRect().top + window.scrollY;
                 const isMobile = window.innerWidth < 768 ? true : false;
-                const rem = isMobile ? 1 : 3;
+                const rem = isMobile ? 1 : 2.5;
                 const offset = rem * 16;
                 window.scrollTo({
-                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+                    top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
                     behavior: 'smooth',
                 });
             }
@@ -162,7 +144,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
     return (
         <>
-            <div className="upcoming-hero w-full h-auto bg-black md:pt-4 pt-0 pb-6" id="upcoming">
+            <div className="previous-hero w-full h-auto bg-black md:pt-4 pt-0 pb-6" id="previous">
 
                 {/* Filters top section */}
                 <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:px-[7.8rem] px-3 pb-5 pt-10">
@@ -197,11 +179,11 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                         </div>
                         {isOpen && (
                             <div className="options absolute top-[100%] left-0 w-[150%] pt-4 rounded-3xl bg-black">
-                                <div className="option px-5 py-3 top-voted bg-black rounded-3xl" onClick={() => handleSort({ target: { value: 'voteDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
-                                    <h2 className="spartan-light text-sm text-white">Top Voted Arts</h2>
+                                <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ target: { value: 'voteDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
+                                    <h2 className="spartan-light text-sm text-white">Top Voted Battles</h2>
                                 </div>
                                 <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ target: { value: 'voteAsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
-                                    <h2 className="spartan-light text-sm">Least Voted Arts</h2>
+                                    <h2 className="spartan-light text-sm">Least Voted Battles</h2>
                                 </div>
                                 <div className="option px-5 py-3 latest-first bg-black" onClick={() => handleSort({ target: { value: 'dateDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
                                     <h2 className="spartan-light text-sm">Latest First</h2>
@@ -212,29 +194,14 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                             </div>
                         )}
                     </div>
-                    <div className="filters-right hidden md:block">
-                        <div className="uploadButtonWrapper">
-                            <button className="uploadButton flex gap-2">
-                                <h2 className="spartan-semibold">View all</h2>
-                                <InlineSVG
-                                    src="/icons/right-arrow.svg"
-                                    className="w-3 h-3 spartan-semibold"
-                                />
-                            </button>
-
-                            <div className="uploadButtonBorder" />
-
-                            <div className="uploadButtonOverlay" />
-                        </div>
-                    </div>
                 </div>
 
-                {/* Upcoming arts grid view section */}
+                {/* Previous battles grid view section */}
                 <div className="relative grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
-                    <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} setSelectedArt={setSelectedArt} currentPage={page} totalPage={totalPage} />
+                    <CardHolder battles={previousBattles} campaignId={campaignId} setRefresh={setRefresh} currentPage={page} totalPage={totalPage} />
                 </div>
 
-                {/* Pagination for upcoming arts */}
+                {/* Pagination for previous arts */}
                 <div className="pagination-section relative w-full flex justify-center py-5">
                     <div className="pagination rounded-[7rem]">
                         <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
@@ -266,9 +233,6 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
                         </div>
                     </div>
-                    {page === totalPage && upcomingArts.length < 5 && selectedArt && <div className="pagination-blur absolute w-full h-full z-0">
-
-                    </div>}
                 </div>
             </div>
         </>
