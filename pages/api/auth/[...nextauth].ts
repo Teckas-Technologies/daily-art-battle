@@ -63,7 +63,6 @@ const options: NextAuthOptions = {
             console.log("No expiration found in the ID token.");
           }
     
-          // console.log("Decoded Token Expiration Time:", token.idTokenExpires ? new Date(token.idTokenExpires).toLocaleString() : null);
         }    
 
         // Check if the token has expired

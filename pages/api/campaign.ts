@@ -11,7 +11,7 @@ export const config = {
     bodyParser: {
       sizeLimit: "100mb", // Adjust this to your needs
     },
-    responseLimit: "100mb",
+    responseLimit: "100mb", 
   },
 };
 
@@ -51,9 +51,9 @@ export default async function handler(
         const campaign = await Campaign.findOne({
           campaignUrl: data.campaignUrl,
         });
-        console.log(data);
         if (!campaign) {
           data.email = email;
+          data.creatorId = user.nearAddress;
           await Campaign.create(data);
           if(data.isSpecialRewards){
             await User.updateOne(
@@ -88,11 +88,10 @@ export default async function handler(
             .status(400)
             .json({ success: false, message: "Campaign already exist" });
         }
-      } catch (error) {
-        console.log(error);
+      } catch (error:any) {
         return res
           .status(400)
-          .json({ success: false, message: "Error campaign" });
+          .json({ success: false, message: error.message });
       }
     }
 
@@ -203,11 +202,11 @@ export default async function handler(
           status = "completed";
         }
         return res.status(200).json( { campaign, status });
-      } catch (error) {
+      } catch (error:any) {
         console.log(error);
         return res
           .status(400)
-          .json({ success: false, message: "Error campaign" });
+          .json({ success: false, message: error.message });
       }
     }
 
@@ -230,11 +229,10 @@ export default async function handler(
         );
 
         return res.status(200).json({ success: true, data: updatedCampaign });
-      } catch (error) {
-        console.log(error);
+      } catch (error:any) {
         return res
           .status(400)
-          .json({ success: false, message: "Error updating campaign" });
+          .json({ success: false, message: error.message });
       }
     }
 
@@ -244,11 +242,10 @@ export default async function handler(
         const id = req.query.id;
         const campaign = await Campaign.deleteOne({ _id: id });
         return res.status(200).json({ success: true, data: campaign });
-      } catch (error) {
-        console.log(error);
+      } catch (error:any) {
         return res
           .status(400)
-          .json({ success: false, message: "Error campaign" });
+          .json({ success: false, message: error.message });
       }
     }
   } catch (error: any) {

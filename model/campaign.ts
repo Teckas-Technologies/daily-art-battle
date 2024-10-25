@@ -18,7 +18,7 @@ interface Campaign extends Document {
 }
 
 const campaignSchema = new mongoose.Schema({
-  specialWinnerCount: {type: Number,required: true,},
+  specialWinnerCount: {type: Number,required: false,},
   campaignUrl: {type: String,required: true,},
   campaignName: {type: String,required: true,},
   campaignWelcomeText: {type: String,required: true,},

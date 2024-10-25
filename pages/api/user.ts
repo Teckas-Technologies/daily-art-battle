@@ -65,18 +65,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         await newTransaction.save();
         newUser.gfxCoin += REFFERED_USER;
+        const newTransactions = new Transactions({
+          email: email,
+          gfxCoin: REFFERED_USER,  
+          transactionType: "received"  
+        });
+        await newTransactions.save();
       }
-      const newTransaction = new Transactions({
-        email: email,
-        gfxCoin: REFFERED_USER,  
-        transactionType: "received"  
-      });
-      
-      await newTransaction.save();
+    
       const response = await newUser.save();
       res.status(201).json({ user: response });
-    } catch (error) {
-      res.status(500).json({ error });
+    } catch (error:any) {
+      res.status(500).json({ error:error.message });
     }
   }
   else if (req.method === 'GET') {

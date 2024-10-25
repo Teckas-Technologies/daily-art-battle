@@ -26,8 +26,17 @@ const Home: NextPage = () => {
     }
     console.log(status);
     console.log(session);
-    // console.log(getProfileEditUrl());
+    // console.log(getProfileEditUrl());  
   }, [status]);
+
+
+  useEffect(() => {
+    console.log("asdadad ");
+    console.log(status);
+    console.log(session);
+    // console.log(getProfileEditUrl());  
+  }, [status]);
+
   // Show loading state while session status is being determined
   if (status === "loading") {
     return <div>Loading...</div>;
