@@ -14,6 +14,7 @@ const handleNavigation = () => {
   window.location.href = "/campaign";
 };
 
+
 const page = () => {
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const [showAllParticipants, setShowAllParticipants] = useState<boolean | null>(null);
