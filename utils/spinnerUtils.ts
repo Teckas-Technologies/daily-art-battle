@@ -14,12 +14,12 @@ export default async function spinner(artAcolouredArt:string,artBcolouredArt:str
     const imageB = Buffer.from(imageBResponse.data).toString('base64');
 
     // Send POST request to Flask API to generate GIF
-    const response = await axios.post('https://spinnerapp-fjbschesgycvgqe6.eastus-01.azurewebsites.net/api/generate_gif', {
+    const response = await axios.post('https://spinner-cscbetbtbfepcrdc.canadacentral-01.azurewebsites.net/api/generate_gif', {
       image1: imageA,
       image2: imageB,
       transition_type: 'rotate'
     });
-    const base64Gif = response.data.gif;
+    const base64Gif = response.data;
     return base64Gif;
 
   } catch (error) {

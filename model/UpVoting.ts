@@ -1,12 +1,18 @@
 import mongoose, { Document, Model } from 'mongoose';
 
 interface ArtVoting extends Document {
+  email:string;
   participantId: string;
   artId: string;
   campaignId:string;
+  votesCount:Number;
 }
 
 const votingSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+  },
   participantId: {
     type: String,
     required: true,
@@ -14,6 +20,11 @@ const votingSchema = new mongoose.Schema({
   artId: {
     type: String,   
     required: true,
+  },
+  votesCount: {
+    type: Number,   
+    required: true,
+    default:0
   },
   campaignId: { type: String, required: true },
 }, { timestamps: true });
