@@ -16,6 +16,7 @@ interface Campaign extends Document {
   distributedRewards:boolean;
   specialWinnerCount:number;
   totalRewards : number;
+  noOfWinners:number;
 }
 
 const campaignSchema = new mongoose.Schema({
@@ -33,7 +34,8 @@ const campaignSchema = new mongoose.Schema({
   isSpecialRewards: {type: Boolean,default: false,},
   distributedRewards: {type: Boolean,default: false,},
   specialRewardsArtId: { type: [String], required: false },
-  totalRewards : {type: Number,required: true,default:0}
+  totalRewards : {type: Number,required: true,default:0},
+  noOfWinners: {type: Number,required: true,default:0}
 });
 
 export default mongoose.models.Campaign || model<Campaign>('Campaign', campaignSchema);
