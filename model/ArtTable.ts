@@ -17,6 +17,7 @@ interface ArtTable extends Document {
   tokenId:Number;
   campaignId:string;
   email:string;
+  isHided:Boolean;
 }
 
 const ArtTableSchema = new mongoose.Schema({
@@ -32,6 +33,7 @@ const ArtTableSchema = new mongoose.Schema({
   tokenId: { type: Number, default: -1 },
   isCompleted:{type: Boolean,default:false},
   isStartedBattle:{type: Boolean,default:false},
+  isHided:{type: Boolean,default:false},
   specialWinner: { type: String, required: false },
   battleTime: { type: Date},
   endTime: { type: Date},

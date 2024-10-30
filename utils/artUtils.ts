@@ -30,60 +30,39 @@ export async function scheduleArt(data: any): Promise<any> {
   return newArt.save();
 }
 
-export const findAllArts = async (page: number, limit: number,campaignId:string): Promise<any> => {
+export const findAllArts = async (campaignId:string): Promise<any> => {
   await connectToDatabase();
-  const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
-  const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false ,campaignId:campaignId })
+  const arts = await ArtTable.find({ isStartedBattle: false ,campaignId:campaignId,isHided:false })
   .sort({ raffleTickets: -1,_id: 1 })
-  .skip(skip)
-  .limit(limit)
   .exec();
 
-  return {arts,totalDocuments,totalPages};
+  return {arts};
 };
 
-export const findAllArtsByVoteAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
+export const findAllArtsByVoteAsc = async (campaignId:string): Promise<any> => {
   await connectToDatabase();
-  const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
-  const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
+  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId ,isHided:false})
   .sort({ raffleTickets: 1,_id: 1 })
-  .skip(skip)
-  .limit(limit)
   .exec();
 
-  return {arts,totalDocuments,totalPages};
+  return {arts};
 };
 
-export const findAllArtsByDate = async (page: number, limit: number,campaignId:string): Promise<any> => {
+export const findAllArtsByDate = async (campaignId:string): Promise<any> => {
   await connectToDatabase();
-  const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
-  const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
+  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId ,isHided:false})
   .sort({ uploadedTime: -1,_id: 1 })
-  .skip(skip)
-  .limit(limit)
   .exec();
 
-  return {arts,totalDocuments,totalPages};
+  return {arts};
 };
 
-export const findAllArtsByDateAsc = async (page: number, limit: number,campaignId:string): Promise<any> => {
+export const findAllArtsByDateAsc = async (campaignId:string): Promise<any> => {
   await connectToDatabase();
-  const skip = limit * (page === 1 ? 0 : page - 1); 
-  const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
-  const totalPages = Math.ceil(totalDocuments / limit);
-  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
+  const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId ,isHided:false})
   .sort({ uploadedTime: 1,_id: 1 })
-  .skip(skip)
-  .limit(limit)
   .exec();
-
-  return {arts,totalDocuments,totalPages};
+  return {arts};
 };
 
 export const findAllArtsByCampaign = async (page: number, limit: number,campaignId:string): Promise<any> => {
