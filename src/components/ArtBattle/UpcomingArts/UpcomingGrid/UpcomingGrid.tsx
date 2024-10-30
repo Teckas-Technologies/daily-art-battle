@@ -171,7 +171,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                             <div className="img md:h-11 md:w-11 h-9 w-9">
                                 <img src="/images/logo.png" alt="logo" className="w-full h-full" />
                             </div>
-                            <div className="search-input md:w-[33rem] md:h-[3rem] p-2">
+                            <div className="search-input md:w-[15rem] lg:w-[27rem] xl:w-[33rem] md:h-[3rem] p-2">
                                 <input
                                     type="text"
                                     placeholder="Search for arts, username"
@@ -212,30 +212,15 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                             </div>
                         )}
                     </div>
-                    <div className="filters-right hidden md:block">
-                        <div className="uploadButtonWrapper">
-                            <button className="uploadButton flex gap-2">
-                                <h2 className="spartan-semibold">View all</h2>
-                                <InlineSVG
-                                    src="/icons/right-arrow.svg"
-                                    className="w-3 h-3 spartan-semibold"
-                                />
-                            </button>
-
-                            <div className="uploadButtonBorder" />
-
-                            <div className="uploadButtonOverlay" />
-                        </div>
-                    </div>
                 </div>
 
                 {/* Upcoming arts grid view section */}
-                <div className="relative grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
+                <div className="grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
                     <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} setSelectedArt={setSelectedArt} currentPage={page} totalPage={totalPage} />
                 </div>
 
                 {/* Pagination for upcoming arts */}
-                <div className="pagination-section relative w-full flex justify-center py-5">
+                {/* <div className="pagination-section relative w-full flex justify-center py-5">
                     <div className="pagination rounded-[7rem]">
                         <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
                             <div className={`previous flex items-center gap-1 ${page === 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`} onClick={page !== 1 ? handlePrevious : undefined}>
@@ -269,7 +254,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     {page === totalPage && upcomingArts.length < 5 && selectedArt && <div className="pagination-blur absolute w-full h-full z-0">
 
                     </div>}
-                </div>
+                </div> */}
             </div>
         </>
     )

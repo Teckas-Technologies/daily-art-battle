@@ -67,3 +67,56 @@
     color: #FFFFFFB5;
 
 }
+
+.collect {
+    font-size: 13px;
+}
+
+.like,
+.hide {
+    border: 0.75px solid #7E7E7E
+}
+
+.img-outer {
+    background: #272727;
+}
+
+.enter-text {
+    font-size: 14px;
+}
+
+.enter-input {
+    border: 1px solid #00FF00
+}
+
+.enter-input input {
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+}
+
+.enter-input input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    appearance: none;
+}
+
+.enter-input input[type="number"]::-webkit-outer-spin-button,
+.enter-input input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.collect-btn {
+    background: linear-gradient(90deg, #00FF00 0%, #009900 100%);
+    cursor: pointer;
+}
+
+.collect-btn .collect-text {
+    font-size: 1.5rem;
+}
+
+.coin-count {
+    font-size: 18px;
+}
