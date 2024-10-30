@@ -1,0 +1,615 @@
+* {
+  font-family: "spartan";
+  box-sizing: border-box;
+}
+.common{
+  background: linear-gradient(180deg, #959595 0%, #2F2F2F 100%);
+  padding: 1px;
+  border-radius: 25.5px;
+}
+.campaign-details-container {
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.campaign-details-container h1 {
+  margin-bottom: 60px;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 40.32px;
+  letter-spacing: -6%;
+  text-align: center;
+  color: #ffffff;
+}
+.art-container {
+  position: relative;
+}
+
+.art-heading {
+  text-align: left;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.art-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+}
+.art {
+  border-radius: 25.5px;
+  padding: 18px 28px;
+  background: #000000;
+}
+.art .art-image {
+  width: 230px;
+  height: 230px;
+  border-radius: 10.5px;
+}
+.art .profile-image {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.art h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #00ff00;
+}
+.art p {
+  font-size: 12px;
+  color: #ffffff;
+}
+.heart-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/*<----------Art detsils----------> */
+.art-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  align-items: center;
+}
+.art-details h3 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20.16px;
+  letter-spacing: -6%;
+  color: #ffffff;
+}
+.art-details p {
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 53.76px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  margin-top: 15px;
+}
+/* <-----------Special Winner---------> */
+.special-winner h2 {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 35.84px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  text-align: center;
+  margin-top: 75px;
+  margin-bottom: 30px;
+}
+.winnersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  width: 950px;
+  gap: 40px;
+  margin: 0 auto;
+}
+.winner {
+ background: #000000;
+  border-radius: 25.5px;
+  padding: 18px 28px;
+}
+.winnersGrid .profile-image {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.winner img {
+  width: 230px;
+  height: 230px;
+  border-radius: 10.5px;
+}
+.winner h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #00ff00;
+}
+.winner p {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+/* <---------- Daywise winners ---------> */
+.daywise-winners h2 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 35.84px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  margin-top: 85px;
+  margin-bottom: 30px;
+}
+.daywise-winners-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  width: 950px;
+  gap: 40px;
+  margin: 0 auto;
+}
+
+.daywise-winner {
+ background: #000000;
+  border-radius: 25.5px;
+  padding: 18px 28px;
+}
+.profile-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 35px;
+}
+.daywise-winner .art-img {
+  width: 230px;
+  height: 230px;
+  border-radius: 10.5px;
+}
+.daywise-winner .profile-image {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.daywise-winner h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #00ff00;
+}
+.daywise-winner p {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.daywise-winner h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.daywise-winner .art-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 10.5px;
+}
+
+/* <----------Summary ------------> */
+.summary-container {
+  display: flex;
+  flex-direction: column;
+}
+.summary-container p {
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: 600;
+  margin-top: 25px;
+}
+.distribute-btn-Wrapper {
+  margin: 20px auto;
+  width: 190px;
+  height: 50px;
+  position: relative;
+  padding-left: 0.9px;
+  padding-top: 0.9px;
+  padding-bottom: 0.9px;
+  border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.distribute-btn {
+  width: 100%;
+  height: 100%;
+  padding: 10.41px 20.69px;
+  border-radius: 55.1px;
+  background: radial-gradient(
+    128.13% 128.13% at 50% 50%,
+    #000000 25%,
+    rgba(0, 255, 0, 0) 100%
+  );
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  font-size: 13.9px;
+  font-weight: 600;
+  line-height: 19.25px;
+  letter-spacing: -6%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.distribute-btn-Border {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(
+    99.76deg,
+    #00ff00 8.86%,
+    rgba(0, 153, 0, 0) 91.14%
+  );
+  z-index: 0;
+  padding: 1.27px;
+  box-sizing: border-box;
+}
+
+.distribute-btn-Overlay {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+  z-index: 1;
+}
+.summary-heading {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 35.84px;
+  letter-spacing: -6%;
+  color: #00ff00;
+  margin-top: 75px;
+}
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+.participants {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0px;
+  background: #171717bd;
+  border: 0.75px solid #ffffff33;
+  padding: 20px;
+  border-radius: 20.5px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  width: 300px;
+  height: 580px;
+}
+
+.participants::-webkit-scrollbar {
+  width: 4.5px;
+}
+
+.participants::-webkit-scrollbar-track {
+  background: #171717bd;
+}
+
+.participants::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border-radius: 20.5px;
+}
+
+.participant {
+  margin: 8px 0;
+  padding: 17px 18px;
+  border-radius: 8.5px;
+  border: 0.75px solid #ffffff33;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 15.12px;
+  letter-spacing: -6%;
+  color: #ffffff;
+  text-align: center;
+}
+.participant-number {
+  margin-right: 10px;
+  font-size: 16px;
+}
+.participants h2 {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 26.88px;
+  letter-spacing: -6%;
+  color: #ffffff;
+  margin-bottom: 5px;
+  margin-top: 15px;
+  grid-column: 1 / -1;
+}
+/* <--------------- Summary Arts ----------> */
+.summary-arts h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 26.88px;
+  letter-spacing: -6%;
+  color: #ffffff;
+  margin-top: 60px;
+}
+.arts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+.art-card {
+  border: 0.75px solid #545454;
+  border-radius: 10.5px;
+  position: relative;
+  overflow: hidden;
+  width: 220px;
+  height: 220px;
+}
+
+.art-card img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+}
+
+
+.pagination {
+  padding: 0.8px 0.8px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+}
+
+.page-numbers .active {
+  background: #0c450c;
+  border: 0.75px solid #00ff00;
+  border-radius: 50%;
+}
+
+.pagination-blur {
+  background-color: #000000b2;
+}
+@media (max-width: 768px) {
+  .common{
+    background: linear-gradient(180deg, #959595 0%, #2F2F2F 100%);
+    padding: 1px;
+    border-radius: 15px;
+  }
+  .campaign-details-container {
+    padding: 20px;
+  }
+  .campaign-details-container h1 {
+    font-size: 17px;
+    margin-bottom: 30px;
+  }
+  .art-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .art-heading {
+    font-size: 11.56px;
+  }
+  .art {
+    padding: 10px;
+    border-radius: 15px;
+  }
+  .art .profile-image {
+    width: 25px;
+    height: 25px;
+    margin-right: 3px;
+  }
+  .art .art-image {
+    width: 130px;
+    height: 130px;
+  }
+  .art h4 {
+    font-size: 12px;
+  }
+  .art p {
+    font-size: 8px;
+  }
+  .heart-icon {
+    height: 10px;
+    width: 10px;
+  }
+  .art-details {
+    grid-template-columns: 1fr;
+  }
+  .art-details h3 {
+    font-size: 9px;
+  }
+  .art-details p {
+    font-size: 22px;
+  }
+
+  /* <--------- Special Winner--------> */
+  .winner {
+    padding: 10px;
+  }
+  .special-winner h2 {
+    font-size: 17px;
+    margin-top: 35px;
+    margin-bottom: 15px;
+  }
+  .winnersGrid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    gap: 20px;
+  }
+  .winner {
+    padding: 10px;
+    border-radius: 15px;
+  }
+  .winner img {
+    width: 130px;
+    height: 130px;
+  }
+  .winner .profile-image {
+    width: 25px;
+    height: 25px;
+    margin-right: 3px;
+  }
+  .winner h4 {
+    font-size: 12px;
+  }
+  .winner p {
+    font-size: 8px;
+  }
+
+  /* <-------- Daywise Winner ---------> */
+  .daywise-winners h2 {
+    font-size: 17px;
+    margin-top: 55px;
+    margin-bottom: 15px;
+  }
+  .daywise-winners-grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    gap: 20px;
+  }
+  .daywise-winner h3 {
+    font-size: 9px;
+  }
+  .profile-section {
+    margin-bottom: 19px;
+  }
+  .daywise-winners h4 {
+    font-size: 12px;
+  }
+  .daywise-winner p {
+    font-size: 8px;
+  }
+  .daywise-winner {
+    padding: 10px;
+    border-radius: 15px;
+  }
+  .daywise-winner .art-img {
+    width: 130px;
+    height: 130px;
+  }
+  .daywise-winner .profile-image {
+    width: 25px;
+    height: 25px;
+    margin-right: 3px;
+  }
+  /* <---------- Summary----------> */
+  .summary-heading {
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 15px;
+  }
+  .summary-container p {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+  .summary {
+    flex-direction: column;
+  }
+  .summary-arts h2 {
+    margin-top: 5px;
+  }
+
+  .participants {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    border-radius: 12px;
+    padding: 10px;
+  }
+  .participants h2{
+    font-size: 15px;
+    margin-bottom: 0px;
+  }
+  .participant {
+    padding: 7px 9px;
+    font-size: 6px;
+    width:100px;
+    height: 40px;
+  }
+  .participant-number{
+    font-size: 12px;
+  }
+  .art-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+  }
+  .arts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-items: center;
+  }
+  .art-card {
+    width: 100%;
+    height: 150px;
+  }
+
+  .art-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .distribute-btn-Wrapper {
+    margin: 20px auto;
+    width: 150px;
+    height: 40px;
+    position: relative;
+    padding-left: 0.9px;
+    padding-top: 0.9px;
+    padding-bottom: 0.9px;
+    border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+  }
+  
+  .distribute-btn {
+    width: 100%;
+    height: 100%;
+    padding: 8.41px 13.69px;
+    border-radius: 55.1px;
+    background: radial-gradient(
+      128.13% 128.13% at 50% 50%,
+      #000000 25%,
+      rgba(0, 255, 0, 0) 100%
+    );
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 10.9px;
+    font-weight: 600;
+    line-height: 13.25px;
+    letter-spacing: -6%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

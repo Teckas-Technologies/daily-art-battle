@@ -1,42 +1,140 @@
 //artVote.ts is used for upvoting the arts.
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '../../utils/mongoose';
-import UpVoting from '../../model/UpVoting';
-import { scheduleArt,findAllArts,updateArtById ,findBattles, findAndupdateArtById} from '../../utils/artUtils';
-interface ResponseData {
-  success: boolean;
-  data?: any;
-  message?: string;
-  error?: any;
-}
+import type { NextApiRequest, NextApiResponse } from "next";
+import { connectToDatabase } from "../../utils/mongoose";
+import UpVoting from "../../model/UpVoting";
+import { authenticateUser, verifyToken } from "../../utils/verifyToken";
+import User from "../../model/User";
+import { ART_UPVOTE, MAX_UPVOTE } from "@/config/points";
+import ArtTable from "../../model/ArtTable";
+import Transactions from "../../model/Transactions";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse  
+) {
   await connectToDatabase();
-  //POST method is used for creating upvote for the arts
-  if (req.method === 'POST') {
+  try {
+  const email = await authenticateUser(req);
+  if (req.method == "POST") {
     try {
-      const { participantId, artId ,campaignId} = req.body;
-      const existingVote = await UpVoting.findOne({ participantId, artId ,campaignId});
-      if (existingVote) {
-        return res.status(400).json({ success: false, message: "Participant has already voted for this art." });
-      }else{
-
-      const result = await findAndupdateArtById(artId,participantId,campaignId);
-      res.status(201).json({ success: true, data: result });
+      await connectToDatabase();
+      const { participantId, artId, campaignId } = req.body;
+      // Find the user by email
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, error: "User profile not found." });
       }
+
+      if(user.nearAddress!=participantId){
+        return res
+        .status(404)
+        .json({ success: false, error: "User wallet address not matched" });
+      }
+
+      // Check if the user has enough gfxCoin to vote
+      if (user.gfxCoin < ART_UPVOTE) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Insufficient balance to vote." });
+      }
+
+      // Check if the participant has already voted for this art
+      const existingVote = await UpVoting.findOne({
+        email,
+        participantId,
+        artId,
+        campaignId,
+      });
+
+      if (existingVote) {
+        if (existingVote.votesCount === MAX_UPVOTE) {
+          return res
+            .status(400)
+            .json({
+              success: false,
+              message: "Participant has reached the vote limit for this art.",
+            });
+        }
+        await ArtTable.findByIdAndUpdate(
+          { _id: artId },
+          { $inc: { upVotes: 1 } },
+          { new: true }
+        );
+        await UpVoting.updateOne(
+          { email,participantId, artId, campaignId },
+          { $inc: { votesCount: 1 } }
+        );
+      } else {
+        await UpVoting.create({
+          email,
+          participantId,
+          artId,
+          campaignId,
+          votesCount: 1,
+        });
+        await ArtTable.findByIdAndUpdate(
+          { _id: artId },
+          { $inc: { upVotes: 1 } },
+          { new: true }
+        );
+      }
+      await User.updateOne({ email }, { $inc: { gfxCoin: -ART_UPVOTE } });
+      const newTransaction = new Transactions({
+        email: email,
+        gfxCoin: ART_UPVOTE,  
+        transactionType: "spent"  
+      });
+      
+      await newTransaction.save();
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: existingVote
+            ? "Vote updated successfully."
+            : "Vote created successfully.",
+        });
     } catch (error) {
-      console.error('Error submitting vote:', error);
-      res.status(500).json({ success: false, error: "Failed to submit vote" });
+      console.error("Error submitting vote:", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Failed to submit vote." });
     }
-  } 
+  }
+
   //GET method is used for fetching upvote by id
-   if (req.method === 'GET') {
+  if (req.method === "GET") {
     try {
-      const { participantId,campaignId } = req.query;
-      const existingVote = await UpVoting.find({participantId,campaignId });
+      if (!email) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Email not found in the token." });
+      }
+
+      // Find the user by email
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, error: "User profile not found." });
+      }
+      const { participantId, campaignId } = req.query;
+
+      if(user.nearAddress!=participantId){
+        return res
+        .status(404)
+        .json({ success: false, error: "User wallet address not matched" });
+      }
+
+      const existingVote = await UpVoting.find({ email,participantId, campaignId });
       res.status(200).json({ success: true, data: existingVote });
     } catch (error) {
       res.status(400).json({ success: false, error });
     }
-  } 
-} 
+  }
+} catch (error:any) {
+  return res.status(400).json({ success: false, error: error.message });
+}
+}

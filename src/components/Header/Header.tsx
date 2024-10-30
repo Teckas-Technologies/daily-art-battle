@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 const navs = [
     { id: "leaderboard", label: "Leaderboard", path: "/leaderboard" },
-    { id: "campaigns", label: "Campaigns", path: "/campaigns" },
+    { id: "campaigns", label: "Campaigns", path: "/campaign" },
     { id: "artbattles", label: "Art Battles", path: "/" },
 ];
 

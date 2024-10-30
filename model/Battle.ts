@@ -3,6 +3,8 @@
 import mongoose, { Document, model } from 'mongoose';
 
 interface Battle extends Document {
+  artAartistEmail:string;
+  artBartistEmail:string;
   artAId:string;
   artBId:string;
   artAartistId:string;
@@ -30,9 +32,19 @@ interface Battle extends Document {
   isSpecialWinnerMinted?:Boolean;
   tokenId:string;
   campaignId:string;
+  emoji1:string;
+  emoji2:string;
+  videoSpinnerReference:string;
+  videoSpinner:string;
 }
 
 const BattleSchema = new mongoose.Schema({
+  videoSpinner: { type: String, required: false },
+  videoSpinnerReference: { type: String, required: false },
+  emoji1: { type: String, required: true },
+  emoji2: { type: String, required: true },
+  artAartistEmail: { type: String, required: true },
+  artBartistEmail: { type: String, required: true },
   campaignId: { type: String, required: true },
   artAId: { type: String, required: true },
   artBId: { type: String, required: true },

@@ -7,6 +7,9 @@ import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
 import {  execute,  transfer,TransferArgs  } from "@mintbase-js/sdk"
 import { ART_BATTLE_CONTRACT } from "@/config/constants";
+import User from "../model/User";
+import Transactions from "../model/Transactions";
+import { PARTICIPANT, SPECIAL_WINNER } from "@/config/points";
 
 interface Transfer {
   receiverId: string;
@@ -22,20 +25,17 @@ export const mintNfts = async (): Promise<void> => {
     }); 
     for(const battle of battles){
     console.log(battle);
-    const ress = await spinner(battle.artAcolouredArt,battle.artBcolouredArt);
-    console.log("Uploading arweave")
-    const response = await uploadArweave(ress);
-    battle.grayScale = response.url;
-    battle.grayScaleReference = response.referenceUrl;
     console.log("Fetching completed battles",battle);
     if(battle){
       if(battle.artAvoters.length >0){
       const tokenIds =  await mintNFTsForParticipants(battle.artAvoters.length,battle.artAcolouredArt,battle.artAcolouredArtReference);
       await handleTransfer(tokenIds,battle.artAvoters);
+      await distributeCoinsparticipants(battle.artAvoters)
       }
       if(battle.artBvoters.length>0){
         const tokenIds =  await mintNFTsForParticipants(battle.artBvoters.length,battle.artBcolouredArt,battle.artBcolouredArtReference);
         await handleTransfer(tokenIds,battle.artBvoters);
+        await distributeCoinsparticipants(battle.artBvoters)
       }
       if(battle.isSpecialWinnerMinted==false){
         const voters = mergeVoters(battle.artAvoters,battle.artBvoters);
@@ -64,6 +64,14 @@ export const mintNfts = async (): Promise<void> => {
           tokenIdA = tokenIds1[0];
         }
       }
+      await User.updateOne({ nearAddress:specialWinner }, { $inc: { gfxCoin: -SPECIAL_WINNER } });
+      const newTransaction = new Transactions({
+        nearAddress: specialWinner,
+        gfxCoin: SPECIAL_WINNER,  
+        transactionType: "received"  
+      });
+      await newTransaction.save();
+
         battle.specialWinner = specialWinner;
         battle.isNftMinted = true;
         battle.isSpecialWinnerMinted = true;
@@ -72,6 +80,19 @@ export const mintNfts = async (): Promise<void> => {
        console.log("saved",res);
         }
     }
+  }
+}
+
+const distributeCoinsparticipants = async(voters: string[])=>{
+  for(let i=0;i<voters.length;i++){
+    await User.updateOne({ nearAddress:voters[i] }, { $inc: { gfxCoin: -PARTICIPANT } });
+    const newTransaction = new Transactions({
+      nearAddress: voters[i],
+      gfxCoin: PARTICIPANT,  
+      transactionType: "received"  
+    });
+    
+    await newTransaction.save();
   }
 }
 

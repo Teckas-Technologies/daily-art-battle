@@ -7,7 +7,7 @@ interface ArtTable extends Document {
   colouredArt: string;
   colouredArtReference: string;
   uploadedTime: Date;
-  upVotes : Number;
+  raffleTickets : Number;
   isCompleted:Boolean;
   isStartedBattle:Boolean;
   specialWinner?: string;
@@ -16,20 +16,24 @@ interface ArtTable extends Document {
   endTime?: Date;
   tokenId:Number;
   campaignId:string;
+  email:string;
+  isHided:Boolean;
 }
 
 const ArtTableSchema = new mongoose.Schema({
+  email: { type: String, required: true },
   campaignId: { type: String, required: true },
   artistId: { type: String, required: true },
   arttitle: { type: String, required: true },
   colouredArt: { type: String, required: true },
   colouredArtReference: { type: String, required: true },
   uploadedTime: { type: Date, required: true },
-  upVotes: { type: Number, default: 0 },
+  raffleTickets: { type: Number, default: 0 },
   votes: { type: Number, default: 0 },
   tokenId: { type: Number, default: -1 },
   isCompleted:{type: Boolean,default:false},
   isStartedBattle:{type: Boolean,default:false},
+  isHided:{type: Boolean,default:false},
   specialWinner: { type: String, required: false },
   battleTime: { type: Date},
   endTime: { type: Date},

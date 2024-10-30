@@ -1,6 +1,7 @@
     import { BlobServiceClient, StorageSharedKeyCredential } from "@azure/storage-blob";
     import { v4 as uuidv4 } from 'uuid';
     import { ACCOUNT_KEY,ACCOUNT_NAME,CONTAINER_NAME } from "@/config/constants";
+    import { CAMPAIGN_CREATION_COST } from "@/config/points";
     const uploadMediaToAzure = async (base64Media: string, fileName: string): Promise<string> => {
         const accountName = ACCOUNT_NAME;
         const accountKey = ACCOUNT_KEY;
@@ -47,5 +48,27 @@
         // Return the URL of the uploaded media
         return blockBlobClient.url;
     };
+
+    export async function calculateCampaignCoins(startDate: any, endDate: any) {
+        // Ensure startDate and endDate are Date objects
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+      
+        // Validate if both dates are valid
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+          throw new Error("Invalid date provided");
+        }
+      
+        // Get the difference in time (milliseconds)
+        const diffInMs = end.getTime() - start.getTime();
+    
+        // Convert milliseconds into days and add 1 to include both start and end dates
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
+        // Coins to be spent: 10,000 per day
+        const coinsPerDay = CAMPAIGN_CREATION_COST;
+        const totalCoins = diffInDays * coinsPerDay;
+      
+        return totalCoins;
+      }
 
     export default uploadMediaToAzure;
