@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/mongoose";
 import { authenticateUser } from "../../utils/verifyToken";
-import {fetchTotalNftCount,fetchTotalUpVotes,fetchTotalVotes,fetchUniqueWallets,fetchMostUpVotedArt,fetchMostVotedArt} from "../../utils/campaignAnalyticsUtil";
+import {fetchTotalNftCount,fetchTotalUpVotes,fetchTotalVotes,fetchUniqueWallets,fetchMostUpVotedArt,fetchMostVotedArt, fetchSpecialWinnerArts} from "../../utils/campaignAnalyticsUtil";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
         await connectToDatabase();
@@ -15,7 +15,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             const totalUniqueWallets = uniqueWallets?.length;
             const mostVotedArt = await fetchMostVotedArt(campaignId as String);
             const mostUpVotedArt = await fetchMostUpVotedArt(campaignId as String);
-            return res.status(200).json({totalVote,totalUpVotes,totalUniqueWallets,uniqueWallets,mostVotedArt,mostUpVotedArt});
+            const specialWinnerArts = await fetchSpecialWinnerArts(campaignId as String);
+            return res.status(200).json({totalVote,totalUpVotes,totalUniqueWallets,uniqueWallets,mostVotedArt,mostUpVotedArt,specialWinnerArts});
         }
     } catch (error:any) {
         return res.status(400).json({error:error.message});
