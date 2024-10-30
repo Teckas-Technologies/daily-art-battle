@@ -1,7 +1,7 @@
 // pages/index.tsx
 "use client"
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import ArtUploadForm from '@/components/ArtUpload/ArtUploadForm';
 import Footer from '@/components/Footer/Footer';
 import { GFX_CAMPAIGNID } from '@/config/constants';
@@ -11,13 +11,26 @@ import { Battle } from '@/components/ArtBattle/Battle/Battle';
 import UpcomingHeader from '@/components/ArtBattle/UpcomingArts/UpcomingHeader';
 import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid';
 import { PreviousGrid } from '@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid';
-
+import { signOut, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const { data: session, status } = useSession();
 
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (status === "unauthenticated") {
+        // Trigger login with Azure B2C provider
+        signIn('azure-ad-b2c',{ callbackUrl: '/' });
+    }
+    console.log(status);
+    console.log(session);
+    // console.log(getProfileEditUrl());
+  }, [status]);
+  
   return (
     <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
      <video autoPlay muted loop id="background-video" style={{ 

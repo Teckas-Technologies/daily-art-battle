@@ -1,5 +1,5 @@
 import ArtTable from "../model/ArtTable";
-import campaign from "../model/campaign";
+import Campaign from "../model/campaign";
 import Transactions from "../model/Transactions";
 import User from "../model/User";
 
@@ -8,18 +8,41 @@ export default async function automateReward(){
         const today = new Date();
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(today.getDate() - 7);
-        const campaigns = await campaign.find({isSpecialRewards:true,distributedRewards:false,  endDate: { $gte: sevenDaysAgo, $lte: today }});
+        const campaigns = await Campaign.find({isSpecialRewards:true,distributedRewards:false,  endDate: { $gte: sevenDaysAgo, $lte: today }});
         for(const campaign of campaigns){
-            console.log(campaign);
-            const arts = await ArtTable.find({campaignId:campaign._id}).select('email');
-            const emailList = arts.map(art => art.email);
+            const arts = await ArtTable.find({ campaignId: campaign._id });
             const rewardPerUser = campaign.specialRewards / campaign.specialWinnerCount;
-            if(emailList.length<=campaign.specialWinnerCount){
-                await distribute(emailList,rewardPerUser);
+            console.log(rewardPerUser);
+            if(arts.length<=campaign.specialWinnerCount){
+                await distribute(arts,rewardPerUser);
+                await Campaign.updateOne(
+                    { _id: campaign._id },
+                    {
+                      $addToSet: {
+                        specialRewardsArtId: { $each: arts.map((art:any) => art._id) }
+                      },
+                      $set: { distributedRewards: true }
+                    }
+                  );
             }else{
-                const randomEmails = await selectRandomWinners(emailList,campaign.specialWinnerCount);
-                await distribute(randomEmails,rewardPerUser);
+                const randomArts = await selectRandomWinners(arts,campaign.specialWinnerCount);
+                await distribute(randomArts,rewardPerUser);
+                await Campaign.updateOne(
+                    { _id: campaign._id },
+                    {
+                      $addToSet: {
+                        specialRewardsArtId: { $each: randomArts.map((art:any) => art._id) }
+                      },
+                      $set: { distributedRewards: true }
+                    }
+                  );
             }
+            await Campaign.updateOne(
+                { _id: campaign._id },
+                {
+                  $set: { distributedRewards: true }
+                }
+              );
         }
     }catch(error:any){
          throw Error(error.message);
@@ -45,6 +68,7 @@ const distribute = async(artList: any[],rewardPerUser:any)=>{
 }
 
 const selectRandomWinners = async(users: any[], count: number) => {
+    console.log("uniqueWinners");
     if (users.length === 0 || count <= 0) return []; 
     const uniqueWinners = new Set();
     

@@ -36,7 +36,7 @@ export const findAllArts = async (page: number, limit: number,campaignId:string)
   const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
   const totalPages = Math.ceil(totalDocuments / limit);
   const arts = await ArtTable.find({ isStartedBattle: false ,campaignId:campaignId })
-  .sort({ upVotes: -1,_id: 1 })
+  .sort({ raffleTickets: -1,_id: 1 })
   .skip(skip)
   .limit(limit)
   .exec();
@@ -50,7 +50,7 @@ export const findAllArtsByVoteAsc = async (page: number, limit: number,campaignI
   const totalDocuments = await ArtTable.countDocuments({ isStartedBattle: false, campaignId:campaignId });
   const totalPages = Math.ceil(totalDocuments / limit);
   const arts = await ArtTable.find({ isStartedBattle: false, campaignId:campaignId })
-  .sort({ upVotes: 1,_id: 1 })
+  .sort({ raffleTickets: 1,_id: 1 })
   .skip(skip)
   .limit(limit)
   .exec();
