@@ -85,17 +85,13 @@ export default async function handler(
           if(search=="artsName"){
           const campaignId = req.query.campaignId as string;
            const name = req.query.name as string;
-          const page = parseInt(req.query.page as string) || 1;
-          const limit = parseInt(req.query.limit as string) || 9;
-          const battles = await findcomingArtsByName(page, limit,name,campaignId);
+          const battles = await findcomingArtsByName(name,campaignId);
           return res.status(200).json(battles);
           }
           else if(search=="artistName"){
             const campaignId = req.query.campaignId as string;
             const name = req.query.name as string;
-            const page = parseInt(req.query.page as string) || 1;
-            const limit = parseInt(req.query.limit as string) || 9;
-            const battles = await findcomingArtsByArtist(page, limit,name,campaignId);
+            const battles = await findcomingArtsByArtist(name,campaignId);
             return res.status(200).json(battles);
           }
        
@@ -105,17 +101,13 @@ export default async function handler(
           if(search=="artsName"){
             const campaignId = req.query.campaignId as string;
            const name = req.query.name as string;
-          const page = parseInt(req.query.page as string) || 1;
-          const limit = parseInt(req.query.limit as string) || 9;
-          const battles = await findCompletedArtsByName(page, limit,name,campaignId);
+          const battles = await findCompletedArtsByName(name,campaignId);
           return res.status(200).json(battles);
           }
           else if(search=="artistName"){
             const campaignId = req.query.campaignId as string;
             const name = req.query.name as string;
-            const page = parseInt(req.query.page as string) || 1;
-            const limit = parseInt(req.query.limit as string) || 9;
-            const battles = await findCompletedArtsByArtist(page, limit,name,campaignId);
+            const battles = await findCompletedArtsByArtist(name,campaignId);
             return res.status(200).json(battles);
           }
        

@@ -142,9 +142,8 @@ export const findArtById = async (id:any): Promise<any> => {
 
 
 
-export const findcomingArtsByName = async (page: number, limit: number,name:string,campaignId:string): Promise<any> => {
+export const findcomingArtsByName = async (name:string,campaignId:string): Promise<any> => {
   await connectToDatabase();
-  const skip = limit * (page === 1 ? 0 : page - 1);
   const queryFilter: { isStartedBattle: boolean; isCompleted: boolean; campaignId: string; arttitle?: { $regex: string; $options: string } } = {
     isStartedBattle: false,
     isCompleted: false,
@@ -154,21 +153,14 @@ export const findcomingArtsByName = async (page: number, limit: number,name:stri
     queryFilter.arttitle = { $regex: name, $options: 'i' }; 
   }
 
-  const totalDocuments = await ArtTable.countDocuments(queryFilter);
-  const totalPages = Math.ceil(totalDocuments / limit);
-
   const arts = await ArtTable.find(queryFilter)
     .sort({ uploadedTime: -1, _id: 1 })
-    .skip(skip)
-    .limit(limit)
     .exec();
 
-  return { arts, totalDocuments, totalPages };
+  return { arts };
 };
-export const findcomingArtsByArtist = async (page: number, limit: number,artistNameSubstring:string,campaignId:string): Promise<any> => {
+export const findcomingArtsByArtist = async (artistNameSubstring:string,campaignId:string): Promise<any> => {
   await connectToDatabase();
-  
-  const skip = limit * (page === 1 ? 0 : page - 1); 
   const artists = await User.find({ 
     $or: [
       { firstName: { $regex: `^${artistNameSubstring}`, $options: 'i' } }, 
@@ -187,26 +179,14 @@ export const findcomingArtsByArtist = async (page: number, limit: number,artistN
       email: { $in: artistEmails } 
     })
     .sort({ uploadedTime: -1, _id: 1 })
-    .skip(skip)
-    .limit(limit)
     .exec();
 
-  const totalDocuments = await ArtTable.countDocuments({ 
-      isStartedBattle: false, 
-      isCompleted: false, 
-      campaignId: campaignId,
-      email: { $in: artistEmails } 
-  });
-
-  const totalPages = Math.ceil(totalDocuments / limit);
-
-  return { arts, totalDocuments, totalPages };
+  return { arts};
 };
 
 
-export const findCompletedArtsByName = async (page: number, limit: number, name: string, campaignId: string): Promise<any> => {
+export const findCompletedArtsByName = async ( name: string, campaignId: string): Promise<any> => {
   await connectToDatabase();
-  const skip = limit * (page === 1 ? 0 : page - 1);
   const queryFilter: { isStartedBattle: boolean; isCompleted: boolean; campaignId: string; arttitle?: { $regex: string; $options: string } } = {
     isStartedBattle: true,
     isCompleted: true,
@@ -216,25 +196,18 @@ export const findCompletedArtsByName = async (page: number, limit: number, name:
     queryFilter.arttitle = { $regex: name, $options: 'i' }; 
   }
 
-  const totalDocuments = await ArtTable.countDocuments(queryFilter);
-  const totalPages = Math.ceil(totalDocuments / limit);
-
   const arts = await ArtTable.find(queryFilter)
     .sort({ uploadedTime: -1, _id: 1 })
-    .skip(skip)
-    .limit(limit)
     .exec();
 
-  return { arts, totalDocuments, totalPages };
+  return { arts };
 };
 
 
 
 
-export const findCompletedArtsByArtist = async (page: number, limit: number, artistNameSubstring: string, campaignId: string): Promise<any> => {
+export const findCompletedArtsByArtist = async ( artistNameSubstring: string, campaignId: string): Promise<any> => {
   await connectToDatabase();
-  
-  const skip = limit * (page === 1 ? 0 : page - 1); 
   const artists = await User.find({ 
     $or: [
       { firstName: { $regex: `^${artistNameSubstring}`, $options: 'i' } }, 
@@ -252,18 +225,7 @@ export const findCompletedArtsByArtist = async (page: number, limit: number, art
       email: { $in: artistEmails } 
     })
     .sort({ uploadedTime: -1, _id: 1 })
-    .skip(skip)
-    .limit(limit)
     .exec();
 
-  const totalDocuments = await ArtTable.countDocuments({ 
-      isStartedBattle: true, 
-      isCompleted: true, 
-      campaignId: campaignId,
-      email: { $in: artistEmails } 
-  });
-
-  const totalPages = Math.ceil(totalDocuments / limit);
-
-  return { arts, totalDocuments, totalPages };
+  return { arts};
 };
