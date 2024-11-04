@@ -17,7 +17,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(400).json({error:"rewards is not eligle"});
         }
         if(campaigns.distributedRewards){
-          res.status(400).json({error:"rewards is distributed"});
+          res.status(400).json({error:"rewards is already distributed"});
       }
          const rewardPerUser = campaigns.specialRewards / campaigns.specialWinnerCount;
          await Promise.all(

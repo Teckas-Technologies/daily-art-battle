@@ -153,17 +153,17 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
         (vote) => vote.artId === selectedArtId && vote.participantId === activeAccountId
     );
 
-    useEffect(() => {
-        if (selectedArtId && overlayArt) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
+    // useEffect(() => {
+    //     if (selectedArtId && overlayArt) {
+    //         document.body.style.overflow = 'hidden';
+    //     } else {
+    //         document.body.style.overflow = 'auto';
+    //     }
 
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [selectedArtId, overlayArt]);
+    //     return () => {
+    //         document.body.style.overflow = 'auto';
+    //     };
+    // }, [selectedArtId, overlayArt]);
 
 
     return (
@@ -175,8 +175,8 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                     </div>
                 ))}
             </div>
-            {selectedArtId && overlayArt && <div className="upcoming-popup-holder absolute z-40 w-full h-full flex items-center justify-center px-3">
-                <div className="upcoming-popup lg:w-[43.5rem] lg:h-[33.5rem] md:w-[40.5rem] md:h-[30.5rem] w-full h-[30rem] lg:p-10 md:p-8  p-6 rounded-2xl bg-black">
+            {selectedArtId && overlayArt && <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
+                <div className="upcoming-popup lg:w-[43.5rem] lg:h-[39.5rem] md:w-[40.5rem] md:h-[30.5rem] w-full h-[30rem] lg:p-10 md:p-8  p-6 rounded-2xl bg-black">
                     <div className="close-art w-full flex justify-end">
                         <div className="close-icon w-[1.9rem] h-[1.9rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleClose}>
                             <InlineSVG
@@ -200,8 +200,18 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                     </div>
                     <div className="art-center w-full h-auto flex items-center justify-between lg:py-4 md:py-2 py-1">
                         <div className="art-img w-[50%] flex  gap-7">
-                            <div className="img-holder lg:w-[18rem] lg:h-[18rem] md:w-[16rem] md:h-[16rem] w-[15rem] h-[15rem] rounded-xl">
-                                <img src={overlayArt.colouredArt} alt={overlayArt.arttitle} className='w-full h-full rounded-xl' />
+                            <div className="img-outer p-[0.5rem] rounded-xl bg-red-500">
+                                <div className="img-holder lg:w-[15rem] lg:h-[15rem] md:w-[14rem] md:h-[14rem] w-[13rem] h-[13rem] rounded-xl">
+                                    <img src={overlayArt.colouredArt} alt={overlayArt.arttitle} className='w-full h-full rounded-xl' />
+                                </div>
+                                <div className="art-info w-full flex justify-between items-center py-2 px-4">
+                                    <div className="art-owner md:w-[10rem] w-[5rem]">
+                                        <h2 className='collect lg:text-md md:text-sm text-xs spartan-semibold md:w-[9rem] w-[2.5rem] truncate overflow-hidden whitespace-nowraps'>Total Collects</h2>
+                                    </div>
+                                    <div className="upvotes">
+                                        <h2 className='text-green'>{overlayArt.upVotes as number}</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="art-info w-[50%]">
@@ -209,33 +219,54 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                                 <div className="count flex justify-center items-center md:p-2 p-1 rounded-md md:min-w-[1.5rem] md:min-h-[1.5rem] min-w-[1.2rem] min-h-[1.2rem]" style={{ aspectRatio: '1' }}>
                                     <h2 className='spartan-medium md:text-md text-sm text-center overflow-hidden'>{overlayArt.upVotes as number}</h2>
                                 </div>
-                                <h2 className='spartan-semibold md:text-lg text-xs'>Upvotes</h2>
+                                <h2 className='spartan-semibold md:text-lg text-xs'>Raffle Tickets</h2>
                             </div>
-                            <h2 className='spartan-medium text-lg py-4 text-green'>Description</h2>
-                            <h6 className='saprtan-medium description-text py-1'>{overlayArt.arttitle}</h6>
-                            {/* <h6 className='saprtan-medium description-text py-1'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6> */}
                             <div className="upload-date flex items-center gap-3 py-2">
                                 <div className="date flex items-center gap-2">
                                     <InlineSVG
                                         src='/icons/calender.svg'
                                         color='#00FF00'
-                                        className='fill-current md:w-6 md:h-6 w-3 h-3'
+                                        className='fill-current md:w-5 md:h-5 w-3 h-3'
                                     />
-                                    <h4 className='text-green spartan-medium text-md'>Upload Date</h4>
+                                    <h4 className='text-green spartan-medium text-sm'>Upload Date</h4>
                                 </div>
                                 <div className="name">
-                                    <h2 className='spartan-bold spartan-semibold text-lg'>12 Oct 2024</h2>
+                                    <h2 className='spartan-bold spartan-semibold text-md'>12 Oct 2024</h2>
                                 </div>
                             </div>
+                            <h2 className='spartan-medium text-lg py-2 text-green'>Description</h2>
+                            {/* <h6 className='saprtan-medium description-text py-1'>{overlayArt.arttitle}</h6> */}
+                            <h6 className='saprtan-medium description-text text-md py-1'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6>
+                            <div className="tickets flex items-center gap-2 py-2">
+                                <h5 className='text-white text-lg'>My Tickets</h5>
+                                <span className='text-green text-lg'>N/A</span>
+                            </div>
+
                         </div>
                     </div>
                     <div className="art-bottom w-full h-auto pt-2">
-                        <div className="upvote-btn lg:w-[18rem] md:w-[16rem] w-[15rem] flex justify-center">
-                            <div className="outside w-full rounded-lg p-[0.08rem]">
+                        <div className="upvote-btn w-full flex flex-col items-center gap-5">
+                            <div className="enter-tickets flex items-center gap-4">
+                                <h3 className='text-white spartan-semibold enter-text'>Enter number of tickets to buy</h3>
+                                <div className="enter-input w-[10rem] h-[2.3rem] rounded-[8px]">
+                                    <input type="number" className='w-full h-full rounded-[8px]' />
+                                </div>
+                            </div>
+                            <div className="buy-tickets flex flex-col items-center gap-3">
+                                <h3 className='coin-count spartan-semibold'>50 GFXvs Coins</h3>
+                                <div className="collect-btn flex items-center gap-2 justify-center py-[0.5rem] px-[3rem] rounded-[0.8rem]">
+                                    <InlineSVG
+                                        src='/icons/gfx-point.svg'
+                                        className='fill-current w-8 h-8'
+                                    />
+                                    <h3 className='spartan-semibold text-white collect-text'>Collect</h3>
+                                </div>
+                            </div>
+                            {/* <div className="outside w-full rounded-lg p-[0.08rem]">
                                 <button className={`w-full md:py-3 py-1 rounded-lg ${hasUpvoted ? "cursor-not-allowed" : "cursor-pointer"}`} onClick={() => onVote(overlayArt._id)} disabled={hasUpvoted}>
                                     <h2 className='spartan-bold text-md'>{hasUpvoted ? 'Upvoted' : 'Upvote Art'}</h2>
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

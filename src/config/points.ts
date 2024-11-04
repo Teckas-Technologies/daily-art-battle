@@ -21,3 +21,4 @@ export const YEAR_2023 = 500;
 export const DEFAULT = 10;
 export const SPECIAL_WINNER = 1000;
 export const PARTICIPANT = 10
+export const RAFFLE_TICKET = 10;

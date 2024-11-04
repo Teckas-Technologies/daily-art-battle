@@ -1,5 +1,6 @@
 import ArtTable from "../model/ArtTable"
 import Battle from "../model/Battle";
+import campaign from "../model/campaign";
 import UpVoting from "../model/UpVoting";
 import User from "../model/User";
 import Voting from "../model/Voting";
@@ -30,6 +31,19 @@ export  async function fetchTotalVotes(campaignId:String){
             ? result[0].totalArtAVotes + result[0].totalArtBVotes 
             : 0;
         return totalVotes;
+       } catch (error:any) {
+           throw new Error(error)
+       }
+}
+
+export  async function fetchSpecialWinnerArts(campaignId:String){
+    try {
+        const camp = await campaign.findOne({_id:campaignId});
+        const arts = await ArtTable.find({
+            _id: { $in: camp.specialRewardsArtId }
+        });
+        return arts;
+
        } catch (error:any) {
            throw new Error(error)
        }

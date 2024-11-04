@@ -213,17 +213,10 @@ export default async function handler(
     if (req.method == "PUT") {
       try {
         await connectToDatabase();
-        const id = req.query.id;
-        const existingCampaign = await Campaign.findById(id);
+       
         const data = req.body;
-
-        if (!data.video) {
-          data.video = existingCampaign?.video;
-        }
-
-        // Update the campaign with the new or existing data
         const updatedCampaign = await Campaign.findOneAndUpdate(
-          { _id: id },
+          { _id: data._id },
           { $set: data },
           { new: true }
         );

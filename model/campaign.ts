@@ -19,7 +19,7 @@ interface Campaign extends Document {
 }
 const campaignSchema = new mongoose.Schema({
   specialWinnerCount: {type: Number,required: false,},
-  campaignUrl: {type: String,required: true,},
+  campaignUrl: {type: String,required: true,unique:true},
   campaignName: {type: String,required: true,},
   campaignWelcomeText: {type: String,required: true,},
   startDate: {type: Date,required: true,},
@@ -35,4 +35,5 @@ const campaignSchema = new mongoose.Schema({
   totalRewards : {type: Number,required: true,default:0},
   noOfWinners: {type: Number,required: true,default:0}
 });
+
 export default mongoose.models.Campaign || model<Campaign>('Campaign', campaignSchema);
