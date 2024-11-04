@@ -216,7 +216,7 @@ export default async function handler(
        
         const data = req.body;
         const updatedCampaign = await Campaign.findOneAndUpdate(
-          { _id: data.id },
+          { _id: data._id },
           { $set: data },
           { new: true }
         );
