@@ -1,12 +1,13 @@
 import { connectToDatabase } from "./mongoose";
 import Battle from "../model/Battle";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 
 // Fetch today battle images for farcaster
 export async function fetchTodayBattle(): Promise<any[]> {
   await connectToDatabase();
   
   return Battle.find({
-    campaignId: "gfxvs",
+    campaignId: GFX_CAMPAIGNID,
     isBattleEnded: false,
     isNftMinted: false
   }).exec();

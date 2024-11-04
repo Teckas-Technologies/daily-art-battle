@@ -17,7 +17,7 @@ export async function getNextAvailableDate(campaignId:string): Promise<Date> {
   }
 
   const nextDay = new Date(latestBattle.endTime);
-  nextDay.setDate(nextDay.getDate() + 1);
+  nextDay.setHours(nextDay.getHours() + 12);
   return nextDay;
 }
 
@@ -58,7 +58,7 @@ export const createBattle = async (): Promise<any> => {
         const startDate = await getNextAvailableDate(campaign._id.toString());
         startDate.setHours(0, 0, 0, 0);
         const endDate = new Date(startDate);
-        endDate.setHours(23, 59, 59, 999);
+        endDate.setHours(startDate.getHours() + 12, 59, 59, 999);
         const ress = await spinner(artA.colouredArt,artB.colouredArt);
         console.log("Uploading arweave")
         const response = await uploadArweave(ress.gif);
@@ -120,7 +120,7 @@ export const createGfxvsBattle = async (): Promise<any> => {
     const startDate = await getNextAvailableDate(campaignId);
     startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(startDate);
-    endDate.setHours(23, 59, 59, 999);
+    endDate.setHours(startDate.getHours() + 12, 59, 59, 999);
     const ress = await spinner(artA.colouredArt,artB.colouredArt);
     console.log("Uploading arweave")
     const response = await uploadArweave(ress.gif);

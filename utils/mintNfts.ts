@@ -27,16 +27,16 @@ export const mintNfts = async (): Promise<void> => {
     console.log(battle);
     console.log("Fetching completed battles",battle);
     if(battle){
-      if(battle.artAvoters.length >0){
-      const tokenIds =  await mintNFTsForParticipants(battle.artAvoters.length,battle.artAcolouredArt,battle.artAcolouredArtReference);
-      await handleTransfer(tokenIds,battle.artAvoters);
-      await distributeCoinsparticipants(battle.artAvoters)
-      }
-      if(battle.artBvoters.length>0){
-        const tokenIds =  await mintNFTsForParticipants(battle.artBvoters.length,battle.artBcolouredArt,battle.artBcolouredArtReference);
-        await handleTransfer(tokenIds,battle.artBvoters);
-        await distributeCoinsparticipants(battle.artBvoters)
-      }
+      // if(battle.artAvoters.length >0){
+      // const tokenIds =  await mintNFTsForParticipants(battle.artAvoters.length,battle.artAcolouredArt,battle.artAcolouredArtReference);
+      // await handleTransfer(tokenIds,battle.artAvoters);
+      // await distributeCoinsparticipants(battle.artAvoters)
+      // }
+      // if(battle.artBvoters.length>0){
+      //   const tokenIds =  await mintNFTsForParticipants(battle.artBvoters.length,battle.artBcolouredArt,battle.artBcolouredArtReference);
+      //   await handleTransfer(tokenIds,battle.artBvoters);
+      //   await distributeCoinsparticipants(battle.artBvoters)
+      // }
       if(battle.isSpecialWinnerMinted==false){
         const voters = mergeVoters(battle.artAvoters,battle.artBvoters);
         const specialWinner = selectRandomWinner(voters);
