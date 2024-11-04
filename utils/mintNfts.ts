@@ -10,6 +10,7 @@ import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import User from "../model/User";
 import Transactions from "../model/Transactions";
 import { PARTICIPANT, SPECIAL_WINNER } from "@/config/points";
+import RaffleTicket from "../model/RaffleTicket";
 
 interface Transfer {
   receiverId: string;
@@ -27,18 +28,13 @@ export const mintNfts = async (): Promise<void> => {
     console.log(battle);
     console.log("Fetching completed battles",battle);
     if(battle){
-      if(battle.artAvoters.length >0){
-      const tokenIds =  await mintNFTsForParticipants(battle.artAvoters.length,battle.artAcolouredArt,battle.artAcolouredArtReference);
-      await handleTransfer(tokenIds,battle.artAvoters);
-      await distributeCoinsparticipants(battle.artAvoters)
-      }
-      if(battle.artBvoters.length>0){
-        const tokenIds =  await mintNFTsForParticipants(battle.artBvoters.length,battle.artBcolouredArt,battle.artBcolouredArtReference);
-        await handleTransfer(tokenIds,battle.artBvoters);
-        await distributeCoinsparticipants(battle.artBvoters)
-      }
       if(battle.isSpecialWinnerMinted==false){
-        const voters = mergeVoters(battle.artAvoters,battle.artBvoters);
+        const artAvoters = await RaffleTicket.find({artId:battle.artAId});
+        const artBvoters = await RaffleTicket.find({artId:battle.artBId});
+        const combinedVoters = [...artAvoters, ...artBvoters];
+        const voters = combinedVoters.flatMap((voter) =>
+          Array(voter.raffleCount).fill(voter.participantId)
+      );  
         const specialWinner = selectRandomWinner(voters);
         let tokenIdA;
         console.log("special winner",specialWinner);
@@ -83,97 +79,8 @@ export const mintNfts = async (): Promise<void> => {
   }
 }
 
-const distributeCoinsparticipants = async(voters: string[])=>{
-  for(let i=0;i<voters.length;i++){
-    await User.updateOne({ nearAddress:voters[i] }, { $inc: { gfxCoin: -PARTICIPANT } });
-    const newTransaction = new Transactions({
-      nearAddress: voters[i],
-      gfxCoin: PARTICIPANT,  
-      transactionType: "received"  
-    });
-    
-    await newTransaction.save();
-  }
-}
-
-const mintNFTsForParticipants = async (artVoters: number, grayScale: string, grayScaleReference: string): Promise<string[]> => {
-  const maxBatchSize = 99;
-  const tokenIds: string[] = [];
-
-  for (let i = 0; i < artVoters; i += maxBatchSize) {
-      const batchSize = Math.min(maxBatchSize, artVoters - i);
-      const batchTokenIds = await mintBatch(batchSize, grayScale, grayScaleReference);
-      tokenIds.push(...batchTokenIds);
-  }
-
-  return tokenIds;
-};
-
-
-const mintBatch = async (artVoters:number, grayScale:string,grayScaleReference:string ) => {
-        const  res =   await participationMint(artVoters, grayScale, grayScaleReference, false);
-       let logs = res.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
-       const tokenIds = logs.map((log:any) => {
-        const match = log.match(/EVENT_JSON:(.*)/);
-        if (match && match[1]) {
-          const eventData = JSON.parse(match[1]);
-          if (eventData.data && eventData.data.length > 0) {
-            return eventData.data[0].token_ids;
-          }
-        }
-        return null;
-      });
-      console.log(tokenIds[0]);
-     return tokenIds[0];
-};
-
-
-const handleTransfer = async (tokenIds: string[], voters: string[]): Promise<void> => {
-  if (tokenIds.length !== voters.length) {
-      throw new Error('Arrays must be of the same length');
-  }
-
-  const maxBatchSize = 99;
-
-  for (let i = 0; i < tokenIds.length; i += maxBatchSize) {
-      const tokenChunk = tokenIds.slice(i, i + maxBatchSize);
-      const voterChunk = voters.slice(i, i + maxBatchSize);
-
-      let tokenList: Transfer[] = [];
-      for (let j = 0; j < tokenChunk.length; j++) {
-          let trans: Transfer = { receiverId: voterChunk[j], tokenId: tokenChunk[j] };
-          tokenList.push(trans);
-      }
-
-      console.log(`Transfer batch ${i / maxBatchSize + 1}`);
-
-      const transferArgs: TransferArgs = {
-          contractAddress: ART_BATTLE_CONTRACT,
-          transfers: tokenList,
-      };
-
-      const account = await connectAccount();
-      await execute(
-          { account: account },
-          transfer(transferArgs),
-      );
-  }
-};
-
 const selectRandomWinner = (votes: any[]): any => {
     if (votes.length === 0) return null;
     const randomIndex = Math.floor(Math.random() * votes.length);
     return votes[randomIndex];
-};
-
-const mergeVoters = (votersA: any[],votersB:any[]): any => {
-    const voters:any[] = [];
-    for(const voter of votersA){
-      voters.push(voter);
-    }
-    for(const voter of votersB){
-      voters.push(voter);
-    }
-
-    return voters
 };
