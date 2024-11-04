@@ -1,6 +1,7 @@
 import ArtTable from "../model/ArtTable"
 import Battle from "../model/Battle";
 import campaign from "../model/campaign";
+import RaffleTicket from "../model/RaffleTicket";
 import UpVoting from "../model/UpVoting";
 import User from "../model/User";
 import Voting from "../model/Voting";
@@ -49,30 +50,10 @@ export  async function fetchSpecialWinnerArts(campaignId:String){
        }
 }
 
-
-export  async function fetchTotalUpVotes(campaignId:String){
-    try {
-        const result = await ArtTable.aggregate([
-            { $match: { campaignId: campaignId } }, 
-            {
-                $group: {
-                    _id: null, 
-                    totalUpVotes: { $sum: "$upVotes" }
-                }
-            }
-        ]);
-        return result.length > 0 ? result[0].totalUpVotes : 0;
-       } catch (error:any) {
-           throw new Error(error)
-       }
-}
-
 export  async function fetchUniqueWallets(campaignId:String){
     try {
-        const upvoters = await UpVoting.find({ campaignId }, { email: 1 });
-        const voters = await Voting.find({campaignId}, { email: 1 })
-        const combinedVoters = [...upvoters, ...voters];
-        const uniqueEmails = Array.from(new Set(combinedVoters.map(voter => voter.email)));
+        const voters = await RaffleTicket.find({campaignId:campaignId})
+        const uniqueEmails = Array.from(new Set(voters.map(voter => voter.email)));
         const users = await User.find({ email: { $in: uniqueEmails } }, { firstName: 1, lastName: 1,email:1 });
         return users;
     } catch (error:any) {
@@ -80,23 +61,27 @@ export  async function fetchUniqueWallets(campaignId:String){
     }
 }
 
+export  async function fetchTotalWallets(campaignId:String){
+    try {
+        const voters = await RaffleTicket.find({campaignId:campaignId})
+        const uniqueEmails = Array.from(voters.map(voter => voter.email));
+        const users = await User.find({ email: { $in: uniqueEmails } }, { firstName: 1, lastName: 1,email:1 });
+        return users.length;
+    } catch (error:any) {
+        throw new Error(error)
+    }
+}
+
+
 export async function fetchMostVotedArt(campaignId:String){
     try {
-    const art = await ArtTable.find({ campaignId }).sort({ votes: -1 }).limit(1);
+    const art = await ArtTable.find({ campaignId }).sort({ raffleTickets: -1 }).limit(1);
     return art;
     } catch (error:any) {
         throw new Error(error)
     }
 }
-export async function fetchMostUpVotedArt(campaignId:String){
-    try{
-    const art = await ArtTable.find({ campaignId }).sort({ upVotes: -1 }).limit(1);
-    return art;
-    }
-    catch(error:any){
-        throw new Error(error)
-    }
-}
+
  
 
 

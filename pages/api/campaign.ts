@@ -5,6 +5,7 @@ import User from "../../model/User";
 import JwtPayload, { authenticateUser } from "../../utils/verifyToken";
 import { calculateCampaignCoins } from "../../utils/campaignUtils";
 import Transactions from "../../model/Transactions";
+import ArtTable from "../../model/ArtTable";
 
 export const config = {
   api: {
@@ -189,6 +190,8 @@ export default async function handler(
             message: "Campaign not found",
           });
         }
+
+        const participants = (await ArtTable.find({campaignId:campaign._id})).length;
         
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0); 
@@ -201,7 +204,7 @@ export default async function handler(
         } else if (campaign.endDate < today) {
           status = "completed";
         }
-        return res.status(200).json( { campaign, status });
+        return res.status(200).json( { campaign, status,participants });
       } catch (error:any) {
         console.log(error);
         return res

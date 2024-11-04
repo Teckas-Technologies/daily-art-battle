@@ -57,18 +57,101 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             try{
                 const queryType = req.query.queryType;
                 if(queryType=="raffles"){
-                    const raffles = await RaffleTicket.find({email:email});
-                    const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
-                        const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
-                        
-                        const plainRaffle = raffle.toObject();
-                        return {
-                            ...plainRaffle, 
-                            colouredArt: art ? art.colouredArt : null,
-                            colouredArtReference : art ? art.colouredArt : null,
-                        };
+                    const queryFilter = await req.query.queryFilter;
+                    const page = parseInt(req.query.page as string) || 1;
+                    const limit = parseInt(req.query.limit as string) || 9;
+                    if(queryFilter=="voteAsc"){
+                        const skip = (page - 1) * limit;
+                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({raffleCount:1});
+                        const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
+                            const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
+                            const plainRaffle = raffle.toObject();
+                            return {
+                                ...plainRaffle, 
+                                colouredArt: art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArt : null,
+                            };
                     }));
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    }else if(queryFilter=="voteDsc"){
+                        const skip = (page - 1) * limit;
+                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({raffleCount:-1});
+                        const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
+                            const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
+                            const plainRaffle = raffle.toObject();
+                            return {
+                                ...plainRaffle, 
+                                colouredArt: art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArt : null,
+                            };
+                    }));
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    }else if(queryFilter=="dateAsc"){
+                        const skip = (page - 1) * limit;
+                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({createdAt:1});
+                        const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
+                            const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
+                            const plainRaffle = raffle.toObject();
+                            return {
+                                ...plainRaffle, 
+                                colouredArt: art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArt : null,
+                            };
+                    }));
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    }else if(queryFilter=="dateDsc"){
+                        const skip = (page - 1) * limit;
+                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({createdAt:-1});
+                        const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
+                            const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
+                            const plainRaffle = raffle.toObject();
+                            return {
+                                ...plainRaffle, 
+                                colouredArt: art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArt : null,
+                            };
+                    }));
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    }
+                    
+                }else if(queryType=="search"){
+                    const queryFilter = req.query.queryFilter;
+                    if(queryFilter=="artName"){
+                        const arttitle = req.query.arttitle;
+                        const raffleEntries = await RaffleTicket.aggregate([
+                            {
+                              $lookup: {
+                                from: "arttables",
+                                let: { artIdRef: { $toObjectId: "$artId" } },
+                                pipeline: [
+                                  { $match: { $expr: { $eq: ["$_id", "$$artIdRef"] } } }
+                                ],
+                                as: "artDetails"
+                              }
+                            },
+                            { $unwind: "$artDetails" },
+                            {
+                                $match: {
+                                  "artDetails.arttitle": { $regex: arttitle, $options: "i" },
+                                  raffleCount: { $gt: 0 }
+                                }
+                            },
+                            {
+                              $project: {
+                                email: 1,
+                                participantId: 1,
+                                artId: 1,
+                                campaignId: 1,
+                                raffleCount: 1,
+                                isMintedNft: 1,
+                                "artDetails.arttitle": 1,
+                                "artDetails.colouredArt": 1,      
+                                "artDetails.colouredArtReference": 1
+                              }
+                            }
+                          ]);
+                          res.status(200).json({raffleEntries });
+                    }
                 }
                 const { artId,campaignId} = req.query;
                 const totalRaffle = await RaffleTicket.findOne({email:email,artId:artId,campaignId:campaignId});
@@ -77,7 +160,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(400).json({error:error.message});
             }
     }
-
     }catch(error:any){
         res.status(400).json({error:error.message});
     }

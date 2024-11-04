@@ -41,7 +41,7 @@ export const mintNfts = async (): Promise<void> => {
         if (specialWinner) {
            console.log("Winner")
            let logs1;
-              const res1 =  await serverMint(specialWinner, battle.grayScale, battle.grayScaleReference,true);
+              const res1 =  await serverMint(specialWinner,battle.grayScale, battle.grayScaleReference,true);
               logs1 =  res1.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
          
            if(logs1){
