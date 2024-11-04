@@ -6,34 +6,42 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
 
-export async function getNextAvailableDate(campaignId:string): Promise<Date> {
+export async function getNextAvailableDate(campaignId: string): Promise<Date> {
   await connectToDatabase();
-  const latestBattle = await Battle.findOne({campaignId}).sort({ endTime: -1 });
+  const latestBattle = await Battle.findOne({ campaignId }).sort({ endTime: -1 });
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0); 
 
-  if (!latestBattle || latestBattle.endTime < today) {
+  if (!latestBattle || latestBattle.endTime < new Date(today.getTime() + 12 * 60 * 60 * 1000)) {
+    today.setHours(0, 0, 0, 0); 
     return today;
   }
 
-  const nextDay = new Date(latestBattle.endTime);
-  nextDay.setHours(nextDay.getHours() + 12);
-  return nextDay;
+  const nextSlot = new Date(latestBattle.endTime);
+  if (nextSlot.getHours() === 0) {
+    nextSlot.setHours(12, 0, 0, 0);
+  } else {
+    nextSlot.setDate(nextSlot.getDate() + 1);
+    nextSlot.setHours(0, 0, 0, 0);
+  }
+  
+  return nextSlot;
 }
+
 
 export const findTopTwoArts = async (campaignId:string): Promise<any[]> => {
   await connectToDatabase();
   console.log(campaignId);
   const art = await ArtTable.aggregate([
     { $match: { isCompleted: false ,campaignId:campaignId} },  
-    { $sort: { upVotes: -1 } }, 
+    { $sort: { raffleTickets: -1 } }, 
     {
       $group: {
         _id: "$artistId",
         topArt: { $first: "$$ROOT" }
       }
     },
-    { $sort: { "topArt.upVotes": -1 } },
+    { $sort: { "topArt.raffleTickets": -1 } },
     { $limit: 2 },
     { $replaceRoot: { newRoot: "$topArt" } }
   ]).exec();
@@ -56,9 +64,8 @@ export const createBattle = async (): Promise<any> => {
 
       if (battles.length === 0 && artA && artB) {
         const startDate = await getNextAvailableDate(campaign._id.toString());
-        startDate.setHours(0, 0, 0, 0);
         const endDate = new Date(startDate);
-        endDate.setHours(startDate.getHours() + 12, 59, 59, 999);
+        endDate.setHours(startDate.getHours() + 12, 0, 0, 0);
         const ress = await spinner(artA.colouredArt,artB.colouredArt);
         console.log("Uploading arweave")
         const response = await uploadArweave(ress.gif);
@@ -118,9 +125,8 @@ export const createGfxvsBattle = async (): Promise<any> => {
   const [artA, artB] = await findTopTwoArts(campaignId);
   if(battles.length<=0 && (artA && artB)){
     const startDate = await getNextAvailableDate(campaignId);
-    startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(startDate);
-    endDate.setHours(startDate.getHours() + 12, 59, 59, 999);
+    endDate.setHours(startDate.getHours() + 12, 0, 0, 0);
     const ress = await spinner(artA.colouredArt,artB.colouredArt);
     console.log("Uploading arweave")
     const response = await uploadArweave(ress.gif);
