@@ -43,7 +43,6 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     setIsPubliclyVisible(event.target.checked);
     console.log("Toggle Value:", event.target.checked);
   };
-
   const campaignData = {
     campaignUrl,
     campaignName,

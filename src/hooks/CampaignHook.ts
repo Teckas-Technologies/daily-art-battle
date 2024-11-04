@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 export interface CampaignPageData {
   _id: string;
-  campaignUrl: string;
+  campaignUrl?: string;
   campaignName: string;
   campaignWelcomeText: string;
   startDate: string;
   endDate: string;
   publiclyVisible: boolean;
-  creatorId: string;
+  creatorId?: string;
   specialRewards: number;
-  isSpecialRewards: boolean;
-  totalRewards: number;
-  noOfWinners: number;
-  specialWinnerCount: number;
+  isSpecialRewards?: boolean;
+  totalRewards?: number;
+  noOfWinners?: number;
+  specialWinnerCount?: number;
 }
 interface Campaign {
-  campaign: Campaign[]; 
+  campaign: Campaign[];
   totalDocuments: number;
   totalPages: number;
 }
@@ -32,7 +32,6 @@ const useCampaigns = (idToken: string) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [analyticsData, setAnalyticsData] = useState<any>(null);
-  const [connectionError, setConnectionError] = useState(false);
   const fetchCampaigns = async (
     queryType: "current" | "upcoming" | "completed" | "myCampaigns",
     page: number = currentPage,
@@ -219,7 +218,7 @@ const useCampaigns = (idToken: string) => {
   }) => {
     setLoading(true);
     setError(null);
-    setConnectionError(false);
+
     try {
       const response = await fetch("/api/campaign", {
         method: "POST",
@@ -231,12 +230,7 @@ const useCampaigns = (idToken: string) => {
       });
 
       if (!response.ok) {
-        if (response.status === 503) {
-          setConnectionError(true);
-          throw new Error("Connection Error. Please try again.");
-        } else {
-          throw new Error("Failed to create campaign");
-        }
+        throw new Error("Failed to create campaign");
       }
 
       const data = await response.json();
@@ -248,11 +242,50 @@ const useCampaigns = (idToken: string) => {
       } else {
         setError("An unknown error occurred");
       }
-      return null; 
+      return null;
     } finally {
       setLoading(false);
     }
   };
+  const updateCampaign = async (updatedCampaignData: CampaignPageData) => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const response = await fetch("/api/campaign", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify(updatedCampaignData),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // Attempt to extract the error response
+        console.error("Error Response:", errorData); // Log the error response for debugging
+        throw new Error("Connection Error. Please try again.");
+      }
+  
+      const data = await response.json();
+      console.log("Campaign updated successfully:", data);
+      setCampaignData((prevCampaigns: CampaignPageData[]) =>
+        prevCampaigns.map((campaign) =>
+          campaign._id === updatedCampaignData._id ? data : campaign
+        )
+      );
+  
+      return data;
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   return {
     campaign,
@@ -273,7 +306,7 @@ const useCampaigns = (idToken: string) => {
     analyticsData,
     fetchCampaignFromArtAPI,
     art,
-    connectionError
+    updateCampaign,
   };
 };
 

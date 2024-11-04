@@ -78,7 +78,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign }) => {
         <div className="CampaignButtonOverlay" />
       </div>
       {showEditModal && (
-        <EditCampaignPopup onClose={() => setShowEditModal(false)} />
+        <EditCampaignPopup onClose={() => setShowEditModal(false)} campaign={campaign}/>
       )}
       {showUploadModal && (
         <ArtUploadForm
