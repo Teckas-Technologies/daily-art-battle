@@ -39,8 +39,9 @@
 .art-section {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 80px;
+  margin-left: 90px;
 }
 .art {
   border-radius: 25.5px;
@@ -348,7 +349,7 @@
   grid-column: 1 / -1;
 }
 /* <--------------- Summary Arts ----------> */
-.summary-arts h2 {
+.summary-arts h3 {
   font-size: 20px;
   font-weight: 600;
   line-height: 26.88px;
@@ -378,24 +379,7 @@
 }
 
 
-.pagination {
-  padding: 0.8px 0.8px;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
-}
 
-.page-numbers .active {
-  background: #0c450c;
-  border: 0.75px solid #00ff00;
-  border-radius: 50%;
-}
-
-.pagination-blur {
-  background-color: #000000b2;
-}
 @media (max-width: 768px) {
   .common{
     background: linear-gradient(180deg, #959595 0%, #2F2F2F 100%);
@@ -412,6 +396,7 @@
   .art-section {
     flex-direction: column;
     gap: 40px;
+    margin-left: 0px;
   }
   .art-heading {
     font-size: 11.56px;
@@ -532,7 +517,7 @@
   .summary {
     flex-direction: column;
   }
-  .summary-arts h2 {
+  .summary-arts h3 {
     margin-top: 5px;
   }
 

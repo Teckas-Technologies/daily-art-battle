@@ -1,5 +1,4 @@
 import mongoose, { Document, model } from 'mongoose';
-
 interface Campaign extends Document {
   campaignUrl: string;
   campaignName: string;
@@ -18,7 +17,6 @@ interface Campaign extends Document {
   totalRewards : number;
   noOfWinners:number;
 }
-
 const campaignSchema = new mongoose.Schema({
   specialWinnerCount: {type: Number,required: false,},
   campaignUrl: {type: String,required: true,unique:true},
