@@ -14,7 +14,6 @@ import { PreviousGrid } from "@/components/ArtBattle/PreviousArts/PreviousGrid/P
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import Footer from "@/components/Footer/Footer";
 import CampaignTime from "@/components/Campaign page/Campaign Timing/CampaignTime";
-import EditCampaignPopup from "@/components/Campaign page/Edit Campaign Details/EditCampaign";
 import FewParticipantsPopup from "@/components/Campaign page/DistributeReward Popup/FewParticipants";
 import AllParticipantpopup from "@/components/Campaign page/DistributeReward Popup/AllParticipants";
 import DistributeRewardPopup from "@/components/Campaign page/DistributeReward Popup/DistributePopup";
@@ -137,7 +136,6 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           </div>
           <CampaignHeader campaign={campaign} status={campaignStatus} />
           <CampaignTime
-    
             campaign={campaign}
           />
           <PreviousGrid

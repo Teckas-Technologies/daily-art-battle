@@ -88,7 +88,7 @@ const Home: NextPage = () => {
       </video>
 
       <Header />
-      <Battle
+      {/* <Battle
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         fontColor={''}
@@ -119,7 +119,7 @@ const Home: NextPage = () => {
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
-      />
+      /> */}
       <Footer />
     </main>
   );
