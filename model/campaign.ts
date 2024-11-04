@@ -1,5 +1,4 @@
 import mongoose, { Document, model } from 'mongoose';
-
 interface Campaign extends Document {
   campaignUrl: string;
   campaignName: string;
@@ -15,8 +14,9 @@ interface Campaign extends Document {
   specialRewardsArtId?:string[];
   distributedRewards:boolean;
   specialWinnerCount:number;
+  totalRewards : number;
+  noOfWinners:number;
 }
-
 const campaignSchema = new mongoose.Schema({
   specialWinnerCount: {type: Number,required: false,},
   campaignUrl: {type: String,required: true,},
@@ -27,11 +27,12 @@ const campaignSchema = new mongoose.Schema({
   creatorId: {type: String,required: true,},
   createdAt: { type: Date, default: Date.now,},
   email: {type: String,required: true,},
-  specialRewards: {type: Number,required: false,default:false},
+  specialRewards: {type: Number,required: false,default:0},
   publiclyVisible: {type: Boolean,default: true,},
   isSpecialRewards: {type: Boolean,default: false,},
   distributedRewards: {type: Boolean,default: false,},
   specialRewardsArtId: { type: [String], required: false },
+  totalRewards : {type: Number,required: true,default:0},
+  noOfWinners: {type: Number,required: true,default:0}
 });
-
 export default mongoose.models.Campaign || model<Campaign>('Campaign', campaignSchema);

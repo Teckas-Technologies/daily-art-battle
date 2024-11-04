@@ -1,174 +1,196 @@
 "use client";
-import { NearWalletConnector } from "@/components/NearWalletConnector";
-import { useFetchCampaignByTitle, CampaignData } from "@/hooks/campaignHooks";
 import { useEffect, useState } from "react";
-import ArtBattle from "@/components/ArtBattle";
-import UpcomingBattlesTable from "@/components/UpcomingBattlesTable";
-import PreviousArtTable from "@/components/PreviousBattlesTable";
-import Footer from "@/components/Footer";
-import ArtworkUploadForm from "@/components/ArtworkUploadForm";
-import { Navbar } from "./Navbar";
+import { CampaignData } from "@/hooks/campaignHooks";
+import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
+import CampaignDetails from "@/components/Campaign page/Campaign Details/CampaignDetails";
+import { Header } from "@/components/Header/Header";
+import InlineSVG from "react-inlinesvg";
+import CampaignHeader from "@/components/Campaign page/Campaign Header/CampaignHeader";
 
+import CurrentCampaigUploadArt from "@/components/Campaign page/Current Campaign/CurrentCampaign";
+import { UpcomingGrid } from "@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid";
+import PreviousArtHeader from "@/components/ArtBattle/PreviousArts/PreviousArtHeader";
+import { PreviousGrid } from "@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid";
+import { GFX_CAMPAIGNID } from "@/config/constants";
+import Footer from "@/components/Footer/Footer";
+import CampaignTime from "@/components/Campaign page/Campaign Timing/CampaignTime";
+import EditCampaignPopup from "@/components/Campaign page/Edit Campaign Details/EditCampaign";
+import FewParticipantsPopup from "@/components/Campaign page/DistributeReward Popup/FewParticipants";
+import AllParticipantpopup from "@/components/Campaign page/DistributeReward Popup/AllParticipants";
+import DistributeRewardPopup from "@/components/Campaign page/DistributeReward Popup/DistributePopup";
+import { Battle } from "@/components/ArtBattle/Battle/Battle";
+import { useSession, signIn } from "next-auth/react";
+import Loader from "@/components/ArtBattle/Loader/Loader";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
-  const [campaign, setCampaign] = useState<CampaignData>();
-  const [mediaUrl, setMediaUrl] = useState<string>("");
-  const [mediaType, setMediaType] = useState<string>("");
-  const [error, setError] = useState(false);
-  const { fetchCampaignByTitle } = useFetchCampaignByTitle();
-  const [showCampaign, setShowCampaign] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setError(true)
-      const data = await fetchCampaignByTitle(params.campaign);
-      if(data){
-        setIsLoading(false);
-      setError(false)
-      setCampaign(data);
-      setMediaUrl(data.video)
-      
-      if (data.video) {
-        
-        // Set media type based on the file extension
-        const response = await fetch(data.video);
-        const blob = await response.blob();
-        const mimeType = await determineMimeType(blob);
-        const type = mimeType.split("/");
-        setMediaType(type[0]);
-      }
-    }else {
-      setIsLoading(false);
-      setShowCampaign(true);
-    }
-    };
-    fetchData();
-    console.log(mediaUrl)
-  }, [params.campaign]);
-
-  const determineMimeType = async (blob: Blob): Promise<string> => {
-    const reader = new FileReader();
-    
-    return new Promise((resolve, reject) => {
-        reader.onload = (event) => {
-            const arrayBuffer = event.target?.result as ArrayBuffer;
-            const bytes = new Uint8Array(arrayBuffer);
-            const signature = bytes.slice(0, 4).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
-            
-            // Compare with known signatures
-            if (signature.startsWith('ffd8')) return resolve('image/jpeg');
-            if (signature.startsWith('8950')) return resolve('image/png');
-            if (signature.startsWith('4749')) return resolve('image/gif');
-            if (signature.startsWith('0000')) return resolve('video/mp4');
-            
-            // Fallback or unknown type
-            resolve('application/octet-stream');
-        };
-        
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(blob.slice(0, 4)); // Read the first 4 bytes
-    });
-};
-
-
+  const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+  const [showDistributeModal, setShowDistributeModal] = useState(false);
+  const [showAllParticipants, setShowAllParticipants] = useState<
+    boolean | null
+  >(null);
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      signIn("azure-ad-b2c", { callbackUrl: "/" });
+    }
 
-  if (isLoading) {
-    return <div className="text-black">Loading...</div>;
-  }
+    console.log("status", status);
+    console.log("session", session);
+  }, [status, session]);
+  const idToken = session?.idToken || "";
 
-  if (showCampaign) {
-    return <div className="text-black">No campaign found</div>;
-  }
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error } = useCampaigns(idToken);
 
+  useEffect(() => {
+    fetchCampaignByTitle(params.campaign);
+  }, [params.campaign, idToken]);
+
+  if (loading)
+    return (
+      <div style={{ background: "#00000" }}>
+        <Loader />{" "}
+      </div>
+    );
+  if (error) return <div>No campaign found</div>;
+  const handleNavigation = () => {
+    window.location.href = "/campaign";
+  };
+
+  const toggleDistributeModal = () => {
+    setShowDistributeModal(!showDistributeModal);
+  };
+
+  const handleDistribute = (hasManyParticipants: boolean) => {
+    setShowDistributeModal(false);
+    setShowAllParticipants(hasManyParticipants);
+  };
   return (
-    <main
-      className="flex flex-col justify-center"
-      style={{
-        width: "100vw",
-        backgroundPosition: "top",
-        backgroundSize: "cover",
-        overflowX: "hidden",
-        overflowY: "auto"
-      }}
-    >
-      {mediaType === "video" && (
-       <video autoPlay muted loop id="background-video" style={{ 
-        position: 'fixed', 
-        right: 0, 
-        bottom: 0, 
-        objectFit: 'cover', 
-        minWidth: '100%', 
-        minHeight: '100%', 
-        zIndex: -1,
-        filter: 'blur(5px) brightness(50%)'
-    }}>
-        <source src={campaign?.video as string} type="video/mp4" />
-        Your browser does not support the video tag.
-    </video>
-       )} 
-      {mediaType === "image" && (
-        <img
-          src={campaign?.video as string}
-          alt="Campaign background"
-          style={{
-            position: "fixed",
-            right: 0,
-            bottom: 0,
-            objectFit: "cover",
-            minWidth: "100%",
-            minHeight: "100%",
-            zIndex: -1,
-            filter: "blur(5px) brightness(50%)"
-          }}
-        />
+    <div style={{ backgroundColor: "black" }}>
+      {campaignStatus === "current" && (
+        <div style={{ backgroundColor: "#000000" }}>
+          <Header />
+          <div className="camapign-path-container">
+            <button className="camapign-path-button">GFXvs</button>
+            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+            <h3
+              style={{
+                color: "#ffffff",
+
+                cursor: "pointer",
+              }}
+              onClick={handleNavigation}
+            >
+              Campaigns
+            </h3>
+            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+            <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
+              Current Campaign
+            </h3>
+          </div>
+          <CampaignHeader campaign={campaign} status={status} />
+          <Battle
+            campaignId={campaign?._id as string}
+            toggleUploadModal={toggleUploadModal}
+            fontColor={""}
+            welcomeText={""}
+            themeTitle={""}
+          />
+          <CurrentCampaigUploadArt />
+          <UpcomingGrid
+            fontColor={""}
+            campaignId={campaign?._id as string}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          <PreviousArtHeader />
+          <PreviousGrid
+            fontColor={""}
+            campaignId={campaign?._id as string}
+            toggleUploadModal={toggleUploadModal}
+          />
+
+          <Footer />
+        </div>
       )}
-      {mediaType===""&&(
-              <video autoPlay muted loop id="background-video" style={{ 
-                position: 'fixed', 
-                right: 0, 
-                bottom: 0, 
-                objectFit: 'cover', 
-                minWidth: '100%', 
-                minHeight: '100%', 
-                zIndex: -1,
-                filter: 'blur(5px) brightness(50%)'
-            }}>
-                <source src="images/back.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+      {campaignStatus === "upcoming" && (
+        <div style={{ backgroundColor: "#000000" }}>
+          <Header />
+          <div className="camapign-path-container">
+            <button className="camapign-path-button">GFXvs</button>
+            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+            <h3
+              style={{
+                color: "#ffffff",
+
+                cursor: "pointer",
+              }}
+              onClick={handleNavigation}
+            >
+              Campaigns
+            </h3>
+            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+            <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
+              Upcoming Campaign
+            </h3>
+          </div>
+          <CampaignHeader campaign={campaign} status={campaignStatus} />
+          <CampaignTime
+    
+            campaign={campaign}
+          />
+          <PreviousGrid
+            fontColor={""}
+            campaignId={campaign?._id as string}
+            toggleUploadModal={toggleUploadModal}
+          />
+
+          <Footer />
+        </div>
       )}
-      <Navbar logo={campaign?.logo as string}/>
-      {showUploadModal && campaign?._id && (
-        <ArtworkUploadForm
-          campaignId={campaign?._id}
-          onClose={() => setShowUploadModal(false)}
-          onSuccessUpload={() => setUploadSuccess(true)}
-        />
+      {campaignStatus === "completed" && (
+        <div
+          style={{ width: "100%", minHeight: "100vh", background: "#000000" }}
+        >
+          <Header />
+          <div className="camapign-path-container">
+            <button className="camapign-path-button">GFXvs</button>
+            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+            <h3
+              style={{ color: "#ffffff", cursor: "pointer" }}
+              onClick={handleNavigation}
+            >
+              Campaigns
+            </h3>
+            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+            <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
+              Completed Campaign
+            </h3>
+          </div>
+          <CampaignHeader campaign={campaign} status={status} />
+          <CampaignDetails toggleDistributeModal={toggleDistributeModal} campaignId={campaign?._id as string}/>
+
+          {showDistributeModal && (
+            <DistributeRewardPopup
+              onDistribute={() => handleDistribute(true)}
+              onClose={() => setShowDistributeModal(false)}
+            />
+          )}
+
+          {showAllParticipants === true && (
+            <AllParticipantpopup onClose={() => setShowAllParticipants(null)} />
+          )}
+          {showAllParticipants === false && (
+            <FewParticipantsPopup
+              onClose={() => setShowAllParticipants(null)}
+            />
+          )}
+
+          <Footer />
+        </div>
       )}
-      <ArtBattle
-        campaignId={campaign?._id as string}
-        fontColor={campaign?.color as string}
-        welcomeText={campaign?.campaignWelcomeText as string}
-        themeTitle={campaign?.campaignTheme as string}
-        toggleUploadModal={toggleUploadModal}
-      />
-      <UpcomingBattlesTable
-        campaignId={campaign?._id as string}
-        fontColor={campaign?.color as string}
-        toggleUploadModal={toggleUploadModal}
-        uploadSuccess={uploadSuccess}
-      />
-      <PreviousArtTable
-        campaignId={campaign?._id as string}
-        fontColor={campaign?.color as string}
-        toggleUploadModal={toggleUploadModal}
-      />
-      <Footer />
-    </main>
+    </div>
   );
 };
 
