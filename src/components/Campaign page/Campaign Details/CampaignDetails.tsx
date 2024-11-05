@@ -1,10 +1,38 @@
 "use client";
 import InlineSVG from "react-inlinesvg";
 import "./CampaignDetails.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
+import useCampaigns from "@/hooks/CampaignHook";
+import { useSession, signIn } from "next-auth/react";
+
 interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
+  campaignId: string;
+}
+
+interface ArtData {
+  tokenId: number;
+  artistId: string;
+  arttitle: string;
+  colouredArt: string;
+  grayScale: string;
+  upVotes: number;
+  email: string;
+}
+
+interface CampaignAnalytics {
+  totalVote: number;
+  totalUpVotes: number;
+  totalUniqueWallets: number;
+  uniqueWallets: number[];
+  mostVotedArt: ArtData[];
+  mostUpVotedArt: ArtData[];
+}
+interface ArtsResponse {
+  arts: ArtData[];
+  totalDocuments: number;
+  totalPages: number;
 }
 const participantsStats = {
   totalParticipants: 24,
@@ -30,113 +58,74 @@ const daywinners = [
   { name: "Satish", image: "/images/uploadart2.png", upvotes: 9, day: 6 },
 ];
 
-const participants = Array(30).fill("Raghuvaran Karthik");
-const arts = [
-  "/images/uploadart2.png",
-  "/images/uploadart2.png",
-  "/images/uploadart2.png",
-  "/images/uploadart2.png",
-  "/images/uploadart2.png",
-  "/images/uploadart2.png",
-];
 const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   toggleDistributeModal,
+  campaignId,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-
-  const MOBILE_LIMIT = 4;
-  const DESKTOP_LIMIT = 6;
-  const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
-  const { battles, error, loading, fetchMoreBattles, totalPage } =
-    useFetchBattles();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(MOBILE_LIMIT);
-  const handlePageClick = (pageNumber: number) => {
-    console.log(`${pageNumber}, ${page}`);
-    if (pageNumber !== page) {
-      setPage(pageNumber);
-      const limit = getLimitBasedOnScreenSize();
-      // fetchMoreBattles(campaignId, sort, page, limit);
-      setLimit(limit);
-
-      const previousSection = document.getElementById("previous");
-      if (previousSection) {
-        const sectionPosition =
-          previousSection.getBoundingClientRect().top + window.scrollY;
-        const isMobile = window.innerWidth < 768 ? true : false;
-        const rem = isMobile ? 1 : 2.5;
-        const offset = rem * 16;
-        window.scrollTo({
-          top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
-          behavior: "smooth",
-        });
-      }
+  const [limit, setLimit] = useState(6);
+  const [campaignAnalytics, setCampaignAnalytics] =
+    useState<CampaignAnalytics | null>(null);
+  const [artData, setArtData] = useState<ArtsResponse | null>(null);
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      signIn("azure-ad-b2c", { callbackUrl: "/" });
     }
-  };
-  const renderPageNumbers = () => {
-    const pagesToShow = 5;
-    let startPage = Math.max(1, page - 2); // Center the current page
-    let endPage = Math.min(totalPage, page + 2); // Show up to 5 pages
+    console.log("status", status);
+    console.log("session", session);
+  }, [status, session]);
+  const idToken = session?.idToken || "";
+  const { fetchCampaignAnalytics, fetchCampaignFromArtAPI, totalPages, art } =
+    useCampaigns(idToken);
+  useEffect(() => {
+    console.log("Fetching data for page:", page);
+    fetchCampaignFromArtAPI(campaignId, page, limit);
+  }, [campaignId, page, limit]);
 
-    if (endPage - startPage + 1 < pagesToShow) {
-      // Adjust start and end if less than 5 pages are displayed
-      if (startPage === 1) {
-        endPage = Math.min(totalPage, pagesToShow);
-      } else if (endPage === totalPage) {
-        startPage = Math.max(1, totalPage - pagesToShow + 1);
-      }
-    }
-
-    return Array.from(
-      { length: endPage - startPage + 1 },
-      (_, i) => startPage + i
-    );
+  const handlePageClick = (newPage: number) => {
+    console.log("Page clicked:", newPage);
+    setPage(newPage);
   };
+
   const handlePrevious = () => {
     if (page > 1) {
-      setPage((prevPage) => prevPage - 1);
-      const limit = getLimitBasedOnScreenSize();
-      setLimit(limit);
-
-      const previousSection = document.getElementById("previous");
-      if (previousSection) {
-        const sectionPosition =
-          previousSection.getBoundingClientRect().top + window.scrollY;
-        const isMobile = window.innerWidth < 768 ? true : false;
-        const rem = isMobile ? 1 : 2.5;
-        const offset = rem * 16;
-        window.scrollTo({
-          top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
-          behavior: "smooth",
-        });
-      }
+      setPage(page - 1);
     }
   };
 
-  const getLimitBasedOnScreenSize = () => {
-    // Set the limit based on the window width
-    return window.innerWidth < 768 ? MOBILE_LIMIT : DESKTOP_LIMIT;
-  };
   const handleNext = () => {
-    if (page < totalPage) {
-      setPage((prevPage) => prevPage + 1);
-      const limit = getLimitBasedOnScreenSize();
-      setLimit(limit);
-
-      const previousSection = document.getElementById("previous");
-      if (previousSection) {
-        const sectionPosition =
-          previousSection.getBoundingClientRect().top + window.scrollY;
-        const isMobile = window.innerWidth < 768 ? true : false;
-        const rem = isMobile ? 1 : 2.5;
-        const offset = rem * 16;
-        window.scrollTo({
-          top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
-          behavior: "smooth",
-        });
-      }
+    if (page < totalPages) {
+      setPage(page + 1);
     }
   };
+
+  const renderPageNumbers = () => {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  };
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const analyticsData = await fetchCampaignAnalytics(campaignId);
+        console.log("log from details", analyticsData);
+
+        if (analyticsData) {
+          setCampaignAnalytics(analyticsData);
+        } else {
+          console.warn("No analytics data returned");
+        }
+      } catch (error) {
+        console.error("Error fetching campaign analytics:", error);
+      }
+    };
+
+    fetchAnalytics();
+  }, [fetchCampaignAnalytics, campaignId]);
+  console.log(">>>>>", campaignId);
+
+  const mostUpVotedArt = campaignAnalytics?.mostUpVotedArt[0];
+  const participantsList = campaignAnalytics?.uniqueWallets || [];
   return (
     <div className="campaign-details-container">
       <h1>Campaign Ended</h1>
@@ -144,7 +133,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       <div className="art-section">
         <div className="flex items-center justify-center gap-[25px] md:gap-[30px]">
           <div className="art-container">
-            <h3 className="art-heading">Most Voted Art</h3>
+            <h3 className="art-heading">Most Collected Art</h3>
             <div className="common">
               <div className="art">
                 <div
@@ -156,12 +145,18 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                     alt="Profile"
                     className="profile-image"
                   />
-                  <h4 style={{ margin: 0 }}>Raghuvaran</h4>
+                  <h4 style={{ margin: 0 }}>
+                    {mostUpVotedArt && mostUpVotedArt.artistId
+                      ? mostUpVotedArt.artistId.length > 10
+                        ? `${mostUpVotedArt.artistId.slice(0, 10)}...`
+                        : mostUpVotedArt.artistId
+                      : "Unknown Artist"}
+                  </h4>
                 </div>
 
                 <img
-                  src="/images/uploadart1.png"
-                  alt=""
+                  src={mostUpVotedArt?.colouredArt}
+                  alt={mostUpVotedArt?.arttitle}
                   className="art-image"
                 />
                 <p
@@ -173,43 +168,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                     src="/icons/heart.svg"
                     style={{ marginRight: "2px" }}
                   />
-                  9 Upvotes
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="art-container">
-            <h3 className="art-heading">Most Upvoted Art</h3>
-            <div className="common">
-              <div className="art">
-                <div
-                  className="flex items-center"
-                  style={{ marginBottom: "10px" }}
-                >
-                  <img
-                    src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
-                    alt="Profile"
-                    className="profile-image"
-                  />
-                  <h4 style={{ margin: 0 }}>Raghuvaran</h4>
-                </div>
-
-                <img
-                  src="/images/uploadart1.png"
-                  alt="Raghuvaran"
-                  className="art-image"
-                />
-                <p
-                  className="flex items-center justify-end"
-                  style={{ width: "100%", marginTop: "15px" }}
-                >
-                  <InlineSVG
-                    src="/icons/heart.svg"
-                    className="heart-icon"
-                    style={{ marginRight: "2px" }}
-                  />
-                  9 Upvotes
+                  {mostUpVotedArt?.upVotes} Upvotes
                 </p>
               </div>
             </div>
@@ -218,20 +177,16 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
         <div className="art-details">
           <div>
-            <h3>Total Participants</h3>
-            <p>{participantsStats.totalParticipants}</p>
+            <h3>Total Votes</h3>
+            <p>{campaignAnalytics?.totalVote}</p>
           </div>
           <div>
-            <h3>Total Votes</h3>
+            <h3>Total Participants</h3>
             <p>{participantsStats.totalVotes}</p>
           </div>
           <div>
-            <h3>Total Upvotes</h3>
-            <p>{participantsStats.totalUpvotes}</p>
-          </div>
-          <div>
             <h3>Unique Participants</h3>
-            <p>{participantsStats.uniqueParticipants}</p>
+            <p> {campaignAnalytics?.totalUniqueWallets}</p>
           </div>
         </div>
       </div>
@@ -240,38 +195,38 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         <h2>Special Rewards Winners</h2>
         <div className="winnersGrid">
           {artworks.map((art, index) => (
-           <div className="common">
-             <div className="winner" key={index}>
-              <div
-                className="flex items-center"
-                style={{ marginBottom: "10px" }}
-              >
+            <div className="common">
+              <div className="winner" key={index}>
+                <div
+                  className="flex items-center"
+                  style={{ marginBottom: "10px" }}
+                >
+                  <img
+                    src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
+                    alt="Profile"
+                    className="profile-image"
+                  />
+                  <h4 style={{ margin: 0 }}>Raghuvaran</h4>{" "}
+                </div>
                 <img
-                  src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
-                  alt="Profile"
-                  className="profile-image"
+                  src="/images/uploadart1.png"
+                  alt={art.name}
+                  className="image"
                 />
-                <h4 style={{ margin: 0 }}>Raghuvaran</h4>{" "}
-              </div>
-              <img
-                src="/images/uploadart1.png"
-                alt={art.name}
-                className="image"
-              />
 
-              <p
-                className="flex items-center justify-end"
-                style={{ width: "100%", marginTop: "15px" }}
-              >
-                <InlineSVG
-                  src="/icons/heart.svg"
-                  style={{ marginRight: "2px" }}
-                  className="heart-icon"
-                />
-                9 upvotes
-              </p>
+                <p
+                  className="flex items-center justify-end"
+                  style={{ width: "100%", marginTop: "15px" }}
+                >
+                  <InlineSVG
+                    src="/icons/heart.svg"
+                    style={{ marginRight: "2px" }}
+                    className="heart-icon"
+                  />
+                  9 upvotes
+                </p>
+              </div>
             </div>
-           </div>
           ))}
         </div>
       </div>
@@ -279,35 +234,35 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         <h2>Day Wise Winners</h2>
         <div className="daywise-winners-grid">
           {daywinners.map((art, index) => (
-           <div className="common">
-             <div className="daywise-winner" key={index}>
-              <h3>Winner: Day {art.day}</h3>
-              <div className="profile-section">
+            <div className="common">
+              <div className="daywise-winner" key={index}>
+                <h3>Winner: Day {art.day}</h3>
+                <div className="profile-section">
+                  <img
+                    src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
+                    alt="Profile"
+                    className="profile-image"
+                  />
+                  <h4>Raghuvaran</h4>
+                </div>
                 <img
-                  src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
-                  alt="Profile"
-                  className="profile-image"
+                  src="/images/uploadart1.png"
+                  alt={art.name}
+                  className="art-img"
                 />
-                <h4>Raghuvaran</h4>
+                <p
+                  className="flex items-center justify-end"
+                  style={{ width: "100%", marginTop: "15px" }}
+                >
+                  <InlineSVG
+                    src="/icons/heart.svg"
+                    style={{ marginRight: "2px" }}
+                    className="heart-icon"
+                  />
+                  9 Upvotes
+                </p>
               </div>
-              <img
-                src="/images/uploadart1.png"
-                alt={art.name}
-                className="art-img"
-              />
-              <p
-                className="flex items-center justify-end"
-                style={{ width: "100%", marginTop: "15px" }}
-              >
-                <InlineSVG
-                  src="/icons/heart.svg"
-                  style={{ marginRight: "2px" }}
-                  className="heart-icon"
-                />
-                9 Upvotes
-              </p>
             </div>
-           </div>
           ))}
         </div>
       </div>
@@ -328,27 +283,36 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         <div className="summary">
           <div className="participants">
             <h2>Participants</h2>
-            {participants.map((participant, index) => (
-              <div
-                key={index}
-                className="participant"
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <span className="participant-number">{index + 1}</span>
-                <span className="participant-name">{participant}</span>
-              </div>
-            ))}
+            {participantsList?.length > 0 ? (
+              participantsList?.map((participant, index) => (
+                <div
+                  key={index}
+                  className="participant"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <span className="participant-number">{index + 1}</span>
+                  <span className="participant-name">{participant}</span>
+                </div>
+              ))
+            ) : (
+              <p>No participants available.</p>
+            )}
           </div>
 
           <div className="summary-arts">
-            <h2>Arts</h2>
+            <h3>Arts</h3>
             <div className="arts-grid">
-              {arts.map((art, index) => (
-                <div key={index} className="art-card">
-                  <img src={art} alt={`Art ${index + 1}`} />
-                </div>
-              ))}
+              {art.length > 0 ? (
+                art.map((artItem, index) => (
+                  <div key={index} className="art-card">
+                    <img src={artItem.colouredArt} alt={`Art ${index + 1}`} />
+                  </div>
+                ))
+              ) : (
+                <div>No art data available</div>
+              )}
             </div>
+
             <div className="pagination-section relative w-full flex justify-center py-5">
               <div className="pagination rounded-[7rem]">
                 <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
@@ -358,14 +322,15 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                         ? "cursor-not-allowed opacity-50"
                         : "cursor-pointer"
                     }`}
-                    onClick={page !== 1 ? handlePrevious : undefined}
+                    onClick={handlePrevious}
                   >
                     <InlineSVG
                       src="/icons/left-arrow.svg"
                       className="w-3 h-3 spartan-light"
                     />
-                    <h4 className="hidden md:block">Previous</h4>
+                    <h2 className="hidden md:block">Previous</h2>
                   </div>
+
                   <div className="page-numbers flex items-center justify-center gap-2">
                     {renderPageNumbers().map((pageNumber) => (
                       <div
@@ -375,19 +340,20 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                         }`}
                         onClick={() => handlePageClick(pageNumber)}
                       >
-                        <h4>{pageNumber}</h4>
+                        <h2>{pageNumber}</h2>
                       </div>
                     ))}
                   </div>
+
                   <div
                     className={`next flex items-center gap-1 ${
-                      page === totalPage
+                      page === totalPages
                         ? "cursor-not-allowed opacity-50"
                         : "cursor-pointer"
                     }`}
-                    onClick={page !== totalPage ? handleNext : undefined}
+                    onClick={handleNext}
                   >
-                    <h4 className="hidden md:block">Next</h4>
+                    <h2 className="hidden md:block">Next</h2>
                     <InlineSVG
                       src="/icons/right-arrow.svg"
                       className="w-3 h-3 spartan-light"

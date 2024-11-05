@@ -1,12 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CampaignPopup.css";
 import InlineSVG from "react-inlinesvg";
+import { CAMPAIGN_CREATION_COST, SPECIAL_WINNER } from "@/config/points";
+import { useSendWalletData } from "@/hooks/saveUserHook";
+import { useMbWallet } from "@mintbase-js/react";
+import useCampaigns from "@/hooks/CampaignHook";
+
 interface CampaignCreationPopupProps {
+  isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
+  specialWinner?: number;
+  campaignDays?: number;
+  campaignCost?: number;
+  idToken: string;
+  connectionError: boolean;
 }
-const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({ onClose }) => {
+const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
+  onClose,
+  onConfirm,
+  isOpen,
+  specialWinner,
+  campaignDays,
+  campaignCost,
+  idToken,
+  connectionError,
+}) => {
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
-  const [connectionError, setConnectionError] = useState(false);
+
+  const { activeAccountId, isConnected } = useMbWallet();
+  const { userDetails, sendWalletData, sufficientBalance } =
+    useSendWalletData();
+  useEffect(() => {
+    if (isOpen && activeAccountId) {
+      const walletAddress = activeAccountId;
+      sendWalletData(idToken, walletAddress);
+    }
+  }, [isOpen, idToken, sendWalletData]);
+
+  useEffect(() => {
+    const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
+    const specialRewardCost = (specialWinner || 0) * SPECIAL_WINNER;
+    const totalCost = creationCost + specialRewardCost;
+
+    if (sufficientBalance !== null) {
+      setInSufficientbalance(sufficientBalance >= totalCost);
+    }
+  }, [sufficientBalance, campaignDays, specialWinner]);
+
+  if (!isOpen) return null;
+  const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
+  const specialRewardCost = (specialWinner || 0) * SPECIAL_WINNER;
+  const totalCost = creationCost + specialRewardCost;
   return (
     <div className="popup-overlay">
       <div className="popup-container">
@@ -20,37 +65,37 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({ onClose }) => {
 
         <h3 className="section-title">Coins Breakup</h3>
 
-      <div className="common">
-      <div className="breakdown-content">
-          <div className="breakdown-row">
-            <span className="description">
-              Campaign Creation Cost (No of days x 10000)
-            </span>
-            <div className="calculation-result">
-              <span className="calculation">4 x 10000</span>
-              <span className="highlight">40000</span>
+        <div className="common">
+          <div className="breakdown-content">
+            <div className="breakdown-row">
+              <span className="description">
+                Campaign Creation Cost (No of days x 10000)
+              </span>
+              <div className="calculation-result">
+                <span className="calculation">{campaignDays} x 10000</span>
+                <span className="highlight">{creationCost}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="breakdown-row">
-            <span className="description">
-              Special Rewards for Participants
-            </span>
-            <div className="calculation-result">
-              <span className="calculation">5 x 1000</span>
-              <span className="highlight">5000</span>
+            <div className="breakdown-row">
+              <span className="description">
+                Special Rewards for Participants
+              </span>
+              <div className="calculation-result">
+                <span className="calculation">{specialWinner} x 1000</span>
+                <span className="highlight">{specialRewardCost}</span>
+              </div>
             </div>
-          </div>
 
-          <hr className="divider" />
+            <hr className="divider" />
 
-          <div className="total-cost">
-            <span className="total-cost-text">Total Creation Cost</span>
-            <span></span>
-            <span className="highlight">45000 GFXvs</span>
+            <div className="total-cost">
+              <span className="total-cost-text">Total Creation Cost</span>
+              <span></span>
+              <span className="highlight">{totalCost} GFXvs</span>
+            </div>
           </div>
         </div>
-      </div>
 
         <div className="popup-buttons">
           {connectionError ? (
@@ -63,7 +108,9 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({ onClose }) => {
                 Cancel Creation
               </button>
               <div className="campaignpopup-btn-Wrapper">
-                <button className="campaignpopup-btn">Create Campaign</button>
+                <button className="campaignpopup-btn" onClick={onConfirm}>
+                  Create Campaign
+                </button>
 
                 <div className="campaignpopup-btn-Border" />
                 <div className="campaignpopup-btn-Overlay" />

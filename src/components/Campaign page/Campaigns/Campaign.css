@@ -212,7 +212,9 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
   align-items: center;
   justify-content: center;
 }
-
+.creater-border{
+  border-color: #00ff00;
+}
 .view-details-btn {
   background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
   padding: 9px 17px;

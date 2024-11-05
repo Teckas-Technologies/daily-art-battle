@@ -1,7 +1,10 @@
 .campaign-success-container {
-  padding: 70px 120px;
-  background-color: #000000;
+  background-color: black;
+  width: 100vw;
+  max-width: 100%;
   min-height: 100vh;
+  padding: 70px 120px;
+  box-sizing: border-box;
 }
 .success-campaign-header {
   background: linear-gradient(90deg, #000000 55%, rgba(0, 0, 0, 0) 100%),

@@ -1,22 +1,31 @@
 "use client";
+import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import "./CampaignSuccess.css";
 import InlineSVG from "react-inlinesvg";
 const CampaignSuccess = () => {
-  const fullLink = "http://localhost:3000/campaign/createcampaign";
+  const searchParams = useSearchParams();
+  const queryParams = searchParams ? searchParams.get("campaignUrl") : null;
+  const fullLink = queryParams
+    ? `https://gfxvs.com/${queryParams}`
+    : "https://gfxvs.com/";
   const [buttonText, setButtonText] = useState("Copy link");
   const handleCopyLink = () => {
-    navigator.clipboard
-      .writeText(fullLink)
-      .then(() => {
-        setButtonText("Copied");
-        setTimeout(() => {
-          setButtonText("Copy link");
-        }, 2000);
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-      });
+    if (fullLink) {
+      navigator.clipboard
+        .writeText(fullLink)
+        .then(() => {
+          setButtonText("Copied");
+          setTimeout(() => {
+            setButtonText("Copy link");
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error("Failed to copy: ", err);
+        });
+    } else {
+      console.error("No link available to copy.");
+    }
   };
   const handleNavigation = () => {
     window.location.href = "/campaign";
@@ -32,7 +41,7 @@ const CampaignSuccess = () => {
         <h3
           style={{
             color: "#FFFFFF",
-         
+
             cursor: "pointer",
           }}
           onClick={handleNavigation}
@@ -63,18 +72,24 @@ const CampaignSuccess = () => {
       <div className="flex flex-col items-center justify-center">
         <div className="campaign-link-box">
           <div className="campaign-link-inputbox">
-            <p>
-              {fullLink.length > 15
-                ? `${fullLink.slice(0, 15)}.............`
-                : fullLink}
-            </p>
-            <button
-              className="copy-link-btn flex items-center"
-              onClick={handleCopyLink}
-            >
-              <InlineSVG src="/icons/copy.svg" className="copy-icon" />
-              {buttonText}
-            </button>
+            {fullLink ? (
+              <>
+                <p>
+                  {fullLink.length > 15
+                    ? `${fullLink.slice(0, 15)}.............`
+                    : fullLink}
+                </p>
+                <button
+                  className="copy-link-btn flex items-center"
+                  onClick={handleCopyLink}
+                >
+                  <InlineSVG src="/icons/copy.svg" className="copy-icon" />
+                  {buttonText}
+                </button>
+              </>
+            ) : (
+              <p>No campaign URL available.</p>
+            )}
           </div>
 
           <div className="share-section">

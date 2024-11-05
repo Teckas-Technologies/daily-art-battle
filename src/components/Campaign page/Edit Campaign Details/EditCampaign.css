@@ -194,7 +194,10 @@ input:checked + .slider:before {
     min-width: 90px;
     font-size: 9.5px;
   }
-
+.close-btn-icon{
+  width:18px;
+  height: 18px;
+}
   .social-share {
     width: 24px;
     height: 24px;
