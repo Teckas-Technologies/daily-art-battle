@@ -294,60 +294,74 @@
   justify-content: center;
   gap: 40px;
 }
+/* Container styling */
 .participants {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 0px;
-  background: #171717bd;
-  border: 0.75px solid #ffffff33;
+  width: 250px; /* Adjust as needed */
+  background: #171717BD;
+  border-radius: 15px; /* Rounded corners */
   padding: 20px;
-  border-radius: 20.5px;
-  overflow-y: auto;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
+  color: #ffffff;
+  overflow-y: auto; 
   width: 300px;
   height: 580px;
+  border: 0.34px solid #FFFFFF33;
 }
 
-.participants::-webkit-scrollbar {
-  width: 4.5px;
-}
 
-.participants::-webkit-scrollbar-track {
-  background: #171717bd;
-}
-
-.participants::-webkit-scrollbar-thumb {
-  background: #00ff00;
-  border-radius: 20.5px;
+.participants h2 {
+  font-size: 23px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
 .participant {
-  margin: 8px 0;
-  padding: 17px 18px;
-  border-radius: 8.5px;
-  border: 0.75px solid #ffffff33;
-  font-size: 13.5px;
-  font-weight: 600;
-  line-height: 15.12px;
-  letter-spacing: -6%;
-  color: #ffffff;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  height:50px;
+  border: 0.34px solid #FFFFFF33;
+  font-size: 15px;
+  font-weight: 700;
 }
+
+/* Number styling */
 .participant-number {
-  margin-right: 10px;
   font-size: 16px;
-}
-.participants h2 {
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 26.88px;
-  letter-spacing: -6%;
+  font-weight: 700;
   color: #ffffff;
-  margin-bottom: 5px;
-  margin-top: 15px;
-  grid-column: 1 / -1;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  margin-right: 10px;
 }
+
+/* Name styling */
+.participant-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* Scrollbar styling */
+.participants::-webkit-scrollbar {
+  width: 6px;
+}
+
+.participants::-webkit-scrollbar-thumb {
+  background-color: #00ff00; /* Green scrollbar thumb */
+  border-radius: 3px;
+}
+
+.participants::-webkit-scrollbar-track {
+  background-color: #2b2b2b;
+}
+
 /* <--------------- Summary Arts ----------> */
 .summary-arts h3 {
   font-size: 20px;
@@ -525,23 +539,27 @@
     width: 100%;
     height: auto;
     max-height: 200px;
+    display:grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
     border-radius: 12px;
     padding: 10px;
   }
   .participants h2{
-    font-size: 15px;
+    font-size: 18px;
     margin-bottom: 0px;
+    grid-column: 1 / -1;
   }
   .participant {
     padding: 7px 9px;
-    font-size: 6px;
+    font-size: 5px;
     width:100px;
     height: 40px;
+    margin-top: 20px;
   }
   .participant-number{
     font-size: 12px;
+    margin-right: 0px;
   }
   .art-details {
     display: flex;

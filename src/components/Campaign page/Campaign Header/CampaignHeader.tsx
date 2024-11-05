@@ -6,12 +6,13 @@ import { CampaignPageData } from "@/hooks/CampaignHook";
 interface CampaignHeaderProps {
   campaign?: CampaignPageData | null;
   status: string;
+  participantsCount: number;
 }
-export default function CampaignHeader({ campaign, status }: CampaignHeaderProps) {
+export default function CampaignHeader({ campaign, status ,participantsCount}: CampaignHeaderProps) {
   const baseLink = "https://gfxvs.com/";
   const fullLink = campaign?.campaignUrl ? baseLink + campaign.campaignUrl.split('/').pop() : baseLink; 
   const [buttonText, setButtonText] = useState("Copy link");
-  console.log("log",campaign);
+  console.log("log>>>>>>>>>>>>>>>>>>..............>>>>>>>>>>>>>>>>>>>>>>>>",campaign);
   
   const handleCopyLink = () => {
     navigator.clipboard
@@ -69,7 +70,7 @@ export default function CampaignHeader({ campaign, status }: CampaignHeaderProps
                   <InlineSVG src="/icons/person.svg" />
                   Participants
                 </span>
-                <span className="span-text sm:self-start ">24 Artists</span>
+                <span className="span-text sm:self-start ">{participantsCount} Artists</span>
               </div>
 
               <InlineSVG src="/icons/vertical-line.svg" />
@@ -105,20 +106,24 @@ export default function CampaignHeader({ campaign, status }: CampaignHeaderProps
               {buttonText}
             </button>
           </div>
-          <div className="flex flex-row items-center justify-center sm:justify-between mt-4 sm:mt-0 gap-4 sm:gap-0 md:gap-[235px]">
+          <div className="flex flex-row items-center justify-center sm:justify-between mt-4 sm:mt-0 gap-4 sm:gap-0 md:gap-[250px]">
             <div className="flex items-center gap-2 sm:gap-3">
               <span className="share-span">Share</span>
-              <InlineSVG src="/icons/whatsapp.svg" className="header-social-share" />
-              <InlineSVG
-                src="/icons/facebook-icon.svg"
-                className="header-social-share"
-              />
-              <InlineSVG src="/icons/tele-icon.svg" className="header-social-share" />
-              <InlineSVG src="/icons/insta-icon.svg" className="header-social-share" />
-              <InlineSVG
-                src="/icons/twitter-icon.svg"
-                className="social-share"
-              />
+              <a href={`https://wa.me/?text=${encodeURIComponent(fullLink)}`} target="_blank" rel="noopener noreferrer">
+                <InlineSVG src="/icons/whatsapp.svg" className="header-social-share" />
+              </a>
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullLink)}`} target="_blank" rel="noopener noreferrer">
+                <InlineSVG src="/icons/facebook-icon.svg" className="header-social-share" />
+              </a>
+              <a href={`https://t.me/share/url?url=${encodeURIComponent(fullLink)}`} target="_blank" rel="noopener noreferrer">
+                <InlineSVG src="/icons/tele-icon.svg" className="header-social-share" />
+              </a>
+              <a href={`https://www.instagram.com/?url=${encodeURIComponent(fullLink)}`} target="_blank" rel="noopener noreferrer">
+                <InlineSVG src="/icons/insta-icon.svg" className="header-social-share" />
+              </a>
+              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(fullLink)}`} target="_blank" rel="noopener noreferrer">
+                <InlineSVG src="/icons/twitter-icon.svg" className="header-social-share" />
+              </a>
             </div>
 
             <div className="campaign-status flex items-center gap-2">
