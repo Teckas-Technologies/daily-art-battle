@@ -10,6 +10,7 @@ import { TOTAL_REWARDS } from '@/data/queries/totalrewards.graphql';
 import { graphQLService } from '@/data/graphqlService';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from '@/config/constants';
 import { error } from 'console';
+import RaffleTicket from '../../model/RaffleTicket';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -88,7 +89,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if(!user){
         return res.status(400).json({error:"User not found"})
       }
-      const voting = (await Voting.find({email:email})).length; 
+      const voting = (await RaffleTicket.find({email:email})).length; 
       const owner = user.nearAddress;
         const rewards = await graphQLService({
             query: TOTAL_REWARDS,
