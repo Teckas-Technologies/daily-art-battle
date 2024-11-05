@@ -95,17 +95,58 @@ const CampaignSuccess = () => {
           <div className="share-section">
             <span>Share</span>
             <div className="social-icons">
-              <InlineSVG className="social-icon" src="/icons/whatsapp.svg" />
-              <InlineSVG
-                className="social-icon"
-                src="/icons/facebook-icon.svg"
-              />
-              <InlineSVG className="social-icon" src="/icons/tele-icon.svg" />
-              <InlineSVG className="social-icon" src="/icons/insta-icon.svg" />
-              <InlineSVG
-                className="social-icon"
-                src="/icons/twitter-icon.svg"
-              />
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(fullLink)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InlineSVG className="social-icon" src="/icons/whatsapp.svg" />
+              </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  fullLink
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InlineSVG
+                  className="social-icon"
+                  src="/icons/facebook-icon.svg"
+                />
+              </a>
+              <a
+                href={`https://t.me/share/url?url=${encodeURIComponent(
+                  fullLink
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InlineSVG className="social-icon" src="/icons/tele-icon.svg" />
+              </a>
+              <a
+                href={`https://www.instagram.com/?url=${encodeURIComponent(
+                  fullLink
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InlineSVG
+                  className="social-icon"
+                  src="/icons/insta-icon.svg"
+                />
+              </a>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  fullLink
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InlineSVG
+                  className="social-icon"
+                  src="/icons/twitter-icon.svg"
+                />
+              </a>
             </div>
           </div>
         </div>

@@ -40,19 +40,20 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   }, [status, session]);
   const idToken = session?.idToken || "";
 
-  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error } = useCampaigns(idToken);
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error } =
+    useCampaigns(idToken);
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
   }, [params.campaign, idToken]);
 
-  if (loading)
-    return (
-      <div style={{ background: "#00000" }}>
-        <Loader />{" "}
-      </div>
-    );
-  if (error) return <div>No campaign found</div>;
+  // if (loading)
+  //   return (
+  //     <div style={{ background: "#00000" }}>
+  //       <Loader />{" "}
+  //     </div>
+  //   );
+  // if (error) return <div>No campaign found</div>;
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
@@ -61,12 +62,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     setShowDistributeModal(!showDistributeModal);
   };
 
-  const handleDistribute = (hasManyParticipants: boolean) => {
-    setShowDistributeModal(false);
-    setShowAllParticipants(hasManyParticipants);
-  };
   return (
-    <div style={{ backgroundColor: "black" }}>
+    <div style={{ backgroundColor: "#000000", width: "100%", height: "100vh" }}>
       {campaignStatus === "current" && (
         <div style={{ backgroundColor: "#000000" }}>
           <Header />
@@ -88,7 +85,11 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
               Current Campaign
             </h3>
           </div>
-          <CampaignHeader campaign={campaign} status={status} />
+          <CampaignHeader
+            campaign={campaign}
+            status={status}
+            participantsCount={campaign?.participants || 0}
+          />
           <Battle
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
@@ -134,10 +135,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
               Upcoming Campaign
             </h3>
           </div>
-          <CampaignHeader campaign={campaign} status={campaignStatus} />
-          <CampaignTime
+          <CampaignHeader
             campaign={campaign}
+            status={campaignStatus}
+            participantsCount={campaign?.participants || 0}
           />
+          <CampaignTime campaign={campaign} />
           <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
@@ -166,24 +169,32 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
               Completed Campaign
             </h3>
           </div>
-          <CampaignHeader campaign={campaign} status={status} />
-          <CampaignDetails toggleDistributeModal={toggleDistributeModal} campaignId={campaign?._id as string}/>
+          <CampaignHeader
+            campaign={campaign}
+            status={status}
+            participantsCount={campaign?.participants || 0}
+          />
+          <CampaignDetails
+            toggleDistributeModal={toggleDistributeModal}
+            campaignId={campaign?._id as string}
+            campaign={campaign}
+          />
 
-          {showDistributeModal && (
+          {/* {showDistributeModal && (
             <DistributeRewardPopup
               onDistribute={() => handleDistribute(true)}
               onClose={() => setShowDistributeModal(false)}
             />
-          )}
+          )} */}
 
-          {showAllParticipants === true && (
+          {/* {showAllParticipants === true && (
             <AllParticipantpopup onClose={() => setShowAllParticipants(null)} />
           )}
           {showAllParticipants === false && (
             <FewParticipantsPopup
               onClose={() => setShowAllParticipants(null)}
             />
-          )}
+          )} */}
 
           <Footer />
         </div>

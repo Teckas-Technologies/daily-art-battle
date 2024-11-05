@@ -1,4 +1,4 @@
-.popupContainer {
+.Art-popupContainer {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   overflow-y: auto;
 }
 
-.popup {
+.Art-popup {
   background: #000000;
   border-radius: 28.39px;
   border: 1px solid #8b8b8b;
@@ -24,10 +24,10 @@
   max-height: 90vh;
   overflow-y: auto;
 }
-.popup::-webkit-scrollbar {
+.Art-popup::-webkit-scrollbar {
   display: none;
 }
-.popup-header {
+.Art-popup .popup-header {
   padding-bottom: 35px;
   margin-top: 20px;
 }

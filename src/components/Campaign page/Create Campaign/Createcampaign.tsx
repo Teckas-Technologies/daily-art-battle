@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import "./CreateCampaign.css";
 import InlineSVG from "react-inlinesvg";
@@ -36,7 +36,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [buttonText, setButtonText] = useState<string>("Coins to Create");
   const [isPubliclyVisible, setIsPubliclyVisible] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [connectionError,setConnectionError] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   const router = useRouter();
   const { createCampaign } = useCampaigns(idToken);
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +86,9 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     const response = await createCampaign(campaignData);
     console.log("response from creation", response);
     if (response.success) {
-      const url = `/campaign/success?campaignUrl=${encodeURIComponent(campaignUrl)}`;
+      const url = `/campaign/success?campaignUrl=${encodeURIComponent(
+        campaignUrl
+      )}`;
       router.push(url);
       resetFormFields();
     } else {
@@ -164,10 +166,8 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const validateForm = () => {
     const numericSpecialRewards = Number(specialRewards);
     const isValid =
-      campaignName.trim() !== "" &&
-      startDate !== null &&
-      endDate !== null &&
-      numericSpecialRewards > 0;
+      campaignName.trim() !== "" && startDate !== null && endDate !== null;
+    // numericSpecialRewards > 0;
 
     setIsFormValid(isValid);
   };

@@ -2,17 +2,23 @@ import { useState } from "react";
 import "./AllParticipants.css";
 interface AllParticipantsPopupProps {
   onClose: () => void;
+  onDistribute:()=>void;
+  selectedArtLength: number;
+  artLength: number;
 }
 
 const AllParticipantpopup: React.FC<AllParticipantsPopupProps> = ({
   onClose,
+  onDistribute,
+  selectedArtLength,
+  artLength
 }) => {
   return (
     <div className="Allparticipant-popup-overlay">
       <div className="Allparticipant-popup-content">
         <h2 className="Allparticipant-popup-title">Distribute Rewards</h2>
         <p className="Allparticipant-main-text">
-          All the 5 participants will receive rewards
+          All the {artLength} participants will receive rewards
         </p>
         <p className="Allparticipant-description-text ">
           You cannot undo the action, please recheck
@@ -23,7 +29,7 @@ const AllParticipantpopup: React.FC<AllParticipantsPopupProps> = ({
             Cancel
           </button>
           <div className="distributepopup-btn-Wrapper">
-            <button className="distributepopup-btn ">Distribute Rewards</button>
+            <button className="distributepopup-btn " onClick={onDistribute}>Distribute Rewards</button>
 
             <div className="distributepopup-btn-Border" />
 

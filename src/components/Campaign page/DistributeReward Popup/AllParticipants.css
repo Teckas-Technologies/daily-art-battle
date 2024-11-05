@@ -39,7 +39,7 @@
 }
 
 .Allparticipant-description-text {
-  font-size: 13px;
+  font-size: 10px !important;
   color: #ffffff;
   margin: 0 auto;
   text-align: center;

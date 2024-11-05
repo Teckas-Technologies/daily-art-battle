@@ -2,20 +2,26 @@ import { useState } from "react";
 import "./FewParticipants.css";
 interface FewParticipantsPopupProps {
   onClose: () => void;
+  onDistribute: () => void;
+  selectedArtLength: number;
+  artLength: number;
 }
 
 const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
   onClose,
+  onDistribute,
+  selectedArtLength,
+  artLength
 }) => {
   return (
     <div className="participant-popup-overlay">
       <div className="participant-popup-content">
         <h2 className="participant-popup-title">Distribute Rewards</h2>
         <p className="main-text">
-          You only Selected <span className="count">2</span> out of{" "}
-          <span className="count">5</span> Special Winners
+          You only Selected <span className="count">{selectedArtLength}</span>{" "}
+          out of <span className="count">{artLength}</span> Special Winners
         </p>
-        <p className="description-text  md:w-[460px]">
+        <p className="participant-description-text  md:w-[350px]">
           Distribute rewards to remaining participants before 7 days of campaign
           ending date, otherwise GFXvs Randomly selects participants and
           distribute rewards
@@ -26,7 +32,9 @@ const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
             Cancel
           </button>
           <div className="distributepopup-btn-Wrapper">
-            <button className="distributepopup-btn ">Distribute Rewards</button>
+            <button className="distributepopup-btn " onClick={onDistribute}>
+              Distribute Rewards
+            </button>
 
             <div className="distributepopup-btn-Border" />
 
