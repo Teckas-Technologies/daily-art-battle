@@ -97,8 +97,10 @@
 }
 
 .enter-input input[type="number"] {
-    -moz-appearance: textfield; /* Firefox */
-    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    -moz-appearance: textfield;
+    /* Firefox */
+    -webkit-appearance: none;
+    /* Chrome, Safari, Edge */
     appearance: none;
 }
 
@@ -117,6 +119,13 @@
     font-size: 1.5rem;
 }
 
-.coin-count {
-    font-size: 18px;
+@media (max-width: 768px) {
+    .img-outer {
+        background: none;
+    }
+}
+
+.hide:hover+.like {
+    z-index: -1;
+    transform: translateX(-400%);
 }

@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useFetchArts, ArtData, useFetchArtById } from "@/hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
-import { useVoting, Vote } from "@/hooks/useArtVoting";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
@@ -94,98 +93,4 @@ const UpcomingHeader: React.FC<{
   );
 };
 
-const BattleTable: React.FC<{
-  artData: ArtData[];
-  campaignId: string;
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ artData, setRefresh, campaignId }) => {
-  const { isConnected, selector, connect, activeAccountId } = useMbWallet();
-  const { votes, fetchVotes, submitVote } = useVoting();
-  const [success, setSuccess] = useState(false);
-  const [upvotes, setVotes] = useState<Vote[]>([]);
-  const router = useRouter();
-  const { fetchArtById } = useFetchArtById();
-  const [selectedArtId, setSelectedArtId] = useState(null);
-  const [overlayArt, setoverlayArt] = useState<ArtData>();
-
-  const getQueryParam = (param: string): string | null => {
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      return url.searchParams.get(param);
-    }
-    return null;
-  };
-  const artId = getQueryParam("artId");
-
-  useEffect(() => {
-    const fetchArt = async () => {
-      if (artId) {
-        const overlay = await fetchArtById(artId);
-        setoverlayArt(overlay);
-      }
-    };
-    fetchArt();
-  }, [artId]);
-
-  const handleImageClick = async (id: any) => {
-    setSelectedArtId(id);
-    const overlay = await fetchArtById(id);
-    setoverlayArt(overlay);
-    const url = new URL(window.location.href);
-    url.searchParams.set("artId", id);
-    window.history.pushState({}, "", url.toString());
-  };
-
-  const handleClose = () => {
-    setSelectedArtId(null);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("artId");
-    window.history.pushState({}, "", url.toString());
-  };
-
-  useEffect(() => {
-    const fetchUserVotes = async () => {
-      if (activeAccountId) {
-        const votes = await fetchVotes(activeAccountId, campaignId);
-        setVotes(votes);
-      }
-    };
-
-    fetchUserVotes();
-  }, [activeAccountId, fetchVotes]);
-
-  const handleArt = (id: any) => {
-    router.push(`/art/${id}`);
-  };
-
-  const onVote = async (id: string) => {
-    if (!isConnected || !activeAccountId) {
-      await connect();
-      return;
-    }
-    if (!id) {
-      alert("art  not loaded!");
-      return;
-    }
-    const success = await submitVote({
-      participantId: activeAccountId,
-      artId: id,
-      campaignId: campaignId,
-    });
-
-    console.log(success);
-    if (success) {
-      setSuccess(true);
-      const votes = await fetchVotes(activeAccountId, campaignId);
-      console.log(votes);
-      setVotes(votes);
-      //   alert('Vote submitted successfully!');
-      setRefresh((prev) => !prev);
-    } else {
-      alert("Failed to submit vote. Maybe you already voted!");
-    }
-  };
-
-  return <></>;
-};
 export default UpcomingHeader;

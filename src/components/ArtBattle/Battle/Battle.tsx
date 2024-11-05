@@ -51,8 +51,7 @@ export const Battle: React.FC<Props> = ({
   themeTitle,
 }) => {
   const { isConnected, connect, activeAccountId } = useMbWallet();
-  const { todayBattle, loading, battle, error, fetchTodayBattle } =
-    useFetchTodayBattle();
+  const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
   const router = useRouter();
 
   const [artA, setArtA] = useState<Artwork>({
@@ -82,6 +81,16 @@ export const Battle: React.FC<Props> = ({
   const [skeletonLoad, setSkeletonLoading] = useState(true);
   const { fetchTodayBattleSpinner } = useTodayBattleSpinner();
   const [spinner, setSpinner] = useState<Response | null>(null);
+  const [viewTools, setViewTools] = useState(initialViewTools);
+
+  useEffect(() => {
+    const fetchSpinner = async () => {
+      const data = await fetchTodayBattleSpinner();
+      console.log("spinner", data);
+      setSpinner(data);
+    };
+    fetchSpinner();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,10 +108,6 @@ export const Battle: React.FC<Props> = ({
     };
     fetchData();
   }, [todayBattle, fetchVotes, refresh]);
-
-  const handleCampaign = () => {
-    router.push(`/campaigns`);
-  };
 
   useEffect(() => {
     console.log(campaignId);
@@ -145,13 +150,6 @@ export const Battle: React.FC<Props> = ({
     }
   }, [todayBattle]);
 
-  const formatTime = (time: number): string => {
-    const hours = Math.floor(time / (1000 * 60 * 60));
-    const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    return `${hours}h ${minutes}m ${seconds}s`;
-  };
-
   useEffect(() => {
     if (todayBattle) {
       setArtA({
@@ -171,6 +169,17 @@ export const Battle: React.FC<Props> = ({
       setBattleId(todayBattle._id);
     }
   }, [todayBattle]);
+
+  const handleCampaign = () => {
+    router.push(`/campaigns`);
+  };
+
+  const formatTime = (time: number): string => {
+    const hours = Math.floor(time / (1000 * 60 * 60));
+    const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((time % (1000 * 60)) / 1000);
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
 
   const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
@@ -200,9 +209,7 @@ export const Battle: React.FC<Props> = ({
     }
   };
 
-  if (error) return <p>Error fetching battle details: {error}</p>;
-
-  const [viewTools, setViewTools] = useState(initialViewTools);
+  // if (error) return <p>Error fetching battle details: {error}</p>;
 
   const handleToolClick = (id: string) => {
     setViewTools((prevTools) =>
@@ -211,14 +218,7 @@ export const Battle: React.FC<Props> = ({
       )
     );
   };
-  useEffect(() => {
-    const fetchSpinner = async () => {
-      const data = await fetchTodayBattleSpinner();
-      console.log("spinner", data);
-      setSpinner(data);
-    };
-    fetchSpinner();
-  }, []);
+
   return (
     <>
       <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[3rem] flex flex-col items-center justify-center bg-black">
@@ -242,9 +242,8 @@ export const Battle: React.FC<Props> = ({
                 <div
                   key={tool.id}
                   onClick={() => handleToolClick(tool.id)}
-                  className={`view-bar cursor-pointer rounded-md p-2 ${
-                    tool.active ? "active" : ""
-                  }`}
+                  className={`view-bar cursor-pointer rounded-md p-2 ${tool.active ? "active" : ""
+                    }`}
                 >
                   <InlineSVG
                     src={tool.path}
@@ -284,13 +283,12 @@ export const Battle: React.FC<Props> = ({
           </div>
 
           {todayBattle && (
-            <div className={`battle-vote-btns md:flex ${viewTools[0].active ? "hidden" : "flex" } w-full flex items-center h-auto mt-8 pb-5 px-3`}>
+            <div className={`battle-vote-btns md:flex ${viewTools[0].active ? "hidden" : "flex"} w-full flex items-center h-auto mt-8 pb-5 px-3`}>
               <div
-                className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${
-                  viewTools[1].active || viewTools[2].active
+                className={`vote-btn w-[50%] flex justify-center pr-8 md:justify-end ${viewTools[1].active || viewTools[2].active
                     ? "md:pr-[8rem]"
                     : "md:pr-[12.5rem]"
-                }`}
+                  }`}
               >
                 <div className="outside w-auto h-auto rounded-3xl">
                   <div className="second-layer w-auto h-auto rounded-3xl">
@@ -303,35 +301,33 @@ export const Battle: React.FC<Props> = ({
                         {votedFor === artA.name
                           ? "Voted Art A"
                           : viewTools[1].active || viewTools[2].active
-                          ? "Vote for Art A"
-                          : "Vote here"}
+                            ? "Vote for Art A"
+                            : "Vote here"}
                       </h2>
                     </button>
                   </div>
                 </div>
               </div>
               <div
-                className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${
-                  viewTools[1].active || viewTools[2].active
+                className={`vote-btn w-[50%] flex justify-center pl-8 md:justify-start ${viewTools[1].active || viewTools[2].active
                     ? "md:pl-[8rem]"
                     : "md:pl-[12.5rem]"
-                } `}
+                  } `}
               >
                 <div className="outside2 w-auto h-auto rounded-3xl">
                   <div className="second-layer2 w-auto h-auto rounded-3xl">
                     <button
                       onClick={() => onVote(artB.id)}
                       disabled={!isConnected || success}
-                      className={`${
-                        !isConnected || success ? "cursor-not-allowed" : "cursor-pointer"
-                      } battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl`}
+                      className={`${!isConnected || success ? "cursor-not-allowed" : "cursor-pointer"
+                        } battle-vote-btn px-5 py-3 border border-green-600 rounded-3xl`}
                     >
                       <h2 className="md:spartan-bold spartan-semibold font-bold text-xs md:text-sm">
                         {votedFor === artB.name
                           ? "Voted Art B"
                           : viewTools[1].active || viewTools[2].active
-                          ? "Vote for Art B"
-                          : "Vote here"}
+                            ? "Vote for Art B"
+                            : "Vote here"}
                       </h2>
                     </button>
                   </div>

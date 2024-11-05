@@ -2,7 +2,7 @@
 import React, { useState,useRef, useEffect } from 'react';
 import { ArtData } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
-import {Vote } from "../hooks/useArtVoting";
+import {Vote } from "../hooks/useRaffleTickets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 interface OverlayProps {

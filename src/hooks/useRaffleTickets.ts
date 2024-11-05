@@ -1,54 +1,56 @@
 //useArtVoting.ts is used for calling artVoting api.
 import { useState, useCallback } from 'react';
+import { fetchWithAuth } from '../../utils/authToken';
 export interface Vote {
-  participantId: string;
+  ticketCount: number;
   artId: string;
-  campaignId:string;
+  campaignId: string;
+  participantId?: string;
 }
 
-interface UseVotingReturn {
-  votes: Vote[];
+interface UseTicketReturn {
+  raffleCount: number;
   error: string | null;
   loading: boolean;
-  fetchVotes: ( artId: string,campaignId:string) => Promise<Vote[]>;
+  fetchArtUserRaffleCount: (artId: string, campaignId: string) => Promise<number>;
   submitVote: (voteData: Vote) => Promise<boolean>;
 }
 
-export const useVoting = (): UseVotingReturn => {
-  const [votes, setVotes] = useState<Vote[]>([]);
+export const useArtsRaffleCount = (): UseTicketReturn => {
+  const [raffleCount, setRaffleCount] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  //fetchVotes is used to fetch artVote by participantId and artId
-  const fetchVotes = useCallback(async (participantId: string,campaignId:string): Promise<Vote[]> => {
+  //fetchVotes is used to fetch ArtRaffleCount by artId & campaignId
+  const fetchArtUserRaffleCount = useCallback(async (artId: string, campaignId: string): Promise<number> => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/artVote?participantId=${participantId}&campaignId=${campaignId}`);
+      const response = await fetchWithAuth(`/api/raffleTicket?artId=${artId}&campaignId=${campaignId}`);
       const data = await response.json();
       if (response.ok) {
         setError(null);
-        if (data.data) {
-          setVotes(data.data); // Assuming data.data is an array of votes
-          return data.data;
+        if (data) {
+          setRaffleCount(data.totalRaffleCounts);
+          return data?.totalRaffleCounts;
         }
-        return []; // Return an empty array if data.data is falsy
+        return 0; // Return an empty array if data.data is falsy
       } else {
         throw new Error(data.message || 'Error fetching votes');
       }
     } catch (err) {
       setError('Error');
-      return []; // Return an empty array in case of error
+      return 0; // Return an empty array in case of error
     } finally {
       setLoading(false);
     }
   }, []);
-  
+
 
   //submitVote is used to create vote the art
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {
-      const response = await fetch('/api/artVote', {
+      const response = await fetchWithAuth('/api/raffleTicket', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,11 +58,11 @@ export const useVoting = (): UseVotingReturn => {
         body: JSON.stringify(voteData),
       });
       const data = await response.json();
-      
+
       if (response.ok) {
-         return true;
+        return true;
       } else {
-        throw new Error("error"+data.message || 'Failed to submit vote');
+        throw new Error("error" + data.message || 'Failed to submit vote');
       }
     } catch (err) {
       setError('Error');
@@ -71,10 +73,10 @@ export const useVoting = (): UseVotingReturn => {
   }, []);
 
   return {
-    votes,
+    raffleCount,
     error,
     loading,
-    fetchVotes,
+    fetchArtUserRaffleCount,
     submitVote,
   };
 };
