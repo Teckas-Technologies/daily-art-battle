@@ -1,5 +1,6 @@
 // hooks/useFetchTodayBattle.ts
 import { useState, useEffect } from 'react';
+import { fetchWithAuth } from '../../utils/authToken';
 
 export interface BattleData {
   _id: string;
@@ -100,7 +101,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
 
     try {
       console.log(campaignId);
-      const response = await fetch(`/api/battle?queryType=Today&campaignId=${campaignId}`);
+      const response = await fetchWithAuth(`/api/battle?queryType=Today&campaignId=${campaignId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch today\'s battle data');
       }

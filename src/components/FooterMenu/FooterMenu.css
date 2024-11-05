@@ -1,0 +1,20 @@
+.footer-menu {
+    border: 0.86px solid #5F5F5F;
+
+
+}
+
+.menu {
+    border: 0.86px solid #5D5D5D;
+    border-radius: 12px;
+}
+
+.menu.active {
+    border: 0.86px solid #00FF00;
+}
+
+@media (max-width: 768px) {
+    .menu {
+        border-radius: 10px;
+    }
+}

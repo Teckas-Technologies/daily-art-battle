@@ -2,7 +2,6 @@
 
 import InlineSVG from "react-inlinesvg";
 import './UpcomingGrid.css';
-import Card from "./ArtCard/Card";
 import { useEffect, useState, useRef } from "react";
 import { useMbWallet } from "@mintbase-js/react";
 import { ArtData, useFetchArts } from "@/hooks/artHooks";
@@ -29,36 +28,6 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const [selectedArt, setSelectedArt] = useState();
 
-    const handleToggle = () => {
-        setIsOpen((prev) => !prev);
-    };
-
-    const getLimitBasedOnScreenSize = () => {
-        // Set the limit based on the window width
-        return window.innerWidth < 768 ? MOBILE_LIMIT : DESKTOP_LIMIT;
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const sortType = event.target.value
-        setSort(sortType);
-        setPage(1); // Reset to first page when sorting
-        const limit = getLimitBasedOnScreenSize();
-        fetchMoreArts(campaignId, sortType, 1, limit);
-    };
-
     useEffect(() => {
         const initializeData = async () => {
             const limit = getLimitBasedOnScreenSize();
@@ -81,6 +50,36 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         }
         setUpcomingArts(arts);
     }, [arts]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleToggle = () => {
+        setIsOpen((prev) => !prev);
+    };
+
+    const getLimitBasedOnScreenSize = () => {
+        // Set the limit based on the window width
+        return window.innerWidth < 768 ? MOBILE_LIMIT : DESKTOP_LIMIT;
+    };
+
+    const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const sortType = event.target.value
+        setSort(sortType);
+        setPage(1); // Reset to first page when sorting
+        const limit = getLimitBasedOnScreenSize();
+        fetchMoreArts(campaignId, sortType, 1, limit);
+    };
 
     const handleNext = () => {
         if (page < totalPage) {
@@ -162,7 +161,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
     return (
         <>
-            <div className="upcoming-hero w-full h-auto bg-black md:pt-4 pt-0 pb-6" id="upcoming">
+            <div className="upcoming-hero w-full h-auto bg-black md:pt-4 pt-0 pb-20" id="upcoming">
 
                 {/* Filters top section */}
                 <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:px-[7.8rem] px-3 pb-5 pt-10">
@@ -171,7 +170,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                             <div className="img md:h-11 md:w-11 h-9 w-9">
                                 <img src="/images/logo.png" alt="logo" className="w-full h-full" />
                             </div>
-                            <div className="search-input md:w-[15rem] lg:w-[27rem] xl:w-[33rem] md:h-[3rem] p-2">
+                            <div className="search-input md:w-[13rem] lg:w-[23rem] xl:w-[33rem] md:h-[3rem] p-2">
                                 <input
                                     type="text"
                                     placeholder="Search for arts, username"
@@ -197,7 +196,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                         </div>
                         {isOpen && (
                             <div className="options absolute top-[100%] left-0 w-[150%] pt-4 rounded-3xl bg-black">
-                                <div className="option px-5 py-3 top-voted bg-black rounded-3xl" onClick={() => handleSort({ target: { value: 'voteDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
+                                <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ target: { value: 'voteDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
                                     <h2 className="spartan-light text-sm text-white">Top Voted Arts</h2>
                                 </div>
                                 <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ target: { value: 'voteAsc' } } as React.ChangeEvent<HTMLSelectElement>)}>

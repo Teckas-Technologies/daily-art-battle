@@ -1,5 +1,6 @@
 //artHooks.ts is used for calling the art api.
 import { useState, useEffect } from 'react';
+import { fetchWithAuth } from '../../utils/authToken';
 
 export interface ArtData {
   _id: string;
@@ -8,36 +9,37 @@ export interface ArtData {
   colouredArt: string;
   colouredArtReference: string;
   uploadedTime: Date;
-  upVotes : Number;
-  isCompleted:Boolean;
-  isStartedBattle:Boolean;
+  upVotes: Number;
+  isCompleted: Boolean;
+  isStartedBattle: Boolean;
   specialWinner?: string;
-  votes?:Number;
+  votes?: Number;
   battleTime?: Date;
   endTime?: Date;
-  tokenId:Number;
-  campaignId:string;
+  tokenId: Number;
+  campaignId: string;
+  raffleTickets: Number;
 }
 
 
 interface BattlesResponse {
   pastBattles: ArtData[];
-  totalDocuments:any;
-  totalPages:any
+  totalDocuments: any;
+  totalPages: any
 }
 
 
 interface UseSaveDataResult {
   saveData: (data: any) => Promise<void>;
   loading: boolean;
-  error: string | null; 
+  error: string | null;
   success: boolean | null;
 }
 export const useSaveData = (): UseSaveDataResult => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
-//saveData is used for creating art.
+  //saveData is used for creating art.
   const saveData = async (data: any): Promise<void> => {
     setLoading(true);
     setError(null);
@@ -70,96 +72,91 @@ export const useSaveData = (): UseSaveDataResult => {
 
   return { saveData, loading, error, success };
 };
-  //useFetchArts is used for fetching arts by id
-    export const useFetchArts = () => {
-      const [arts, setArts] = useState<ArtData[]>([]);
-      const [totalPage, setTotalPage] = useState<any>();
-      const [loading, setLoading] = useState<boolean>(false);
-      const [error, setError] = useState<string | null>(null);
-    
-      const fetchArts = async (campaignId:string,sort:string,page: number, limit: number = 8) => {
-        setLoading(true);
-        setError(null);
-        try {
-          const response = await fetch(`/api/art?campaignId=${campaignId}&page=${page}&limit=${limit}&sort=${sort}`);
-          if (!response.ok) throw new Error('Network response was not ok');
-          const data = await response.json();
-          setArts(data.arts);
-          setTotalPage(data.totalPages)
-        } catch (err) {
-          setError("Error loading arts");
-        } finally {
-          
-          setLoading(false);
-        }
-      };
+//useFetchArts is used for fetching arts by id
+export const useFetchArts = () => {
+  const [arts, setArts] = useState<ArtData[]>([]);
+  const [totalPage, setTotalPage] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-    
-      return { arts, totalPage,loading, error, fetchMoreArts: fetchArts };
+  const fetchArts = async (campaignId: string, sort: string, page: number, limit: number = 8) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`/api/art?campaignId=${campaignId}&sort=${sort}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setArts(data.arts);
+      setTotalPage(data.totalPages)
+    } catch (err) {
+      setError("Error loading arts");
+    } finally {
+      setLoading(false);
     }
-  
-
-    export const useFetchBattles = () => {
-      const [battles, setBattles] = useState<BattlesResponse | null>(null);
-      const [loading, setLoading] = useState<boolean>(false);
-      const [error, setError] = useState<string | null>(null);
-    
-    
-          const fetchBattles = async (sort:string,page: number, limit: number = 10) => {
-              setLoading(true);
-              setError(null);
-              try {
-                  const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
-                  if (!response.ok) throw new Error('Network response was not ok');
-                  const data: BattlesResponse = await response.json();
-               
-                  setBattles(data);
-              } catch (err) {
-                  console.error('Error fetching battles:', err);
-                  setError("Error fetching battles!");
-              } finally {
-                  setLoading(false);
-              }
-          };
-    
-          useEffect(() => {
-             fetchBattles("date",1);
-          }, []);
-         
-    
-      return { battles, loading, error,fetchMoreBattles: fetchBattles };
-        }
- 
+  };
 
 
+  return { arts, totalPage, loading, error, fetchMoreArts: fetchArts };
+}
 
-        export const useFetchArtById = () => {
-          const [art, setArts] = useState<ArtData | null>(null);
-          const [loading, setLoading] = useState<boolean>(false);
-          const [error, setError] = useState<string | null>(null);
-        
-        
-              const fetchArtById = async (id:any) => {
-                  setLoading(true);
-                  setError(null);
-                  try {
-                      const response = await fetch(`/api/art?queryType=upcoming&id=${id}`);
-                      if (!response.ok) throw new Error('Network response was not ok');
-                      const data = await response.json();
-                      
-                      setArts(data.art);
-                      return data.art;
-                  } catch (err) {
-                      console.error('Error fetching art:', err);
-                      setError("Error fetching art!");
-                  } finally {
-                      setLoading(false);
-                  }
-              };
-        
-              
-             
-        
-          return { fetchArtById};
-            }
-     
+
+export const useFetchBattles = () => {
+  const [battles, setBattles] = useState<BattlesResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+  const fetchBattles = async (sort: string, page: number, limit: number = 10) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data: BattlesResponse = await response.json();
+
+      setBattles(data);
+    } catch (err) {
+      console.error('Error fetching battles:', err);
+      setError("Error fetching battles!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBattles("date", 1);
+  }, []);
+
+
+  return { battles, loading, error, fetchMoreBattles: fetchBattles };
+}
+
+
+
+
+export const useFetchArtById = () => {
+  const [art, setArts] = useState<ArtData | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+  const fetchArtById = async (id: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`/api/art?queryType=upcoming&id=${id}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+
+      setArts(data.art);
+      return data.art;
+    } catch (err) {
+      console.error('Error fetching art:', err);
+      setError("Error fetching art!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { fetchArtById };
+}

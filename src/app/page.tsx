@@ -13,6 +13,8 @@ import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/U
 import { PreviousGrid } from '@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid';
 import { signOut, useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
+import { setAuthToken } from '../../utils/authToken';
+import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -21,19 +23,19 @@ const Home: NextPage = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
   useEffect(() => {
-    // Redirect to login if not authenticated
-    if (status === "unauthenticated") {
-        // Trigger login with Azure B2C provider
-        signIn('azure-ad-b2c',{ callbackUrl: '/' });
+    if (status === 'unauthenticated') {
+      // Redirect to login if not authenticated
+      signIn('azure-ad-b2c', { callbackUrl: '/' });
+    } else if (status === 'authenticated' && session) {
+      // Set the idToken for all API requests
+      setAuthToken(session?.idToken || "");
+      console.log('Token set for API requests', session);
     }
-    console.log(status);
-    console.log(session);
-    // console.log(getProfileEditUrl());
-  }, [status]);
+  }, [status, session]);
   
   return (
     <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
-     <video autoPlay muted loop id="background-video" style={{ 
+     {/* <video autoPlay muted loop id="background-video" style={{ 
     position: 'fixed', 
     right: 0, 
     bottom: 0, 
@@ -45,12 +47,13 @@ const Home: NextPage = () => {
 }}>
     <source src="images/back.mp4" type="video/mp4" />
     Your browser does not support the video tag.
-</video>
+</video> */}
       <Header />
       <Battle campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
       {/* <UpcomingHeader fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} /> */}
       <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+      <FooterMenu />
+      {/* {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />} */}
       {/* <PreviousArtHeader /> */}
       {/* <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} /> */}
       {/* <Footer /> */}
