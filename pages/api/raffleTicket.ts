@@ -57,7 +57,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             try{
                 const queryType = req.query.queryType;
                 if(queryType=="raffles"){
-                    const queryFilter = await req.query.queryFilter;
+                    const queryFilter =  req.query.sort;
                     const page = parseInt(req.query.page as string) || 1;
                     const limit = parseInt(req.query.limit as string) || 9;
                     if(queryFilter=="voteAsc"){
@@ -118,6 +118,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     const queryFilter = req.query.queryFilter;
                     if(queryFilter=="artName"){
                         const arttitle = req.query.arttitle;
+                        const page = parseInt(req.query.page as string) || 1;
+                        const limit = parseInt(req.query.limit as string) || 9;
+                        const skip = limit * (page === 1 ? 0 : page - 1);
                         const raffleEntries = await RaffleTicket.aggregate([
                             {
                               $lookup: {
@@ -149,7 +152,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                 "artDetails.colouredArtReference": 1
                               }
                             }
-                          ]);
+                          ]).skip(skip)
+                          .limit(limit);
                           res.status(200).json({raffleEntries });
                     }
                 }

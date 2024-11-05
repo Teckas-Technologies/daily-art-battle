@@ -9,24 +9,20 @@ import uploadArweave from "./uploadArweave";
 export async function getNextAvailableDate(campaignId: string): Promise<Date> {
   await connectToDatabase();
   const latestBattle = await Battle.findOne({ campaignId }).sort({ endTime: -1 });
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); 
 
-  if (!latestBattle || latestBattle.endTime < new Date(today.getTime() + 12 * 60 * 60 * 1000)) {
-    today.setHours(0, 0, 0, 0); 
+  // If there’s no latest battle, return today's date at 12:00 PM (noon) as the default start time
+  if (!latestBattle) {
+    const today = new Date();
+    today.setHours(12, 0, 0, 0);
     return today;
   }
 
-  const nextSlot = new Date(latestBattle.endTime);
-  if (nextSlot.getHours() === 0) {
-    nextSlot.setHours(12, 0, 0, 0);
-  } else {
-    nextSlot.setDate(nextSlot.getDate() + 1);
-    nextSlot.setHours(0, 0, 0, 0);
-  }
-  
+  // Set the next available slot to immediately after the latest battle's end time
+  const nextSlot = new Date(latestBattle.endTime.getTime() + 1);
+
   return nextSlot;
 }
+
 
 
 export const findTopTwoArts = async (campaignId:string): Promise<any[]> => {
@@ -65,7 +61,11 @@ export const createBattle = async (): Promise<any> => {
       if (battles.length === 0 && artA && artB) {
         const startDate = await getNextAvailableDate(campaign._id.toString());
         const endDate = new Date(startDate);
-        endDate.setHours(startDate.getHours() + 12, 0, 0, 0);
+        endDate.setHours(startDate.getHours() + 11);
+        endDate.setMinutes(startDate.getMinutes() + 59);
+        endDate.setSeconds(59);
+        endDate.setMilliseconds(999);
+        console.log(endDate);
         const ress = await spinner(artA.colouredArt,artB.colouredArt);
         console.log("Uploading arweave")
         const response = await uploadArweave(ress.gif);
@@ -126,7 +126,11 @@ export const createGfxvsBattle = async (): Promise<any> => {
   if(battles.length<=0 && (artA && artB)){
     const startDate = await getNextAvailableDate(campaignId);
     const endDate = new Date(startDate);
-    endDate.setHours(startDate.getHours() + 12, 0, 0, 0);
+    endDate.setHours(startDate.getHours() + 11);
+    endDate.setMinutes(startDate.getMinutes() + 59);
+    endDate.setSeconds(59);
+    endDate.setMilliseconds(999);
+    console.log(endDate);
     const ress = await spinner(artA.colouredArt,artB.colouredArt);
     console.log("Uploading arweave")
     const response = await uploadArweave(ress.gif);

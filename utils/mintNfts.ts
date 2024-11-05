@@ -60,9 +60,10 @@ export const mintNfts = async (): Promise<void> => {
           tokenIdA = tokenIds1[0];
         }
       }
-      await User.updateOne({ nearAddress:specialWinner }, { $inc: { gfxCoin: -SPECIAL_WINNER } });
+      await User.updateOne({ nearAddress:specialWinner }, { $inc: { gfxCoin: SPECIAL_WINNER } });
+      const user = await User.findOne({nearAddress:specialWinner});
       const newTransaction = new Transactions({
-        nearAddress: specialWinner,
+        email: user.email,
         gfxCoin: SPECIAL_WINNER,  
         transactionType: "received"  
       });

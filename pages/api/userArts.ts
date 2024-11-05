@@ -14,7 +14,7 @@ export default async function handler(
       try {
         const queryType = req.query.queryType;
         if(queryType=='uploadedArts'){
-          const queryFilter = req.query.queryFilter;
+          const queryFilter = req.query.sort;
           if(queryFilter=='voteAsc'){
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 9;
@@ -67,6 +67,27 @@ export default async function handler(
                   .exec();
                 return res.status(200).json({ totalDocuments, totalPages, arts });
                 }
+        }else if(queryType=="search"){
+          const queryFilter = req.query.queryFilter;
+          if(queryFilter=="artName"){
+          const name = req.query.name as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 9;
+          const queryFilter: {email:string; arttitle?: { $regex: string; $options: string } } = {
+            email:email
+          };
+          if (name) {
+            queryFilter.arttitle = { $regex: name, $options: 'i' }; 
+          }
+          const skip = limit * (page === 1 ? 0 : page - 1);
+          const arts = await ArtTable.find(queryFilter)
+            .sort({ uploadedTime: -1, _id: 1 })
+            .skip(skip)
+            .limit(limit)
+            .exec();
+        
+            return res.status(200).json({arts });
+        }
         }
       } catch (error: any) {
         res.status(400).json({ error: error.message });
