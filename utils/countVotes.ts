@@ -20,10 +20,10 @@ export const countVotes = async (): Promise<void> => {
         const artAVotes = artA.raffleTickets;
         const artBVotes = artB.raffleTickets;
 
-        const winningArt = artAVotes.length >= artBVotes.length ? 'Art A' : 'Art B';
+        const winningArt = artAVotes >= artBVotes ? 'Art A' : 'Art B';
         // Update battle information
-        battle.artAVotes = artAVotes.length;
-        battle.artBVotes = artBVotes.length;
+        battle.artAVotes = artAVotes;
+        battle.artBVotes = artBVotes;
         battle.isBattleEnded = true;
         battle.winningArt = winningArt;
         battle.totalVotes = artAVotes + artBVotes;
@@ -37,7 +37,6 @@ export const countVotes = async (): Promise<void> => {
        await ArtTable.findOneAndUpdate(
         { _id: battle.artAId }, 
         { $set: { isCompleted: true,
-         votes:artAVotes.length,
          battleTime:battle.startTime,
          endTime:battle.endTime
          } }, 
@@ -47,13 +46,12 @@ export const countVotes = async (): Promise<void> => {
       await ArtTable.findOneAndUpdate(
         { _id: battle.artBId }, 
         { $set: { isCompleted: true,
-          votes:artBVotes.length,
           battleTime:battle.startTime,
           endTime:battle.endTime } }, 
         { new: true } 
       );
-        console.log("Art A Votes:", artAVotes.length);
-        console.log("Art B Votes:", artBVotes.length);
+        console.log("Art A Votes:", artAVotes);
+        console.log("Art B Votes:", artBVotes);
     }
 }
 };

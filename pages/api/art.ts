@@ -82,32 +82,36 @@ export default async function handler(
 
         if(queryType=="coming"){
           const search = req.query.search
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 9;
           if(search=="artsName"){
           const campaignId = req.query.campaignId as string;
            const name = req.query.name as string;
-          const battles = await findcomingArtsByName(name,campaignId);
+          const battles = await findcomingArtsByName(name,campaignId,page,limit);
           return res.status(200).json(battles);
           }
           else if(search=="artistName"){
             const campaignId = req.query.campaignId as string;
             const name = req.query.name as string;
-            const battles = await findcomingArtsByArtist(name,campaignId);
+            const battles = await findcomingArtsByArtist(name,campaignId,page,limit);
             return res.status(200).json(battles);
           }
        
         }
         if(queryType=="completed"){
           const search = req.query.search
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 9;
           if(search=="artsName"){
             const campaignId = req.query.campaignId as string;
            const name = req.query.name as string;
-          const battles = await findCompletedArtsByName(name,campaignId);
+          const battles = await findCompletedArtsByName(name,campaignId,page,limit);
           return res.status(200).json(battles);
           }
           else if(search=="artistName"){
             const campaignId = req.query.campaignId as string;
             const name = req.query.name as string;
-            const battles = await findCompletedArtsByArtist(name,campaignId);
+            const battles = await findCompletedArtsByArtist(name,campaignId,page,limit);
             return res.status(200).json(battles);
           }
        
@@ -136,26 +140,29 @@ export default async function handler(
         } else {
           const sort = req.query.sort;
           const campaignId = req.query.campaignId as string;
+          const page = parseInt(req.query.page as string) || 1;
+          const limit = parseInt(req.query.limit as string) || 10;
           if (sort == "voteDsc") {
-            const { arts } = await findAllArts(
-              campaignId
+            const { arts, totalDocuments, totalPages } = await findAllArts(
+              campaignId,
+              page, limit
             );
-            return res.status(200).json({ arts });
+            return res.status(200).json({ arts , totalDocuments, totalPages});
           } else if (sort == "dateDsc") {
-            const { arts} =
-              await findAllArtsByDate(campaignId);
-            return res.status(200).json({ arts});
+            const { arts, totalDocuments, totalPages} =
+              await findAllArtsByDate(campaignId,page, limit);
+            return res.status(200).json({ arts, totalDocuments, totalPages});
           } else if (sort == "voteAsc") {
-            const { arts } =
-              await findAllArtsByVoteAsc(campaignId);
-            return res.status(200).json({ arts});
+            const { arts, totalDocuments, totalPages } =
+              await findAllArtsByVoteAsc(campaignId,page, limit);
+            return res.status(200).json({ arts, totalDocuments, totalPages});
           } else if (sort == "dateAsc") {
-            const { arts} =
-              await findAllArtsByDateAsc(campaignId);
-            return res.status(200).json({ arts });
+            const { arts, totalDocuments, totalPages} =
+              await findAllArtsByDateAsc(campaignId,page, limit);
+            return res.status(200).json({ arts , totalDocuments, totalPages});
           } else {
             const { arts, totalDocuments, totalPages } =
-              await findAllArtsByDate( campaignId);
+              await findAllArtsByDate( campaignId,page, limit);
             return res.status(200).json({ arts, totalDocuments, totalPages });
           }
         }
