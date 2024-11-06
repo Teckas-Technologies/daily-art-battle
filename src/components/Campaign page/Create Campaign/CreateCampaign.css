@@ -134,7 +134,6 @@
   border-radius: 37.86px;
   padding: 15px;
   outline: 0;
-  
 }
 .create-campaign-left,
 .create-campaign-right {
@@ -247,7 +246,7 @@
   position: relative;
   display: inline-block;
   width: 50px;
-  height: 24px; 
+  height: 24px;
 }
 
 .switch input {
@@ -358,16 +357,16 @@ input:checked + .slider:before {
   }
   .create-campaign-coinsButton {
     border-radius: 5.82px;
-    font-size: 7.42px;
+    font-size: 10.42px;
     font-weight: 600;
     line-height: 10.55px;
     letter-spacing: -6%;
-    padding: 10px 19px;
+    padding: 13px 30px;
     gap: 5px;
   }
   .coin-btn-icon {
-    width: 10px;
-    height: 10px;
+    width: 13px;
+    height: 13px;
   }
   .submitButton {
     width: 128px;
@@ -377,25 +376,109 @@ input:checked + .slider:before {
     font-size: 10.63px;
     font-weight: 600;
     line-height: 11.91px;
-    margin: 25px auto;
+    margin: 25px auto 100px auto;
   }
+  .submit-btn-Wrapper {
+    position: relative;
+    padding-left: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+    width: 128px;
+    height: 35.27px;
+    margin: 25px auto 100px auto;
+    display: block;
+  }
+
+  .submit-btn {
+    width: 100%;
+    height: 100%;
+    border-radius: 21.86px;
+    padding: 7.68px 10.13px;
+    background: radial-gradient(
+      128.13% 128.13% at 50% 50%,
+      #000000 25%,
+      rgba(0, 255, 0, 0) 100%
+    );
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 10.63px;
+    font-weight: 600;
+    line-height: 11.91px;
+    letter-spacing: -6%;
+    text-align: center;
+  }
+
+  .submit-btn-Border {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 21.86px;
+    background: linear-gradient(
+      99.76deg,
+      #00ff00 8.86%,
+      rgba(0, 153, 0, 0) 91.14%
+    );
+    z-index: 0;
+    padding: 1.27px;
+    box-sizing: border-box;
+  }
+
+
+  .submit-btn-Wrapper:hover .submit-btn-Border {
+    animation: glow 1.5s infinite alternate;
+    background-size: 200% 200%;
+  }
+
+
+  .submit-btn-Overlay {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 21.86px;
+    background: linear-gradient(
+      to left,
+      rgba(0, 255, 0, 0.737),
+      transparent 60%
+    );
+    z-index: 1;
+  }
+
+  @keyframes glow {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
   .create-campaign-firstrow label {
     font-size: 11.81px;
     font-weight: 600;
     line-height: 15.47px;
   }
   .create-campaign-firstrow input {
-    font-size: 9.3px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 10.42px;
     letter-spacing: -6%;
     height: 41.43px;
+    padding: 7px 30px;
+    font-size: 12px;
   }
   .create-campaign-input {
     height: 41.43px;
   }
   .create-campaign-input input {
     height: 41.43px;
+    font-size: 12px;
   }
   .create-campaign-input label {
     font-size: 10.81px;

@@ -8,7 +8,6 @@
   padding: 70px 120px;
   position: relative;
   z-index: 1;
-
 }
 .campaign-header {
   background: linear-gradient(90deg, #000000 55%, rgba(0, 0, 0, 0) 100%),
@@ -81,7 +80,7 @@
   border-radius: 55.1px;
   background: radial-gradient(
     128.13% 128.13% at 50% 50%,
-    #000000 25%,
+    hwb(0 0% 100% / 0.952) 25%,
     rgba(0, 255, 0, 0) 100%
   );
   position: relative;
@@ -110,6 +109,7 @@
   z-index: 0;
   padding: 1.27px;
   box-sizing: border-box;
+  transition: background-position 0.4s ease;
 }
 
 .campaign-btn-Overlay {
@@ -123,6 +123,32 @@
   background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
   z-index: 1;
 }
+.campaign-btn-Wrapper:hover .campaign-btn-Border {
+  animation: glow 1.5s infinite alternate;
+  background-size: 200% 200%;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.campaign-btn-Overlay {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+  z-index: 1;
+  pointer-events: none;
+}
 .button-table-container {
   /* background: rgb(0,0,0);
   background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 93%, rgba(0,0,0,1) 100%);
@@ -133,7 +159,7 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
 }
 .effect {
   position: absolute;
- top:50%;
+  top: 50%;
   transform: translateY(-50%);
   width: 100%;
   height: 100%;
@@ -199,7 +225,6 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
   border-radius: 10.5px;
   align-items: center;
   border: 1px solid #7a7a7a;
-  
 }
 .cell {
   font-size: 12px;
@@ -212,7 +237,7 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
   align-items: center;
   justify-content: center;
 }
-.creater-border{
+.creater-border {
   border-color: #00ff00;
 }
 .view-details-btn {
@@ -243,6 +268,9 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
 .pagination-blur {
   background-color: #000000b2;
 }
+.pagination-section {
+  margin-bottom: 70px;
+}
 
 @media (max-width: 768px) {
   .campaign-header {
@@ -256,19 +284,15 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
     height: 250px;
   }
   .camapign-path-button {
-    height: 26.75px;
-    padding: 7.5px 18px;
-    border-radius: 35.25px;
-    border: 0.75px solid #00ff00;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.15) 100%
-    );
+    font-size: 11.2px;
+    padding: 5.5px 13.2px;
+    height: 22.55px;
+  }
+  .camapign-path {
+    margin-top: 20px;
+  }
+  .camapign-path h3 {
+    font-size: 11.2px;
   }
   .campaign-header h1 {
     font-size: 28px;
@@ -293,7 +317,6 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
     padding-bottom: 1px;
     border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
     margin-bottom: 40px;
-   
   }
 
   .campaign-btn {
@@ -392,7 +415,7 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
     /* justify-self: end;  */
   }
   .effect {
-right:2px;
+    right: 2px;
   }
   .camapign-page-path {
     margin-top: 50px;
@@ -408,7 +431,6 @@ right:2px;
   }
   .camapigns-path {
     margin-top: 20px;
-    
   }
   .camapigns-path h3 {
     font-size: 11.2px;
@@ -420,7 +442,7 @@ right:2px;
     height: 20.55px;
   }
 }
-.no-campaign{
+.no-campaign {
   text-align: center;
   padding: 60px;
 }
@@ -473,7 +495,6 @@ right:2px;
   .campaign-tabs {
     margin-top: 60px;
     justify-content: space-around;
-   
   }
 
   .campaign-tabs button {
@@ -485,7 +506,8 @@ right:2px;
     gap: 8px;
   }
 
-  .table-header, .campaign-row {
+  .table-header,
+  .campaign-row {
     gap: 30px;
     grid-template-columns: 4fr 2fr 2fr 2fr 2fr;
     padding: 12px;

@@ -1,7 +1,7 @@
 "use client";
 import InlineSVG from "react-inlinesvg";
 import "./CampaignDetails.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
 import { useSession, signIn } from "next-auth/react";
@@ -85,9 +85,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   campaignId,
   campaign,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const [limit, setLimit] = useState(6); // Number of items per page
+  const [arts, setArts] = useState<ArtData[]>([]); // Store arts data
+  const [totalPages, setTotalPages] = useState(1); // Total number of pages
   const [campaignAnalytics, setCampaignAnalytics] =
     useState<CampaignAnalytics | null>(null);
   const [participants, setParticipants] = useState<string[]>([]);
@@ -105,6 +106,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
   const { data: session, status } = useSession();
   const { activeAccountId, isConnected } = useMbWallet();
+  const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (status === "unauthenticated") {
       signIn("azure-ad-b2c", { callbackUrl: "/" });
@@ -113,46 +115,51 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     console.log("session", session);
   }, [status, session]);
   const idToken = session?.idToken || "";
-  const { fetchCampaignAnalytics, fetchCampaignFromArtAPI, totalPages, art } =
-    useCampaigns(idToken);
+  const {
+    fetchCampaignAnalytics,
+    fetchCampaignFromArtAPI,
+    art,
+    totalDocuments,
+    loading,
+  } = useCampaigns(idToken);
   useEffect(() => {
-    fetchCampaignFromArtAPI(campaignId, page, limit);
-  }, [campaignId, page, limit]);
+    const fetchData = async () => {
+      try {
+        const fetchArt = await fetchCampaignFromArtAPI(
+          campaignId,
+          currentPage,
+          limit
+        );
+        setArts(fetchArt.arts);
+        setTotalPages(fetchArt.totalPages); // Update the total pages
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [campaignId, currentPage, limit, session?.idToken]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return; // Prevent invalid page number
+    setCurrentPage(newPage);
+  };
+
   const SpecialWinnerCount = campaign?.specialWinnerCount ?? "";
+  const distributedRewards = campaign?.distributedRewards ?? false;
 
-  console.log("log log log", SpecialWinnerCount);
-
-  const handlePageClick = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handlePrevious = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
-
-  const renderPageNumbers = () => {
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
-  };
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
         const analyticsData = await fetchCampaignAnalytics(campaignId);
         if (analyticsData) {
           setCampaignAnalytics(analyticsData);
-  
+
           const participantNames = analyticsData.uniqueWallets.map(
-            (wallet: { firstName: string; lastName: string }) => 
+            (wallet: { firstName: string; lastName: string }) =>
               `${wallet.firstName} ${wallet.lastName}`
           );
-  
+
           setParticipants(participantNames);
         } else {
           console.warn("No analytics data returned");
@@ -161,13 +168,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         console.error("Error fetching campaign analytics:", error);
       }
     };
-  
+
     fetchAnalytics();
   }, [fetchCampaignAnalytics, campaignId]);
-  
 
   useEffect(() => {
-    console.log("Updated participants:", participants);
+    // console.log("Updated participants:", participants);
   }, [participants]);
   const { battles, fetchBattles } = useCampaigns(idToken);
   useEffect(() => {
@@ -200,6 +206,8 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     const result = await distributeArt(campaignId, artList);
     if (result) {
       console.log("Success!");
+      setShowAllParticipantsPopup(false);
+      setShowFewParticipantsPopup(false);
     } else {
       console.error("Failed to distribute art");
     }
@@ -213,6 +221,22 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       setShowFewParticipantsPopup(true);
     }
     setShowRewardModal(false);
+  };
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const totalPagesToShow = 3;
+
+    let startPage = Math.max(1, currentPage - Math.floor(totalPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + totalPagesToShow - 1);
+
+    if (endPage === totalPages) {
+      startPage = Math.max(1, endPage - totalPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
   };
   const isCreator = campaign?.creatorId === activeAccountId;
   return (
@@ -257,7 +281,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                         src="/icons/red-heart.svg"
                         style={{ marginRight: "2px" }}
                       />
-                      {art.raffleTickets} Upvotes
+                      {art.raffleTickets} Collects
                     </p>
                   </div>
                 ))}
@@ -314,7 +338,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                     style={{ marginRight: "2px" }}
                     className="heart-icon"
                   />
-                  {special.raffleTickets} Upvotes
+                  {special.raffleTickets} Collects
                 </p>
               </div>
             </div>
@@ -363,7 +387,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                       style={{ marginRight: "2px" }}
                       className="heart-icon"
                     />
-                    {upvotes} Upvotes
+                    {upvotes} Collects
                   </p>
                 </div>
               </div>
@@ -382,8 +406,14 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
               <button
                 className="distribute-btn "
                 onClick={() => setShowRewardModal(true)}
+                disabled={distributedRewards}
+                style={{
+                  cursor: distributedRewards ? "not-allowed" : "pointer",
+                }}
               >
-                Distribute Rewards
+                {distributedRewards
+                  ? "Reward Distributed"
+                  : "Distribute Reward"}
               </button>
 
               <div className="distribute-btn-Border" />
@@ -401,8 +431,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                 className="participant"
                 style={{ display: "flex", alignItems: "center" }}
               >
-                <span className="participant-number">{index + 1}</span>
-                <span className="participant-name">{participant}</span>
+                <div className="flex flex-row items-center justify-center">
+                  <span className="participant-number">{index + 1}</span>
+                  <span className="participant-name">{participant}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -426,11 +458,13 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                 <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
                   <div
                     className={`previous flex items-center gap-1 ${
-                      page === 1
-                        ? "cursor-not-allowed opacity-50"
-                        : "cursor-pointer"
+                      currentPage === 1
+                        ? "cursor-not-allowed opacity-50 text-gray-400"
+                        : "cursor-pointer text-white"
                     }`}
-                    onClick={handlePrevious}
+                    onClick={() =>
+                      currentPage > 1 && handlePageChange(currentPage - 1)
+                    }
                   >
                     <InlineSVG
                       src="/icons/left-arrow.svg"
@@ -440,13 +474,13 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                   </div>
 
                   <div className="page-numbers flex items-center justify-center gap-2">
-                    {renderPageNumbers().map((pageNumber) => (
+                    {renderPageNumbers().map((pageNumber: number) => (
                       <div
                         key={pageNumber}
-                        className={`page md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center ${
-                          page === pageNumber ? "active" : "cursor-pointer"
+                        className={`page-number md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center rounded-full cursor-pointer ${
+                          currentPage === pageNumber ? "active-page" : ""
                         }`}
-                        onClick={() => handlePageClick(pageNumber)}
+                        onClick={() => handlePageChange(pageNumber)}
                       >
                         <h2>{pageNumber}</h2>
                       </div>
@@ -455,11 +489,14 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
                   <div
                     className={`next flex items-center gap-1 ${
-                      page === totalPages
-                        ? "cursor-not-allowed opacity-50"
-                        : "cursor-pointer"
+                      currentPage === totalPages
+                        ? "cursor-not-allowed opacity-50 text-gray-400"
+                        : "cursor-pointer text-white"
                     }`}
-                    onClick={handleNext}
+                    onClick={() =>
+                      currentPage < totalPages &&
+                      handlePageChange(currentPage + 1)
+                    }
                   >
                     <h2 className="hidden md:block">Next</h2>
                     <InlineSVG
@@ -470,36 +507,36 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                 </div>
               </div>
             </div>
-            {showRewardModal && (
-              <DistributeRewardPopup
-                campaignId={campaignId}
-                onClose={() => setShowRewardModal(false)}
-                art={art}
-                idToken={idToken}
-                selectedArt={selectedArt}
-                toggleSelection={toggleSelection}
-                handlePopups={handlePopups}
-                SpecialWinnerCount={SpecialWinnerCount}
-              />
-            )}
-            {showAllParticipantsPopup && (
-              <AllParticipantpopup
-                onClose={() => setShowAllParticipantsPopup(false)}
-                onDistribute={handleDistribute}
-                selectedArtLength={selectedArt.length}
-                artLength={art.length}
-              />
-            )}
-            {showFewParticipantsPopup && (
-              <FewParticipantsPopup
-                onClose={() => setShowFewParticipantsPopup(false)}
-                onDistribute={handleDistribute}
-                selectedArtLength={selectedArt.length}
-                artLength={art.length}
-              />
-            )}
           </div>
         </div>
+        {showRewardModal && (
+          <DistributeRewardPopup
+            campaignId={campaignId}
+            onClose={() => setShowRewardModal(false)}
+            art={art}
+            idToken={idToken}
+            selectedArt={selectedArt}
+            toggleSelection={toggleSelection}
+            handlePopups={handlePopups}
+            SpecialWinnerCount={SpecialWinnerCount}
+          />
+        )}
+        {showAllParticipantsPopup && (
+          <AllParticipantpopup
+            onClose={() => setShowAllParticipantsPopup(false)}
+            onDistribute={handleDistribute}
+            selectedArtLength={selectedArt.length}
+            artLength={art.length}
+          />
+        )}
+        {showFewParticipantsPopup && (
+          <FewParticipantsPopup
+            onClose={() => setShowFewParticipantsPopup(false)}
+            onDistribute={handleDistribute}
+            selectedArtLength={selectedArt.length}
+            artLength={art.length}
+          />
+        )}
       </div>
     </div>
   );
