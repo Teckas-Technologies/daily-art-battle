@@ -4,9 +4,11 @@ import { FETCH_FEED } from "@/data/queries/feed.graphql";
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import { authenticateUser } from "../../utils/verifyToken";
 import User from "../../model/User";
+import { connectToDatabase } from "../../utils/mongoose";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     const email = await authenticateUser(req);
+    await connectToDatabase();
     if(req.method=='GET'){
         try{
         const queryType = req.query.queryType;
@@ -49,7 +51,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
            
         }
         catch(error:any){
-            res.status(400).json({error});
+            res.status(400).json({error:error.message});
         }
        
     }

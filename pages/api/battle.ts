@@ -13,6 +13,7 @@ import {
 } from "../../utils/battleUtils";
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import Battle from "../../model/Battle";
+import { connectToDatabase } from "../../utils/mongoose";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,6 +21,7 @@ export default async function handler(
 ) {
   try {
     const email = await authenticateUser(req);
+    await connectToDatabase();
     switch (req.method) {
       //POST method is used for creating battle
       case "POST":

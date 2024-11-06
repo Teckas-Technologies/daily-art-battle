@@ -22,3 +22,5 @@ export const DEFAULT = 10;
 export const SPECIAL_WINNER = 1000;
 export const PARTICIPANT = 10
 export const RAFFLE_TICKET = 10;
+export const DAILY_CHECKIN = 10;
+export const WEEKLY_CLAIM = 25;
