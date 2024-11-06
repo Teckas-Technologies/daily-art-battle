@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import './Card.css';
 import InlineSVG from 'react-inlinesvg';
-import { ArtData } from '@/hooks/artHooks';
-import { useArtsRaffleCount, Vote } from '@/hooks/useRaffleTickets';
+import { ArtData, useFetchArtById } from '@/hooks/artHooks';
+import { useArtsRaffleCount } from '@/hooks/useRaffleTickets';
 import { useMbWallet } from '@mintbase-js/react';
 
 interface CardProps {
@@ -11,26 +11,43 @@ interface CardProps {
     onImageClick: (id: string) => Promise<void>;
     campaignId: string;
     success: boolean;
+    overlayArt: ArtData | undefined;
 }
 
-const Card: React.FC<CardProps> = ({ art, onImageClick, campaignId, success }) => {
+const Card: React.FC<CardProps> = ({ art, onImageClick, campaignId, success, overlayArt }) => {
 
     const { activeAccountId } = useMbWallet();
-    const { fetchArtUserRaffleCount } = useArtsRaffleCount();
+    const { raffleCount, fetchArtUserRaffleCount } = useArtsRaffleCount();
     const [myTickets, setMyTickets] = useState<number>(0);
+    const [artNew, setArtNew] = useState<ArtData>();
+    const { fetchArtById } = useFetchArtById();
+    // console.log("Success ", success);
+
+    const fetchArtUserticketss = async (art: ArtData) => {
+        if (art && campaignId) {
+            const tickets = await fetchArtUserRaffleCount(art?._id as string, campaignId);
+            setMyTickets(tickets);
+            console.log("My tickets : ", myTickets);
+        }
+    };
 
     useEffect(() => {
+        fetchArtUserticketss(art);
+    }, [activeAccountId, fetchArtUserRaffleCount, campaignId, success, overlayArt, art]);
 
-        const fetchArtUserticketss = async () => {
-            if (art) {
-                const tickets = await fetchArtUserRaffleCount(art?._id as string, campaignId);
-                setMyTickets(tickets);
-                console.log("My tickets : ", myTickets);
-            }
-        };
+    const fetchArt = async () => {
+        const overlay = await fetchArtById(art._id);
+        setArtNew(overlay);
+    }
 
-        fetchArtUserticketss();
-    }, [activeAccountId, fetchArtUserRaffleCount, campaignId, success]);
+    useEffect(()=>{
+        if(overlayArt && overlayArt._id === art._id && success) {
+            fetchArt();
+        }
+        if(overlayArt && overlayArt._id === art._id) {
+            fetchArtUserticketss(overlayArt);
+        }
+    }, [success, overlayArt])
 
     return (
         <div className="card w-auto gap-0 md:rounded-[1.25rem] rounded-[1rem] md:mt-5 mt-0 shadow-md p-[0.5rem] flex flex-col items-center"> {/* lg:w-[18.5rem] lg:h-[26.5rem] md:w-[17rem] md:h-[25rem] w-[10rem] h-[15.5rem] */}
@@ -59,7 +76,7 @@ const Card: React.FC<CardProps> = ({ art, onImageClick, campaignId, success }) =
                     <h2 className='collect lg:text-md md:text-sm text-xs md:spartan-semibold spartan-light md:w-[9rem] w-[4.5rem] truncate overflow-hidden whitespace-nowraps'>Total Collects</h2>
                 </div>
                 <div className="upvotes">
-                    <h2 className='text-green md:text-md text-sm'>{art.raffleTickets as number}</h2>
+                    <h2 className='text-green md:text-md text-sm'>{ artNew ? artNew.raffleTickets as number : art?.raffleTickets as number}</h2>
                 </div>
             </div>
         </div>

@@ -3,9 +3,9 @@
 import InlineSVG from "react-inlinesvg";
 import './UpcomingGrid.css';
 import { useEffect, useState, useRef } from "react";
-import { useMbWallet } from "@mintbase-js/react";
 import { ArtData, useFetchArts } from "@/hooks/artHooks";
 import CardHolder from "./ArtCard/CardHolder";
+import Loader from "../../Loader/Loader";
 
 interface Props {
     toggleUploadModal: () => void;
@@ -14,42 +14,23 @@ interface Props {
     fontColor: string
 }
 
-const MOBILE_LIMIT = 4;
+const MOBILE_LIMIT = 9;
 const DESKTOP_LIMIT = 8;
 
 export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
     const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
     const [refresh, setRefresh] = useState(false);
     const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
-    const { isConnected } = useMbWallet();
-    const [page, setPage] = useState(1);
-    const [sort, setSort] = useState("dateDsc");
+    const [page, setPage] = useState<number | null>(null);
+    const [sort, setSort] = useState<string | null>("dateDsc");
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const [selectedArt, setSelectedArt] = useState();
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const initializeData = async () => {
-            const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, page, limit);
-        };
-        const timeoutId = setTimeout(initializeData, 1000);
-
-        return () => clearTimeout(timeoutId);
-    }, [sort, page, refresh, uploadSuccess, fetchMoreArts]);
-
-    const [hasnext, setHasNext] = useState(false);
-
-    useEffect(() => {
-        if (arts) {
-            if (page <= totalPage - 1) {
-                setHasNext(true);
-            } else {
-                setHasNext(false);
-            }
-        }
-        setUpcomingArts(arts);
-    }, [arts]);
+    // useEffect(() => {
+    //     setSort("dateDsc");
+    // }, []);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -74,90 +55,143 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     };
 
     const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setUpcomingArts([]);
         const sortType = event.target.value
         setSort(sortType);
-        setPage(1); // Reset to first page when sorting
+        setPage(0);
+    };
+
+    const getArts = async () => {
         const limit = getLimitBasedOnScreenSize();
-        fetchMoreArts(campaignId, sortType, 1, limit);
-    };
-
-    const handleNext = () => {
-        if (page < totalPage) {
-            setPage((prevPage) => prevPage + 1);
-            const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, page + 1, limit);
-
-            const upcomingSection = document.getElementById('upcoming');
-            if (upcomingSection) {
-                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
-                const isMobile = window.innerWidth < 768 ? true : false;
-                const rem = isMobile ? 1 : 3;
-                const offset = rem * 16;
-                window.scrollTo({
-                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
-                    behavior: 'smooth',
-                });
-            }
+        if (loading || page === null || page === 0 || sort === null || !campaignId) return;
+        if (page === 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
         }
-    };
+        setLoading(true);
+        try {
+            const arts = await fetchMoreArts(campaignId, sort, page, limit);
+            if (arts && arts.length > 0) {
+                setUpcomingArts((prevArts) => [...prevArts, ...arts]);
+                // setUpcomingArts((prevArts) => {
+                //     const artMap = new Map(prevArts.map(art => [art._id, art]));
+                //     arts.forEach((newArt: ArtData) => {
+                //         artMap.set(newArt._id, newArt);
+                //     });
 
-    const handlePrevious = () => {
-        if (page > 1) {
-            setPage((prevPage) => prevPage - 1);
-            const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, page - 1, limit);
-
-            const upcomingSection = document.getElementById('upcoming');
-            if (upcomingSection) {
-                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
-                const isMobile = window.innerWidth < 768 ? true : false;
-                const rem = isMobile ? 1 : 3;
-                const offset = rem * 16;
-                window.scrollTo({
-                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
-                    behavior: 'smooth',
-                });
-                // upcomingSection.scrollIntoView({ behavior: 'smooth' });
+                //     return Array.from(artMap.values());
+                // });
+            } else {
+                console.log(`No data returned for page ${page}`);
             }
+        } catch (error) {
+            console.error("Error fetching arts:", error);
+        } finally {
+            setLoading(false);
         }
+    }
+
+    // Add debounce function for scroll handling
+    const debounce = (func: () => void, delay: number) => {
+        let timeoutId: NodeJS.Timeout;
+        return () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(func, delay);
+        };
     };
 
-    const handlePageClick = (pageNumber: number) => {
-        if (pageNumber !== page) {
-            setPage(pageNumber);
-            const limit = getLimitBasedOnScreenSize();
-            fetchMoreArts(campaignId, sort, pageNumber, limit);
-
-            const upcomingSection = document.getElementById('upcoming');
-            if (upcomingSection) {
-                const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
-                const isMobile = window.innerWidth < 768 ? true : false;
-                const rem = isMobile ? 1 : 3;
-                const offset = rem * 16;
-                window.scrollTo({
-                    top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
-                    behavior: 'smooth',
-                });
-            }
+    const handleInfiniteScroll = debounce(() => {
+        if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight && !loading) {
+            setPage((prevPage) => (prevPage === null ? 0 : prevPage + 1));
         }
-    };
+    }, 200);
 
-    const renderPageNumbers = () => {
-        const pagesToShow = 5;
-        let startPage = Math.max(1, page - 2);  // Center the current page
-        let endPage = Math.min(totalPage, page + 2);  // Show up to 5 pages
+    useEffect(() => {
+        window.addEventListener("scroll", handleInfiniteScroll);
+        return () => window.removeEventListener("scroll", handleInfiniteScroll);
+    }, [loading]);
 
-        if (endPage - startPage + 1 < pagesToShow) {
-            // Adjust start and end if less than 5 pages are displayed
-            if (startPage === 1) {
-                endPage = Math.min(totalPage, pagesToShow);
-            } else if (endPage === totalPage) {
-                startPage = Math.max(1, totalPage - pagesToShow + 1);
-            }
-        }
+    useEffect(() => {
+        getArts();
+    }, [page, sort, refresh, uploadSuccess]);
 
-        return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-    };
+
+    // const handleNext = () => {
+    //     if (page < totalPage) {
+    //         setPage((prevPage) => prevPage + 1);
+    //         const limit = getLimitBasedOnScreenSize();
+    //         fetchMoreArts(campaignId, sort, page + 1, limit);
+
+    //         const upcomingSection = document.getElementById('upcoming');
+    //         if (upcomingSection) {
+    //             const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+    //             const isMobile = window.innerWidth < 768 ? true : false;
+    //             const rem = isMobile ? 1 : 3;
+    //             const offset = rem * 16;
+    //             window.scrollTo({
+    //                 top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+    //                 behavior: 'smooth',
+    //             });
+    //         }
+    //     }
+    // };
+
+    // const handlePrevious = () => {
+    //     if (page > 1) {
+    //         setPage((prevPage) => prevPage - 1);
+    //         const limit = getLimitBasedOnScreenSize();
+    //         fetchMoreArts(campaignId, sort, page - 1, limit);
+
+    //         const upcomingSection = document.getElementById('upcoming');
+    //         if (upcomingSection) {
+    //             const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+    //             const isMobile = window.innerWidth < 768 ? true : false;
+    //             const rem = isMobile ? 1 : 3;
+    //             const offset = rem * 16;
+    //             window.scrollTo({
+    //                 top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+    //                 behavior: 'smooth',
+    //             });
+    //             // upcomingSection.scrollIntoView({ behavior: 'smooth' });
+    //         }
+    //     }
+    // };
+
+    // const handlePageClick = (pageNumber: number) => {
+    //     if (pageNumber !== page) {
+    //         setPage(pageNumber);
+    //         const limit = getLimitBasedOnScreenSize();
+    //         fetchMoreArts(campaignId, sort, pageNumber, limit);
+
+    //         const upcomingSection = document.getElementById('upcoming');
+    //         if (upcomingSection) {
+    //             const sectionPosition = upcomingSection.getBoundingClientRect().top + window.scrollY;
+    //             const isMobile = window.innerWidth < 768 ? true : false;
+    //             const rem = isMobile ? 1 : 3;
+    //             const offset = rem * 16;
+    //             window.scrollTo({
+    //                 top: !isMobile ? sectionPosition + offset : sectionPosition - 70,
+    //                 behavior: 'smooth',
+    //             });
+    //         }
+    //     }
+    // };
+
+    // const renderPageNumbers = () => {
+    //     const pagesToShow = 5;
+    //     let startPage = Math.max(1, page - 2);  // Center the current page
+    //     let endPage = Math.min(totalPage, page + 2);  // Show up to 5 pages
+
+    //     if (endPage - startPage + 1 < pagesToShow) {
+    //         // Adjust start and end if less than 5 pages are displayed
+    //         if (startPage === 1) {
+    //             endPage = Math.min(totalPage, pagesToShow);
+    //         } else if (endPage === totalPage) {
+    //             startPage = Math.max(1, totalPage - pagesToShow + 1);
+    //         }
+    //     }
+
+    //     return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    // };
 
     return (
         <>
@@ -213,9 +247,11 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     </div>
                 </div>
 
+                {upcomingArts.length === 0 && <Loader />}
+
                 {/* Upcoming arts grid view section */}
                 <div className="grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
-                    <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} setSelectedArt={setSelectedArt} currentPage={page} totalPage={totalPage} />
+                    <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} />
                 </div>
 
                 {/* Pagination for upcoming arts */}

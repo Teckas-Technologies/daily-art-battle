@@ -83,11 +83,13 @@ export const useFetchArts = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?campaignId=${campaignId}&sort=${sort}`);
+      const response = await fetchWithAuth(`/api/art?campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
+      console.log("data:", data)
       setArts(data.arts);
       setTotalPage(data.totalPages)
+      return data?.arts;
     } catch (err) {
       setError("Error loading arts");
     } finally {
