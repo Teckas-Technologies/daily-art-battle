@@ -104,12 +104,16 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
     const handleClose = () => {
         setSelectedArtId(null);
         setSelectedArt(null);
-        setTokenCount(1)
+        // setTokenCount(1)
         const url = new URL(window.location.href);
         url.searchParams.delete('artId');
         window.history.pushState({}, '', url.toString());
-        setSuccess(false);
+        // setSuccess(false);
     };
+    const handleSuccessClose = () => {
+        setSuccess(false);
+        setTokenCount(1);
+    }
 
     // useEffect(()=>{
     //     if(activeAccountId) {
@@ -163,10 +167,11 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
         // console.log(success);
         if (success) {
             setSuccess(true);
+            handleClose();
             const art = await fetchArtById(id);
             console.log(art);
             setArtTickets(art?.raffleTickets);
-            setTokenCount(null)
+            // setTokenCount(null)
             //   alert('Vote submitted successfully!');
             setRefresh((prev) => !prev);
         } else {
@@ -305,6 +310,20 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>}
+
+            {success && <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
+                <div className="upcoming-popup lg:w-[38.5rem] md:w-[34.5rem] w-full h-auto lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
+                    <div className="close-art w-full flex justify-end">
+                        <div className="close-icon md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleSuccessClose}>
+                            <InlineSVG
+                                src="/icons/close.svg"
+                                className="md:w-4 md:h-4 w-3 h-3 spartan-light"
+                            />
+                        </div>
+                    </div>
+                    <h3 className='spartan-semibold text-xl text-green text-center pb-5 pt-6'>You have collected&nbsp; <span>{tokenCount}</span> &nbsp;raffle tickets successfully!</h3>
                 </div>
             </div>}
         </>
