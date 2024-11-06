@@ -20,6 +20,8 @@ import DistributeRewardPopup from "@/components/Campaign page/DistributeReward P
 import { Battle } from "@/components/ArtBattle/Battle/Battle";
 import { useSession, signIn } from "next-auth/react";
 import Loader from "@/components/ArtBattle/Loader/Loader";
+import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
+import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -40,20 +42,20 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   }, [status, session]);
   const idToken = session?.idToken || "";
 
-  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error } =
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error,participants } =
     useCampaigns(idToken);
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
   }, [params.campaign, idToken]);
 
-  // if (loading)
-  //   return (
-  //     <div style={{ background: "#00000" }}>
-  //       <Loader />{" "}
-  //     </div>
-  //   );
-  // if (error) return <div>No campaign found</div>;
+  if (loading)
+    return (
+      <div style={{ background: "#000000", width: "100%", height: "100vh" ,display:"flex",justifyContent:"center",alignItems:"center" }}>
+        <Loader />{" "}
+      </div>
+    );
+  if (error) return <div>No campaign found</div>;
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
@@ -88,7 +90,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           <CampaignHeader
             campaign={campaign}
             status={status}
-            participantsCount={campaign?.participants || 0}
+            participantsCount={participants}
           />
           <Battle
             campaignId={campaign?._id as string}
@@ -97,7 +99,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             welcomeText={""}
             themeTitle={""}
           />
-          <CurrentCampaigUploadArt />
+          <CurrentCampaigUploadArt toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          {showUploadModal && <ArtUploadForm campaignId={campaign?._id as string} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
           <UpcomingGrid
             fontColor={""}
             campaignId={campaign?._id as string}
@@ -111,7 +114,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             toggleUploadModal={toggleUploadModal}
           />
 
-          <Footer />
+          <FooterMenu />
         </div>
       )}
       {campaignStatus === "upcoming" && (
@@ -138,16 +141,16 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           <CampaignHeader
             campaign={campaign}
             status={campaignStatus}
-            participantsCount={campaign?.participants || 0}
+            participantsCount={participants}
           />
-          <CampaignTime campaign={campaign} />
+          <CampaignTime campaign={campaign} campaignId={campaign?._id as string}/>
           <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
           />
 
-          <Footer />
+          <FooterMenu />
         </div>
       )}
       {campaignStatus === "completed" && (
@@ -172,7 +175,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           <CampaignHeader
             campaign={campaign}
             status={status}
-            participantsCount={campaign?.participants || 0}
+            participantsCount={participants}
           />
           <CampaignDetails
             toggleDistributeModal={toggleDistributeModal}
@@ -196,7 +199,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             />
           )} */}
 
-          <Footer />
+          <FooterMenu />
         </div>
       )}
     </div>

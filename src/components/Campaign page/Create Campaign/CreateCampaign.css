@@ -76,7 +76,9 @@
 .create-campaign-coinsButton {
   background: linear-gradient(180deg, #00ff00 0%, #007200 100%);
   border-radius: 11px;
-  padding: 18px 43px;
+  padding: 19px 43px;
+  font-size: 15px;
+  font-weight: 600;
 }
 .coin-btn-icon {
   width: 18px;
@@ -101,11 +103,13 @@
   border: 0.74px solid #7b7b7b;
   outline: 0;
   background: transparent;
+  font-size: 14px;
+  font-weight: 600;
 }
 .create-campaign-firstrow input::placeholder {
-  font-size: 12px; 
-  color: #777777; 
-  font-weight: 400; 
+  font-size: 12px;
+  color: #777777;
+  font-weight: 400;
 }
 .create-campaign-input {
   display: flex;
@@ -130,6 +134,7 @@
   border-radius: 37.86px;
   padding: 15px;
   outline: 0;
+  
 }
 .create-campaign-left,
 .create-campaign-right {
@@ -242,7 +247,7 @@
   position: relative;
   display: inline-block;
   width: 50px;
-  height: 25px;
+  height: 24px; 
 }
 
 .switch input {
@@ -262,6 +267,7 @@
   border-radius: 34px;
   transition: 0.4s;
   border: 1px solid #7b7b7b;
+  box-sizing: border-box;
 }
 
 .slider:before {
@@ -270,7 +276,7 @@
   height: 19px;
   width: 19px;
   left: 4px;
-  bottom: 3px;
+  bottom: 2px;
   background-color: #707070;
   border-radius: 50%;
   transition: 0.4s;
@@ -423,7 +429,6 @@ input:checked + .slider:before {
     height: 22.55px;
   }
 }
-
 
 @media (min-width: 768px) and (max-width: 1024px) {
   .create-campaign-header {

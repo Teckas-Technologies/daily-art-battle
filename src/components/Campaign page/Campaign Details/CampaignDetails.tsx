@@ -8,6 +8,7 @@ import { useSession, signIn } from "next-auth/react";
 import DistributeRewardPopup from "../DistributeReward Popup/DistributePopup";
 import FewParticipantsPopup from "../DistributeReward Popup/FewParticipants";
 import AllParticipantpopup from "../DistributeReward Popup/AllParticipants";
+import { useMbWallet } from "@mintbase-js/react";
 
 interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
@@ -56,8 +57,8 @@ interface DayWinner {
   artBcolouredArtReference: string;
   artAgrayScaleReference: string;
   artBgrayScaleReference: string;
-  startTime: string; 
-  endTime: string; 
+  startTime: string;
+  endTime: string;
   isBattleEnded: boolean;
   isNftMinted: boolean;
   artAVotes: number;
@@ -65,8 +66,8 @@ interface DayWinner {
   artAvoters: string[];
   artBvoters: string[];
   winningArt: "Art A" | "Art B";
-  artAspecialWinner?: string | null; 
-  artBspecialWinner?: string | null; 
+  artAspecialWinner?: string | null;
+  artBspecialWinner?: string | null;
   campaignId: string;
   totalVotes: number;
 }
@@ -86,7 +87,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(6);
+  const [limit, setLimit] = useState(4);
   const [campaignAnalytics, setCampaignAnalytics] =
     useState<CampaignAnalytics | null>(null);
   const [participants, setParticipants] = useState<string[]>([]);
@@ -103,6 +104,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   );
 
   const { data: session, status } = useSession();
+  const { activeAccountId, isConnected } = useMbWallet();
   useEffect(() => {
     if (status === "unauthenticated") {
       signIn("azure-ad-b2c", { callbackUrl: "/" });
@@ -145,11 +147,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         const analyticsData = await fetchCampaignAnalytics(campaignId);
         if (analyticsData) {
           setCampaignAnalytics(analyticsData);
-
+  
           const participantNames = analyticsData.uniqueWallets.map(
-            (wallet: { firstName: string }) => wallet.firstName
+            (wallet: { firstName: string; lastName: string }) => 
+              `${wallet.firstName} ${wallet.lastName}`
           );
-
+  
           setParticipants(participantNames);
         } else {
           console.warn("No analytics data returned");
@@ -158,9 +161,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         console.error("Error fetching campaign analytics:", error);
       }
     };
-
+  
     fetchAnalytics();
   }, [fetchCampaignAnalytics, campaignId]);
+  
 
   useEffect(() => {
     console.log("Updated participants:", participants);
@@ -210,7 +214,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     }
     setShowRewardModal(false);
   };
-
+  const isCreator = campaign?.creatorId === activeAccountId;
   return (
     <div className="campaign-details-container">
       <h1>Campaign Ended</h1>
@@ -310,7 +314,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                     style={{ marginRight: "2px" }}
                     className="heart-icon"
                   />
-                  {special.raffleTickets} upvotes
+                  {special.raffleTickets} Upvotes
                 </p>
               </div>
             </div>
@@ -369,21 +373,25 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       </div>
       <div className="summary-container">
         <h2 className="summary-heading">Summary</h2>
-        <p className="summary-text">
-          Distribute special rewards before 7 days of campaign ending date
-        </p>
-        <div className="distribute-btn-Wrapper">
-          <button
-            className="distribute-btn "
-            onClick={() => setShowRewardModal(true)}
-          >
-            Distribute Rewards
-          </button>
+        {isCreator && (
+          <>
+            <p className="summary-text">
+              Distribute special rewards before 7 days of campaign ending date
+            </p>
+            <div className="distribute-btn-Wrapper">
+              <button
+                className="distribute-btn "
+                onClick={() => setShowRewardModal(true)}
+              >
+                Distribute Rewards
+              </button>
 
-          <div className="distribute-btn-Border" />
+              <div className="distribute-btn-Border" />
 
-          <div className="distribute-btn-Overlay" />
-        </div>
+              <div className="distribute-btn-Overlay" />
+            </div>
+          </>
+        )}
         <div className="summary">
           <div className="participants">
             <h2>Participants</h2>

@@ -7,9 +7,10 @@ import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
+  campaignId: string
 }
 
-const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign }) => {
+const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId }) => {
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -82,7 +83,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign }) => {
       )}
       {showUploadModal && (
         <ArtUploadForm
-          campaignId={""}
+          campaignId={campaignId}
           onClose={() => setShowUploadModal(false)}
           onSuccessUpload={() => setUploadSuccess(true)}
         />

@@ -27,12 +27,12 @@
 .Art-popup::-webkit-scrollbar {
   display: none;
 }
-.Art-popup .popup-header {
+.Art-popup .Art-popup-header {
   padding-bottom: 35px;
   margin-top: 20px;
 }
 
-.popup-header h2 {
+.Art-popup-header h2 {
   font-size: 17.93px;
   font-weight: 600;
   line-height: 20.08px;

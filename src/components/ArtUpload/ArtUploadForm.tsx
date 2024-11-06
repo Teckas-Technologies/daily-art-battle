@@ -235,13 +235,13 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
     }
   };
   return (
-    <div className="popupContainer">
-      <div className="popup">
+    <div className="Art-popupContainer">
+      <div className="Art-popup ">
         <form onSubmit={uploadArtWork}>
           <button className="closeBtn" onClick={onClose}>
             <InlineSVG src="/icons/x.svg" />
           </button>
-          <div className="popup-header">
+          <div className="Art-popup-header">
             <h2>Upload Art</h2>
           </div>
 

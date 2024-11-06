@@ -1,4 +1,4 @@
-.popup-overlay {
+.edit-popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 
-.popup-container {
+.edit-popup-container {
   background: #000000;
   border: 1px solid #8b8b8b;
   border-radius: 15.85px;
@@ -44,7 +44,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   height: 41.46px;
   position: relative;
 }
@@ -62,8 +62,12 @@
   background: transparent;
   border: 0.74px solid #7b7b7b;
   border-radius: 37.86px;
-  padding: 15px;
+  padding: 25px 25px 25px 35px;
   outline: 0;
+  color: #BCBCBC;
+  font-size: 17px;
+  font-weight: 600;
+
 }
 .submitButton {
   background: #aaaaaa;
@@ -180,9 +184,9 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 @media (max-width: 768px) {
-  .popup-container {
+  .edit-popup-container {
     padding: 15px 20px;
-    width: 320px;
+    width: 340px;
   }
 
   .create-campaign-input label {
@@ -208,12 +212,20 @@ input:checked + .slider:before {
     font-size: 8px;
     line-height: 9px;
   }
+  .edit-popup-header{
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
   .edit-popup-header h2 {
     font-size: 14px;
     line-height: 15px;
   }
   .create-campaign-input {
     margin-bottom: 10px;
+  }
+  .create-campaign-input input{
+    padding: 15px 15px 15px 25px;
+    font-size: 12px;
   }
   .create-campaign-toggle {
     margin-bottom: 10px;
