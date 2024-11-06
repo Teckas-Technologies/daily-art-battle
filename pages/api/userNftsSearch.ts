@@ -10,8 +10,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         await connectToDatabase();
         const email = await authenticateUser(req);
-        try {
             if(req.method=='GET'){
+              try {
                 const queryType = req.query.queryType;
                 const {title,limit = 10, offset = 0 } = req.query;
                 if(queryType=="spinner"){
@@ -37,13 +37,13 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     if(!user){
                       res.status(400).json({error:"user not found"});
                     }
-                    const owner = user.nearAddress
+                    const owner = user.nearAddress;
                     const result = await graphQLService({
                         query: SEARCH_ARTNAME,
                         variables: {
                           nft_contract_id:ART_BATTLE_CONTRACT,
-                          title:title,
-                          owner,  
+                          owner, 
+                          title, 
                           limit: parseInt(limit as string),
                           offset: parseInt(offset as string),
                         },
@@ -51,11 +51,10 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                       });
                       return res.status(200).json(result);
                 }
+              } catch (error:any) {
+                res.status(400).json({error:error.message});
             }
-        } catch (error:any) {
-            
-        }
-
+            }
     }catch(error:any){
         res.status(400).json({error:error.message});
     }
