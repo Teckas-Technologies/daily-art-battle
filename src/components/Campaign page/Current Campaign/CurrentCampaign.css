@@ -110,7 +110,9 @@
     width: 110.01px;
     height: 38.1px;
     margin: 10px auto;
-    padding: 1px;
+    padding-left: 0.7px;
+    padding-top: 0.7px;
+    padding-bottom: 0.7px;
     border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
   }
 

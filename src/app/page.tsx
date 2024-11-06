@@ -12,7 +12,7 @@ import UpcomingHeader from '@/components/ArtBattle/UpcomingArts/UpcomingHeader';
 import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/UpcomingGrid';
 import { PreviousGrid } from '@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid';
 import { signOut, useSession } from 'next-auth/react';
-import { signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react'; 
 import { setAuthToken } from '../../utils/authToken';
 import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { useSendWalletData } from "@/hooks/saveUserHook";

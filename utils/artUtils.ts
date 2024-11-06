@@ -3,6 +3,7 @@ import ArtTable from "../model/ArtTable";
 import UpVoting from "../model/UpVoting";
 import uploadArweaveUrl from "./uploadArweaveUrl";
 import User from "../model/User";
+import Battle from "../model/Battle";
 
 export async function scheduleArt(data: any): Promise<any> {
   await connectToDatabase();
@@ -162,17 +163,46 @@ export const findArtById = async (id:any): Promise<any> => {
 
 
 
-export const findcomingArtsByName = async (name:string,campaignId:string,page: number, limit: number): Promise<any> => {
+export const findComingArts = async (
+  searchTerm: string,
+  campaignId: string,
+  page: number,
+  limit: number
+): Promise<any> => {
   await connectToDatabase();
-  const queryFilter: { isStartedBattle: boolean; isCompleted: boolean; campaignId: string; arttitle?: { $regex: string; $options: string } } = {
+  const skip = (page - 1) * limit;
+
+  // Base query filter for ArtTable
+  const queryFilter: {
+    isStartedBattle: boolean;
+    isCompleted: boolean;
+    campaignId: string;
+    arttitle?: { $regex: string; $options: string };
+    email?: { $in: string[] };
+  } = {
     isStartedBattle: false,
     isCompleted: false,
     campaignId: campaignId,
   };
-  if (name) {
-    queryFilter.arttitle = { $regex: name, $options: 'i' }; 
+
+  // Search for artists that match the search term in firstName or lastName
+  const artists = await User.find({
+    $or: [
+      { firstName: { $regex: `^${searchTerm}`, $options: 'i' } },
+      { lastName: { $regex: `^${searchTerm}`, $options: 'i' } }
+    ]
+  }).exec();
+
+  if (artists.length > 0) {
+    // Include artist emails in the filter if any artist matches
+    const artistEmails = artists.map(artist => artist.email);
+    queryFilter.email = { $in: artistEmails };
+  } else if (searchTerm) {
+    // Only apply the art title filter if no artist matches
+    queryFilter.arttitle = { $regex: searchTerm, $options: 'i' };
   }
-  const skip = (page - 1) * limit;
+
+  // Fetch arts based on the constructed query filter
   const arts = await ArtTable.find(queryFilter)
     .sort({ uploadedTime: -1, _id: 1 })
     .skip(skip)
@@ -181,33 +211,63 @@ export const findcomingArtsByName = async (name:string,campaignId:string,page: n
 
   return { arts };
 };
-export const findcomingArtsByArtist = async (artistNameSubstring:string,campaignId:string,page: number, limit: number): Promise<any> => {
+
+
+export const findCompletedArts = async (
+  searchTerm: string,
+  campaignId: string,
+  page: number,
+  limit: number
+): Promise<any> => {
   await connectToDatabase();
   const skip = (page - 1) * limit;
-  const artists = await User.find({ 
-    $or: [
-      { firstName: { $regex: `^${artistNameSubstring}`, $options: 'i' } }, 
-      { lastName: { $regex: `^${artistNameSubstring}`, $options: 'i' } }   
-    ]
-  }).exec(); 
 
-  if (artists.length === 0) {
-    return { arts: [], totalDocuments: 0, totalPages: 0 }; 
+  // Base query filter for the Battle table
+  const queryFilter: {
+    isBattleEnded: boolean;
+    campaignId: string;
+    $or?: Array<{ [key: string]: { $regex: string; $options: string } } | { [key: string]: { $in: string[] } }>;
+  } = {
+    isBattleEnded: true,
+    campaignId: campaignId,
+  };
+
+  // Search for artists that match the search term in firstName or lastName
+  const artists = await User.find({
+    $or: [
+      { firstName: { $regex: `^${searchTerm}`, $options: 'i' } },
+      { lastName: { $regex: `^${searchTerm}`, $options: 'i' } }
+    ]
+  }).exec();
+
+  if (artists.length > 0) {
+    // Include artist emails in the filter if any artist matches
+    const artistEmails = artists.map(artist => artist.email);
+    queryFilter.$or = [
+      { artAartistEmail: { $in: artistEmails } },
+      { artBartistEmail: { $in: artistEmails } }
+    ];
+  } else if (searchTerm) {
+    // Apply art title search if no artist matches
+    queryFilter.$or = [
+      { artAtitle: { $regex: searchTerm, $options: 'i' } },
+      { artBtitle: { $regex: searchTerm, $options: 'i' } }
+    ];
   }
-  const artistEmails = artists.map(artist => artist.email);
-  const arts = await ArtTable.find({ 
-      isStartedBattle: false, 
-      isCompleted: false, 
-      campaignId: campaignId,
-      email: { $in: artistEmails } 
-    })
-    .sort({ uploadedTime: -1, _id: 1 })
+
+  // Fetch completed arts from the Battle table based on the constructed query filter
+  const completedBattles = await Battle.find(queryFilter)
+    .sort({ endTime: -1, _id: 1 })
     .skip(skip)
     .limit(limit)
     .exec();
+    
 
-  return { arts};
+  return { completedBattles };
 };
+
+
+
 
 
 export const findCompletedArtsByName = async ( name: string, campaignId: string,page: number, limit: number): Promise<any> => {
