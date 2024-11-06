@@ -285,7 +285,8 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
       </div>
     </div>
   );
-  
+
 };
+
 
 export default CampaignBanner;
