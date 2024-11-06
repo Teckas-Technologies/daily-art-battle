@@ -22,16 +22,21 @@ import { useSession, signIn } from "next-auth/react";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
+import { useMbWallet } from "@mintbase-js/react";
+import { useSendWalletData } from "@/hooks/saveUserHook";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
+  const { activeAccountId } = useMbWallet();
+  const { sendWalletData } = useSendWalletData();
   const [showAllParticipants, setShowAllParticipants] = useState<
     boolean | null
   >(null);
   const { data: session, status } = useSession();
+  const [user, setUser] = useState<any>();
   useEffect(() => {
     if (status === "unauthenticated") {
       signIn("azure-ad-b2c", { callbackUrl: "/" });
@@ -42,31 +47,47 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   }, [status, session]);
   const idToken = session?.idToken || "";
 
-  const {
-    fetchCampaignByTitle,
-    campaignStatus,
-    campaign,
-    loading,
-    error,
-    participants,
-  } = useCampaigns(idToken);
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error,participants } =
+    useCampaigns(idToken);
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
   }, [params.campaign, idToken]);
 
+  useEffect(() => {
+    const handleWalletData = async () => {
+      if (session && session.user) {
+        const idToken = session.idToken as string;
+        console.log("ID Token:", idToken);
+
+        const walletAddress = activeAccountId;
+        if (!walletAddress) {
+          console.warn("No wallet address available.");
+          return;
+        }
+
+        console.log("Wallet Address:", walletAddress);
+
+        try {
+          const user = await sendWalletData(walletAddress);
+          if(user !== null) {
+            console.log("USER:", user)
+            setUser(user)
+          }
+        } catch (err) {
+          console.error("Failed to send wallet data:", err);
+        }
+      } else {
+        console.warn("Session or user information is missing.");
+      }
+    };
+
+    handleWalletData();
+  }, [session, activeAccountId]);
+
   if (loading)
     return (
-      <div
-        style={{
-          background: "#000000",
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div style={{ background: "#000000", width: "100%", height: "100vh" ,display:"flex",justifyContent:"center",alignItems:"center" }}>
         <Loader />{" "}
       </div>
     );
@@ -114,22 +135,21 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             welcomeText={""}
             themeTitle={""}
           />
-          <CurrentCampaigUploadArt
-            toggleUploadModal={toggleUploadModal}
-            uploadSuccess={uploadSuccess}
-          />
-          {showUploadModal && (
-            <ArtUploadForm
-              campaignId={campaign?._id as string}
-              onClose={() => setShowUploadModal(false)}
-              onSuccessUpload={() => setUploadSuccess(true)}
-            />
-          )}
+          <CurrentCampaigUploadArt toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          {showUploadModal && <ArtUploadForm campaignId={campaign?._id as string} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
           <UpcomingGrid
             fontColor={""}
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            userMail={user?.user?.email}
+            adminEmail={campaign?.email as string}
+          />
+          <PreviousArtHeader />
+          <PreviousGrid
+            fontColor={""}
+            campaignId={campaign?._id as string}
+            toggleUploadModal={toggleUploadModal}
           />
 
           <FooterMenu />
@@ -161,10 +181,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             status={campaignStatus}
             participantsCount={participants}
           />
-          <CampaignTime
-            campaign={campaign}
-            campaignId={campaign?._id as string}
-          />
+          <CampaignTime campaign={campaign} campaignId={campaign?._id as string}/>
           <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}

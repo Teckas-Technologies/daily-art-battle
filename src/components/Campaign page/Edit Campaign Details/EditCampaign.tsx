@@ -78,6 +78,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
       specialRewards: Number(specialRewards) || 0,
       publiclyVisible: isPubliclyVisible,
       participants:0,
+      email: campaign?.email || ""
     };
 
     console.log("Updated Campaign Data:", updatedCampaignData);

@@ -46,7 +46,7 @@ export const useSaveData = (): UseSaveDataResult => {
     setSuccess(null);
 
     try {
-      const response = await fetch('/api/art', {
+      const response = await fetchWithAuth('/api/art', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export const useFetchBattles = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
+      const response = await fetchWithAuth(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data: BattlesResponse = await response.json();
 
@@ -161,4 +161,73 @@ export const useFetchArtById = () => {
   };
 
   return { fetchArtById };
+}
+
+export const useHideArt = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [hideSuccess, setSuccess] = useState<boolean | null>(null);
+
+  const hideArt = async (artId: string): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetchWithAuth('/api/hideArt', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          artId: artId
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save data');
+      }
+
+      const responseData = await response.json();
+      console.log("Response Data >> ", responseData);
+
+      setSuccess(true);
+      return;
+    } catch (error) {
+      console.error('Error saving data:', error);
+      setError('Failed to save data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { hideArt, loading, error, hideSuccess };
+};
+
+export const useSearchArts = () => {
+  const [arts, setArts] = useState<ArtData[]>([]);
+  const [totalPage, setTotalPage] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const searchArts = async (campaignId: string,name: string, sort: string, page: number, limit: number = 8) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&sort=${sort}&page=${page}&limit=${limit}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      console.log("data:", data)
+      setArts(data.arts);
+      setTotalPage(data.totalPages)
+      return data?.arts;
+    } catch (err) {
+      setError("Error loading arts");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  return { arts, totalPage, loading, error, searchArts };
 }

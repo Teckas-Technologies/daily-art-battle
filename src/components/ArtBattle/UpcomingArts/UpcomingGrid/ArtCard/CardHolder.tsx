@@ -12,12 +12,15 @@ import { useSendWalletData } from '@/hooks/saveUserHook';
 interface CardHolderProps {
     artData: ArtData[];
     campaignId: string;
+    adminEmail: string;
+    userMail: string;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
     setSelectedArt: (e: any) => void;
     totalPage: number;
+    removeArtById: (id: string) => void;
 }
 
-const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh, setSelectedArt, totalPage }) => {
+const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail, userMail, setRefresh, setSelectedArt, totalPage, removeArtById }) => {
     const { isConnected, selector, connect, activeAccountId, disconnect } = useMbWallet();
     const { fetchArtUserRaffleCount, submitVote } = useArtsRaffleCount();
     const [success, setSuccess] = useState(false);
@@ -25,10 +28,12 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
     const [myTickets, setMyTickets] = useState<number>(0);
     const router = useRouter();
     const { fetchArtById } = useFetchArtById();
-    const { userDetails, sendWalletData } = useSendWalletData();
+    const { sendWalletData } = useSendWalletData();
     const [selectedArtId, setSelectedArtId] = useState(null);
     const [overlayArt, setoverlayArt] = useState<ArtData>();
     const [tokenCount, setTokenCount] = useState<number | null>(1);
+    const [myTicketsNew, setMyTicketsNew] = useState<{ [key: string]: number }>({});
+    // const [user, setUser] = useState<any>(null);
 
     const getQueryParam = (param: string): string | null => {
         if (typeof window !== 'undefined') {
@@ -117,24 +122,47 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
 
     // useEffect(()=>{
     //     if(activeAccountId) {
-    //         const fetchUser = async () => {
-    //             await sendWalletData(activeAccountId)
-    //         }
-    //         fetchUser();
+    //         const res = fetchUser();
+    //         setUser(res);
+    //         console.log("Res:", res);
     //     }
     // }, [activeAccountId])
 
-    // console.log("User Details : ", userDetails)
+    // const fetchUser = async () => {
+    //     if(!activeAccountId) return;
+    //     const res = await sendWalletData(activeAccountId);
+    //     console.log("Res:", res);
+    //     return res;
+    // }
 
     useEffect(() => {
-        const fetchArtUserticketss = async () => {
-            if (overlayArt) {
-                const tickets = await fetchArtUserRaffleCount(overlayArt?._id as string, campaignId);
-                setMyTickets(tickets);
-            }
+        const fetchAllTickets = async () => {
+            const ticketsMap: { [key: string]: number } = {};
+            await Promise.all(
+                artData.map(async (art) => {
+                    const tickets = await fetchArtUserRaffleCount(art._id as string, campaignId);
+                    ticketsMap[art._id] = tickets;
+                })
+            );
+            setMyTicketsNew(ticketsMap);
         };
 
-        fetchArtUserticketss();
+        if (artData.length > 0) {
+            fetchAllTickets();
+        }
+    }, [artData, campaignId, success]);
+
+    const fetchArtUserticketss = async (art: ArtData) => {
+        if (art) {
+            const tickets = await fetchArtUserRaffleCount(art?._id as string, campaignId);
+            setMyTickets(tickets);
+        }
+    };
+
+    useEffect(() => {
+        if (overlayArt) {
+            fetchArtUserticketss(overlayArt);
+        }
     }, [activeAccountId, fetchArtUserRaffleCount, overlayArt, success]);
 
     const handleArt = (id: any) => {
@@ -203,7 +231,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
             <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-[1.5rem] lg:gap-[1.5rem] md:gap-[1rem] gap-[0.5rem]" id="upcoming-grid">
                 {artData.map((art, index) => (
                     <div key={index}>
-                        <Card art={art} onImageClick={handleImageClick} campaignId={campaignId} success={success} overlayArt={overlayArt} />
+                        <Card art={art} myTicketsNew={myTicketsNew[art._id] || 0} onImageClick={handleImageClick} removeArtById={removeArtById} campaignId={campaignId} success={success} overlayArt={overlayArt} adminEmail={adminEmail} userMail={userMail} />
                     </div>
                 ))}
             </div>
@@ -236,8 +264,9 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                                 <div className="relative img-holder lg:w-[15rem] lg:h-[15rem] md:w-[14rem] md:h-[14rem] w-[14rem] h-[14rem] rounded-xl">
                                     <img src={overlayArt.colouredArt} alt={overlayArt.arttitle} className='w-full h-full rounded-xl' />
 
-                                    <div className={`absolute bottom-0 w-full flex items-center ${activeAccountId === "rapid-aurora.testnet" ? "justify-between" : "justify-end"} px-3 pb-2`}>
-                                        {activeAccountId === "rapid-aurora.testnet" && <div className="hide w-[2.5rem] h-[2.5rem] bg-white flex justify-center items-center rounded-full">
+                                    <div className={`absolute bottom-0 w-full flex items-center ${false ? "justify-between" : "justify-end"} px-3 pb-2`}>
+                                        {/* adminEmail === userMail */}
+                                        {false && <div className="hide w-[2.5rem] h-[2.5rem] bg-white flex justify-center items-center rounded-full">
                                             <InlineSVG
                                                 src="/icons/hide.svg"
                                                 className="w-8 h-8 spartan-medium"
@@ -315,7 +344,11 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
 
             {success && <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
                 <div className="upcoming-popup lg:w-[38.5rem] md:w-[34.5rem] w-full h-auto lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
-                    <div className="close-art w-full flex justify-end">
+                    <div className="close-art w-full flex justify-between">
+                        <div className="dummy md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem]">
+
+                        </div>
+                        <h2 className='text-green text-md'>Raffle Tickets Collected</h2>
                         <div className="close-icon md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleSuccessClose}>
                             <InlineSVG
                                 src="/icons/close.svg"
@@ -323,7 +356,12 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                             />
                         </div>
                     </div>
-                    <h3 className='spartan-semibold text-xl text-green text-center pb-5 pt-6'>You have collected&nbsp; <span>{tokenCount}</span> &nbsp;raffle tickets successfully!</h3>
+                    <div className="w-full flex justify-center">
+                        <div className="success-holder w-[15rem] h-[10rem]">
+                            <img src="/images/success.png" alt="success" className="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                    <h3 className='spartan-semibold text-2xl text-white text-center pb-5 pt-6'>You have collected&nbsp; <span>{tokenCount}</span> &nbsp;raffle tickets successfully!</h3>
                 </div>
             </div>}
         </>
@@ -332,3 +370,4 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
 };
 
 export default CardHolder;
+// CardHolder.tsx
