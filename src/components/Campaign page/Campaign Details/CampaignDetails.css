@@ -4,7 +4,7 @@
 }
 .common {
   background: linear-gradient(180deg, #959595 0%, #2f2f2f 100%);
-  padding: 1px;
+  padding: 0.75px;
   border-radius: 25.5px;
 }
 .campaign-details-container {

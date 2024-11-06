@@ -85,10 +85,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   campaignId,
   campaign,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [limit, setLimit] = useState(6); // Number of items per page
-  const [arts, setArts] = useState<ArtData[]>([]); // Store arts data
-  const [totalPages, setTotalPages] = useState(1); // Total number of pages
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(6);
+  const [arts, setArts] = useState<ArtData[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [campaignAnalytics, setCampaignAnalytics] =
     useState<CampaignAnalytics | null>(null);
   const [participants, setParticipants] = useState<string[]>([]);
@@ -245,49 +245,53 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
       <div className="art-section">
         <div className="flex items-center justify-center gap-[25px] md:gap-[30px]">
-          <div className="art-container">
-            <h3 className="art-heading">Most Collected Art</h3>
-            <div className="common">
-              <div className="art">
-                {campaignAnalytics?.mostVotedArt.map((art, index) => (
-                  <div key={index}>
-                    <div
-                      className="flex items-center"
-                      style={{ marginBottom: "10px" }}
-                    >
-                      <img
-                        src=""
-                        alt={art.arttitle}
-                        className="profile-image"
-                      />
-                      <h4 style={{ margin: 0 }}>
-                        {art.artistId && art.artistId.length > 10
-                          ? `${art.artistId.slice(0, 10)}...`
-                          : art.artistId || "Unknown Artist"}
-                      </h4>
-                    </div>
+          {campaignAnalytics &&
+            campaignAnalytics.mostVotedArt &&
+            campaignAnalytics.mostVotedArt.length > 0 && (
+              <div className="art-container">
+                <h3 className="art-heading">Most Collected Art</h3>
+                <div className="common">
+                  <div className="art">
+                    {campaignAnalytics.mostVotedArt.map((art, index) => (
+                      <div key={index}>
+                        <div
+                          className="flex items-center"
+                          style={{ marginBottom: "10px" }}
+                        >
+                          <img
+                            src=""
+                            alt={art.arttitle}
+                            className="profile-image"
+                          />
+                          <h4 style={{ margin: 0 }}>
+                            {art.artistId && art.artistId.length > 10
+                              ? `${art.artistId.slice(0, 10)}...`
+                              : art.artistId || "Unknown Artist"}
+                          </h4>
+                        </div>
 
-                    <img
-                      src={art.colouredArt}
-                      alt={art.arttitle}
-                      className="art-image"
-                    />
-                    <p
-                      className="flex items-center justify-end"
-                      style={{ width: "100%", marginTop: "15px" }}
-                    >
-                      <InlineSVG
-                        className="heart-icon"
-                        src="/icons/red-heart.svg"
-                        style={{ marginRight: "2px" }}
-                      />
-                      {art.raffleTickets} Collects
-                    </p>
+                        <img
+                          src={art.colouredArt}
+                          alt={art.arttitle}
+                          className="art-image"
+                        />
+                        <p
+                          className="flex items-center justify-end"
+                          style={{ width: "100%", marginTop: "15px" }}
+                        >
+                          <InlineSVG
+                            className="heart-icon"
+                            src="/icons/red-heart.svg"
+                            style={{ marginRight: "2px" }}
+                          />
+                          {art.raffleTickets} Collects
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-          </div>
+            )}
         </div>
 
         <div className="art-details">
@@ -308,93 +312,97 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
       <div className="special-winner">
         <h2>Special Rewards Winners</h2>
-        <div className="winnersGrid">
-          {campaignAnalytics?.specialWinnerArts.map((special, index) => (
-            <div className="common">
-              <div className="winner" key={index}>
-                <div
-                  className="flex items-center"
-                  style={{ marginBottom: "10px" }}
-                >
-                  <img
-                    src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
-                    alt="Profile"
-                    className="profile-image"
-                  />
-                  <h4 style={{ margin: 0 }}>
-                    {special.artistId.length > 10
-                      ? `${special.artistId.substring(0, 10)}...`
-                      : special.artistId}
-                  </h4>
+        {campaignAnalytics?.specialWinnerArts &&
+          campaignAnalytics.specialWinnerArts.length > 0 && (
+            <div className="winnersGrid">
+              {campaignAnalytics.specialWinnerArts.map((special, index) => (
+                <div className="common" key={index}>
+                  <div className="winner">
+                    <div
+                      className="flex items-center"
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <img
+                        src="https://s3-alpha-sig.figma.com/img/b437/5247/c9ed39b90ad6de42f855680cf4d8f730?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X5GMnZ2xAnXog2hCj~mh6VB2BoeRaGAcqbyEjyv5OSkjZ2JhA1VeiNQp2TfH1vS~GkQwQezTFOufqD-M7OMBVgUOHztWTq833Fg5kFmnDiKjQiiS9yqW9V262fofSojIu1pkOrNm3~Q3QSngTjDDtpkKCL7s3lgxSylFCgc72ypQH25khte1VWpKg42J1smWQepV9Xz-yWSDeCt5PJIKdXFvGDmYeogjoZaCeCGkwUpLofTVyFVmB4jnq6BOhJUxGoZMiuO-nh3s~ydmjmmyay6y~IQLDEaoKAJ03j8niwCiVmgV6BWN-wkldw5XEGGbaEIxTDI2f4JLbrhD7KW7dg__"
+                        alt="Profile"
+                        className="profile-image"
+                      />
+                      <h4 style={{ margin: 0 }}>
+                        {special.artistId.length > 10
+                          ? `${special.artistId.substring(0, 10)}...`
+                          : special.artistId}
+                      </h4>
+                    </div>
+                    <img src={special.colouredArt} className="image" />
+                    <p
+                      className="flex items-center justify-end"
+                      style={{ width: "100%", marginTop: "15px" }}
+                    >
+                      <InlineSVG
+                        src="/icons/red-heart.svg"
+                        style={{ marginRight: "2px" }}
+                        className="heart-icon"
+                      />
+                      {special.raffleTickets} Collects
+                    </p>
+                  </div>
                 </div>
-                <img src={special.colouredArt} className="image" />
-
-                <p
-                  className="flex items-center justify-end"
-                  style={{ width: "100%", marginTop: "15px" }}
-                >
-                  <InlineSVG
-                    src="/icons/red-heart.svg"
-                    style={{ marginRight: "2px" }}
-                    className="heart-icon"
-                  />
-                  {special.raffleTickets} Collects
-                </p>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
       </div>
+
       <div className="daywise-winners">
         <h2>Day Wise Winners</h2>
-        <div className="daywise-winners-grid">
-          {dayWinners.map((battle: DayWinner, index: number) => {
-            const isArtAWinner = battle.winningArt === "Art A";
-            const winnerTitle = isArtAWinner
-              ? battle.artAtitle
-              : battle.artBtitle;
-            const winnerImage = isArtAWinner
-              ? battle.artAcolouredArt
-              : battle.artBcolouredArt;
-            const winnerArtist = isArtAWinner
-              ? battle.artAartistId
-              : battle.artBartistId;
-            const upvotes = isArtAWinner ? battle.artAVotes : battle.artBVotes;
+        {dayWinners.length > 0 && (
+          <div className="daywise-winners-grid">
+            {dayWinners.map((battle: DayWinner, index: number) => {
+              const isArtAWinner = battle.winningArt === "Art A";
+              const winnerTitle = isArtAWinner
+                ? battle.artAtitle
+                : battle.artBtitle;
+              const winnerImage = isArtAWinner
+                ? battle.artAcolouredArt
+                : battle.artBcolouredArt;
+              const winnerArtist = isArtAWinner
+                ? battle.artAartistId
+                : battle.artBartistId;
+              const upvotes = isArtAWinner
+                ? battle.artAVotes
+                : battle.artBVotes;
 
-            return (
-              <div className="common" key={battle._id}>
-                <div className="daywise-winner">
-                  <h3>Winner: Day {index + 1}</h3>
-                  <div className="profile-section">
-                    <img src="" alt="Profile" className="profile-image" />
-                    <h4>
-                      {winnerArtist.length > 10
-                        ? `${winnerArtist.slice(0, 10)}...`
-                        : winnerArtist}
-                    </h4>
-                  </div>
-                  <img
-                    src={winnerImage}
-                    alt={winnerTitle}
-                    className="art-img"
-                  />
-                  <p
-                    className="flex items-center justify-end"
-                    style={{ width: "100%", marginTop: "15px" }}
-                  >
-                    <InlineSVG
-                      src="/icons/red-heart.svg"
-                      style={{ marginRight: "2px" }}
-                      className="heart-icon"
+              return (
+                <div className="common" key={battle._id}>
+                  <div className="daywise-winner">
+                    <h3>Winner: Day {index + 1}</h3>
+                    <div className="profile-section">
+                      <img src="" alt="Profile" className="profile-image" />
+                      <h4>
+                        {winnerArtist.length > 10
+                          ? `${winnerArtist.slice(0, 10)}...`
+                          : winnerArtist}
+                      </h4>
+                    </div>
+                    <img
+                      src={winnerImage}
+                      alt={winnerTitle}
+                      className="art-img"
                     />
-                    {upvotes} Collects
-                  </p>
+                    <p className="flex items-center justify-end mt-3">
+                      <InlineSVG
+                        src="/icons/red-heart.svg"
+                        className="heart-icon mr-1"
+                      />
+                      {upvotes} Collects
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+
       <div className="summary-container">
         <h2 className="summary-heading">Summary</h2>
         {isCreator && (
@@ -425,18 +433,20 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         <div className="summary">
           <div className="participants">
             <h2>Participants</h2>
-            {participants.map((participant, index) => (
-              <div
-                key={index}
-                className="participant"
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <div className="flex flex-row items-center justify-center">
-                  <span className="participant-number">{index + 1}</span>
-                  <span className="participant-name">{participant}</span>
+            {participants &&
+              participants.length > 0 &&
+              participants.map((participant, index) => (
+                <div
+                  key={index}
+                  className="participant"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <div className="flex flex-row items-center justify-center">
+                    <span className="participant-number">{index + 1}</span>
+                    <span className="participant-name">{participant}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           <div className="summary-arts">
@@ -449,7 +459,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                   </div>
                 ))
               ) : (
-                <div>No art data available</div>
+                <div className="text-center p-4">No art data available</div>
               )}
             </div>
 
