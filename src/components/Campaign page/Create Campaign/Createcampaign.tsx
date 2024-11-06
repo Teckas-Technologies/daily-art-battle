@@ -179,29 +179,22 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     <>
       <div className="create-campaign">
         <div
-          className="flex gap-1 items-center camapign-path md:mb-9"
+          className="flex gap-1 items-center camapign-path md:mb-10"
           style={{ paddingTop: "80px" }}
         >
           <button className="camapign-path-button">GFXvs</button>
           <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
           <h3
             style={{
-              color: "#ffffff",
+              color: "#00ff00",
+              textDecoration: "underline",
               cursor: "pointer",
             }}
             onClick={handleNavigation}
           >
             Campaigns
           </h3>
-          <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
-          <h3
-            style={{
-              color: "#00ff00",
-              textDecoration: "underline",
-            }}
-          >
-            Create Campaign
-          </h3>
+         
         </div>
         <div className="create-campaign-header">
           <div className="create-campaign-content">

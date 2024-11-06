@@ -12,7 +12,7 @@ export default function CampaignHeader({ campaign, status ,participantsCount}: C
   const baseLink = "https://gfxvs.com/";
   const fullLink = campaign?.campaignUrl ? baseLink + campaign.campaignUrl.split('/').pop() : baseLink; 
   const [buttonText, setButtonText] = useState("Copy link");
-  console.log("log>>>>>>>>>>>>>>>>>>..............>>>>>>>>>>>>>>>>>>>>>>>>",campaign);
+  console.log("log>>>>>>>>>>>>>>>>>>..............>>>>>>>>>>>>>>>>>>>>>>>>",participantsCount);
   
   const handleCopyLink = () => {
     navigator.clipboard
@@ -29,11 +29,14 @@ export default function CampaignHeader({ campaign, status ,participantsCount}: C
   };
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", { 
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).replace(/, /g, " ");
+    return date
+      .toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+      .replace(/, /g, "");
   };
   
   return (

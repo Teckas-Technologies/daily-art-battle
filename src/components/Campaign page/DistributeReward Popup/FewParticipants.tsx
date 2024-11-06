@@ -18,8 +18,8 @@ const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
       <div className="participant-popup-content">
         <h2 className="participant-popup-title">Distribute Rewards</h2>
         <p className="main-text">
-          You only Selected <span className="count">{selectedArtLength}</span>{" "}
-          out of <span className="count">{artLength}</span> Special Winners
+          You only Selected {selectedArtLength}{" "}
+          out of {artLength} Special Winners
         </p>
         <p className="participant-description-text  md:w-[350px]">
           Distribute rewards to remaining participants before 7 days of campaign
@@ -27,18 +27,18 @@ const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
           distribute rewards
         </p>
 
-        <div className="button-container">
-          <button className="cancel-btn" onClick={onClose}>
+        <div className="few-button-container">
+          <button className="few-cancel-btn" onClick={onClose}>
             Cancel
           </button>
-          <div className="distributepopup-btn-Wrapper">
-            <button className="distributepopup-btn " onClick={onDistribute}>
+          <div className="few-distributepopup-btn-Wrapper">
+            <button className="few-distributepopup-btn " onClick={onDistribute}>
               Distribute Rewards
             </button>
 
-            <div className="distributepopup-btn-Border" />
+            <div className="few-distributepopup-btn-Border" />
 
-            <div className="distributepopup-btn-Overlay" />
+            <div className="few-distributepopup-btn-Overlay" />
           </div>
         </div>
       </div>

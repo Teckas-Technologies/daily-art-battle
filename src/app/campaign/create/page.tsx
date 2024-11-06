@@ -2,6 +2,7 @@
 import CreateCampaign from '@/components/Campaign page/Create Campaign/Createcampaign'
 import CampaignPopup from '@/components/Campaign page/CreateCampaign Popup/CampaignPopup';
 import Footer from '@/components/Footer/Footer'
+import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { Header } from '@/components/Header/Header'
 import { useSession, signIn } from "next-auth/react";
 import React, { useEffect, useState } from 'react'
@@ -34,7 +35,7 @@ const page = () => {
       {/* {showCampaignModal && (
         <CampaignPopup onClose={() => setShowCampaignModal(false)} />
       )} */}
-      <Footer/>
+      <FooterMenu/>
     </div>
   )
 }

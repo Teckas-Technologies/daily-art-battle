@@ -15,11 +15,14 @@ import { signOut, useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
 import { setAuthToken } from '../../utils/authToken';
 import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
+import { useSendWalletData } from "@/hooks/saveUserHook";
+import { useMbWallet } from "@mintbase-js/react";
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const { data: session, status } = useSession();
-
+  const { sendWalletData } = useSendWalletData();
+  const { activeAccountId, isConnected } = useMbWallet();
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
   useEffect(() => {
@@ -32,6 +35,32 @@ const Home: NextPage = () => {
       console.log('Token set for API requests', session);
     }
   }, [status, session]);
+  useEffect(() => {
+    const handleWalletData = async () => {
+      if (session && session.user) {
+        const idToken = session.idToken as string;
+        console.log("ID Token:", idToken);
+
+        const walletAddress = activeAccountId;
+        if (!walletAddress) {
+          console.warn("No wallet address available.");
+          return;
+        }
+
+        console.log("Wallet Address:", walletAddress);
+
+        try {
+          await sendWalletData(idToken, walletAddress);
+        } catch (err) {
+          console.error("Failed to send wallet data:", err);
+        }
+      } else {
+        console.warn("Session or user information is missing.");
+      }
+    };
+
+    handleWalletData();
+  }, [session, activeAccountId]);
   
   return (
     <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>

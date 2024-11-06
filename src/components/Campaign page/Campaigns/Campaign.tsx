@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import "./Campaign.css";
 import InlineSVG from "react-inlinesvg";
@@ -27,8 +27,8 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
   const { activeAccountId, isConnected } = useMbWallet();
   const [activeTab, setActiveTab] = useState("Current Campaigns");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
+  const [limit, setLimit] = useState(2);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const {
     campaignData,
     loading,
@@ -69,11 +69,17 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
 
   const handlePageClick = (newPage: number) => {
     setPage(newPage);
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "auto" });
+    }
   };
 
   const handlePrevious = () => {
     if (page > 1) {
       setPage(page - 1);
+    }
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "auto" });
     }
   };
 
@@ -81,20 +87,37 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
     if (page < totalPages) {
       setPage(page + 1);
     }
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "auto" });
+    }
   };
 
   const renderPageNumbers = () => {
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
+    const pageNumbers = [];
+    const totalPagesToShow = 3;
+    let startPage = Math.max(1, page - Math.floor(totalPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + totalPagesToShow - 1);
+
+    if (endPage === totalPages) {
+      startPage = Math.max(1, endPage - totalPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return pageNumbers;
   };
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date
-      .toLocaleDateString("en-US", {
+      .toLocaleDateString("en-GB", {
         day: "numeric",
         month: "short",
         year: "numeric",
+        timeZone: "UTC",
       })
-      .replace(/, /g, " ");
+      .replace(/, /g, "");
   };
 
   const handleCreateCampaign = () => {
@@ -108,7 +131,7 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
     <div className="campaign-container">
       <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG>
       <div
-        className="flex gap-1 items-center camapign-path md:mb-9"
+        className="flex gap-1 items-center camapign-path md:mb-10"
         style={{ paddingTop: "80px" }}
       >
         <button className="camapign-path-button">GFXvs</button>
@@ -140,11 +163,10 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
 
             <div className="campaign-btn-Border" />
 
-            <div className="campaign-btn-Overlay" />
+            <div className="campaign-btn-Overlay" ref={scrollRef} id="top" />
           </div>
         </div>
       </div>
-
       <div className="campaign-tabs">
         {[
           "Current Campaigns",
@@ -162,49 +184,56 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
         ))}
       </div>
 
-      <div className="table-container">
-        <div className="table-header">
-          <div className="header-cell">Campaign Name</div>
-          <div className="header-cell">Start Date</div>
-          <div className="header-cell">End Date</div>
-          <div className="header-cell">Rewards</div>
-          <div className="header-cell"></div>
-        </div>
+      {campaignData && campaignData.length > 0 ? (
+        <div className="table-container">
+          <div className="table-header">
+            <div className="header-cell">Campaign Name</div>
+            <div className="header-cell">Start Date</div>
+            <div className="header-cell">End Date</div>
+            <div className="header-cell">Rewards</div>
+            <div className="header-cell"></div>
+          </div>
 
-        {campaignData && campaignData.length > 0 ? (
-          campaignData.map((item: Campaign, index: number) => (
-            <div
-              key={index}
-              className={`campaign-row ${
-                item.creatorId === activeAccountId ? "creater-border" : ""
-              }`}
-            >
-              <div className="cell">{item.campaignName}</div>
-              <div className="cell">{formatDate(item.startDate)}</div>
-              <div className="cell">{formatDate(item.endDate)}</div>
-              <div className="cell">
-                <span className="flex items-center justify-center gap-[5px]">
-                  <InlineSVG
-                    src="/icons/coin.svg"
-                    className="w-[19.1px] h-[19.1px]"
-                  />
-                  {item.specialRewards}
-                </span>
+          {campaignData &&
+            campaignData.length > 0 &&
+            campaignData.map((item: Campaign, index: number) => (
+              <div
+                key={index}
+                className={`campaign-row ${
+                  item.creatorId === activeAccountId ? "creater-border" : ""
+                }`}
+              >
+                <div className="cell">
+                  {item.campaignName.length > 15
+                    ? `${item.campaignName.substring(0, 15)}...`
+                    : item.campaignName}
+                </div>
+
+                <div className="cell">{formatDate(item.startDate)}</div>
+                <div className="cell">{formatDate(item.endDate)}</div>
+                <div className="cell">
+                  <span className="flex items-center justify-center gap-[5px]">
+                    <InlineSVG
+                      src="/icons/coin.svg"
+                      className="w-[19.1px] h-[19.1px]"
+                    />
+                    {item.specialRewards}
+                  </span>
+                </div>
+                <div className="cell">
+                  <button
+                    className="view-details-btn"
+                    onClick={() => router.push(`/${item.campaignUrl}`)}
+                  >
+                    View Details
+                  </button>
+                </div>
               </div>
-              <div className="cell">
-                <button
-                  className="view-details-btn"
-                  onClick={() => router.push(`/${item.campaignUrl}`)}
-                >
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No campaigns available.</p>
-        )}
-      </div>
+            ))}
+        </div>
+      ) : (
+        <p className="no-campaign">No campaigns available.</p>
+      )}
 
       <div className="pagination-section relative w-full flex justify-center py-5">
         <div className="pagination rounded-[7rem]">
