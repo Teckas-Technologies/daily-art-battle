@@ -261,6 +261,7 @@ export const findCompletedArts = async (
     .skip(skip)
     .limit(limit)
     .exec();
+    
 
   return { completedBattles };
 };
