@@ -96,8 +96,8 @@ export default function CampaignHeader({ campaign, status ,participantsCount}: C
           <div className="campaign-header-input">
             <p>
               {" "}
-              {fullLink.length > 15
-                ? `${fullLink.slice(0, 15)}......`
+              {fullLink.length > 25
+                ? `${fullLink.slice(0, 25)}......`
                 : fullLink}
             </p>
 

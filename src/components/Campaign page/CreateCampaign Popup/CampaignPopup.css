@@ -12,7 +12,7 @@
 }
 .common {
   background: linear-gradient(90deg, #000000 0%, #666666 100%);
-  padding: 1px;
+  padding: 0.75px;
   border-radius: 18px;
 }
 .popup-container {

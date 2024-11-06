@@ -1,3 +1,7 @@
+* {
+  font-family: "Spartan";
+  box-sizing: border-box;
+}
 .campaign-success-container {
   background-color: black;
   width: 100vw;
@@ -61,14 +65,15 @@
 .campaign-link-box {
   display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
   flex-direction: column;
   background: #171717;
-  padding: 37.5px 18.5px;
+  padding: 20.5px 18.5px;
   border-radius: 12px;
   width: 400.54px;
-  height: 160.75px;
+  height: 140.75px;
   border: 0.75px solid #555555;
+  margin-bottom: 120px;
 }
 .campaign-link-inputbox {
   display: flex;
@@ -82,14 +87,14 @@
   height: 43px;
 }
 .campaign-link-inputbox p {
-  font-size: 17px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 20.16px;
   letter-spacing: -6%;
   color: #ffffff;
   margin-left: 8px;
 }
-.campaign-link-input {
+/* .campaign-link-input {
   flex: 1;
   background: transparent;
   border: none;
@@ -97,7 +102,7 @@
   color: #ffffff;
   font-size: 16px;
   padding-right: 10px;
-}
+} */
 
 .copy-link-btn {
   background-color: transparent;
@@ -116,7 +121,7 @@
   width:18px;
   height:18px;
 }
-.share-section {
+.success-share-section {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -126,9 +131,13 @@
   color: #ffffff;
   margin-top: 20px;
 }
-
-.share-section span {
-  font-size: 11.5px;
+.success-social-icons{
+  display: flex;
+  flex-direction: row;
+  gap:8px;
+}
+.success-share-section span {
+  font-size: 13.5px;
   font-weight: 600;
   line-height: 15.12px;
   letter-spacing: -6%;
@@ -190,7 +199,7 @@
     width: 326.9px;
     height: 118.53px;
     padding: 30px 15px;
-    margin: 0 auto;
+    margin: 0 auto 100px auto;
   }
   .campaign-link-inputbox p {
     font-size: 12.68px;

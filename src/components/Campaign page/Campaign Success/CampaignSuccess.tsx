@@ -75,8 +75,8 @@ const CampaignSuccess = () => {
             {fullLink ? (
               <>
                 <p>
-                  {fullLink.length > 15
-                    ? `${fullLink.slice(0, 15)}.............`
+                  {fullLink.length > 25
+                    ? `${fullLink.slice(0, 25)}.............`
                     : fullLink}
                 </p>
                 <button
@@ -92,9 +92,9 @@ const CampaignSuccess = () => {
             )}
           </div>
 
-          <div className="share-section">
+          <div className="success-share-section">
             <span>Share</span>
-            <div className="social-icons">
+            <div className="success-social-icons">
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(fullLink)}`}
                 target="_blank"

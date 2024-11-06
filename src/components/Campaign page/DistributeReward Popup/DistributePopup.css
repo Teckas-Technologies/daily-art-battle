@@ -185,6 +185,12 @@
   box-sizing: border-box;
 }
 
+/* Hover effect for glowing animation */
+.distributepopup-btn-Wrapper:hover .distributepopup-btn-Border {
+  animation: glow 1.5s infinite alternate;
+  background-size: 200% 200%;
+}
+
 .distributepopup-btn-Overlay {
   content: "";
   position: absolute;
@@ -196,6 +202,17 @@
   background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
   z-index: 1;
 }
+
+/* Glow animation */
+@keyframes glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .distribute-popup  {
     width: 90%;

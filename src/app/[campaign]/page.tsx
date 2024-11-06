@@ -26,7 +26,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const toggleUploadModal = () => setShowUploadModal(!showUploadModal); 
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const [showAllParticipants, setShowAllParticipants] = useState<
     boolean | null
@@ -42,8 +42,14 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   }, [status, session]);
   const idToken = session?.idToken || "";
 
-  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error,participants } =
-    useCampaigns(idToken);
+  const {
+    fetchCampaignByTitle,
+    campaignStatus,
+    campaign,
+    loading,
+    error,
+    participants,
+  } = useCampaigns(idToken);
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
@@ -51,7 +57,16 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
 
   if (loading)
     return (
-      <div style={{ background: "#000000", width: "100%", height: "100vh" ,display:"flex",justifyContent:"center",alignItems:"center" }}>
+      <div
+        style={{
+          background: "#000000",
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Loader />{" "}
       </div>
     );
@@ -99,19 +114,22 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             welcomeText={""}
             themeTitle={""}
           />
-          <CurrentCampaigUploadArt toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-          {showUploadModal && <ArtUploadForm campaignId={campaign?._id as string} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+          <CurrentCampaigUploadArt
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          {showUploadModal && (
+            <ArtUploadForm
+              campaignId={campaign?._id as string}
+              onClose={() => setShowUploadModal(false)}
+              onSuccessUpload={() => setUploadSuccess(true)}
+            />
+          )}
           <UpcomingGrid
             fontColor={""}
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-          />
-          <PreviousArtHeader />
-          <PreviousGrid
-            fontColor={""}
-            campaignId={campaign?._id as string}
-            toggleUploadModal={toggleUploadModal}
           />
 
           <FooterMenu />
@@ -143,7 +161,10 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             status={campaignStatus}
             participantsCount={participants}
           />
-          <CampaignTime campaign={campaign} campaignId={campaign?._id as string}/>
+          <CampaignTime
+            campaign={campaign}
+            campaignId={campaign?._id as string}
+          />
           <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}

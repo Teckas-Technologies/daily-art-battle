@@ -27,7 +27,7 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
   const { activeAccountId, isConnected } = useMbWallet();
   const [activeTab, setActiveTab] = useState("Current Campaigns");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
+  const [limit, setLimit] = useState(10);
   const scrollRef = useRef<HTMLDivElement>(null);
   const {
     campaignData,
@@ -127,13 +127,14 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
+  
   return (
     <div className="campaign-container">
       <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG>
       <div
-        className="flex gap-1 items-center camapign-path md:mb-10"
-        style={{ paddingTop: "80px" }}
-      >
+          className="flex gap-1 items-center camapign-path md:mb-10"
+          style={{ paddingTop: "80px" }}
+        >
         <button className="camapign-path-button">GFXvs</button>
         <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
         <h3
@@ -284,6 +285,8 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
       </div>
     </div>
   );
+
 };
+
 
 export default CampaignBanner;
