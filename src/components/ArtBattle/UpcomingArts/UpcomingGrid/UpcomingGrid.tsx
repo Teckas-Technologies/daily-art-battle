@@ -3,7 +3,7 @@
 import InlineSVG from "react-inlinesvg";
 import './UpcomingGrid.css';
 import { useEffect, useState, useRef } from "react";
-import { ArtData, useFetchArts } from "@/hooks/artHooks";
+import { ArtData, useFetchArts, useSearchArts } from "@/hooks/artHooks";
 import CardHolder from "./ArtCard/CardHolder";
 import Loader from "../../Loader/Loader";
 
@@ -11,26 +11,27 @@ interface Props {
     toggleUploadModal: () => void;
     uploadSuccess: boolean;
     campaignId: string;
-    fontColor: string
+    fontColor: string;
+    adminEmail: string;
+    userMail: string;
 }
 
 const MOBILE_LIMIT = 9;
 const DESKTOP_LIMIT = 8;
 
-export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
+export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor, adminEmail, userMail }) => {
     const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
     const [refresh, setRefresh] = useState(false);
     const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
+    const { searchArts } = useSearchArts();
     const [page, setPage] = useState<number | null>(null);
     const [sort, setSort] = useState<string | null>("dateDsc");
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const [selectedArt, setSelectedArt] = useState();
     const [loading, setLoading] = useState(false);
-
-    // useEffect(() => {
-    //     setSort("dateDsc");
-    // }, []);
+    const [hideSuccess, setHideSuccess] = useState(false);
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -64,22 +65,22 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     const getArts = async () => {
         const limit = getLimitBasedOnScreenSize();
         if (loading || page === null || page === 0 || sort === null || !campaignId) return;
-        if (page === 1) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
+        // if (page === 1) {
+        //     await new Promise(resolve => setTimeout(resolve, 100));
+        // }
         setLoading(true);
         try {
             const arts = await fetchMoreArts(campaignId, sort, page, limit);
             if (arts && arts.length > 0) {
-                setUpcomingArts((prevArts) => [...prevArts, ...arts]);
-                // setUpcomingArts((prevArts) => {
-                //     const artMap = new Map(prevArts.map(art => [art._id, art]));
-                //     arts.forEach((newArt: ArtData) => {
-                //         artMap.set(newArt._id, newArt);
-                //     });
+                // setUpcomingArts((prevArts) => [...prevArts, ...arts]);
+                setUpcomingArts((prevArts) => {
+                    const artMap = new Map(prevArts.map(art => [art._id, art]));
+                    arts.forEach((newArt: ArtData) => {
+                        artMap.set(newArt._id, newArt);
+                    });
 
-                //     return Array.from(artMap.values());
-                // });
+                    return Array.from(artMap.values());
+                });
             } else {
                 console.log(`No data returned for page ${page}`);
             }
@@ -89,6 +90,11 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
             setLoading(false);
         }
     }
+
+    const removeArtById = (id: string) => {
+        setUpcomingArts((prevArts) => prevArts.filter((art) => art._id !== id));
+        setHideSuccess(true);
+    };
 
     // Add debounce function for scroll handling
     const debounce = (func: () => void, delay: number) => {
@@ -103,7 +109,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight && !loading) {
             setPage((prevPage) => (prevPage === null ? 0 : prevPage + 1));
         }
-    }, 200);
+    }, 100);
 
     useEffect(() => {
         window.addEventListener("scroll", handleInfiniteScroll);
@@ -113,6 +119,10 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     useEffect(() => {
         getArts();
     }, [page, sort, refresh, uploadSuccess]);
+
+    const handleSuccessClose = () => {
+        setHideSuccess(false);
+    }
 
 
     // const handleNext = () => {
@@ -251,8 +261,31 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
                 {/* Upcoming arts grid view section */}
                 <div className="grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
-                    <CardHolder artData={upcomingArts} campaignId={campaignId} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} />
+                    <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} userMail={userMail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} />
                 </div>
+
+                {hideSuccess && <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
+                    <div className="upcoming-popup lg:w-[38.5rem] md:w-[34.5rem] w-full h-auto lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
+                        <div className="close-art w-full flex justify-between">
+                            <div className="dummy md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem]">
+
+                            </div>
+                            <h2 className='text-green text-md'>Hide Art</h2>
+                            <div className="close-icon md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleSuccessClose}>
+                                <InlineSVG
+                                    src="/icons/close.svg"
+                                    className="md:w-4 md:h-4 w-3 h-3 spartan-light"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full flex justify-center">
+                            <div className="success-holder w-[15rem] h-[10rem]">
+                                <img src="/images/success.png" alt="success" className="w-full h-full object-cover" />
+                            </div>
+                        </div>
+                        <h3 className='spartan-semibold text-2xl text-white text-center pb-5 pt-6'>Art hidden successfully!</h3>
+                    </div>
+                </div>}
 
                 {/* Pagination for upcoming arts */}
                 {/* <div className="pagination-section relative w-full flex justify-center py-5">
@@ -294,3 +327,4 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         </>
     )
 }
+// Upcominggrid.tsx

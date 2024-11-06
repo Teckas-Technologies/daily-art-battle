@@ -34,7 +34,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   useEffect(() => {
     if (isOpen && activeAccountId) {
       const walletAddress = activeAccountId;
-      sendWalletData(idToken, walletAddress);
+      sendWalletData(walletAddress);
     }
   }, [isOpen, idToken, sendWalletData]);
 
@@ -131,3 +131,4 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
 };
 
 export default CampaignPopup;
+// CampaignPopUp.tsx
