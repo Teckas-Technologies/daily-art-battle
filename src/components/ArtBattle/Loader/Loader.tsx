@@ -26,7 +26,7 @@ const Loader = () => {
   }, [progress]);
 
   return (
-    <div className="new-loading flex w-full justify-center mt-6 mx-8 md:h-[29rem]">
+    <div className="new-loading flex w-full justify-center mt-6 md:h-[29rem]">
       <div className="loader-gif md:w-[24.5rem] md:h-[26.5rem] w-[15rem] h-[15rem]">
         <img src="/images/gfxvs_loader.gif" alt="loader" className="w-full h-full object-cover" />
       </div>

@@ -4,7 +4,9 @@ import InlineSVG from "react-inlinesvg";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
-
+import { signOut, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
+import { setAuthToken } from "../../../../utils/authToken";
 interface EditCampaignPopupProps {
   onClose: () => void;
   campaign?: CampaignPageData | null;
@@ -22,8 +24,10 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   const [welcomeText, setWelcomeText] = useState("");
   const [specialRewards, setSpecialRewards] = useState("");
   const [isPubliclyVisible, setIsPubliclyVisible] = useState(false);
-  const idToken =
-    "eyJhbGciOiJSUzI1NiIsImtpZCI6Ilg1ZVhrNHh5b2pORnVtMWtsMll0djhkbE5QNC1jNTdkTzZRR1RWQndhTmsiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MzA4MTMyNjAsIm5iZiI6MTczMDgwOTY2MCwidmVyIjoiMS4wIiwiaXNzIjoiaHR0cHM6Ly9nZnh2c2FwcC5iMmNsb2dpbi5jb20vZTk5ZWJlOWQtNjg2Yi00OWQwLThmMmMtZWVmZTE2MDVjODA5L3YyLjAvIiwic3ViIjoiNWY0ZDcyOGQtZjBlYS00ZTQ0LWE2NzEtYmU3ODcwYTkyOWEwIiwiYXVkIjoiMmExNDU3ZjMtZTIzOC00OTUxLTk2MDUtOTEyMTgwMjMzZWIxIiwiaWF0IjoxNzMwODA5NjYwLCJhdXRoX3RpbWUiOjE3MzA3NDQxNjEsImlkcF9hY2Nlc3NfdG9rZW4iOiJ5YTI5LmEwQWVEQ2xaQWpTWnI0by15UDZKMzB6MTFwME1GQ0RfdU0zSkFyWTMtRlZrX0gyZy1MSVRUS0VtNGtjUlZQeDljRklWYkp5bjQ0Vm54bU1EclFOZEhuZUdEbTFNUVlONlVNQ3BBWm1UUExPYjdEcTlpQ1RoS3RRdmh4LU1TbWhUSzZTMTNodmk5eDdCLWF4R0psTXJUeXJkVUdCdkw3UUllYUdrb2FDZ1lLQVRJU0FSQVNGUUhHWDJNaUJ5RWdtQk1rdk1raldPZ0g5WEhUencwMTcwIiwiZ2l2ZW5fbmFtZSI6IlNoYXJtaWxhIiwiZmFtaWx5X25hbWUiOiJCbGVzc3kiLCJpZHAiOiJnb29nbGUuY29tIiwib2lkIjoiNWY0ZDcyOGQtZjBlYS00ZTQ0LWE2NzEtYmU3ODcwYTkyOWEwIiwiZW1haWxzIjpbInNoYXJtaWxhQGthbGFrZW5kcmFkYW8ub3JnIl0sInRmcCI6IkIyQ18xX3NpZ251cF9zaWduaW4ifQ.P_z85PHuPVODZhYyXYZ5r7rNJ8PrPJhhOJJ3uFXGC4Uf0WTx5W1p_Ov3WD3G53jAusSWfPhm1Q1ZIntKfUVvtGEsthuELuk5CnilUxQ3j3ZO8UoqpwbpW62eDaJTLmGSsLay9KNEeEdSY3U3GAyZpQAxbQMfTI9JTA9C_J_xEaVqe6g1QYslImDCXgiVSy_p4AaNfm9AOkk6l7_Hfgp9a2YbyGDxT0YyHTNH8QFTDdnx6B_ot60yh5UUSXkS3403qKe5tCrWvYu0P-Qf_yD6TAxcaigOc-kYHJO797Di5-3GKdv-LIWXuHtOj9NvDzAoROnlNWk-3dRY0hTKetc5Cw";
+  const { data: session, status } = useSession();
+  const idToken = session?.idToken || "";
+ console.log(">>>>>>>>>>>>>>>>>>>>>",idToken);
+ 
   const { updateCampaign, loading, error } = useCampaigns(idToken);
 
   useEffect(() => {
@@ -36,7 +40,16 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
       setIsPubliclyVisible(campaign.publiclyVisible || false);
     }
   }, [campaign]);
-
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      // Redirect to login if not authenticated
+      signIn('azure-ad-b2c', { callbackUrl: '/' });
+    } else if (status === 'authenticated' && session) {
+      // Set the idToken for all API requests
+      setAuthToken(session?.idToken || "");
+      console.log('Token set for API requests', session);
+    }
+  }, [status, session]);
   const handleDateChange = (
     date: Date | null,
     setter: React.Dispatch<React.SetStateAction<Date | null>>
@@ -77,8 +90,8 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   };
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-container">
+    <div className="edit-popup-overlay">
+      <div className="edit-popup-container">
         <button className="close-btn" onClick={onClose}>
           <InlineSVG src="/icons/x.svg" className="close-btn-icon" />
         </button>

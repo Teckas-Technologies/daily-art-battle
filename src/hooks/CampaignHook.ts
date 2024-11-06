@@ -423,7 +423,8 @@ const useCampaigns = (idToken: string) => {
     updateCampaign,
     fetchBattles,
     battles,
-    distributeArt
+    distributeArt,
+    participants
   };
 };
 

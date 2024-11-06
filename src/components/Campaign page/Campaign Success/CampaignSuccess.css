@@ -20,7 +20,7 @@
   color: white;
   border: 0.53px solid #939393;
   border-radius: 11.2px;
-  margin-bottom: 65px;
+  margin-bottom: 75px;
 }
 
 .success-campaign-content {
@@ -41,7 +41,7 @@
   text-align: left;
   font-size: 16px;
   font-weight: 500;
-  line-height: 14.34px;
+  line-height: 17.34px;
   letter-spacing: -6%;
   background: #9b9b9b;
   -webkit-background-clip: text;
@@ -49,7 +49,7 @@
   margin-top: 15px;
 }
 .campaign-success-title {
-  font-size: 30px;
+  font-size: 31px;
   color: #00ff00;
   line-height: 40.32px;
   letter-spacing: -6%;
