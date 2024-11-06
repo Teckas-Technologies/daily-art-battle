@@ -28,7 +28,7 @@
 .options {
     backdrop-filter: blur(20px);
     background-color: #000000;
-    z-index: 49;
+    z-index: 40;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.104) 0%, rgba(255, 255, 255, 0.104) 100%);
 }
 

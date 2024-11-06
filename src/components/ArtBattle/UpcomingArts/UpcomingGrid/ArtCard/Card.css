@@ -129,3 +129,36 @@
     z-index: -1;
     transform: translateX(-400%);
 }
+
+@media (max-width: 380px) {
+    .img-holder {
+        width: 12rem;
+        height: 12rem;
+    }
+    .raffle-text {
+        font-size: 1.1rem;
+    }
+
+    .upvote-btn {
+        gap: 1rem;
+        padding-bottom: 0.5rem;
+    }
+    .collect-btn {
+        padding: 0.5rem 1.2rem;
+        border-radius: 0.5rem !important;
+    }
+
+    .point-c {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    .collect-text {
+        font-size: 1rem !important;
+    }
+    .enter-input {
+        height: 2.5rem;
+    }
+    .des {
+        padding: 0.2rem 0;
+    }
+}

@@ -7,17 +7,17 @@ import { useRouter } from 'next/navigation';
 import './Card.css';
 import InlineSVG from 'react-inlinesvg';
 import Card from './Card';
+import { useSendWalletData } from '@/hooks/saveUserHook';
 
 interface CardHolderProps {
     artData: ArtData[];
     campaignId: string;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
     setSelectedArt: (e: any) => void;
-    currentPage: number;
     totalPage: number;
 }
 
-const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh, setSelectedArt, currentPage, totalPage }) => {
+const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh, setSelectedArt, totalPage }) => {
     const { isConnected, selector, connect, activeAccountId, disconnect } = useMbWallet();
     const { fetchArtUserRaffleCount, submitVote } = useArtsRaffleCount();
     const [success, setSuccess] = useState(false);
@@ -25,6 +25,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
     const [myTickets, setMyTickets] = useState<number>(0);
     const router = useRouter();
     const { fetchArtById } = useFetchArtById();
+    const { userDetails, sendWalletData } = useSendWalletData();
     const [selectedArtId, setSelectedArtId] = useState(null);
     const [overlayArt, setoverlayArt] = useState<ArtData>();
     const [tokenCount, setTokenCount] = useState<number | null>(1);
@@ -110,6 +111,16 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
         setSuccess(false);
     };
 
+    // useEffect(()=>{
+    //     if(activeAccountId) {
+    //         const fetchUser = async () => {
+    //             await sendWalletData(activeAccountId)
+    //         }
+    //         fetchUser();
+    //     }
+    // }, [activeAccountId])
+
+    // console.log("User Details : ", userDetails)
 
     useEffect(() => {
         const fetchArtUserticketss = async () => {
@@ -139,13 +150,17 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
         if (tokenCount == null || tokenCount === 0) {
             return;
         }
+        // if (userDetails?.user?.gfxCoin < raffleTicketAmount()) {
+        //     alert("Insufficient gfxCoin to submit vote!");
+        //     return;
+        // }
         const success = await submitVote({
             ticketCount: tokenCount,
             artId: id,
             campaignId: campaignId
         });
 
-        console.log(success);
+        // console.log(success);
         if (success) {
             setSuccess(true);
             const art = await fetchArtById(id);
@@ -183,7 +198,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
             <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-[1.5rem] lg:gap-[1.5rem] md:gap-[1rem] gap-[0.5rem]" id="upcoming-grid">
                 {artData.map((art, index) => (
                     <div key={index}>
-                        <Card art={art} onImageClick={handleImageClick} campaignId={campaignId} success={success} />
+                        <Card art={art} onImageClick={handleImageClick} campaignId={campaignId} success={success} overlayArt={overlayArt} />
                     </div>
                 ))}
             </div>
@@ -236,7 +251,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                                         <h2 className='collect lg:text-md md:text-sm text-xs spartan-semibold md:w-[9rem] w-[2.5rem] truncate overflow-hidden whitespace-nowraps'>Total Collects</h2>
                                     </div>
                                     <div className="upvotes">
-                                        <h2 className='text-green'>{overlayArt.raffleTickets as number}</h2>
+                                        <h2 className='text-green'>{overlayArt?.raffleTickets as number}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -244,9 +259,9 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                         <div className="art-info md:w-[50%] w-full">
                             <div className="upvotes w-auto flex items-center md:justify-start justify-center gap-2 py-1 pt-3">
                                 <div className="count flex justify-center items-center p-2 rounded-md min-w-[1.5rem] min-h-[1.5rem]" style={{ aspectRatio: '1' }}>
-                                    <h2 className='spartan-medium text-md text-center overflow-hidden'>{overlayArt.raffleTickets as number}</h2>
+                                    <h2 className='spartan-medium text-md text-center overflow-hidden'>{overlayArt?.raffleTickets as number}</h2>
                                 </div>
-                                <h2 className='spartan-semibold md:text-lg text-xl'>Raffle Tickets</h2>
+                                <h2 className='spartan-semibold md:text-lg text-xl raffle-text'>Raffle Tickets</h2>
                             </div>
                             <div className="upload-date flex items-center md:justify-start justify-center md:gap-3 gap-6 md:py-2 py-1">
                                 <div className="date flex items-center gap-2">
@@ -261,9 +276,9 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                                     <h2 className='spartan-semibold text-md'>{formatDate(overlayArt.uploadedTime instanceof Date ? overlayArt.uploadedTime.toISOString() : overlayArt.uploadedTime)}</h2>
                                 </div>
                             </div>
-                            <h2 className='spartan-medium md:text-lg text-md py-2 text-green md:text-left text-center'>Description</h2>
-                            {/* <h6 className='saprtan-medium description-text md:text-md text-sm py-1 md:text-left text-center leading-tight'>{overlayArt.arttitle}</h6> */}
-                            <h6 className='saprtan-medium description-text md:text-md text-sm py-1 md:text-left text-center leading-tight'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6>
+                            <h2 className='spartan-medium md:text-lg text-md py-2 text-green md:text-left text-center des'>Description</h2>
+                            <h6 className='saprtan-medium description-text md:text-md text-sm py-1 md:text-left text-center leading-tight'>{overlayArt.arttitle}</h6>
+                            {/* <h6 className='saprtan-medium description-text md:text-md text-sm py-1 md:text-left text-center leading-tight'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6> */}
                             <div className="tickets flex items-center md:justify-start justify-center gap-2 py-2">
                                 <h5 className='text-white text-md'>My Tickets</h5>
                                 <span className='text-green text-lg'>{myTickets as number > 0 ? myTickets : 'N/A'}</span>
@@ -283,7 +298,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, setRefresh
                                 <div className="collect-btn flex items-center gap-2 justify-center py-[0.5rem] px-[3rem] rounded-[0.8rem]" onClick={() => onVote(overlayArt._id)}>
                                     <InlineSVG
                                         src='/icons/gfx-point.svg'
-                                        className='fill-current w-8 h-8'
+                                        className='fill-current point-c w-8 h-8'
                                     />
                                     <h3 className='spartan-semibold text-white collect-text'>Collect</h3>
                                 </div>
