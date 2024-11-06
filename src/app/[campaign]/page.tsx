@@ -24,7 +24,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal); 
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const [showAllParticipants, setShowAllParticipants] = useState<
     boolean | null
