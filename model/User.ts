@@ -2,7 +2,7 @@
 import mongoose, { Document, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 export interface UserTable extends Document {
- // profileImg: string;
+  profileImg: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -33,10 +33,10 @@ export interface UserTable extends Document {
 }
 
 const UserTableSchema = new mongoose.Schema({
-//   profileImg: { type: String, required: true },
+  profileImg: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  nearAddress: { type: String, required: true },
+  nearAddress: { type: String, required: false },
   email: { 
     type: String, 
     required: true, 

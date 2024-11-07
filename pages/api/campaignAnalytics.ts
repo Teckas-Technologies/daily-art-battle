@@ -6,6 +6,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
         await connectToDatabase();
         const email = await authenticateUser(req);
+        //To fetch campaign analytics details
         if(req.method=='GET'){
             const campaignId = req.query.id;
             // const totalNfts = await fetchTotalNftCount(campaignId as String);

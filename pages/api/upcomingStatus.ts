@@ -7,6 +7,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         const email = await authenticateUser(req);
         await connectToDatabase();
+        //Here we will return the status of the upcoming arts section
         if(req.method=='GET'){
             const campaignId = req.query.id;
             const upcomingBattleArts = (await ArtTable.find({campaignId:campaignId,isStartedBattle:false})).length;

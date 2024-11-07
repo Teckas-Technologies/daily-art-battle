@@ -36,11 +36,6 @@ export default async function handler(
             .status(404)
             .json({ success: false, error: "User profile not found." });
         }
-        if(user.nearAddress!=art.artistId){
-          return res
-          .status(404)
-          .json({ success: false, error: "User wallet address not matched" });
-        }
         if (user.gfxCoin < ART_UPLOAD) {
           return res
             .status(400)
@@ -77,7 +72,7 @@ export default async function handler(
           const battles = await findAllArtsByCampaign(page, limit,id);
           return res.status(200).json(battles);
         }
-
+         //Search upcoming arts based on art name and artist name
         if(queryType=="coming"){
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 9;
@@ -86,6 +81,7 @@ export default async function handler(
           const battles = await findComingArts(name,campaignId,page,limit);
           return res.status(200).json(battles);
         }
+         //Fetch completed battles based on art name and artist name
         if(queryType=="completed"){
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 9;
@@ -115,7 +111,9 @@ export default async function handler(
               .status(200)
               .json({ battles, totalDocuments, totalPages });
           }
-        } else {
+        } 
+        //Fetch upcoming arts with sorting
+        else {
           const sort = req.query.sort;
           const campaignId = req.query.campaignId as string;
           const page = parseInt(req.query.page as string) || 1;

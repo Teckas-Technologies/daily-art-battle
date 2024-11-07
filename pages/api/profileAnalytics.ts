@@ -8,6 +8,8 @@ import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } fro
 import RaffleTicket from "../../model/RaffleTicket";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
+  
+  //Here we will return users nft and arts counts
     try {
         await connectToDatabase();
         const email = await authenticateUser(req);

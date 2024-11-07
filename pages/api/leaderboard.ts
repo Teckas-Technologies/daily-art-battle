@@ -9,6 +9,7 @@ import { TOTAL_REWARDS } from "@/data/queries/totalrewards.graphql";
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
+  // This api to fetch leaderboard list 
     if(req.method=='GET'){
         try{
         const email = await authenticateUser(req);    

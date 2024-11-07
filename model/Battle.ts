@@ -67,8 +67,6 @@ const BattleSchema = new mongoose.Schema({
   artAVotes: { type: Number, default: 0 },
   artBVotes: { type: Number, default: 0 },
   specialWinner: { type: String, required: false },
-  artAspecialWinner: { type: String, required: false },
-  artBspecialWinner: { type: String, required: false },
   artAvoters: { type: [String], required: false },
   artBvoters: { type: [String], required: false },
   tokenId: { type: String, required: false },

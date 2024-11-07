@@ -18,6 +18,7 @@ export default async function handler(
 ) {
   try{
     const email = await authenticateUser(req);
+    //This api to generate ai arts
   if (req.method == "POST") {
     const { prompt } = req.body;
 

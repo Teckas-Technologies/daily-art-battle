@@ -7,6 +7,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
     try{
         await connectToDatabase();
         const email = await authenticateUser(req);
+        //Here we will return thre transaction details of the user
         if(req.method=='GET'){
             try{
             const transaction = await Transactions.find({email:email});

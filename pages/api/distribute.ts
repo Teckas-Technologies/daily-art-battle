@@ -10,6 +10,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     await connectToDatabase();
     const email = await authenticateUser(req);
+    //This api to distribute special rewards of campaign
     if(req.method=='POST'){
         const {artList,campaignId} = req.body;
         const campaigns = await campaign.findOne({_id:campaignId});

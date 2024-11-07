@@ -7,12 +7,14 @@ import calaculateRafflePoints from "../../utils/raffleUtils";
 import Transactions from "../../model/Transactions";
 import ArtTable from "../../model/ArtTable";
 import mongoose from "mongoose";
+import Battle from "../../model/Battle";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         await connectToDatabase();
         const email = await authenticateUser(req);
         const user = await User.findOne({email});
+        //Here will create raffle tickets for specific arts
         if(req.method=='POST'){
             try{
             const { artId,campaignId,ticketCount } = req.body;
@@ -31,7 +33,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             }else{
                 const createNewRaffle = new RaffleTicket({
                     email:email,
-                    participantId: user.nearAddress,
                     artId: artId,
                     campaignId:campaignId,
                     raffleCount:ticketCount,
@@ -53,10 +54,86 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(400).json({error:error.message});
         }
         }
+        //Here we will return the users raffle tickets and their collected arts
         else if(req.method=="GET"){
             try{
                 const queryType = req.query.queryType;
-                if(queryType=="raffles"){
+                if(queryType=="spinner"){
+                    const queryFilter =  req.query.sort;
+                    const page = parseInt(req.query.page as string) || 1;
+                    const limit = parseInt(req.query.limit as string) || 9;
+                    if(queryFilter=="voteAsc"){
+                        const skip = (page - 1) * limit;
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email});
+                        const totalPages = Math.ceil(totalDocuments / limit);
+                        const spinner = await Battle.aggregate([
+                            {
+                              $match: { specialWinner: email}
+                            },
+                            {
+                              $addFields: {
+                                totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
+                              }
+                            },
+                            {
+                              $sort: { totalVotes: 1, _id: 1 }
+                            },
+                            {
+                              $skip: skip
+                            },
+                            {
+                              $limit: limit
+                            }
+                          ]);
+                   
+                    res.status(200).json({ totalDocuments,totalPages,spinner});
+                    }else if(queryFilter=="voteDsc"){
+                        const skip = (page - 1) * limit;
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email});
+                        const totalPages = Math.ceil(totalDocuments / limit);
+                        const spinner = await Battle.aggregate([
+                            {
+                              $match: { specialWinner: email}
+                            },
+                            {
+                              $addFields: {
+                                totalVotes: { $add: ["$artAVotes", "$artBVotes"] }
+                              }
+                            },
+                            {
+                              $sort: { totalVotes: -1, _id: 1 }
+                            },
+                            {
+                              $skip: skip
+                            },
+                            {
+                              $limit: limit
+                            }
+                          ]);
+                   
+                    res.status(200).json({ totalDocuments,totalPages,spinner});
+                    }else if(queryFilter=="dateAsc"){
+
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const skip = (page - 1) * limit;
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email, endTime: { $lt: today }});
+                        const totalPages = Math.ceil(totalDocuments / limit);
+                        const pastBattles = await Battle.find({ specialWinner:email, endTime: { $lt: today }}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
+                        return { pastBattles,totalDocuments,totalPages };
+
+                    }else if(queryFilter=="dateDsc"){
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const skip = (page - 1) * limit;
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email, endTime: { $lt: today }});
+                        const totalPages = Math.ceil(totalDocuments / limit);
+                        const pastBattles = await Battle.find({ specialWinner:email, endTime: { $lt: today }}).sort({ startTime: -1 ,_id: 1 }).skip(skip).limit(limit);
+                        return { pastBattles,totalDocuments,totalPages };
+
+                    }
+                }
+                else if(queryType=="raffles"){
                     const queryFilter =  req.query.sort;
                     const page = parseInt(req.query.page as string) || 1;
                     const limit = parseInt(req.query.limit as string) || 9;
@@ -113,7 +190,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     }));
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
                     }
-                    
+               //Here user can search arts based on art name
                 }else if(queryType=="search"){
                     const queryFilter = req.query.queryFilter;
                     if(queryFilter=="artName"){
@@ -121,6 +198,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         const page = parseInt(req.query.page as string) || 1;
                         const limit = parseInt(req.query.limit as string) || 9;
                         const skip = limit * (page === 1 ? 0 : page - 1);
+
                         const raffleEntries = await RaffleTicket.aggregate([
                             {
                               $lookup: {
@@ -154,12 +232,14 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             }
                           ]).skip(skip)
                           .limit(limit);
-                          res.status(200).json({raffleEntries });
+                        
+                          res.status(200).json({raffleEntries});
                     }
-                }
+                }else{
                 const { artId,campaignId} = req.query;
                 const totalRaffle = await RaffleTicket.findOne({email:email,artId:artId,campaignId:campaignId});
-                res.status(200).json({ message: 'Raffle tickets Counts', totalRaffleCounts:totalRaffle?.raffleCount });
+                res.status(200).json({ message: 'Raffle tickets Counts', totalRaffleCounts:totalRaffle?.raffleCount});
+                }
             }catch(error:any){
             res.status(400).json({error:error.message});
             }

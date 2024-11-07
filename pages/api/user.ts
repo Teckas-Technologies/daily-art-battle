@@ -14,6 +14,7 @@ import RaffleTicket from '../../model/RaffleTicket';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
+    //Here user will be created 
     try {
       await connectToDatabase();
       const {walletAddress} = req.body;
@@ -80,6 +81,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ error:error.message });
     }
   }
+
+  //To fetch users based on id token
   else if (req.method === 'GET') {
     try {
       await connectToDatabase();
@@ -104,6 +107,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(400).json({ error:error.message });
     }
   }
+
+  // To update user based on token
   if(req.method=='PUT'){
     try{
       await connectToDatabase();
@@ -122,6 +127,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const existingUser = await User.findOne({ email: email });
       if (!existingUser) {
         res.status(400).json({message:"User profile not found"});
+      }
+      const queryType = req.query.queryType;
+      if(queryType=="update"){
+        const updateData = { ...req.body };
+        const updatedProfile = await User.findOneAndUpdate(
+          { email },
+          updateData,
+          { new: true }
+        );
+        res.status(200).json({ profile: updatedProfile });
       }
       const profile = await User.findOneAndUpdate({ email }, {firstName:payload.given_name,lastName:payload.family_name}, { new: true }); 
       res.status(200).json({profile});
