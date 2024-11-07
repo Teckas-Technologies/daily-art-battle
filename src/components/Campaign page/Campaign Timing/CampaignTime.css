@@ -87,6 +87,18 @@
     background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
     z-index: 1;
   }
+  .CampaignButtonWrapper:hover .CampaignButtonBorder {
+    animation: glow 1.5s infinite alternate;
+    background-size: 200% 200%;
+  }
+  @keyframes glow {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
   @media screen and (max-width: 768px) {
     .campaign-timings{
       padding: 20px;
@@ -96,7 +108,7 @@
       line-height: 26.95px;
     }
     .campaign-timings h1{
-      font-size: 40.13px;
+      font-size: 39.13px;
       line-height: 56.14px;
     }
     .CampaignButtonWrapper {

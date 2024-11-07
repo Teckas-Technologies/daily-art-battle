@@ -12,6 +12,7 @@ import { CAMPAIGN_CREATION_COST } from "@/config/points";
 interface CampaignCreationProps {
   toggleCampaignModal: () => void;
   idToken: string;
+  
 }
 
 const CreateCampaign: React.FC<CampaignCreationProps> = ({
@@ -38,7 +39,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const router = useRouter();
-  const { createCampaign } = useCampaigns(idToken);
+  const { createCampaign } = useCampaigns();
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsPubliclyVisible(event.target.checked);
     console.log("Toggle Value:", event.target.checked);
@@ -103,10 +104,26 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     date: Date | null,
     setter: React.Dispatch<React.SetStateAction<Date | null>>
   ) => {
-    setter(date);
+    if (date) {
+      // Normalize the date by setting the time to 00:00:00 in the local time zone
+      const normalizedDate = new Date(date);
+      normalizedDate.setHours(0, 0, 0, 0); // Reset time to midnight (00:00:00)
+      
+      // Adjust to local timezone (optional, depends on your use case)
+      const localTime = new Date(normalizedDate.getTime() - normalizedDate.getTimezoneOffset() * 60000);
+      setter(localTime);
+    } else {
+      setter(date);
+    }
+  
+    // Close date picker based on which one was selected
     if (setter === setStartDate) setStartDatePickerOpen(false);
     else setEndDatePickerOpen(false);
   };
+  
+
+  
+
   useEffect(() => {
     if (campaignName) {
       const formattedUrl = `https://gfxvs.com/${campaignName
@@ -166,7 +183,10 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const validateForm = () => {
     const numericSpecialRewards = Number(specialRewards);
     const isValid =
-      campaignName.trim() !== "" && startDate !== null && endDate !== null;
+      campaignName.trim() !== "" &&
+      campaignWelcomeText.trim() !== "" &&
+      startDate !== null &&
+      endDate !== null;
     // numericSpecialRewards > 0;
 
     setIsFormValid(isValid);
@@ -174,7 +194,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
 
   useEffect(() => {
     validateForm();
-  }, [campaignName, startDate, endDate, specialRewards]);
+  }, [campaignName, startDate, endDate, specialRewards, campaignWelcomeText]);
   return (
     <>
       <div className="create-campaign">
@@ -194,7 +214,6 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           >
             Campaigns
           </h3>
-         
         </div>
         <div className="create-campaign-header">
           <div className="create-campaign-content">
@@ -307,7 +326,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                         onChange={(date) => handleDateChange(date, setEndDate)}
                         onClickOutside={() => setEndDatePickerOpen(false)}
                         inline
-                        minDate={new Date()}
+                        minDate={startDate || undefined} 
                       />
                     </div>
                   )}
@@ -359,12 +378,12 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   value={specialWinner}
                   onChange={(e) => setSpecialWinner(Number(e.target.value))}
                 />
-                <div className="relative">
+                {/* <div className="relative">
                   <InlineSVG
                     src="/icons/dollar.svg"
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
                   />
-                </div>
+                </div> */}
               </div>
               <div className="create-campaign-input">
                 <label
@@ -431,6 +450,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           campaignCost={CAMPAIGN_CREATION_COST}
           idToken={idToken}
           connectionError={connectionError}
+          specialRewards={specialRewards}
         />
       </div>
     </>

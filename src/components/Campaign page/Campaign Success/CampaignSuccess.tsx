@@ -75,8 +75,8 @@ const CampaignSuccess = () => {
             {fullLink ? (
               <>
                 <p>
-                  {fullLink.length > 25
-                    ? `${fullLink.slice(0, 25)}.............`
+                  {fullLink.length > 20
+                    ? `${fullLink.slice(0, 20)}.....`
                     : fullLink}
                 </p>
                 <button

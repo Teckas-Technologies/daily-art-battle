@@ -209,6 +209,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 100px;
+  margin-top: 20px;
 }
 .summary-container p {
   text-align: center;
@@ -280,6 +281,18 @@
   background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
   z-index: 1;
 }
+.distribute-btn-Wrapper:hover .distribute-btn-Border {
+  animation: glow 1.5s infinite alternate;
+  background-size: 200% 200%;
+}
+@keyframes glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
 .summary-heading {
   text-align: center;
   font-size: 25px;
@@ -297,9 +310,9 @@
 }
 /* Container styling */
 .participants {
-  width: 250px; /* Adjust as needed */
+  width: 250px; 
   background: #171717bd;
-  border-radius: 15px; /* Rounded corners */
+  border-radius: 15px;
   padding: 20px;
   color: #ffffff;
   overflow-y: auto;
@@ -358,7 +371,7 @@
 }
 
 .participants::-webkit-scrollbar-thumb {
-  background-color: #00ff00; /* Green scrollbar thumb */
+  background-color: #00ff00; 
   border-radius: 3px;
 }
 
@@ -633,5 +646,109 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .common {
+    padding: 0.8px;
+    border-radius: 20px;
+  }
+
+  .campaign-details-container h1 {
+    font-size: 25px;
+    margin-bottom: 40px;
+  }
+
+  .art-section {
+    flex-direction: row;
+    gap: 40px;
+    margin-left: 30px;
+  }
+
+  .art-heading {
+    font-size: 15px;
+    margin-left: 5px;
+  }
+
+  .art {
+    padding: 15px 20px;
+    border-radius: 20px;
+  }
+
+  .art .art-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .art .profile-image {
+    width: 30px;
+    height: 30px;
+  }
+
+  .art h4 {
+    font-size: 18px;
+  }
+
+  .art p {
+    font-size: 11px;
+  }
+
+  .winnersGrid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    gap: 20px;
+  }
+
+  .winner img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .daywise-winners-grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    gap: 20px;
+  }
+
+  .summary-heading {
+    font-size: 22px;
+  }
+
+  .summary {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .participants {
+    width: 300px;
+    height: 500px;
+    
+  }
+
+  .participant {
+    font-size: 14px;
+  }
+
+  .summary-arts h3 {
+    font-size: 18px;
+  }
+
+  .arts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .art-card {
+    width: 180px;
+    height: 180px;
+  }
+
+  .distribute-btn-Wrapper {
+    width: 150px;
+    height: 45px;
+  }
+
+  .distribute-btn {
+    font-size: 10px;
   }
 }

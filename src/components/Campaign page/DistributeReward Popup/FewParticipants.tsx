@@ -5,21 +5,23 @@ interface FewParticipantsPopupProps {
   onDistribute: () => void;
   selectedArtLength: number;
   artLength: number;
+  isLoading: boolean;
 }
 
 const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
   onClose,
   onDistribute,
   selectedArtLength,
-  artLength
+  artLength,
+  isLoading,
 }) => {
   return (
     <div className="participant-popup-overlay">
       <div className="participant-popup-content">
         <h2 className="participant-popup-title">Distribute Rewards</h2>
         <p className="main-text">
-          You only Selected {selectedArtLength}{" "}
-          out of {artLength} Special Winners
+          You only Selected {selectedArtLength} out of {artLength} Special
+          Winners
         </p>
         <p className="participant-description-text  md:w-[350px]">
           Distribute rewards to remaining participants before 7 days of campaign
@@ -28,12 +30,19 @@ const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
         </p>
 
         <div className="few-button-container">
-          <button className="few-cancel-btn" onClick={onClose}>
+          <button
+            className="few-cancel-btn"
+            onClick={onClose}
+            disabled={isLoading}
+          >
             Cancel
           </button>
           <div className="few-distributepopup-btn-Wrapper">
-            <button className="few-distributepopup-btn " onClick={onDistribute}>
-              Distribute Rewards
+            <button
+              className="few-distributepopup-btn "
+              onClick={onDistribute}
+            >
+              {isLoading ? "Distributing Rewards..." : "Distribute Rewards"}
             </button>
 
             <div className="few-distributepopup-btn-Border" />

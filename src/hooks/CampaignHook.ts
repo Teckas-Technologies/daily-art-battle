@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
 export interface CampaignPageData {
   _id: string;
   campaignUrl?: string;
@@ -13,7 +14,7 @@ export interface CampaignPageData {
   totalRewards?: number;
   noOfWinners?: number;
   specialWinnerCount?: number;
-  participants:number;
+  participants: number;
   distributedRewards?: boolean;
   email: string;
 }
@@ -43,15 +44,16 @@ export interface ArtItem {
   specialWinner: string;
   votes: number;
   campaignId: string;
-  email: string;
+  email?: string;
 }
 
 interface ArtData {
   campaignId: string;
   artList: ArtItem[];
+  email?: string;
 }
 
-const useCampaigns = (idToken: string) => {
+const useCampaigns = () => {
   const [campaign, setCampaign] = useState<CampaignPageData | null>(null);
   const [campaignData, setCampaignData] = useState<any>(null);
   const [campaignStatus, setCampaignStatus] = useState<string | null>(null);
@@ -64,7 +66,7 @@ const useCampaigns = (idToken: string) => {
   const [limit, setLimit] = useState<number>(10);
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [battles, setBattles] = useState<any[]>([]);
-  const [participants,setParticipants] = useState<any>(null);
+  const [participants, setParticipants] = useState<any>(null);
   const fetchCampaigns = async (
     queryType: "current" | "upcoming" | "completed" | "myCampaigns",
     page: number = currentPage,
@@ -74,15 +76,8 @@ const useCampaigns = (idToken: string) => {
     setError(null);
 
     try {
-      const response = await fetch(
-        `/api/campaign?queryType=${queryType}&page=${page}&limit=${limit}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken}`,
-          },
-        }
+      const response = await fetchWithAuth(
+        `/api/campaign?queryType=${queryType}&page=${page}&limit=${limit}`
       );
 
       if (!response.ok) {
@@ -90,7 +85,7 @@ const useCampaigns = (idToken: string) => {
       }
 
       const data = await response.json();
-      // console.log(`${queryType} campaign data:`, data);
+      console.log(`${queryType} campaign data:`, data);
       setCampaignData(data.data.campaign);
       setTotalDocuments(data.data.totalDocuments);
       setTotalPages(data.data.totalPages);
@@ -105,69 +100,55 @@ const useCampaigns = (idToken: string) => {
       setLoading(false);
     }
   };
- const fetchCampaignFromArtAPI = async (
-  campaignId: string,
-  page: number = 1,
-  limit: number = 6
-) => {
-  setLoading(true);
-  setError(null);
+  const fetchCampaignFromArtAPI = async (
+    campaignId: string,
+    page: number = 1,
+    limit: number = 6
+  ) => {
+    setLoading(true);
+    setError(null);
 
-  try {
-    console.log("Fetching art for Campaign ID:", campaignId);
-    const response = await fetch(
-      `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
+    try {
+      console.log("Fetching art for Campaign ID:", campaignId);
+      const response = await fetchWithAuth(
+        `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch campaign from art API`);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch campaign from art API`);
+      const data = await response.json();
+      console.log("API Response:", data);
+      console.log("Arts Data:", data.arts);
+
+      setArt(data.arts);
+      setTotalDocuments(data.totalDocuments);
+      console.log("Total Arts", totalDocuments);
+      setTotalPages(data.totalPages);
+      console.log("Total pages", totalPages);
+      setCurrentPage(page);
+
+      return data;
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+      return null;
+    } finally {
+      setLoading(false);
     }
-
-    const data = await response.json();
-    console.log("API Response:", data);
-    console.log("Arts Data:", data.arts);
-
-    setArt(data.arts);
-    setTotalDocuments(data.totalDocuments);
-    console.log("Total Arts", totalDocuments);
-    setTotalPages(data.totalPages);
-    console.log("Total pages", totalPages);
-    setCurrentPage(page);
-
-    return data;
-  } catch (err) {
-    if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError("An unknown error occurred");
-    }
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const fetchBattles = async (campaignId: string, sort: string = "voteDsc") => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(
-        `/api/battle?queryType=battles&sort=${sort}&campaignId=${campaignId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken}`,
-          },
-        }
+      const response = await fetchWithAuth(
+        `/api/battle?queryType=battles&sort=${sort}&campaignId=${campaignId}`
       );
 
       if (!response.ok) {
@@ -176,7 +157,7 @@ const useCampaigns = (idToken: string) => {
 
       const data = await response.json();
       setBattles(data.battles);
-      // console.log("Fetched battles data:", data);
+      console.log("Fetched battles data:", data);
       return data;
     } catch (err) {
       setError(
@@ -193,13 +174,7 @@ const useCampaigns = (idToken: string) => {
     setError(null);
 
     try {
-      const response = await fetch(`/api/campaign?title=${title}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-      });
+      const response = await fetchWithAuth(`/api/campaign?title=${title}`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch campaign data");
@@ -209,9 +184,8 @@ const useCampaigns = (idToken: string) => {
       setCampaign(data.campaign);
       setCampaignStatus(data.status);
       setParticipants(data.participants);
-      console.log(")))))",participants);
+      console.log(")))))", participants);
       console.log("Fetched participants:", data.participants);
-      
     } catch (err) {
       setError(null);
     } finally {
@@ -224,13 +198,9 @@ const useCampaigns = (idToken: string) => {
     setError(null);
 
     try {
-      const response = await fetch(`/api/campaignAnalytics?id=${campaignId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-      });
+      const response = await fetchWithAuth(
+        `/api/campaignAnalytics?id=${campaignId}`
+      );
 
       if (!response.ok) {
         throw new Error(
@@ -269,11 +239,11 @@ const useCampaigns = (idToken: string) => {
   const fetchMyCampaigns = (page: number = currentPage, limit: number = 10) =>
     fetchCampaigns("myCampaigns", page, limit);
 
-  useEffect(() => {
-    if (idToken) {
-      fetchCurrentCampaign();
-    }
-  }, [idToken]);
+  // useEffect(() => {
+  //   if (idToken) {
+  //     fetchCurrentCampaign();
+  //   }
+  // }, [idToken]);
 
   const createCampaign = async (campaignData: {
     campaignUrl: string;
@@ -292,11 +262,11 @@ const useCampaigns = (idToken: string) => {
     setError(null);
 
     try {
-      const response = await fetch("/api/campaign", {
+      const response = await fetchWithAuth("/api/campaign", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify(campaignData),
       });
@@ -324,18 +294,18 @@ const useCampaigns = (idToken: string) => {
     setError(null);
 
     try {
-      const response = await fetch("/api/campaign", {
+      const response = await fetchWithAuth("/api/campaign", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify(updatedCampaignData),
       });
 
       if (!response.ok) {
-        const errorData = await response.json(); 
-        console.error("Error Response:", errorData); 
+        const errorData = await response.json();
+        console.error("Error Response:", errorData);
         throw new Error("Connection Error. Please try again.");
       }
 
@@ -358,50 +328,52 @@ const useCampaigns = (idToken: string) => {
     }
   };
 
-  const distributeArt = async (campaignId: string, artList: ArtItem[]): Promise<ArtData | null> => {
+  const distributeArt = async (
+    campaignId: string,
+    artList: ArtItem[]
+  ): Promise<ArtData | null> => {
     setLoading(true);
     setError(null);
 
     const body: ArtData = {
-        campaignId,
-        artList,
+      campaignId,
+      artList,
     };
 
-    console.log("Sending data to API:", body, idToken); // Log request details
+    // console.log("Sending data to API:", body, idToken); // Log request details
 
     try {
-        const response = await fetch("/api/distribute", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${idToken}`,
-            },
-            body: JSON.stringify(body),
-        });
+      const response = await fetch("/api/distribute", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(body),
+      });
 
-        if (!response.ok) {
-            const errorText = await response.text(); // Capture full error response
-            console.error("API Error:", errorText); // Log full response error
-            throw new Error("Failed to distribute art");
-        }
+      if (!response.ok) {
+        const errorText = await response.text(); 
+        console.error("API Error:", errorText); 
+        throw new Error("Failed to distribute art");
+      }
 
-        const data: ArtData = await response.json();
-        console.log("Art distributed successfully:", data);
-        return data;
+      const data: ArtData = await response.json();
+      console.log("Art distributed successfully:", data);
+      return data;
     } catch (err) {
-        if (err instanceof Error) {
-            console.error("Error distributing art:", err); // Log error details
-            setError(err.message);
-        } else {
-            console.error("An unknown error occurred:", err); // Log unknown errors
-            setError("An unknown error occurred");
-        }
-        return null;
+      if (err instanceof Error) {
+        console.error("Error distributing art:", err); 
+        setError(err.message);
+      } else {
+        console.error("An unknown error occurred:", err); 
+        setError("An unknown error occurred");
+      }
+      return null;
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
-
+  };
 
   return {
     campaign,
@@ -426,7 +398,7 @@ const useCampaigns = (idToken: string) => {
     fetchBattles,
     battles,
     distributeArt,
-    participants
+    participants,
   };
 };
 
