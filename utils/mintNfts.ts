@@ -32,49 +32,32 @@ export const mintNfts = async (): Promise<void> => {
         const artAvoters = await RaffleTicket.find({artId:battle.artAId});
         const artBvoters = await RaffleTicket.find({artId:battle.artBId});
         const combinedVoters = [...artAvoters, ...artBvoters];
+        if(combinedVoters.length>0){
         const voters = combinedVoters.flatMap((voter) =>
-          Array(voter.raffleCount).fill(voter.participantId)
+          Array(voter.raffleCount).fill(voter.email)
       );  
-        const specialWinner = selectRandomWinner(voters);
-        let tokenIdA;
-        console.log("special winner",specialWinner);
-        if (specialWinner) {
-           console.log("Winner")
-           let logs1;
-              const res1 =  await serverMint(specialWinner,battle.grayScale, battle.grayScaleReference,true);
-              logs1 =  res1.receipts_outcome.map((outcome :any)=> outcome.outcome.logs).flat();
-         
-           if(logs1){
-           const tokenIds1 = logs1.map((log:any) => {
-            const match = log.match(/EVENT_JSON:(.*)/);
-            if (match && match[1]) {
-              const eventData = JSON.parse(match[1]);
-              if (eventData.data && eventData.data.length > 0) {
-                return eventData.data[0].token_ids;
-              }
-            }
-            return null;
-          }).filter((tokenIds:any) => tokenIds !== null).flat();
-          
-          console.log('Token IDs:', tokenIds1);
-          tokenIdA = tokenIds1[0];
+      const specialWinner = selectRandomWinner(voters);
+      console.log(specialWinner);
+      if(specialWinner){
+        const user = await User.findOne({email:specialWinner});
+        if(!user){
+         throw Error("User profile not found");
         }
-      }
-      await User.updateOne({ nearAddress:specialWinner }, { $inc: { gfxCoin: SPECIAL_WINNER } });
-      const user = await User.findOne({nearAddress:specialWinner});
+      await User.updateOne({ email:specialWinner }, { $inc: { gfxCoin: SPECIAL_WINNER } });
+      console.log(user);
       const newTransaction = new Transactions({
         email: user.email,
         gfxCoin: SPECIAL_WINNER,  
         transactionType: "received"  
       });
       await newTransaction.save();
-
-        battle.specialWinner = specialWinner;
+        battle.specialWinner = specialWinner; 
         battle.isNftMinted = true;
         battle.isSpecialWinnerMinted = true;
-        battle.tokenId = tokenIdA;
        const res =  await battle.save();
        console.log("saved",res);
+    }
+  }
         }
     }
   }

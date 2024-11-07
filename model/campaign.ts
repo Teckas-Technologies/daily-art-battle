@@ -6,7 +6,6 @@ interface Campaign extends Document {
   campaignWelcomeText: string;
   startDate:string;
   endDate:string;
-  creatorId:string;
   createdAt:Date;
   email:string;
   specialRewards:number;
@@ -26,7 +25,6 @@ const campaignSchema = new mongoose.Schema({
   campaignWelcomeText: {type: String,required: true,},
   startDate: {type: Date,required: true,},
   endDate: {type: Date,required: true,},
-  creatorId: {type: String,required: true,},
   createdAt: { type: Date, default: Date.now,},
   email: {type: String,required: true,},
   specialRewards: {type: Number,required: false,default:0},

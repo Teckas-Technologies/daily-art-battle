@@ -2,7 +2,6 @@ import mongoose, { Document, Model } from 'mongoose';
 
 interface RaffleTicket extends Document {
   email:string;
-  participantId: string;
   artId: string;
   campaignId:string;
   raffleCount:number;
@@ -11,7 +10,6 @@ interface RaffleTicket extends Document {
 
 const RaffleTicketSchema = new mongoose.Schema({
   email: {type: String,required: true,},
-  participantId: {type: String,required: true,},
   artId: {type: String,required: true,},
   campaignId: { type: String, required: true },
   raffleCount: { type: Number, required: true ,default:0},

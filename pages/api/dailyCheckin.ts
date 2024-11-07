@@ -10,6 +10,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
         const email = await authenticateUser(req);
         await connectToDatabase();
+        //To claim daily reward 
         if(req.method=="POST"){
             try {
                 const queryType = req.query.queryType;
@@ -68,6 +69,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   streakDays: checkin.streakDays,
                   totalStreakDays: checkin.totalStreakDays,
                 });
+
+            //To claim weekly reward
             }else if(queryType=="weekly"){
                 const checkin = await DailyCheckin.findOne({ email });
   

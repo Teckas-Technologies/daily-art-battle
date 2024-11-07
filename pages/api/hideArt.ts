@@ -3,6 +3,8 @@ import { connectToDatabase } from '../../utils/mongoose';
 import ArtTable from '../../model/ArtTable';
 import { authenticateUser } from '../../utils/verifyToken';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  
+  //This api to hide arts only admin can able to hide this art
   if (req.method === 'PUT') {
     await connectToDatabase();
     const email = await authenticateUser(req);
