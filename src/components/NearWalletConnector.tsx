@@ -84,12 +84,12 @@ export const NearWalletConnector: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="flex flex-row justify-center items-center hover-trigger">
+        <div   onClick={handleSignIn} className="flex cursor-pointer flex-row justify-center mr-3 items-center hover-trigger">
         <img
-          onClick={handleSignIn}
           src="/wallet open.png"
           className="w-10 h-10 cursor-pointer"
         />
+         <p className="ml-2">Login / Register</p>
         </div>
       )}
     </nav>
