@@ -7,10 +7,11 @@ import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
-  campaignId: string
+  campaignId: string;
+  setEditCampaign:(value:boolean)=>void ;
 }
 
-const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId }) => {
+const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId,setEditCampaign }) => {
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -79,7 +80,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId }) => {
         <div className="CampaignButtonOverlay" />
       </div>
       {showEditModal && (
-        <EditCampaignPopup onClose={() => setShowEditModal(false)} campaign={campaign}/>
+        <EditCampaignPopup onClose={() => setShowEditModal(false)} campaign={campaign} setEditCampaign={setEditCampaign}/>
       )}
       {showUploadModal && (
         <ArtUploadForm

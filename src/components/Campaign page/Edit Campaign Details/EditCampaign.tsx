@@ -4,17 +4,19 @@ import InlineSVG from "react-inlinesvg";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
-import { signOut, useSession } from 'next-auth/react';
-import { signIn } from 'next-auth/react';
+import { signOut, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { setAuthToken } from "../../../../utils/authToken";
 interface EditCampaignPopupProps {
   onClose: () => void;
   campaign?: CampaignPageData | null;
+  setEditCampaign:(value:boolean)=>void ;
 }
 
 const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   onClose,
   campaign,
+  setEditCampaign,
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -26,9 +28,8 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   const [isPubliclyVisible, setIsPubliclyVisible] = useState(false);
   const { data: session, status } = useSession();
   const idToken = session?.idToken || "";
- console.log(">>>>>>>>>>>>>>>>>>>>>",idToken);
- 
-  const { updateCampaign, loading, error } = useCampaigns(idToken);
+
+  const { updateCampaign, loading, error } = useCampaigns();
 
   useEffect(() => {
     if (campaign) {
@@ -40,16 +41,16 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
       setIsPubliclyVisible(campaign.publiclyVisible || false);
     }
   }, [campaign]);
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
-    }
-  }, [status, session]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     // Redirect to login if not authenticated
+  //     signIn("azure-ad-b2c", { callbackUrl: "/" });
+  //   } else if (status === "authenticated" && session) {
+  //     // Set the idToken for all API requests
+  //     setAuthToken(session?.idToken || "");
+  //     console.log("Token set for API requests", session);
+  //   }
+  // }, [status, session]);
   const handleDateChange = (
     date: Date | null,
     setter: React.Dispatch<React.SetStateAction<Date | null>>
@@ -77,8 +78,8 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
       endDate: endDate ? endDate.toISOString() : "",
       specialRewards: Number(specialRewards) || 0,
       publiclyVisible: isPubliclyVisible,
-      participants:0,
-      email: campaign?.email || ""
+      participants: 0,
+      email: campaign?.email || "",
     };
 
     console.log("Updated Campaign Data:", updatedCampaignData);
@@ -86,6 +87,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
     const result = await updateCampaign(updatedCampaignData);
 
     if (result) {
+      setEditCampaign(true);
       onClose();
     }
   };
@@ -185,7 +187,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
                       onChange={(date) => handleDateChange(date, setEndDate)}
                       onClickOutside={() => setEndDatePickerOpen(false)}
                       inline
-                      minDate={new Date()}
+                      minDate={startDate || undefined} 
                     />
                   </div>
                 )}
@@ -237,6 +239,5 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
     </div>
   );
 };
-
 
 export default EditCampaignPopup;

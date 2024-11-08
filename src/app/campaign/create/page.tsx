@@ -6,6 +6,7 @@ import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { Header } from '@/components/Header/Header'
 import { useSession, signIn } from "next-auth/react";
 import React, { useEffect, useState } from 'react'
+import { setAuthToken } from '../../../../utils/authToken';
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -16,13 +17,14 @@ interface Props {
 const page = () => {
   const { data: session, status } = useSession();
   useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn("azure-ad-b2c", { callbackUrl: "/" });
+    if (status === 'unauthenticated') {
+      // Redirect to login if not authenticated
+      signIn('azure-ad-b2c', { callbackUrl: '/' });
+    } else if (status === 'authenticated' && session) {
+      // Set the idToken for all API requests
+      setAuthToken(session?.idToken || "");
+      console.log('Token set for API requests', session);
     }
-   
-    
-    console.log("status", status);
-    console.log("session", session);
   }, [status, session]);
   const idToken = session?.idToken || "";
   const [showCampaignModal, setShowCampaignModal] = useState(false);

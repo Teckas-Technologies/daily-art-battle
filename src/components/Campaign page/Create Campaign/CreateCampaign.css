@@ -218,6 +218,11 @@
   box-sizing: border-box;
 }
 
+.submit-btn-Wrapper:hover .submit-btn-Border {
+  animation: glow 1.5s infinite alternate;
+  background-size: 200% 200%;
+}
+
 .submit-btn-Overlay {
   content: "";
   position: absolute;
@@ -228,6 +233,15 @@
   border-radius: 34.96px;
   background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
   z-index: 1;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
 }
 .create-campaign-toggle {
   display: flex;
@@ -428,12 +442,10 @@ input:checked + .slider:before {
     box-sizing: border-box;
   }
 
-
   .submit-btn-Wrapper:hover .submit-btn-Border {
     animation: glow 1.5s infinite alternate;
     background-size: 200% 200%;
   }
-
 
   .submit-btn-Overlay {
     content: "";

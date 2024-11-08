@@ -3,7 +3,7 @@
   border: 0.5px solid #ccc;
   padding: 20px 20px 0px 20px;
   border-radius: 15px;
-  width:900px;
+  width: 900px;
   max-height: 80vh;
   margin: 0 auto;
   color: #0f0;
@@ -14,7 +14,6 @@
   transform: translate(-50%, -50%);
   z-index: 1000;
   overflow-y: auto;
-
 }
 
 .distribute-popup::-webkit-scrollbar {
@@ -41,7 +40,6 @@
   width: 750px;
   margin: 0 auto;
   justify-content: center;
-  
 }
 
 .distribute-card {
@@ -51,21 +49,20 @@
   transition: transform 0.3s ease;
   cursor: pointer;
   position: relative;
-  border: 0.56px solid #7A7A7A;
+  border: 0.56px solid #7a7a7a;
   margin-bottom: 35px;
 }
 .distribute-card.disabled {
   pointer-events: none;
-  opacity: 0.3; 
+  opacity: 0.3;
 }
 
-.distribute-card img{
-  width:100%;
-  height:100%;
+.distribute-card img {
+  width: 100%;
+  height: 100%;
   border-radius: 7px;
   object-fit: cover;
 }
-
 
 .user-info {
   display: flex;
@@ -75,7 +72,7 @@
 }
 .user-info span {
   font-size: 10px;
-  color: #ffffff;;
+  color: #ffffff;
 }
 .checkmark {
   position: absolute;
@@ -105,13 +102,13 @@
   align-items: center;
   gap: 10px;
   width: calc(100% + 40px);
-  margin-left: -20px; 
+  margin-left: -20px;
   margin-right: -20px;
   box-sizing: border-box;
   left: 0;
 }
 
-.distribute-popup .reward-result{
+.distribute-popup .reward-result {
   font-size: 15px;
   font-weight: 600;
   color: #ffffff;
@@ -185,12 +182,6 @@
   box-sizing: border-box;
 }
 
-/* Hover effect for glowing animation */
-.distributepopup-btn-Wrapper:hover .distributepopup-btn-Border {
-  animation: glow 1.5s infinite alternate;
-  background-size: 200% 200%;
-}
-
 .distributepopup-btn-Overlay {
   content: "";
   position: absolute;
@@ -203,18 +194,8 @@
   z-index: 1;
 }
 
-/* Glow animation */
-@keyframes glow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 100% 50%;
-  }
-}
-
 @media screen and (max-width: 768px) {
-  .distribute-popup  {
+  .distribute-popup {
     width: 90%;
     max-width: none;
     padding: 15 15px 0px 15px;
@@ -244,10 +225,10 @@
 
   .footer {
     padding: 10px 15px 30px 15px;
-    width: calc(100% + 40px); 
+    width: calc(100% + 40px);
     margin-left: -20px;
     margin-right: -20px;
-    gap:5px;
+    gap: 5px;
   }
 
   .distribute-popup .reward-result {

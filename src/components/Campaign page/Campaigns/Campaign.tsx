@@ -15,14 +15,12 @@ interface Campaign {
   campaignName: string;
   startDate: string;
   endDate: string;
-  specialRewards: number;
+  totalRewards: number;
   campaignUrl: string;
   creatorId: string;
 }
-interface CampaignBannerProps {
-  idToken: string;
-}
-const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
+
+const CampaignBanner = () => {
   const router = useRouter();
   const { activeAccountId, isConnected } = useMbWallet();
   const [activeTab, setActiveTab] = useState("Current Campaigns");
@@ -37,7 +35,7 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
     fetchUpcomingCampaigns,
     fetchPreviousCampaigns,
     fetchMyCampaigns,
-  } = useCampaigns(idToken);
+  } = useCampaigns();
 
   const updateCampaigns = () => {
     switch (activeTab) {
@@ -110,14 +108,10 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
   };
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date
-      .toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        timeZone: "UTC",
-      })
-      .replace(/, /g, "");
+    return `${String(date.getUTCDate()).padStart(2, "0")} ${date.toLocaleString(
+      "en-GB",
+      { month: "short", timeZone: "UTC" }
+    )} ${date.getUTCFullYear()}`;
   };
 
   const handleCreateCampaign = () => {
@@ -127,14 +121,14 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
-  
+
   return (
     <div className="campaign-container">
       <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG>
       <div
-          className="flex gap-1 items-center camapign-path md:mb-10"
-          style={{ paddingTop: "80px" }}
-        >
+        className="flex gap-1 items-center camapign-path md:mb-10"
+        style={{ paddingTop: "80px" }}
+      >
         <button className="camapign-path-button">GFXvs</button>
         <InlineSVG src="/icons/green-arrow.svg" style={{ fill: "#00ff00" }} />
         <h3
@@ -218,7 +212,7 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
                       src="/icons/coin.svg"
                       className="w-[19.1px] h-[19.1px]"
                     />
-                    {item.specialRewards}
+                    {item.totalRewards}
                   </span>
                 </div>
                 <div className="cell">
@@ -285,8 +279,6 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({ idToken }) => {
       </div>
     </div>
   );
-
 };
-
 
 export default CampaignBanner;

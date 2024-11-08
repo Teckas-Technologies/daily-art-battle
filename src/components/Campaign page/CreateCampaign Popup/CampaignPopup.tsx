@@ -15,6 +15,7 @@ interface CampaignCreationPopupProps {
   campaignCost?: number;
   idToken: string;
   connectionError: boolean;
+  specialRewards: string;
 }
 const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   onClose,
@@ -25,6 +26,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   campaignCost,
   idToken,
   connectionError,
+  specialRewards,
 }) => {
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
 
@@ -40,7 +42,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
 
   useEffect(() => {
     const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
-    const specialRewardCost = (specialWinner || 0) * SPECIAL_WINNER;
+    const specialRewardCost = (specialWinner || 0) * Number(specialRewards);
     const totalCost = creationCost + specialRewardCost;
 
     if (sufficientBalance !== null) {
@@ -77,15 +79,17 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
               </div>
             </div>
 
-            <div className="breakdown-row">
-              <span className="description">
-                Special Rewards for Participants
-              </span>
-              <div className="calculation-result">
-                <span className="calculation">{specialWinner} x 1000</span>
-                <span className="highlight">{specialRewardCost}</span>
+            {specialWinner && (
+              <div className="breakdown-row">
+                <span className="description">
+                  Special Rewards for Participants
+                </span>
+                <div className="calculation-result">
+                  <span className="calculation">{specialWinner} x 1000</span>
+                  <span className="highlight">{specialRewardCost}</span>
+                </div>
               </div>
-            </div>
+            )}
 
             <hr className="divider" />
 

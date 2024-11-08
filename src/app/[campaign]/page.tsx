@@ -24,10 +24,12 @@ import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { useMbWallet } from "@mintbase-js/react";
 import { useSendWalletData } from "@/hooks/saveUserHook";
+import { setAuthToken } from "../../../utils/authToken";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [editCampaign,setEditCampaign] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const { activeAccountId } = useMbWallet();
@@ -38,21 +40,24 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<any>();
   useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn("azure-ad-b2c", { callbackUrl: "/" });
+    if (status === 'unauthenticated') {
+      // Redirect to login if not authenticated
+      signIn('azure-ad-b2c', { callbackUrl: '/' });
+    } else if (status === 'authenticated' && session) {
+      // Set the idToken for all API requests
+      setAuthToken(session?.idToken || "");
+      console.log('Token set for API requests', session);
     }
-
-    console.log("status", status);
-    console.log("session", session);
   }, [status, session]);
-  const idToken = session?.idToken || "";
+ 
 
   const { fetchCampaignByTitle, campaignStatus, campaign, loading, error,participants } =
-    useCampaigns(idToken);
+    useCampaigns();
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
-  }, [params.campaign, idToken]);
+  }, [params.campaign, session?.idToken,editCampaign]);
+console.log("Participants ?>",participants);
 
   useEffect(() => {
     const handleWalletData = async () => {
@@ -145,12 +150,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
           />
-          <PreviousArtHeader />
+          {/* <PreviousArtHeader />
           <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
-          />
+          /> */}
 
           <FooterMenu />
         </div>
@@ -181,11 +186,19 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             status={campaignStatus}
             participantsCount={participants}
           />
-          <CampaignTime campaign={campaign} campaignId={campaign?._id as string}/>
-          <PreviousGrid
+          <CampaignTime campaign={campaign} campaignId={campaign?._id as string} setEditCampaign={setEditCampaign}/>
+          {/* <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
+          /> */}
+          <UpcomingGrid
+            fontColor={""}
+            campaignId={campaign?._id as string}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+            userMail={user?.user?.email}
+            adminEmail={campaign?.email as string}
           />
 
           <FooterMenu />
