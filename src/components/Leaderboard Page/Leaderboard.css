@@ -1,0 +1,159 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Spartan";
+}
+.leaderboard-container {
+  background-color: #000000;
+  width: 100vw;
+  min-height: 100vh;
+}
+.leaderboard-title {
+  text-align: center;
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 60.48px;
+  letter-spacing: -6%;
+  background: linear-gradient(180deg, #00ff00 45.93%, #009900 76.54%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-top: 150px;
+}
+
+.leaderboard-subtitle {
+  margin-bottom: 40px;
+  color: #a7a7a7;
+  text-align: center;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 15.12px;
+  letter-spacing: -6%;
+  margin-top: 10px;
+}
+
+.rank-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  width: 90%;
+  margin: 0 auto;
+}
+.user-list {
+  border-radius: 44.25px;
+  padding: 40px 30px;
+  flex: 1;
+  margin-bottom: 50px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 0.75px solid #656565;
+}
+.first-rank {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 182, 0, 0.3) 0%,
+    rgba(255, 172, 51, 0.2) 100%
+  );
+  border-color: #ba8912;
+}
+
+.second-rank {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(181, 181, 181, 0.2) 100%
+  );
+}
+
+.third-rank {
+  background: linear-gradient(
+    90deg,
+    rgba(216, 83, 0, 0.3) 0%,
+    rgba(172, 102, 0, 0.2) 100%
+  );
+}
+
+.header {
+  display: flex;
+  justify-content: space-around;
+  gap: 30px;
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 15.12px;
+  letter-spacing: -6%;
+  color: #ffffff;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+  padding: 15px 0px;
+  border: 1px solid #808080;
+  border-radius: 10.5px;
+}
+.user-list span {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 15.12px;
+  letter-spacing: -6%;
+  color: #ffffff;
+}
+
+.top-rankings {
+  flex: 0.5;
+  margin-top: 0;
+  padding: 30px;
+  border-radius: 10px;
+}
+.top-rankings h2 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -6%;
+  background: linear-gradient(180deg, #00ff00 0%, #009900 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.first-rank-div {
+  margin-top: 10px;
+  background: linear-gradient(270deg, #ffdd55 0%, #ba8912 100%);
+  padding: 10px;
+  border-radius: 8px;
+  width: 480.75px;
+  height: 92.25px;
+}
+
+.second-rank-div {
+  background: linear-gradient(90deg, #d9d9d9 0%, #737373 100%);
+  padding: 10px;
+  border-radius: 8px;
+  width: 384.75px;
+  height: 92.25px;
+}
+
+.third-rank-div {
+  background: linear-gradient(90deg, #ac6600 0%, #5b3225 100%);
+  padding: 10px;
+  border-radius: 8px;
+  width: 341.25px;
+  height: 92.25px;
+}
+
+.top-user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
