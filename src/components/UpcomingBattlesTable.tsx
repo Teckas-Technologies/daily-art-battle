@@ -254,7 +254,7 @@ const BattleTable: React.FC<{
       style={{ zIndex: "-1" }}
     >
         <p className="hidden 2xl:block px-4 text-4xl mb-4 text-center text-white font-bold mt-5 md:ml-10 md:mr-10 lg:ml-10 lg:mr-10" style={{color:"#00ff15"}}>
-        Visit <span style={{color:"#ff00ff"}}>GFXvs.com</span> on your phone to participate in the live art battle
+       <span style={{color:"#ff00ff"}}>GFXvs.com</span> - Make AI Art and Join the Daily Battle From Your Phone!
       </p>
 
       <div className=" grid grid-cols-3 gap-4  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6  justify-center overflow-hidden">
