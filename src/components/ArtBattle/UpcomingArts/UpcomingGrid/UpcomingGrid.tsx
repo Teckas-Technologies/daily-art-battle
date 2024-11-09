@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from "react";
 import { ArtData, useFetchArts, useSearchArts } from "@/hooks/artHooks";
 import CardHolder from "./ArtCard/CardHolder";
 import Loader from "../../Loader/Loader";
+import Toast from "@/components/Toast";
 
 interface Props {
     toggleUploadModal: () => void;
@@ -26,6 +27,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     const { searchArts } = useSearchArts();
     const [page, setPage] = useState<number | null>(null);
     const [sort, setSort] = useState<string | null>("dateDsc");
+    const [sortLabel, setSortLabel] = useState("Latest First");
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const [selectedArt, setSelectedArt] = useState();
@@ -55,10 +57,48 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         return window.innerWidth < 768 ? MOBILE_LIMIT : DESKTOP_LIMIT;
     };
 
-    const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    useEffect(() => {
+        if (upcomingArts.length === 0) {
+            const scrollTimeout = setTimeout(() => {
+                const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const isAtBottom = window.scrollY >= totalScrollHeight;
+
+                if (isAtBottom) {
+                    window.scrollTo({
+                        top: totalScrollHeight * 0.99,
+                        behavior: "smooth",
+                    });
+
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: totalScrollHeight,
+                            behavior: "smooth",
+                        });
+                    }, 100);
+                } else {
+                    window.scrollTo({
+                        top: totalScrollHeight,
+                        behavior: "smooth",
+                    });
+                }
+            }, 3000);
+
+            return () => clearTimeout(scrollTimeout);
+        }
+    }, [upcomingArts]);
+
+    const handleSort = ({ value, label }: { value: string, label: string }) => {
         setUpcomingArts([]);
-        const sortType = event.target.value
-        setSort(sortType);
+        // const sortType = event.target.value
+        setSort(value);
+        setSortLabel(label);
+        setPage(0);
+    };
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const query = event.target.value;
+        setSearchQuery(query);
+        setUpcomingArts([]);
         setPage(0);
     };
 
@@ -70,19 +110,36 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         // }
         setLoading(true);
         try {
-            const arts = await fetchMoreArts(campaignId, sort, page, limit);
-            if (arts && arts.length > 0) {
-                // setUpcomingArts((prevArts) => [...prevArts, ...arts]);
-                setUpcomingArts((prevArts) => {
-                    const artMap = new Map(prevArts.map(art => [art._id, art]));
-                    arts.forEach((newArt: ArtData) => {
-                        artMap.set(newArt._id, newArt);
-                    });
+            if (!searchQuery) {
+                const arts = await fetchMoreArts(campaignId, sort, page, limit);
+                if (arts && arts.length > 0) {
+                    // setUpcomingArts((prevArts) => [...prevArts, ...arts]);
+                    setUpcomingArts((prevArts) => {
+                        const artMap = new Map(prevArts.map(art => [art._id, art]));
+                        arts.forEach((newArt: ArtData) => {
+                            artMap.set(newArt._id, newArt);
+                        });
 
-                    return Array.from(artMap.values());
-                });
+                        return Array.from(artMap.values());
+                    });
+                } else {
+                    console.log(`1. No data returned for page ${page}`);
+                }
             } else {
-                console.log(`No data returned for page ${page}`);
+                const arts = await searchArts(campaignId, searchQuery, page, limit);
+                if (arts && arts.length > 0) {
+                    // setUpcomingArts((prevArts) => [...prevArts, ...arts]);
+                    setUpcomingArts((prevArts) => {
+                        const artMap = new Map(prevArts.map(art => [art._id, art]));
+                        arts.forEach((newArt: ArtData) => {
+                            artMap.set(newArt._id, newArt);
+                        });
+
+                        return Array.from(artMap.values());
+                    });
+                } else {
+                    console.log(`2. No data returned for page ${page}`);
+                }
             }
         } catch (error) {
             console.error("Error fetching arts:", error);
@@ -119,10 +176,6 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     useEffect(() => {
         getArts();
     }, [page, sort, refresh, uploadSuccess]);
-
-    const handleSuccessClose = () => {
-        setHideSuccess(false);
-    }
 
 
     // const handleNext = () => {
@@ -217,6 +270,8 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                             <div className="search-input md:w-[13rem] lg:w-[23rem] xl:w-[33rem] md:h-[3rem] p-2">
                                 <input
                                     type="text"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
                                     placeholder="Search for arts, username"
                                     className="w-full spartan-light text-white h-full px-2 text-md placeholder:text-sm border-0 outline-none bg-transparent search-input"
                                 />
@@ -231,7 +286,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     </div>
 
                     <div className="filters-center relative md:w-auto w-[8rem] flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black" ref={dropdownRef} onClick={handleToggle}>
-                        <h2 className="spartan-light text-white md:text-md text-sm">Sort by</h2>
+                        <h2 className="spartan-light text-white md:text-md text-sm">{sortLabel}</h2>
                         <div className="down-icon md:h-[3rem] h-[2rem] flex justify-center items-center">
                             <InlineSVG
                                 src="/icons/down-arrow.svg"
@@ -240,16 +295,16 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                         </div>
                         {isOpen && (
                             <div className="options absolute top-[100%] left-0 w-[150%] pt-4 rounded-3xl bg-black">
-                                <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ target: { value: 'voteDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
+                                <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Voted" })}>
                                     <h2 className="spartan-light text-sm text-white">Top Voted Arts</h2>
                                 </div>
-                                <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ target: { value: 'voteAsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
+                                <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ value: 'voteAsc', label: "Least Voted" })}>
                                     <h2 className="spartan-light text-sm">Least Voted Arts</h2>
                                 </div>
-                                <div className="option px-5 py-3 latest-first bg-black" onClick={() => handleSort({ target: { value: 'dateDsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
+                                <div className="option px-5 py-3 latest-first bg-black" onClick={() => handleSort({ value: 'dateDsc', label: "Latest First" })}>
                                     <h2 className="spartan-light text-sm">Latest First</h2>
                                 </div>
-                                <div className="option px-5 pt-3 pb-7 oldest-first bg-black rounded-bl-3xl rounded-br-3xl" onClick={() => handleSort({ target: { value: 'dateAsc' } } as React.ChangeEvent<HTMLSelectElement>)}>
+                                <div className="option px-5 pt-3 pb-7 oldest-first bg-black rounded-bl-3xl rounded-br-3xl" onClick={() => handleSort({ value: 'dateAsc', label: "Oldest First" })}>
                                     <h2 className="spartan-light text-sm">Oldest First</h2>
                                 </div>
                             </div>
@@ -257,35 +312,18 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     </div>
                 </div>
 
-                {upcomingArts.length === 0 && <Loader />}
+                {upcomingArts.length === 0 && loading && <Loader />}
 
                 {/* Upcoming arts grid view section */}
                 <div className="grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
                     <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} userMail={userMail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} />
                 </div>
 
-                {hideSuccess && <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
-                    <div className="upcoming-popup lg:w-[38.5rem] md:w-[34.5rem] w-full h-auto lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
-                        <div className="close-art w-full flex justify-between">
-                            <div className="dummy md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem]">
-
-                            </div>
-                            <h2 className='text-green text-md'>Hide Art</h2>
-                            <div className="close-icon md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleSuccessClose}>
-                                <InlineSVG
-                                    src="/icons/close.svg"
-                                    className="md:w-4 md:h-4 w-3 h-3 spartan-light"
-                                />
-                            </div>
-                        </div>
-                        <div className="w-full flex justify-center">
-                            <div className="success-holder w-[15rem] h-[10rem]">
-                                <img src="/images/success.png" alt="success" className="w-full h-full object-cover" />
-                            </div>
-                        </div>
-                        <h3 className='spartan-semibold text-2xl text-white text-center pb-5 pt-6'>Art hidden successfully!</h3>
-                    </div>
-                </div>}
+                {hideSuccess && <Toast
+                    success={true}
+                    message={"Art hidden successfully!!"}
+                    onClose={() => setHideSuccess(false)}
+                />}
 
                 {/* Pagination for upcoming arts */}
                 {/* <div className="pagination-section relative w-full flex justify-center py-5">

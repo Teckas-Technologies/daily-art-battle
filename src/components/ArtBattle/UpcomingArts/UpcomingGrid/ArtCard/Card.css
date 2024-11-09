@@ -77,7 +77,8 @@
     border: 0.75px solid #7E7E7E
 }
 
-.img-outer {
+.img-outer,
+.raffle-info {
     background: #272727;
 }
 
@@ -120,9 +121,9 @@
 }
 
 @media (max-width: 768px) {
-    .img-outer {
+    /* .img-outer {
         background: none;
-    }
+    } */
 }
 
 .hide:hover+.like {
