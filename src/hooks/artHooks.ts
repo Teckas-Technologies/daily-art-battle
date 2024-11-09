@@ -210,11 +210,11 @@ export const useSearchArts = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const searchArts = async (campaignId: string,name: string, sort: string, page: number, limit: number = 8) => {
+  const searchArts = async (campaignId: string,name: string, page: number, limit: number = 8) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&sort=${sort}&page=${page}&limit=${limit}`);
+      const response = await fetchWithAuth(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log("data:", data)

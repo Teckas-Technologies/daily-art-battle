@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import './FooterMenu.css';
 
 const initialMenus = [
-    { id: "battle", label: "Battle", path: "/", icon: "/images/Battle_Icon.png", active: true },
+    { id: "battle", label: "Battle", path: "/", icon: "/images/Battle_Icon.png", active: false },
     { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Trophy_Icon.png", active: false },
     { id: "create", label: "Create", path: "/create", icon: "/images/Create_Icon.png", active: false },
     { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_Icon.png", active: false },
@@ -14,6 +14,19 @@ const initialMenus = [
 export const FooterMenu: React.FC = () => {
     const [menus, setMenus] = useState(initialMenus);
     const router = useRouter();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        const updatedMenus = initialMenus.map(menu => ({
+            ...menu,
+            active: menu.path === pathname
+        }));
+
+        if (!updatedMenus.some(menu => menu.active)) {
+            updatedMenus[0].active = true; 
+        }
+        setMenus(updatedMenus);
+    }, [pathname]);
 
     const handleMenuClick = (menuId: string) => {
         const updatedMenus = menus.map(menu => ({

@@ -3,6 +3,7 @@ import InlineSVG from 'react-inlinesvg';
 import './Header.css';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const navs = [
     { id: "leaderboard", label: "Leaderboard", path: "/leaderboard" },
@@ -30,9 +31,11 @@ export const Header: React.FC = () => {
                 </div>
                 <div className="nav-links hidden md:flex gap-5">
                     {navs.map((nav, index) => (
-                        <h3 key={index} className={`text-white cursor-pointer font-semibold spartan-semibold text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
-                            {nav?.label}
-                        </h3>
+                        <Link href={nav?.path}>
+                            <h3 key={index} className={`text-white cursor-pointer font-semibold spartan-semibold text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
+                                {nav?.label}
+                            </h3>
+                        </Link>
                     ))}
                 </div>
             </div>
