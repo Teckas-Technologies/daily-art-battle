@@ -42,16 +42,15 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [openNav, setOpenNav] = useState(false);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === "unauthenticated") {
       // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
+      signIn("azure-ad-b2c", { callbackUrl: "/" });
+    } else if (status === "authenticated" && session) {
       // Set the idToken for all API requests
       setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
+      console.log("Token set for API requests", session);
     }
   }, [status, session]);
-
 
   const { fetchCampaignByTitle, campaignStatus, campaign, loading, error, participants } =
     useCampaigns();
@@ -59,7 +58,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
   }, [params.campaign, session?.idToken, editCampaign]);
-  console.log("Participants ?>", participants);
+
+  console.log("Participants:", participants);
 
   useEffect(() => {
     const handleWalletData = async () => {
@@ -78,8 +78,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         try {
           const user = await sendWalletData(walletAddress);
           if (user !== null) {
-            console.log("USER:", user)
-            setUser(user)
+            console.log("USER:", user);
+            setUser(user);
           }
         } catch (err) {
           console.error("Failed to send wallet data:", err);
@@ -94,7 +94,16 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
 
   if (loading)
     return (
-      <div style={{ background: "#000000", width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <div
+        style={{
+          background: "#000000",
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Loader />{" "}
       </div>
     );
@@ -142,8 +151,17 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             welcomeText={""}
             themeTitle={""}
           />
-          <CurrentCampaigUploadArt toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-          {showUploadModal && <ArtUploadForm campaignId={campaign?._id as string} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+          <CurrentCampaigUploadArt
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          {showUploadModal && (
+            <ArtUploadForm
+              campaignId={campaign?._id as string}
+              onClose={() => setShowUploadModal(false)}
+              onSuccessUpload={() => setUploadSuccess(true)}
+            />
+          )}
           <UpcomingGrid
             fontColor={""}
             campaignId={campaign?._id as string}
@@ -187,7 +205,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             status={campaignStatus}
             participantsCount={participants}
           />
-          <CampaignTime campaign={campaign} campaignId={campaign?._id as string} setEditCampaign={setEditCampaign} />
+          <CampaignTime
+            campaign={campaign}
+            campaignId={campaign?._id as string}
+            setEditCampaign={setEditCampaign}
+          />
+
           {/* <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}

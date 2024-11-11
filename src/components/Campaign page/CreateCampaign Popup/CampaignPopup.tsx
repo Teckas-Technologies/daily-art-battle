@@ -16,6 +16,8 @@ interface CampaignCreationPopupProps {
   idToken: string;
   connectionError: boolean;
   specialRewards: string;
+  resetFormFields:()=>void;
+  setConnectionError:(value:boolean)=>void;
 }
 const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   onClose,
@@ -27,6 +29,8 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   idToken,
   connectionError,
   specialRewards,
+  resetFormFields,
+  setConnectionError
 }) => {
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
 
@@ -54,6 +58,12 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
   const specialRewardCost = (specialWinner || 0) * SPECIAL_WINNER;
   const totalCost = creationCost + specialRewardCost;
+
+  const closeRetry =()=>{
+    setConnectionError(false);
+    onClose();
+    resetFormFields();
+  }
   return (
     <div className="popup-overlay">
       <div className="popup-container">
@@ -104,7 +114,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
         <div className="popup-buttons">
           {connectionError ? (
             <div className="flex flex-col items-center">
-              <button className="retry-button">Retry Creation</button>
+              <button className="retry-button" onClick={closeRetry}>Retry Creation</button>
             </div>
           ) : inSufficientbalance ? (
             <>
@@ -135,4 +145,4 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
 };
 
 export default CampaignPopup;
-// CampaignPopUp.tsx
+
