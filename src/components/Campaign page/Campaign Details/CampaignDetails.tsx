@@ -107,13 +107,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const { data: session, status } = useSession();
   const { activeAccountId, isConnected } = useMbWallet();
   const scrollRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn("azure-ad-b2c", { callbackUrl: "/" });
-    }
-    console.log("status", status);
-    console.log("session", session);
-  }, [status, session]);
+ 
   const idToken = session?.idToken || "";
   const {
     fetchCampaignAnalytics,
@@ -174,7 +168,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     };
 
     fetchAnalytics();
-  }, [fetchCampaignAnalytics, campaignId]);
+  }, [campaignId]);
 
   useEffect(() => {
     console.log("Updated participants:", participants);
@@ -195,7 +189,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
           console.error("Failed to fetch battles:", error);
         });
     }
-  }, [campaignId, fetchBattles]);
+  }, [campaignId]);
 
   const toggleSelection = (index: number) => {
     setSelectedArt((prev) =>
