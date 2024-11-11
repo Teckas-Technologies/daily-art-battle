@@ -29,7 +29,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [editCampaign,setEditCampaign] = useState(false);
+  const [editCampaign, setEditCampaign] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const { activeAccountId } = useMbWallet();
@@ -39,6 +39,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   >(null);
   const { data: session, status } = useSession();
   const [user, setUser] = useState<any>();
+  const [openNav, setOpenNav] = useState(false);
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       // Redirect to login if not authenticated
@@ -49,15 +51,15 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
       console.log('Token set for API requests', session);
     }
   }, [status, session]);
- 
 
-  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error,participants } =
+
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error, participants } =
     useCampaigns();
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
-  }, [params.campaign, session?.idToken,editCampaign]);
-console.log("Participants ?>",participants);
+  }, [params.campaign, session?.idToken, editCampaign]);
+  console.log("Participants ?>", participants);
 
   useEffect(() => {
     const handleWalletData = async () => {
@@ -75,7 +77,7 @@ console.log("Participants ?>",participants);
 
         try {
           const user = await sendWalletData(walletAddress);
-          if(user !== null) {
+          if (user !== null) {
             console.log("USER:", user)
             setUser(user)
           }
@@ -92,7 +94,7 @@ console.log("Participants ?>",participants);
 
   if (loading)
     return (
-      <div style={{ background: "#000000", width: "100%", height: "100vh" ,display:"flex",justifyContent:"center",alignItems:"center" }}>
+      <div style={{ background: "#000000", width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <Loader />{" "}
       </div>
     );
@@ -109,7 +111,7 @@ console.log("Participants ?>",participants);
     <div style={{ backgroundColor: "#000000", width: "100%", height: "100vh" }}>
       {campaignStatus === "current" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -161,7 +163,7 @@ console.log("Participants ?>",participants);
       )}
       {campaignStatus === "upcoming" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -185,7 +187,7 @@ console.log("Participants ?>",participants);
             status={campaignStatus}
             participantsCount={participants}
           />
-          <CampaignTime campaign={campaign} campaignId={campaign?._id as string} setEditCampaign={setEditCampaign}/>
+          <CampaignTime campaign={campaign} campaignId={campaign?._id as string} setEditCampaign={setEditCampaign} />
           {/* <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
@@ -206,7 +208,7 @@ console.log("Participants ?>",participants);
         <div
           style={{ width: "100%", minHeight: "100vh", background: "#000000" }}
         >
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />

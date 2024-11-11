@@ -74,7 +74,7 @@ export const Battle: React.FC<Props> = ({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [skeletonLoad, setSkeletonLoading] = useState(true);
   const [viewTools, setViewTools] = useState(initialViewTools);
-  const [spinnerUrl, setSpinnerUrl] = useState("");
+  const [spinnerUrl, setSpinnerUrl] = useState<string>();
   const { fetchArtById } = useFetchArtById();
   const [artARaffleTickets, setArtARaffleTickets] = useState(0);
   const [artBRaffleTickets, setArtBRaffleTickets] = useState(0);
@@ -154,7 +154,7 @@ export const Battle: React.FC<Props> = ({
         artistId: todayBattle.artBartistId,
       });
       setBattleId(todayBattle._id);
-      setSpinnerUrl(todayBattle?.videoSpinner);
+      setSpinnerUrl(todayBattle.grayScale);
     }
   }, [todayBattle]);
 

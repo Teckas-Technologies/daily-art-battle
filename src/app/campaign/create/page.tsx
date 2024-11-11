@@ -16,6 +16,7 @@ interface Props {
 }
 const page = () => {
   const { data: session, status } = useSession();
+  const [openNav, setOpenNav] = useState(false);
   useEffect(() => {
     if (status === 'unauthenticated') {
       // Redirect to login if not authenticated
@@ -32,7 +33,7 @@ const page = () => {
     setShowCampaignModal(!showCampaignModal);
   return (
     <div style={{ backgroundColor: "#000000" }}>
-      <Header/>
+      <Header openNav={openNav} setOpenNav={setOpenNav} />
       <CreateCampaign toggleCampaignModal={toggleCampaignModal} idToken={idToken}/>
       {/* {showCampaignModal && (
         <CampaignPopup onClose={() => setShowCampaignModal(false)} />

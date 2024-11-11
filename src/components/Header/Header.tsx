@@ -1,12 +1,16 @@
 "use client";
 import InlineSVG from 'react-inlinesvg';
 import './Header.css';
-import { useRouter, usePathname } from 'next/navigation';
-import { act, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { UserDetails } from '@/types/types';
 import { useMbWallet } from '@mintbase-js/react';
 import { useAuth } from '@/contexts/AuthContext';
+
+interface Props {
+    openNav: boolean;
+    setOpenNav: (e: boolean) => void;
+}
 
 const navs = [
     { id: "battles", label: "Battles", path: "/", icon: "/images/Battle_Icon.png" },
@@ -15,11 +19,11 @@ const navs = [
     { id: "create", label: "Create", path: "/create", icon: "/images/Create_Icon.png" },
 ];
 
-export const Header: React.FC = () => {
+export const Header: React.FC<Props> = ({ openNav, setOpenNav }) => {
     const pathName = usePathname();
     const { activeAccountId, isConnected, connect, disconnect } = useMbWallet();
     const [walletIcon, setWalletIcon] = useState("/icons/wallet-red.svg");
-    const { user } = useAuth();
+    const { user, signInUser } = useAuth();
     let userDetails = user;
 
     useEffect(() => {
@@ -46,6 +50,7 @@ export const Header: React.FC = () => {
                         <InlineSVG
                             src="/icons/menu.svg"
                             className="h-6 w-6"
+                            onClick={()=> setOpenNav(!openNav)}
                         />
                     </div>
                 </div>

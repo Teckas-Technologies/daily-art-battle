@@ -1,7 +1,7 @@
 // pages/index.tsx
 "use client"
 import type { NextPage } from 'next';
-import { useState ,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import ArtUploadForm from '@/components/ArtUpload/ArtUploadForm';
 import Footer from '@/components/Footer/Footer';
 import { GFX_CAMPAIGNID, ADMIN_GMAIL } from '@/config/constants';
@@ -18,6 +18,8 @@ import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { useMbWallet } from "@mintbase-js/react";
 import { useAuth } from '@/contexts/AuthContext';
+import InlineSVG from 'react-inlinesvg';
+import { MobileNav } from '@/components/MobileNav/MobileNav';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -26,6 +28,7 @@ const Home: NextPage = () => {
   // const { sendWalletData } = useSendWalletData();
   // const { activeAccountId, isConnected } = useMbWallet();
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+  const [openNav, setOpenNav] = useState(false);
   // const [user, setUser] = useState<any>();
 
   // useEffect(() => {
@@ -68,14 +71,15 @@ const Home: NextPage = () => {
 
   //   handleWalletData();
   // }, [session, activeAccountId]);
-  
+
   return (
-    <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
-      <Header />
-      <Battle campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
-      <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} adminEmail={ADMIN_GMAIL} />
+    <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
+      <Header openNav={openNav} setOpenNav={setOpenNav} />
+      <Battle campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
+      <UpcomingGrid fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} adminEmail={ADMIN_GMAIL} />
       {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <FooterMenu />
+      <MobileNav openNav={openNav} setOpenNav={setOpenNav} />
     </main>
   );
 };

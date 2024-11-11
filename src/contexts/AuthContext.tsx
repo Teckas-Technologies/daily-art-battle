@@ -9,6 +9,8 @@ import { setAuthToken } from '../../utils/authToken';
 interface AuthContextType {
     user: UserDetails | null;
     idToken: string | null;
+    signInUser: () => void;
+    connected: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,6 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<UserDetails | null>(null);
     const [idToken, setIdToken] = useState<string | null>(null);
+    const [connected, setConnected] = useState(false);
     const { data: session, status } = useSession();
     const { sendWalletData } = useSendWalletData();
     const { activeAccountId } = useMbWallet();
@@ -40,6 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     const fetchedUser = await sendWalletData(walletAddress);
                     if (fetchedUser) {
                         setUser(fetchedUser);
+                        setConnected(true);
                     }
                 } catch (err) {
                     console.error("Failed to send wallet data:", err);
@@ -50,8 +54,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         handleWalletData();
     }, [session, activeAccountId]);
 
+    const signInUser = () => {
+        signIn('azure-ad-b2c', { callbackUrl: '/' });
+    };
+
     return (
-        <AuthContext.Provider value={{ user, idToken }}>
+        <AuthContext.Provider value={{ user, idToken, signInUser, connected }}>
             {children}
         </AuthContext.Provider>
     );

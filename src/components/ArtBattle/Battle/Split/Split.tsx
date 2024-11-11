@@ -85,7 +85,7 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
             {/* Split battle starts */}
             <div className="flex md:flex-row flex-col w-full justify-center items-center mt-5">
                 <div className="hero-left flex md:flex-row flex-col justify-end items-center md:w-[50%] w-full md:pr-[3.5rem] ">
-                    <div className="relative arta xl:w-[24.5rem] xl:h-[26rem] lg:w-[22.5rem] lg:h-[24rem] md:w-[20.5rem] md:h-[22rem] w-[16rem] h-[18rem] rounded-2xl cursor-pointer" onClick={toggleOverlayA}>
+                    <div className="relative arta xl:w-[24.5rem] xl:h-[26rem] lg:w-[22.5rem] lg:h-[24rem] md:w-[20.5rem] md:h-[22rem] w-[17rem] h-[17rem] rounded-2xl cursor-pointer" onClick={toggleOverlayA}>
                         <img src={artA.imageUrl} alt={artA.title} className='w-full h-full rounded-2xl' />
                         <div className='overlay w-full flex flex-col absolute bottom-0 left-0 rounded-b-2xl'>
                             <div className="lay w-full flex h-20">
@@ -119,7 +119,7 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
                     </div>
                 </div>
                 <div className="hero-right flex md:flex-row flex-col justify-start items-center md:w-[50%] w-full md:pl-[3.5rem]">
-                    <div className="relative artb xl:w-[24.5rem] xl:h-[26rem] lg:w-[22.5rem] lg:h-[24rem] md:w-[20.5rem] md:h-[22rem] w-[16rem] h-[18rem] rounded-2xl cursor-pointer" onClick={toggleOverlayB}>
+                    <div className="relative artb xl:w-[24.5rem] xl:h-[26rem] lg:w-[22.5rem] lg:h-[24rem] md:w-[20.5rem] md:h-[22rem] w-[17rem] h-[17rem] rounded-2xl cursor-pointer" onClick={toggleOverlayB}>
                         <img src={artB.imageUrl} alt={artB.title} className='w-full h-full rounded-2xl' />
                         <div className="overlay w-full flex flex-col rounded-b-2xl">
                             <div className="lay w-full flex h-20">
