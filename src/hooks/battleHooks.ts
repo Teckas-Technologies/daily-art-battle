@@ -30,6 +30,12 @@ export interface BattleData {
   artBvoters?:string[];
   isSpecialWinnerMinted?:Boolean;
   tokenId:string;
+  videoSpinner: string;
+  videoSpinnerReference: string;
+  emoji1: string;
+  emoji2: string;
+  artAartistEmail: string;
+  artBartistEmail: string;
 }
 
 interface UseFetchTodayBattleResult {

@@ -1,37 +1,32 @@
 import { useState } from "react";
 import { fetchWithAuth } from "../../utils/authToken";
-
-interface ApiResponse {
-  user?: any;
-  error?: string;
-  message?: string;
-}
+import { UserDetails } from "@/types/types";
 
 interface UseSendWalletDataResult {
   isLoading: boolean;
   error: string | null;
-  userDetails: any; 
+  userDetails: UserDetails | null;
   sufficientBalance: number | null;
-  sendWalletData: (walletAddress: string) => Promise<void>;
+  sendWalletData: (walletAddress: string) => Promise<UserDetails | null>;
 }
 
 export const useSendWalletData = (): UseSendWalletDataResult => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [userDetails, setUserDetails] = useState<any>(null); 
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [sufficientBalance, setSufficientBalance] = useState<any>(null);
-  const sendWalletData = async ( walletAddress: string) => {
-    setIsLoading(true); 
-    setError(null); 
+  const sendWalletData = async (walletAddress: string) => {
+    setIsLoading(true);
+    setError(null);
 
     try {
       const userExistsResponse = await fetchWithAuth("/api/user");
 
       if (userExistsResponse.ok) {
-        const userData = await userExistsResponse.json(); 
+        const userData = await userExistsResponse.json();
         // console.log("User already exists:", userData);
         setUserDetails(userData);
-        setSufficientBalance(userData.user?.gfxCoin ?? 0); 
+        setSufficientBalance(userData.user?.gfxCoin ?? 0);
         return userData;
       }
 
@@ -42,7 +37,7 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
           return null;
         } else {
           console.error("Error checking user existence:", errorResponse);
-          setError(errorResponse.error); 
+          setError(errorResponse.error);
           return null;
         }
       } else {
@@ -55,10 +50,10 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
       }
     } catch (error) {
       console.error("Error processing wallet data:", error);
-      setError("Failed to process wallet data."); 
+      setError("Failed to process wallet data.");
       return null;
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -80,12 +75,11 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
       const newUserData = await response.json();
       console.log("New user created successfully:", newUserData);
       setUserDetails(newUserData);
-      setSufficientBalance(newUserData.user.gfxCoin); 
+      setSufficientBalance(newUserData.user.gfxCoin);
     } catch (error) {
       console.error("Error creating user:", error);
     }
   };
 
-  return { isLoading, error, userDetails, sendWalletData,sufficientBalance };
+  return { isLoading, error, userDetails, sendWalletData, sufficientBalance };
 };
-// saveUserHook.tsx

@@ -39,6 +39,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   >(null);
   const { data: session, status } = useSession();
   const [user, setUser] = useState<any>();
+  const [openNav, setOpenNav] = useState(false);
+
   useEffect(() => {
     if (status === "unauthenticated") {
       // Redirect to login if not authenticated
@@ -50,18 +52,13 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     }
   }, [status, session]);
 
-  const {
-    fetchCampaignByTitle,
-    campaignStatus,
-    campaign,
-    loading,
-    error,
-    participants,
-  } = useCampaigns();
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error, participants } =
+    useCampaigns();
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
   }, [params.campaign, session?.idToken, editCampaign]);
+
   console.log("Participants:", participants);
 
   useEffect(() => {
@@ -123,7 +120,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     <div style={{ backgroundColor: "#000000", width: "100%", height: "100vh" }}>
       {campaignStatus === "current" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -170,7 +167,6 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
           />
           {/* <PreviousArtHeader />
@@ -185,7 +181,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
       )}
       {campaignStatus === "upcoming" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -214,6 +210,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={campaign?._id as string}
             setEditCampaign={setEditCampaign}
           />
+
           {/* <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
@@ -224,7 +221,6 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
           />
 
@@ -235,7 +231,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         <div
           style={{ width: "100%", minHeight: "100vh", background: "#000000" }}
         >
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
