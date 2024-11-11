@@ -25,10 +25,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-   const email = await authenticateUser(req);
+  
     switch (req.method) {
       //POST method is used to create art.
       case "POST":
+        const email = await authenticateUser(req);
         const art = req.body;
         const user = await User.findOne({ email: email });
         if (!user) {
@@ -145,6 +146,7 @@ export default async function handler(
 
       //PUT method is used to update art by id.
       case "PUT":
+        await authenticateUser(req);
         const { id } = req.body;
         if (!id) {
           return res.status(400).json({ error: "ID is required for updating" });
