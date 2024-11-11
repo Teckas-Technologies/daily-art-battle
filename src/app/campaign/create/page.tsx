@@ -17,16 +17,16 @@ interface Props {
 const page = () => {
   const { data: session, status } = useSession();
   const [openNav, setOpenNav] = useState(false);
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
-    }
-  }, [status, session]);
+  // useEffect(() => {
+  //   if (status === 'unauthenticated') {
+  //     // Redirect to login if not authenticated
+  //     signIn('azure-ad-b2c', { callbackUrl: '/' });
+  //   } else if (status === 'authenticated' && session) {
+  //     // Set the idToken for all API requests
+  //     setAuthToken(session?.idToken || "");
+  //     console.log('Token set for API requests', session);
+  //   }
+  // }, [status, session]);
   const idToken = session?.idToken || "";
   const [showCampaignModal, setShowCampaignModal] = useState(false);
   const toggleCampaignModal = () =>

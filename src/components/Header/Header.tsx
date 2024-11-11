@@ -75,7 +75,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav }) => {
                 />
                 {!userDetails && <div className="header-actions flex items-center gap-3">
                     {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}
-                    <div className="outside rounded-3xl">
+                    <div className="outside rounded-3xl" onClick={signInUser}>
                         <div className="layer2 rounded-3xl">
                             <div className="register-btn px-10 py-2 rounded-3xl cursor-pointer">
                                 <h2 className='font-bold spartan-semibold'>Login</h2>

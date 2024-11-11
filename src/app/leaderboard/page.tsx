@@ -5,10 +5,11 @@ import "../../components/LeaderBoard/LeaderBoard.css";
 import LeaderboardHolders from "@/components/LeaderBoard/LeaderBoardHolders";
 const LeaderBoardPage = ()=>{
     const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
+    const [openNav, setOpenNav] = useState(false);
 
     return(
         <div className="bg-black min-h-screen w-full text-white">
-        <Header />
+        <Header openNav={openNav} setOpenNav={setOpenNav} />
         <div className="flex flex-col items-center justify-center pt-20 w-full px-4 text-center">
           <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-20 font-bold text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
             GFXvs Leaderboard

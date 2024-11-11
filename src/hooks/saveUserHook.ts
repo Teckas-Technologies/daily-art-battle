@@ -7,7 +7,7 @@ interface UseSendWalletDataResult {
   error: string | null;
   userDetails: UserDetails | null;
   sufficientBalance: number | null;
-  sendWalletData: (walletAddress: string) => Promise<UserDetails | null>;
+  sendWalletData: () => Promise<UserDetails | null>;
 }
 
 export const useSendWalletData = (): UseSendWalletDataResult => {
@@ -15,7 +15,7 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
   const [error, setError] = useState<string | null>(null);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [sufficientBalance, setSufficientBalance] = useState<any>(null);
-  const sendWalletData = async (walletAddress: string) => {
+  const sendWalletData = async () => {
     setIsLoading(true);
     setError(null);
 
@@ -33,7 +33,7 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
       if (userExistsResponse.status === 400) {
         const errorResponse = await userExistsResponse.json();
         if (errorResponse.error === "User not found") {
-          await createUser(walletAddress);
+          await createUser();
           return null;
         } else {
           console.error("Error checking user existence:", errorResponse);
@@ -57,14 +57,14 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
     }
   };
 
-  const createUser = async (walletAddress: string) => {
+  const createUser = async () => {
     try {
       const response = await fetchWithAuth("/api/user", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ walletAddress }),
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
+        // body: JSON.stringify({ walletAddress }),
       });
 
       if (!response.ok) {

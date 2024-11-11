@@ -105,7 +105,7 @@ export const Battle: React.FC<Props> = ({
 
     const timeoutId = setTimeout(() => {
       fetchBattle();
-    }, 10000); // 10 seconds in milliseconds
+    }, 3000); // 10 seconds in milliseconds
 
     // Cleanup function to clear the timeout if the component unmounts or campaignId changes
     return () => clearTimeout(timeoutId);
