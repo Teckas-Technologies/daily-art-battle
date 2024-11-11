@@ -12,7 +12,6 @@ import { CAMPAIGN_CREATION_COST } from "@/config/points";
 interface CampaignCreationProps {
   toggleCampaignModal: () => void;
   idToken: string;
-  
 }
 
 const CreateCampaign: React.FC<CampaignCreationProps> = ({
@@ -82,21 +81,24 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   };
 
   const confirmCampaignCreation = async () => {
-    setIsPopupOpen(false);
+    setConnectionError(false);
     console.log("Submitting Campaign Data:", campaignData);
+
     const response = await createCampaign(campaignData);
-    console.log("response from creation", response);
-    if (response.success) {
+
+    if (response) {
+      setIsPopupOpen(false);
       const url = `/campaign/success?campaignUrl=${encodeURIComponent(
-        campaignUrl
+        campaignData.campaignUrl
       )}`;
       router.push(url);
       resetFormFields();
     } else {
       setConnectionError(true);
-      console.error("Error creating campaign:", response.error);
+      setIsPopupOpen(true);
     }
   };
+
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
@@ -105,24 +107,20 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     setter: React.Dispatch<React.SetStateAction<Date | null>>
   ) => {
     if (date) {
-      // Normalize the date by setting the time to 00:00:00 in the local time zone
       const normalizedDate = new Date(date);
-      normalizedDate.setHours(0, 0, 0, 0); // Reset time to midnight (00:00:00)
-      
-      // Adjust to local timezone (optional, depends on your use case)
-      const localTime = new Date(normalizedDate.getTime() - normalizedDate.getTimezoneOffset() * 60000);
+      normalizedDate.setHours(0, 0, 0, 0);
+
+      const localTime = new Date(
+        normalizedDate.getTime() - normalizedDate.getTimezoneOffset() * 60000
+      );
       setter(localTime);
     } else {
       setter(date);
     }
-  
-    // Close date picker based on which one was selected
+
     if (setter === setStartDate) setStartDatePickerOpen(false);
     else setEndDatePickerOpen(false);
   };
-  
-
-  
 
   useEffect(() => {
     if (campaignName) {
@@ -326,7 +324,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                         onChange={(date) => handleDateChange(date, setEndDate)}
                         onClickOutside={() => setEndDatePickerOpen(false)}
                         inline
-                        minDate={startDate || undefined} 
+                        minDate={startDate || undefined}
                       />
                     </div>
                   )}
@@ -450,7 +448,9 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           campaignCost={CAMPAIGN_CREATION_COST}
           idToken={idToken}
           connectionError={connectionError}
+          setConnectionError={setConnectionError}
           specialRewards={specialRewards}
+          resetFormFields={resetFormFields}
         />
       </div>
     </>
