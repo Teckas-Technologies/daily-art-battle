@@ -11,6 +11,7 @@ import React, { useState } from 'react'
 
 const page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openNav, setOpenNav] = useState(false);
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -22,7 +23,7 @@ const page = () => {
   };
   return (
     <div className="container-profile bg-[#000000] w-full min-h-screen lg: px-[110px] ">
-      <Header/>
+      <Header openNav={openNav} setOpenNav={setOpenNav} />
       <ProfilePath/>
       <ProfileHeader onEditClick={handleEditClick}/>
         <ConnectWallet/>

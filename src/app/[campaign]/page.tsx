@@ -41,16 +41,16 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [user, setUser] = useState<any>();
   const [openNav, setOpenNav] = useState(false);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      // Redirect to login if not authenticated
-      signIn("azure-ad-b2c", { callbackUrl: "/" });
-    } else if (status === "authenticated" && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log("Token set for API requests", session);
-    }
-  }, [status, session]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     // Redirect to login if not authenticated
+  //     signIn("azure-ad-b2c", { callbackUrl: "/" });
+  //   } else if (status === "authenticated" && session) {
+  //     // Set the idToken for all API requests
+  //     setAuthToken(session?.idToken || "");
+  //     console.log("Token set for API requests", session);
+  //   }
+  // }, [status, session]);
 
   const { fetchCampaignByTitle, campaignStatus, campaign, loading, error, participants } =
     useCampaigns();
@@ -61,36 +61,36 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
 
   console.log("Participants:", participants);
 
-  useEffect(() => {
-    const handleWalletData = async () => {
-      if (session && session.user) {
-        const idToken = session.idToken as string;
-        console.log("ID Token:", idToken);
+  // useEffect(() => {
+  //   const handleWalletData = async () => {
+  //     if (session && session.user) {
+  //       const idToken = session.idToken as string;
+  //       console.log("ID Token:", idToken);
 
-        const walletAddress = activeAccountId;
-        if (!walletAddress) {
-          console.warn("No wallet address available.");
-          return;
-        }
+  //       const walletAddress = activeAccountId;
+  //       if (!walletAddress) {
+  //         console.warn("No wallet address available.");
+  //         return;
+  //       }
 
-        console.log("Wallet Address:", walletAddress);
+  //       console.log("Wallet Address:", walletAddress);
 
-        try {
-          const user = await sendWalletData(walletAddress);
-          if (user !== null) {
-            console.log("USER:", user);
-            setUser(user);
-          }
-        } catch (err) {
-          console.error("Failed to send wallet data:", err);
-        }
-      } else {
-        console.warn("Session or user information is missing.");
-      }
-    };
+  //       try {
+  //         const user = await sendWalletData();
+  //         if (user !== null) {
+  //           console.log("USER:", user);
+  //           setUser(user);
+  //         }
+  //       } catch (err) {
+  //         console.error("Failed to send wallet data:", err);
+  //       }
+  //     } else {
+  //       console.warn("Session or user information is missing.");
+  //     }
+  //   };
 
-    handleWalletData();
-  }, [session, activeAccountId]);
+  //   handleWalletData();
+  // }, [session, activeAccountId]);
 
   if (loading)
     return (

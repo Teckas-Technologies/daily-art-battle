@@ -24,9 +24,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { activeAccountId } = useMbWallet();
 
     useEffect(() => {
-        if (status === 'unauthenticated') {
-            signIn('azure-ad-b2c', { callbackUrl: '/' });
-        } else if (status === 'authenticated' && session) {
+        // if (status === 'unauthenticated') {
+        //     signIn('azure-ad-b2c', { callbackUrl: '/' });
+        // } else 
+        if (status === 'authenticated' && session) {
             setIdToken(session?.idToken || "");
             setAuthToken(session?.idToken || "");
             console.log(idToken)
@@ -36,11 +37,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const handleWalletData = async () => {
             if (session && session.user) {
-                const walletAddress = activeAccountId;
-                if (!walletAddress) return;
-
                 try {
-                    const fetchedUser = await sendWalletData(walletAddress);
+                    const fetchedUser = await sendWalletData();
                     if (fetchedUser) {
                         setUser(fetchedUser);
                         setConnected(true);
