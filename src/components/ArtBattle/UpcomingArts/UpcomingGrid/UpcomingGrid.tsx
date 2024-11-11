@@ -14,13 +14,12 @@ interface Props {
     campaignId: string;
     fontColor: string;
     adminEmail: string;
-    userMail: string;
 }
 
 const MOBILE_LIMIT = 9;
 const DESKTOP_LIMIT = 8;
 
-export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor, adminEmail, userMail }) => {
+export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor, adminEmail }) => {
     const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
     const [refresh, setRefresh] = useState(false);
     const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
@@ -285,7 +284,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                         </div>
                     </div>
 
-                    <div className="filters-center relative md:w-auto w-[8rem] flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black" ref={dropdownRef} onClick={handleToggle}>
+                    <div className="filters-center relative md:w-auto w-[10rem] flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black" ref={dropdownRef} onClick={handleToggle}>
                         <h2 className="spartan-light text-white md:text-md text-sm">{sortLabel}</h2>
                         <div className="down-icon md:h-[3rem] h-[2rem] flex justify-center items-center">
                             <InlineSVG
@@ -316,7 +315,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
                 {/* Upcoming arts grid view section */}
                 <div className="grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
-                    <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} userMail={userMail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} />
+                    <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} />
                 </div>
 
                 {hideSuccess && <Toast

@@ -147,7 +147,6 @@ console.log("Participants ?>",participants);
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
           />
           {/* <PreviousArtHeader />
@@ -197,7 +196,6 @@ console.log("Participants ?>",participants);
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
           />
 

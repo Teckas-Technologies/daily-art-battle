@@ -142,7 +142,7 @@ export const useFetchArtById = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-  const fetchArtById = async (id: any) => {
+  const fetchArtById = async (id: string) => {
     setLoading(true);
     setError(null);
     try {

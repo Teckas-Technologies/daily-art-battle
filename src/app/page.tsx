@@ -13,87 +13,71 @@ import { UpcomingGrid } from '@/components/ArtBattle/UpcomingArts/UpcomingGrid/U
 import { PreviousGrid } from '@/components/ArtBattle/PreviousArts/PreviousGrid/PreviousGrid';
 import { signOut, useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
-import { setAuthToken } from '../../utils/authToken';
+// import { setAuthToken } from '../../utils/authToken';
 import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { useMbWallet } from "@mintbase-js/react";
+import { useAuth } from '@/contexts/AuthContext';
+
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const { data: session, status } = useSession();
-  const { sendWalletData } = useSendWalletData();
-  const { activeAccountId, isConnected } = useMbWallet();
+  // const { data: session, status } = useSession();
+  // const { sendWalletData } = useSendWalletData();
+  // const { activeAccountId, isConnected } = useMbWallet();
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
-  const [user, setUser] = useState<any>();
+  // const [user, setUser] = useState<any>();
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
-    }
-  }, [status, session]);
-  useEffect(() => {
-    const handleWalletData = async () => {
-      if (session && session.user) {
-        const idToken = session.idToken as string;
-        console.log("ID Token:", idToken);
+  // useEffect(() => {
+  //   if (status === 'unauthenticated') {
+  //     // Redirect to login if not authenticated
+  //     signIn('azure-ad-b2c', { callbackUrl: '/' });
+  //   } else if (status === 'authenticated' && session) {
+  //     // Set the idToken for all API requests
+  //     setAuthToken(session?.idToken || "");
+  //     console.log('Token set for API requests', session);
+  //   }
+  // }, [status, session]);
+  // useEffect(() => {
+  //   const handleWalletData = async () => {
+  //     if (session && session.user) {
+  //       const idToken = session.idToken as string;
+  //       console.log("ID Token:", idToken);
 
-        const walletAddress = activeAccountId;
-        if (!walletAddress) {
-          console.warn("No wallet address available.");
-          return;
-        }
+  //       const walletAddress = activeAccountId;
+  //       if (!walletAddress) {
+  //         console.warn("No wallet address available.");
+  //         return;
+  //       }
 
-        console.log("Wallet Address:", walletAddress);
+  //       console.log("Wallet Address:", walletAddress);
 
-        try {
-          const user = await sendWalletData(walletAddress);
-          if(user !== null) {
-            console.log("USER:", user)
-            setUser(user)
-          }
-        } catch (err) {
-          console.error("Failed to send wallet data:", err);
-        }
-      } else {
-        console.warn("Session or user information is missing.");
-      }
-    };
+  //       try {
+  //         const user = await sendWalletData(walletAddress);
+  //         if(user !== null) {
+  //           console.log("USER:", user)
+  //           setUser(user)
+  //         }
+  //       } catch (err) {
+  //         console.error("Failed to send wallet data:", err);
+  //       }
+  //     } else {
+  //       console.warn("Session or user information is missing.");
+  //     }
+  //   };
 
-    handleWalletData();
-  }, [session, activeAccountId]);
+  //   handleWalletData();
+  // }, [session, activeAccountId]);
   
   return (
     <main className="flex flex-col w-full justify-center overflow-x-hidden" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
-     {/* <video autoPlay muted loop id="background-video" style={{ 
-    position: 'fixed', 
-    right: 0, 
-    bottom: 0, 
-    objectFit: 'cover', 
-    minWidth: '100%', 
-    minHeight: '100%', 
-    zIndex: -1,
-    filter: 'blur(5px) brightness(50%)'
-}}>
-    <source src="images/back.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-</video> */}
       <Header />
       <Battle campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
-      {/* <UpcomingHeader fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} /> */}
-      <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} adminEmail={ADMIN_GMAIL} userMail={user?.user?.email}/>
+      <UpcomingGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} adminEmail={ADMIN_GMAIL} />
+      {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
       <FooterMenu />
-      {/* {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />} */}
-      {/* <PreviousArtHeader /> */}
-      {/* <PreviousGrid fontColor={""} campaignId = {GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} /> */}
-      {/* <Footer /> */}
     </main>
   );
 };
 
 export default Home;
-// app/page.tsx
