@@ -20,11 +20,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const email = await authenticateUser(req);
+   
     await connectToDatabase();
     switch (req.method) {
       //POST method is used for creating battle
       case "POST":
+        const email = await authenticateUser(req);
         const battle = req.body;
         const scheduledBattle = await scheduleBattle(battle);
         return res.status(201).json(scheduledBattle);
@@ -85,6 +86,7 @@ export default async function handler(
         }
       //PUT method is used to update battle by id
       case "PUT":
+        await authenticateUser(req);
         const { battleId, campaignId } = req.query;
         if (!battleId) {
           return res.status(400).json({ error: "Battle ID is required" });
