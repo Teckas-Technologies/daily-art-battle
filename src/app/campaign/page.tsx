@@ -7,9 +7,13 @@ import { Header } from "@/components/Header/Header";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { setAuthToken } from "../../../utils/authToken";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 
 const page = () => {
   const { data: session, status } = useSession();
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [openNav, setOpenNav] = useState(false);
   // useEffect(() => {
   //   if (status === 'unauthenticated') {
@@ -23,9 +27,9 @@ const page = () => {
   // }, [status, session]);
   return (
     <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>
-      <Header openNav={openNav} setOpenNav={setOpenNav}  />
+      <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <CampaignBanner />
-      <FooterMenu />
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
     </div>
   );
 };

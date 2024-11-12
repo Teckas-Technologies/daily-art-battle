@@ -1,7 +1,7 @@
 "use client";
 import InlineSVG from 'react-inlinesvg';
 import './Header.css';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useMbWallet } from '@mintbase-js/react';
@@ -10,17 +10,23 @@ import { useAuth } from '@/contexts/AuthContext';
 interface Props {
     openNav: boolean;
     setOpenNav: (e: boolean) => void;
+    toggleUploadModal: () => void;
+    uploadSuccess: boolean;
+    campaignId: string;
+    fontColor: string;
 }
 
 const navs = [
     { id: "battles", label: "Battles", path: "/", icon: "/images/Battle_Icon.png" },
     { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Trophy_Icon.png" },
     { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_Icon.png" },
-    { id: "create", label: "Create", path: "/create", icon: "/images/Create_Icon.png" },
+    { id: "create", label: "Create", path: "/", icon: "/images/Create_Icon.png" },
 ];
 
-export const Header: React.FC<Props> = ({ openNav, setOpenNav }) => {
+export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
     const pathName = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const { activeAccountId, isConnected, connect, disconnect } = useMbWallet();
     const [walletIcon, setWalletIcon] = useState("/icons/wallet-red.svg");
     const { user, signInUser } = useAuth();
@@ -34,7 +40,14 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav }) => {
         }
     }, [activeAccountId, isConnected, userDetails]);
 
-    console.log(`Account connected : ${userDetails?.user?.nearAddress}, ${activeAccountId}`)
+    useEffect(() => {
+        const openupload = searchParams?.get('openupload');
+        if (openupload === 'true') {
+            toggleUploadModal();
+        }
+    }, [pathName, searchParams]);
+
+    // console.log(`Account connected : ${userDetails?.user?.nearAddress}, ${activeAccountId}`)
 
     return (
         <div className="header fixed bg-black h-[7rem] w-full z-50 top-0 left-0 flex items-center justify-between xl:px-[7rem] lg:px-[3rem] md:px-[2rem] px-3">
@@ -50,29 +63,48 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav }) => {
                         <InlineSVG
                             src="/icons/menu.svg"
                             className="h-6 w-6"
-                            onClick={()=> setOpenNav(!openNav)}
+                            onClick={() => setOpenNav(!openNav)}
                         />
                     </div>
                 </div>
                 <div className="nav-links hidden md:flex gap-5">
                     {navs.map((nav, index) => (
-                        <Link href={nav?.path}>
-                            <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
-                                <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.5rem] h-[1.5rem]"}`}>
-                                    <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
-                                </div>
-                                {nav?.label}
-                            </h3>
-                        </Link>
+                        <div key={nav?.id}>
+                            {nav.id === "create" ? (
+                                <>
+                                    <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm`} onClick={() => {
+                                        if (pathName === "/") {
+                                            toggleUploadModal();
+                                        } else {
+                                            router.push(`${nav?.path}?openupload=true`);
+                                        }
+                                    }}>
+                                        <div className={`md:hidden lg:block w-[1.5rem] h-[1.5rem]`}>
+                                            <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
+                                        </div>
+                                        {nav?.label}
+                                    </h3>
+                                </>
+                            ) : (
+                                <Link href={nav?.path}>
+                                    <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
+                                        <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.5rem] h-[1.5rem]"}`}>
+                                            <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
+                                        </div>
+                                        {nav?.label}
+                                    </h3>
+                                </Link>
+                            )}
+                        </div>
                     ))}
                 </div>
             </div>
             <div className="header-right flex items-center md:gap-3 gap-2">
-                <InlineSVG
+                {userDetails && <InlineSVG
                     src={walletIcon}
                     className="md:h-11 md:w-11 h-8 w-8 cursor-pointer"
                     onClick={() => { activeAccountId ? disconnect() : connect() }}
-                />
+                />}
                 {!userDetails && <div className="header-actions flex items-center gap-3">
                     {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}
                     <div className="outside rounded-3xl" onClick={signInUser}>

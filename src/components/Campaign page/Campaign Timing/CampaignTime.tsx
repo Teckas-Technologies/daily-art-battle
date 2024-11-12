@@ -8,10 +8,10 @@ import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
   campaignId: string;
-  setEditCampaign:(value:boolean)=>void ;
+  setEditCampaign: (value: boolean) => void;
 }
 
-const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId,setEditCampaign }) => {
+const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEditCampaign }) => {
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -22,6 +22,18 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId,setEdit
   const [showEditModal, setShowEditModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [toast, setToast] = useState(false);
+  const [successToast, setSuccessToast] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    if (toast) {
+      setTimeout(() => setToast(false), 3000)
+    }
+  }, [toast])
+  
   useEffect(() => {
     if (!campaign || !campaign.startDate) return;
 
@@ -80,13 +92,18 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign,campaignId,setEdit
         <div className="CampaignButtonOverlay" />
       </div>
       {showEditModal && (
-        <EditCampaignPopup onClose={() => setShowEditModal(false)} campaign={campaign} setEditCampaign={setEditCampaign}/>
+        <EditCampaignPopup onClose={() => setShowEditModal(false)} campaign={campaign} setEditCampaign={setEditCampaign} />
       )}
       {showUploadModal && (
         <ArtUploadForm
           campaignId={campaignId}
           onClose={() => setShowUploadModal(false)}
           onSuccessUpload={() => setUploadSuccess(true)}
+          setSignToast={setSignToast}
+          setErrMsg={setErrMsg}
+          setToast={setToast}
+          setSuccessToast={setSuccessToast}
+          setToastMessage={setToastMessage}
         />
       )}
     </div>

@@ -3,13 +3,17 @@ import { useState } from "react";
 import { Header } from "@/components/Header/Header";
 import "../../components/LeaderBoard/LeaderBoard.css";
 import LeaderboardHolders from "@/components/LeaderBoard/LeaderBoardHolders";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 const LeaderBoardPage = ()=>{
     const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const [openNav, setOpenNav] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
     return(
         <div className="bg-black min-h-screen w-full text-white">
-        <Header openNav={openNav} setOpenNav={setOpenNav} />
+        <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         <div className="flex flex-col items-center justify-center pt-20 w-full px-4 text-center">
           <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-20 font-bold text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
             GFXvs Leaderboard
