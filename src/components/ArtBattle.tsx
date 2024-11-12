@@ -248,7 +248,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
           <div>
          <a href="https://app.potlock.io/?tab=project&projectId=gfxvs_artbattle.near"> <h1 className="text-2xl md:text-2xl lg:text-2xl font-bold mb-2 text-amber-300 cursor-pointer">⚠️ Support GFXvs on Potlock!</h1></a>
           {/* <h1 onClick={handleCampaign} className="text-xl md:text-2xl lg:text-2xl font-bold mb-2 text-amber-300 cursor-pointer">🔔 Click here to explore running campaigns and join the excitement!</h1> */}
-           <p>Welcome to Graphics Versus! Vote daily to collect NFTs and shape our favorite $20 winner, awarded every Wednesday. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!</p>
+           <p>Welcome to Graphics Versus! Vote daily to collect NFTs and donate 0.1 NEAR in create./dev round to support GFXvs on potlock!. Each vote gives you a shot at the day's exclusive 1:1 rare spinner. Connect your NEAR wallet and dive into the action!</p>
           </div>
         ):(
           <p>
