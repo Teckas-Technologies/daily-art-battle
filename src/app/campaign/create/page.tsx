@@ -7,6 +7,7 @@ import { Header } from '@/components/Header/Header'
 import { useSession, signIn } from "next-auth/react";
 import React, { useEffect, useState } from 'react'
 import { setAuthToken } from '../../../../utils/authToken';
+import { GFX_CAMPAIGNID } from '@/config/constants';
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -29,16 +30,19 @@ const page = () => {
   // }, [status, session]);
   const idToken = session?.idToken || "";
   const [showCampaignModal, setShowCampaignModal] = useState(false);
-  const toggleCampaignModal = () =>
-    setShowCampaignModal(!showCampaignModal);
+  const toggleCampaignModal = () => setShowCampaignModal(!showCampaignModal);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+
   return (
     <div style={{ backgroundColor: "#000000" }}>
-      <Header openNav={openNav} setOpenNav={setOpenNav} />
+      <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <CreateCampaign toggleCampaignModal={toggleCampaignModal} idToken={idToken}/>
       {/* {showCampaignModal && (
         <CampaignPopup onClose={() => setShowCampaignModal(false)} />
       )} */}
-      <FooterMenu/>
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
     </div>
   )
 }

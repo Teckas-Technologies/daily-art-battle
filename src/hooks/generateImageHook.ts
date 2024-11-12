@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { fetchWithAuth } from '../../utils/authToken';
 
 export const useFetchGeneratedImage = () => {
   const [imageUrl, setImage] = useState<string | null>(null);
@@ -8,7 +9,7 @@ export const useFetchGeneratedImage = () => {
   const fetchGeneratedImage = async (prompt: string) => {
     try {
       setError(null);
-      const response = await fetch('/api/generateImage', {
+      const response = await fetchWithAuth('/api/generateImage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

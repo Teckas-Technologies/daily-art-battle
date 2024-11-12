@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { ArtData, useFetchArtById } from '@/hooks/artHooks';
 import { useMbWallet } from '@mintbase-js/react';
 import { useArtsRaffleCount } from '@/hooks/useRaffleTickets';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import './Card.css';
 import Card from './Card';
 import Toast from '@/components/Toast';
 import { BuyRafflePopup } from '@/components/ArtBattle/RafflePopup/BuyRafflePopup';
+import InlineSVG from 'react-inlinesvg';
+import { SignInPopup } from '@/components/PopUps/SignInPopup';
 
 interface CardHolderProps {
     artData: ArtData[];
@@ -25,18 +27,30 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
     const [success, setSuccess] = useState(false);
     const [myTickets, setMyTickets] = useState<number>(0);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const pathName = usePathname();
     const { fetchArtById } = useFetchArtById();
-    const [selectedArtId, setSelectedArtId] = useState(null);
+    const [selectedArtId, setSelectedArtId] = useState<string | null>(null);
     const [overlayArt, setoverlayArt] = useState<ArtData | null>(null);
     const [myTicketsNew, setMyTicketsNew] = useState<{ [key: string]: number }>({});
     const [err, setErr] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [signToast, setSignToast] = useState(false);
+    const [artId, setArtId] = useState("");
 
     useEffect(() => {
         if (err) {
             setTimeout(() => setErr(false), 3000);
         }
     }, [err])
+
+    useEffect(() => {
+        const artid = searchParams?.get('artId');
+        if (artid) {
+            setArtId(artid);
+        }
+    }, [searchParams, pathName]);
+
 
     const getQueryParam = (param: string): string | null => {
         if (typeof window !== 'undefined') {
@@ -45,12 +59,13 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
         }
         return null;
     };
-    const artId = getQueryParam('artId');
+    // const artId = getQueryParam('artId');
 
     useEffect(() => {
         const fetchArt = async () => {
             if (artId) {
                 const overlay = await fetchArtById(artId);
+                setSelectedArtId(artId)
                 setoverlayArt(overlay);
             }
         }
@@ -111,7 +126,9 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
                     </div>
                 ))}
             </div>
-            {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={myTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} />}
+            {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={myTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
+
+            {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => setSignToast(false)} />}
 
             {success && <Toast
                 success={true}

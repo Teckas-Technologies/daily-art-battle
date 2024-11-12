@@ -1,5 +1,6 @@
 "use state";
 import Toast from "@/components/Toast";
+import { RAFFLE_TICKET } from "@/config/points";
 import { useAuth } from "@/contexts/AuthContext";
 import { ArtData, useFetchArtById } from "@/hooks/artHooks";
 import { useArtsRaffleCount } from "@/hooks/useRaffleTickets";
@@ -15,9 +16,10 @@ interface Props {
     setSelectedArtId: (e: any) => void;
     setErr: (e: boolean) => void;
     setErrMsg: (e: string) => void;
+    setSignToast: (e: boolean) => void;
 }
 
-export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campaignId, setSuccess, myTickets, setSelectedArtId, setErr, setErrMsg }) => {
+export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campaignId, setSuccess, myTickets, setSelectedArtId, setErr, setErrMsg, setSignToast }) => {
     const { submitVote } = useArtsRaffleCount();
     const { fetchArtById } = useFetchArtById();
     const [tokenCount, setTokenCount] = useState<number | null>(1);
@@ -46,6 +48,10 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
         if (tokenCount == null || tokenCount === 0) {
             setErr(true);
             setErrMsg("Collect Min 1 Ticket!");
+            return;
+        }
+        if (!userDetails) {
+            setSignToast(true);
             return;
         }
         if (userDetails && userDetails?.user?.gfxCoin < raffleTicketAmount()) {
@@ -86,7 +92,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
 
     const raffleTicketAmount = () => {
         if (tokenCount && tokenCount > 0) {
-            return tokenCount * 10;
+            return tokenCount * RAFFLE_TICKET;
         } else {
             return 0
         }
@@ -123,7 +129,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                         <h4 className='text-green spartan-medium md:text-md text-sm'>Artist name</h4>
                     </div>
                     <div className="name">
-                        <h2 className='md:spartan-bold spartan-semibold text-sm md:text-lg'>{overlayArt.artistId}</h2>
+                        <h2 className='md:spartan-bold spartan-semibold text-sm md:text-lg'>{overlayArt?.artistName}</h2>
                     </div>
                 </div>
                 <div className="art-center w-full h-auto flex md:flex-row flex-col items-center justify-between lg:py-4 md:py-2 py-1">

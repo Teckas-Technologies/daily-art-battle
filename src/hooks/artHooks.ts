@@ -19,6 +19,7 @@ export interface ArtData {
   tokenId: Number;
   campaignId: string;
   raffleTickets: Number;
+  artistName: string;
 }
 
 
@@ -58,10 +59,15 @@ export const useSaveData = (): UseSaveDataResult => {
         throw new Error('Failed to save data');
       }
 
-      const responseData = await response.json();
-      console.log("Response Data >> ", responseData);
-
-      setSuccess(true);
+      const responseText = await response.text();
+      if (responseText) {
+        const responseData = JSON.parse(responseText);
+        console.log("Response Data >> ", responseData);
+        setSuccess(true);
+      } else {
+        console.warn('Empty response from server');
+        setSuccess(false);
+      }
     } catch (error) {
       console.error('Error saving data:', error);
       setError('Failed to save data');
@@ -210,7 +216,7 @@ export const useSearchArts = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const searchArts = async (campaignId: string,name: string, page: number, limit: number = 8) => {
+  const searchArts = async (campaignId: string, name: string, page: number, limit: number = 8) => {
     setLoading(true);
     setError(null);
     try {

@@ -7,6 +7,7 @@ import { BuyRafflePopup } from '../../RafflePopup/BuyRafflePopup';
 import { useArtsRaffleCount } from '@/hooks/useRaffleTickets';
 import { Artwork } from '../Battle';
 import Toast from '@/components/Toast';
+import { SignInPopup } from '@/components/PopUps/SignInPopup';
 
 interface Props {
     artA: Artwork,
@@ -29,6 +30,7 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
     const [artBMyTickets, setArtBMyTickets] = useState<number>(0);
     const [err, setErr] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [signToast, setSignToast] = useState(false);
 
     useEffect(() => {
         if (err) {
@@ -152,7 +154,8 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
                         </div>
                     </div>
                 </div>
-                {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={overlayArt?._id === artA?.id ? artAMyTickets : artBMyTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} />}
+                {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={overlayArt?._id === artA?.id ? artAMyTickets : artBMyTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
+                {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => setSignToast(false)} />}
                 {success && <Toast
                     success={true}
                     message={"Raffle Tickets Collected!"}

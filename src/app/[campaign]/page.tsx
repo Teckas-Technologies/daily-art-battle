@@ -40,6 +40,17 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<any>();
   const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [toast, setToast] = useState(false);
+  const [successToast, setSuccessToast] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    if (toast) {
+      setTimeout(() => setToast(false), 3000)
+    }
+  }, [toast])
 
   // useEffect(() => {
   //   if (status === "unauthenticated") {
@@ -120,7 +131,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     <div style={{ backgroundColor: "#000000", width: "100%", height: "100vh" }}>
       {campaignStatus === "current" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header openNav={openNav} setOpenNav={setOpenNav} />
+          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -160,6 +171,11 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
               campaignId={campaign?._id as string}
               onClose={() => setShowUploadModal(false)}
               onSuccessUpload={() => setUploadSuccess(true)}
+              setSignToast={setSignToast} 
+              setErrMsg={setErrMsg} 
+              setToast={setToast} 
+              setSuccessToast={setSuccessToast} 
+              setToastMessage={setToastMessage}
             />
           )}
           <UpcomingGrid
@@ -176,12 +192,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             toggleUploadModal={toggleUploadModal}
           /> */}
 
-          <FooterMenu />
+          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         </div>
       )}
       {campaignStatus === "upcoming" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header openNav={openNav} setOpenNav={setOpenNav} />
+          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -224,14 +240,14 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             adminEmail={campaign?.email as string}
           />
 
-          <FooterMenu />
+          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         </div>
       )}
       {campaignStatus === "completed" && (
         <div
           style={{ width: "100%", minHeight: "100vh", background: "#000000" }}
         >
-          <Header openNav={openNav} setOpenNav={setOpenNav} />
+          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -273,7 +289,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             />
           )} */}
 
-          <FooterMenu />
+          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         </div>
       )}
     </div>
