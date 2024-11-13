@@ -10,26 +10,32 @@ import ProfileHeader from '@/components/Profile Page/ProfileHeader/ProfileHeader
 import React, { useState } from 'react'
 
 const page = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isCoinOpen,setIsCoinOpen] = useState(false);
   const handleEditClick = () => {
-    setIsModalOpen(true);
+    setIsEditOpen(true);
   };
 
-  // Handler to close the modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const closeEditModal = () => {
+    setIsEditOpen(false);
+  };
+  const handleCoinClick = () => {
+    setIsCoinOpen(true);
+  };
+  const closeCoinModal = () => {
+    setIsCoinOpen(false);
   };
   return (
-    <div className="container-profile bg-[#000000] w-full min-h-screen lg: px-[110px] ">
+    <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-[20px] md:px-[80px] lg:px-[90px] xl:px-[110px] xxl:px-[130px]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
       <Header/>
       <ProfilePath/>
-      <ProfileHeader onEditClick={handleEditClick}/>
+      <ProfileHeader onEditClick={handleEditClick} handleCoinClick={handleCoinClick}/>
         <ConnectWallet/>
         <FooterMenu/>
 
-        {isModalOpen && <EditProfilePopup onClose={handleCloseModal} />}
-    </div>
+        {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
+        {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
+   </main>
   )
 }
 
