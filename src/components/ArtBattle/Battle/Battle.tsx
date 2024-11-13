@@ -105,7 +105,7 @@ export const Battle: React.FC<Props> = ({
 
     const timeoutId = setTimeout(() => {
       fetchBattle();
-    }, 1000); // 10 seconds in milliseconds
+    }, 500); // 10 seconds in milliseconds
 
     // Cleanup function to clear the timeout if the component unmounts or campaignId changes
     return () => clearTimeout(timeoutId);
@@ -235,7 +235,7 @@ export const Battle: React.FC<Props> = ({
           </div>
           <div className="arts flex w-full px-3">
             {!todayBattle && !loading && <NoBattle />}
-            {loading && <Loader />}
+            {loading && <Loader md="24.5" sm="15" />}
             {todayBattle && viewTools[0].active && (
               <Split artA={artA} artB={artB} campaignId={campaignId} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} setRefresh={setRefresh} />
             )}
