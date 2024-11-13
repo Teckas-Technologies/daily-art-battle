@@ -22,6 +22,7 @@ export default async function handler(
 ) {
   try {
     const email = await authenticateUser(req);
+       //To Create campaign
     if (req.method == "POST") {
       try {
         await connectToDatabase();
@@ -99,6 +100,7 @@ export default async function handler(
     if (req.method == "GET") {
       try {
         await connectToDatabase();
+           //To fetch campaigns based on some filters
         const queryType = req.query.queryType;
         if (queryType == "myCampaigns") {
           const page = parseInt(req.query.page as string) || 1;
@@ -142,7 +144,6 @@ export default async function handler(
           const skip = (page - 1) * limit;
           const today = new Date();
           today.setUTCHours(0, 0, 0, 0);
-          console.log(today);
           const totalDocuments = await Campaign.countDocuments({
             startDate: { $lte: today },
             endDate: { $gte: today },
@@ -190,9 +191,13 @@ export default async function handler(
             message: "Campaign not found",
           });
         }
-
-        const participants = (await ArtTable.find({campaignId:campaign._id})).length;
+        const participants = await ArtTable.aggregate([
+          { $match: { campaignId: campaign._id } },
+          { $group: { _id: "$email" } },
+          { $count: "uniqueParticipants" }
+        ]);
         
+        const uniqueParticipantCount = participants.length > 0 ? participants[0].uniqueParticipants : 0;
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0); 
         
@@ -204,7 +209,7 @@ export default async function handler(
         } else if (campaign.endDate < today) {
           status = "completed";
         }
-        return res.status(200).json( { campaign, status,participants });
+        return res.status(200).json( { campaign, status,participants:uniqueParticipantCount });
       } catch (error:any) {
         console.log(error);
         return res
@@ -216,7 +221,7 @@ export default async function handler(
     if (req.method == "PUT") {
       try {
         await connectToDatabase();
-       
+          //Update campaign based on campaign id
         const data = req.body;
         const updatedCampaign = await Campaign.findOneAndUpdate(
           { _id: data._id },
@@ -231,7 +236,8 @@ export default async function handler(
           .json({ success: false, message: error.message });
       }
     }
-
+    
+   //Delete campaign based on campaign id
     if (req.method == "DELETE") {
       try {
         await connectToDatabase();

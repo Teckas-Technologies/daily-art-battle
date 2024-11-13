@@ -9,6 +9,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         const email = await authenticateUser(req);
         await connectToDatabase();
+        //To validate whether is minted or not
         if(req.method=="POST"){
             const {transactionHash,raffleTicketId} = req.body;
             const existinghash = await Hashes.findOne({hash:transactionHash});

@@ -10,6 +10,7 @@ export default async function handler(
   try {
     await connectToDatabase();
     const email = await authenticateUser(req);
+    // TO fetch users uploaded arts
     if (req.method == "GET") {
       try {
         const queryType = req.query.queryType;

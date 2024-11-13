@@ -36,9 +36,16 @@ interface Battle extends Document {
   emoji2:string;
   videoSpinnerReference:string;
   videoSpinner:string;
+  artAartistName:string;
+  artBartistName:string;
+  specialWinnerName:string;
 }
 
+
 const BattleSchema = new mongoose.Schema({
+  specialWinnerName:{ type: String, required: true },
+  artAartistName:{ type: String, required: true },
+  artBartistName:{ type: String, required: true },
   videoSpinner: { type: String, required: false },
   videoSpinnerReference: { type: String, required: false },
   emoji1: { type: String, required: true },
@@ -48,8 +55,8 @@ const BattleSchema = new mongoose.Schema({
   campaignId: { type: String, required: true },
   artAId: { type: String, required: true },
   artBId: { type: String, required: true },
-  artAartistId: { type: String, required: true },
-  artBartistId: { type: String, required: true },
+  artAartistId: { type: String, required: false },
+  artBartistId: { type: String, required: false },
   artAtitle: { type: String, required: true },
   artBtitle: { type: String, required: true },
   grayScale: { type: String, required: false },
@@ -67,8 +74,6 @@ const BattleSchema = new mongoose.Schema({
   artAVotes: { type: Number, default: 0 },
   artBVotes: { type: Number, default: 0 },
   specialWinner: { type: String, required: false },
-  artAspecialWinner: { type: String, required: false },
-  artBspecialWinner: { type: String, required: false },
   artAvoters: { type: [String], required: false },
   artBvoters: { type: [String], required: false },
   tokenId: { type: String, required: false },

@@ -5,26 +5,31 @@ import Footer from "@/components/Footer/Footer";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { Header } from "@/components/Header/Header";
 import { useSession, signIn } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setAuthToken } from "../../../utils/authToken";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 
 const page = () => {
   const { data: session, status } = useSession();
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
-    }
-  }, [status, session]);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+  const [openNav, setOpenNav] = useState(false);
+  // useEffect(() => {
+  //   if (status === 'unauthenticated') {
+  //     // Redirect to login if not authenticated
+  //     signIn('azure-ad-b2c', { callbackUrl: '/' });
+  //   } else if (status === 'authenticated' && session) {
+  //     // Set the idToken for all API requests
+  //     setAuthToken(session?.idToken || "");
+  //     console.log('Token set for API requests', session);
+  //   }
+  // }, [status, session]);
   return (
     <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>
-      <Header />
+      <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <CampaignBanner />
-      <FooterMenu />
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
     </div>
   );
 };

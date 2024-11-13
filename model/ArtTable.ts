@@ -21,9 +21,10 @@ interface ArtTable extends Document {
 }
 
 const ArtTableSchema = new mongoose.Schema({
+  artistName : {type: String, required: true},
   email: { type: String, required: true },
   campaignId: { type: String, required: true },
-  artistId: { type: String, required: true },
+  artistId: { type: String, required: false },
   arttitle: { type: String, required: true },
   colouredArt: { type: String, required: true },
   colouredArtReference: { type: String, required: true },

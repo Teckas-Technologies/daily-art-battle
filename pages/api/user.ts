@@ -14,9 +14,9 @@ import RaffleTicket from '../../model/RaffleTicket';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
+    //Here user will be created 
     try {
       await connectToDatabase();
-      const {walletAddress} = req.body;
       const token = req.headers['authorization']?.split(' ')[1];
       if (!token) {
         return res.status(401).json({ error: 'Authorization token is required' });
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const payload = decoded as JwtPayload; // Cast the decoded token
       const email = payload.emails[0]; // Extract email from the decoded token
 
-      const existingUser = await User.findOne({ email: email,nearAddress:walletAddress });
+      const existingUser = await User.findOne({ email: email });
       if (existingUser) {
         return res.status(400).json({ error: 'User already exists' });
       }
@@ -51,7 +51,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         referralCode: referralCodeGenerated,
         referredBy: referrer ? referrer._id : null,
         createdAt: new Date(),
-        nearAddress:walletAddress, 
       });
 
       if (referrer) {
@@ -80,6 +79,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ error:error.message });
     }
   }
+
+  //To fetch users based on id token
   else if (req.method === 'GET') {
     try {
       await connectToDatabase();
@@ -104,6 +105,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(400).json({ error:error.message });
     }
   }
+
+  // To update user based on token
   if(req.method=='PUT'){
     try{
       await connectToDatabase();
@@ -120,8 +123,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const payload = decoded as JwtPayload;
       const email = payload.emails[0];
       const existingUser = await User.findOne({ email: email });
-      if (!existingUser) {
+      if (!existingUser) {  
         res.status(400).json({message:"User profile not found"});
+      }
+      const queryType = req.query.queryType;
+      if(queryType=="update"){
+        const updateData = { ...req.body };
+        const updatedProfile = await User.findOneAndUpdate(
+          { email },
+          updateData,
+          { new: true }
+        );
+        res.status(200).json({ profile: updatedProfile });
       }
       const profile = await User.findOneAndUpdate({ email }, {firstName:payload.given_name,lastName:payload.family_name}, { new: true }); 
       res.status(200).json({profile});

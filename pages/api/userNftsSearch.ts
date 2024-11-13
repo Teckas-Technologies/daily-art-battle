@@ -10,6 +10,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         await connectToDatabase();
         const email = await authenticateUser(req);
+        //To search nft based on near address
             if(req.method=='GET'){
               try {
                 const queryType = req.query.queryType;

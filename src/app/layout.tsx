@@ -7,6 +7,7 @@ import "../styles.css";
 
 import { MintbaseWalletContextProvider } from "@mintbase-js/react";
 import { SessionProvider } from "next-auth/react";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,13 +38,15 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <MintbaseWalletContextProvider {...MintbaseWalletSetup}>
-        <html lang="en">
-          <body className={inter.className}>
-            <div className="flex flex-1 flex-col min-h-screen text-gray-500 gradient w-full h-full flex justify-center items-center bold text-white">
-              {children}
-            </div>
-          </body>
-        </html>
+        <AuthProvider>
+          <html lang="en">
+            <body className={inter.className}>
+              <div className="flex flex-1 flex-col min-h-screen text-gray-500 gradient w-full h-full flex justify-center items-center bold text-white">
+                {children}
+              </div>
+            </body>
+          </html>
+        </AuthProvider>
       </MintbaseWalletContextProvider>
     </SessionProvider>
   );

@@ -19,6 +19,7 @@ export interface ArtData {
   tokenId: Number;
   campaignId: string;
   raffleTickets: Number;
+  artistName: string;
 }
 
 
@@ -58,10 +59,15 @@ export const useSaveData = (): UseSaveDataResult => {
         throw new Error('Failed to save data');
       }
 
-      const responseData = await response.json();
-      console.log("Response Data >> ", responseData);
-
-      setSuccess(true);
+      const responseText = await response.text();
+      if (responseText) {
+        const responseData = JSON.parse(responseText);
+        console.log("Response Data >> ", responseData);
+        setSuccess(true);
+      } else {
+        console.warn('Empty response from server');
+        setSuccess(false);
+      }
     } catch (error) {
       console.error('Error saving data:', error);
       setError('Failed to save data');
@@ -83,7 +89,7 @@ export const useFetchArts = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`);
+      const response = await fetch(`/api/art?campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log("data:", data)
@@ -142,11 +148,11 @@ export const useFetchArtById = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-  const fetchArtById = async (id: any) => {
+  const fetchArtById = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?queryType=upcoming&id=${id}`);
+      const response = await fetch(`/api/art?queryType=upcoming&id=${id}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
 
@@ -206,15 +212,15 @@ export const useHideArt = () => {
 
 export const useSearchArts = () => {
   const [arts, setArts] = useState<ArtData[]>([]);
-  const [totalPage, setTotalPage] = useState<any>();
+  const [totalSearchPage, setTotalPage] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const searchArts = async (campaignId: string,name: string, sort: string, page: number, limit: number = 8) => {
+  const searchArts = async (campaignId: string, name: string, page: number, limit: number = 8) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&sort=${sort}&page=${page}&limit=${limit}`);
+      const response = await fetch(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log("data:", data)
@@ -229,5 +235,5 @@ export const useSearchArts = () => {
   };
 
 
-  return { arts, totalPage, loading, error, searchArts };
+  return { arts, totalSearchPage, loading, error, searchArts };
 }

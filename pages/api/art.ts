@@ -25,21 +25,17 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-   const email = await authenticateUser(req);
+  
     switch (req.method) {
       //POST method is used to create art.
       case "POST":
+        const email = await authenticateUser(req);
         const art = req.body;
         const user = await User.findOne({ email: email });
         if (!user) {
           return res
             .status(404)
             .json({ success: false, error: "User profile not found." });
-        }
-        if(user.nearAddress!=art.artistId){
-          return res
-          .status(404)
-          .json({ success: false, error: "User wallet address not matched" });
         }
         if (user.gfxCoin < ART_UPLOAD) {
           return res
@@ -77,7 +73,7 @@ export default async function handler(
           const battles = await findAllArtsByCampaign(page, limit,id);
           return res.status(200).json(battles);
         }
-
+         //Search upcoming arts based on art name and artist name
         if(queryType=="coming"){
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 9;
@@ -86,6 +82,7 @@ export default async function handler(
           const battles = await findComingArts(name,campaignId,page,limit);
           return res.status(200).json(battles);
         }
+         //Fetch completed battles based on art name and artist name
         if(queryType=="completed"){
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 9;
@@ -115,7 +112,9 @@ export default async function handler(
               .status(200)
               .json({ battles, totalDocuments, totalPages });
           }
-        } else {
+        } 
+        //Fetch upcoming arts with sorting
+        else {
           const sort = req.query.sort;
           const campaignId = req.query.campaignId as string;
           const page = parseInt(req.query.page as string) || 1;
@@ -147,6 +146,7 @@ export default async function handler(
 
       //PUT method is used to update art by id.
       case "PUT":
+        await authenticateUser(req);
         const { id } = req.body;
         if (!id) {
           return res.status(400).json({ error: "ID is required for updating" });

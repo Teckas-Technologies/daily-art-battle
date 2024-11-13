@@ -29,8 +29,8 @@ export const countVotes = async (): Promise<void> => {
         battle.totalVotes = artAVotes + artBVotes;
         const artARaffleVoters = await RaffleTicket.find({artId:battle.artAId});
         const artBRaffleVoters = await RaffleTicket.find({artId:battle.artBId});
-        battle.artAvoters = artARaffleVoters.map(voter => voter.participantId);
-        battle.artBvoters = artBRaffleVoters.map(voter => voter.participantId);
+        battle.artAvoters = artARaffleVoters.map(voter => voter.email);
+        battle.artBvoters = artBRaffleVoters.map(voter => voter.email);
         console.log(battle.artBvoters);
        const res =  await battle.save();
        console.log("saved",res);

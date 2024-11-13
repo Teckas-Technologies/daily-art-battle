@@ -8,7 +8,7 @@ import Battle from "../model/Battle";
 export async function scheduleArt(data: any): Promise<any> {
   await connectToDatabase();
   const startDate = new Date();
-  if(!data.artistId || !data.colouredArt){
+  if(!data.colouredArt){
     return;
   }
   if(!data.arttitle) {
@@ -203,13 +203,15 @@ export const findComingArts = async (
   }
 
   // Fetch arts based on the constructed query filter
+  const totalDocuments = await ArtTable.countDocuments(queryFilter);
+  const totalPages = Math.ceil(totalDocuments / limit);
   const arts = await ArtTable.find(queryFilter)
     .sort({ uploadedTime: -1, _id: 1 })
     .skip(skip)
     .limit(limit)
     .exec();
 
-  return { arts };
+  return { arts,totalDocuments,totalPages };
 };
 
 
@@ -256,6 +258,8 @@ export const findCompletedArts = async (
   }
 
   // Fetch completed arts from the Battle table based on the constructed query filter
+  const totalDocuments = await Battle.countDocuments(queryFilter);
+  const totalPages = Math.ceil(totalDocuments / limit);
   const completedBattles = await Battle.find(queryFilter)
     .sort({ endTime: -1, _id: 1 })
     .skip(skip)
@@ -263,7 +267,7 @@ export const findCompletedArts = async (
     .exec();
     
 
-  return { completedBattles };
+  return { completedBattles,totalPages,totalDocuments };
 };
 
 

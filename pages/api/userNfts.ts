@@ -9,6 +9,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     const email = await authenticateUser(req);
     await connectToDatabase();
+    // To fetch users nft both spinners and participation nft
     if(req.method=='GET'){
         try{
         const queryType = req.query.queryType;

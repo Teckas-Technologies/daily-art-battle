@@ -29,7 +29,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [editCampaign,setEditCampaign] = useState(false);
+  const [editCampaign, setEditCampaign] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const { activeAccountId } = useMbWallet();
@@ -39,61 +39,83 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   >(null);
   const { data: session, status } = useSession();
   const [user, setUser] = useState<any>();
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
-    }
-  }, [status, session]);
- 
+  const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [toast, setToast] = useState(false);
+  const [successToast, setSuccessToast] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
-  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error,participants } =
+  useEffect(() => {
+    if (toast) {
+      setTimeout(() => setToast(false), 3000)
+    }
+  }, [toast])
+
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     // Redirect to login if not authenticated
+  //     signIn("azure-ad-b2c", { callbackUrl: "/" });
+  //   } else if (status === "authenticated" && session) {
+  //     // Set the idToken for all API requests
+  //     setAuthToken(session?.idToken || "");
+  //     console.log("Token set for API requests", session);
+  //   }
+  // }, [status, session]);
+
+  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error, participants } =
     useCampaigns();
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
-  }, [params.campaign, session?.idToken,editCampaign]);
-console.log("Participants ?>",participants);
+  }, [params.campaign, session?.idToken, editCampaign]);
 
-  useEffect(() => {
-    const handleWalletData = async () => {
-      if (session && session.user) {
-        const idToken = session.idToken as string;
-        console.log("ID Token:", idToken);
+  console.log("Participants:", participants);
 
-        const walletAddress = activeAccountId;
-        if (!walletAddress) {
-          console.warn("No wallet address available.");
-          return;
-        }
+  // useEffect(() => {
+  //   const handleWalletData = async () => {
+  //     if (session && session.user) {
+  //       const idToken = session.idToken as string;
+  //       console.log("ID Token:", idToken);
 
-        console.log("Wallet Address:", walletAddress);
+  //       const walletAddress = activeAccountId;
+  //       if (!walletAddress) {
+  //         console.warn("No wallet address available.");
+  //         return;
+  //       }
 
-        try {
-          const user = await sendWalletData(walletAddress);
-          if(user !== null) {
-            console.log("USER:", user)
-            setUser(user)
-          }
-        } catch (err) {
-          console.error("Failed to send wallet data:", err);
-        }
-      } else {
-        console.warn("Session or user information is missing.");
-      }
-    };
+  //       console.log("Wallet Address:", walletAddress);
 
-    handleWalletData();
-  }, [session, activeAccountId]);
+  //       try {
+  //         const user = await sendWalletData();
+  //         if (user !== null) {
+  //           console.log("USER:", user);
+  //           setUser(user);
+  //         }
+  //       } catch (err) {
+  //         console.error("Failed to send wallet data:", err);
+  //       }
+  //     } else {
+  //       console.warn("Session or user information is missing.");
+  //     }
+  //   };
+
+  //   handleWalletData();
+  // }, [session, activeAccountId]);
 
   if (loading)
     return (
-      <div style={{ background: "#000000", width: "100%", height: "100vh" ,display:"flex",justifyContent:"center",alignItems:"center" }}>
-        <Loader />{" "}
+      <div
+        style={{
+          background: "#000000",
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader md="24.5" sm="15" />{" "}
       </div>
     );
   if (error) return <div>No campaign found</div>;
@@ -109,7 +131,7 @@ console.log("Participants ?>",participants);
     <div style={{ backgroundColor: "#000000", width: "100%", height: "100vh" }}>
       {campaignStatus === "current" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -140,15 +162,29 @@ console.log("Participants ?>",participants);
             welcomeText={""}
             themeTitle={""}
           />
-          <CurrentCampaigUploadArt toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-          {showUploadModal && <ArtUploadForm campaignId={campaign?._id as string} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} />}
+          <CurrentCampaigUploadArt
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          {showUploadModal && (
+            <ArtUploadForm
+              campaignId={campaign?._id as string}
+              onClose={() => setShowUploadModal(false)}
+              onSuccessUpload={() => setUploadSuccess(true)}
+              setSignToast={setSignToast}
+              setErrMsg={setErrMsg}
+              setToast={setToast}
+              setSuccessToast={setSuccessToast}
+              setToastMessage={setToastMessage}
+            />
+          )}
           <UpcomingGrid
             fontColor={""}
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
+            showUploadModal={showUploadModal}
           />
           {/* <PreviousArtHeader />
           <PreviousGrid
@@ -157,12 +193,12 @@ console.log("Participants ?>",participants);
             toggleUploadModal={toggleUploadModal}
           /> */}
 
-          <FooterMenu />
+          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         </div>
       )}
       {campaignStatus === "upcoming" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -186,7 +222,12 @@ console.log("Participants ?>",participants);
             status={campaignStatus}
             participantsCount={participants}
           />
-          <CampaignTime campaign={campaign} campaignId={campaign?._id as string} setEditCampaign={setEditCampaign}/>
+          <CampaignTime
+            campaign={campaign}
+            campaignId={campaign?._id as string}
+            setEditCampaign={setEditCampaign}
+          />
+
           {/* <PreviousGrid
             fontColor={""}
             campaignId={campaign?._id as string}
@@ -197,18 +238,18 @@ console.log("Participants ?>",participants);
             campaignId={campaign?._id as string}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            userMail={user?.user?.email}
             adminEmail={campaign?.email as string}
+            showUploadModal={showUploadModal}
           />
 
-          <FooterMenu />
+          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         </div>
       )}
       {campaignStatus === "completed" && (
         <div
           style={{ width: "100%", minHeight: "100vh", background: "#000000" }}
         >
-          <Header />
+          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -250,7 +291,7 @@ console.log("Participants ?>",participants);
             />
           )} */}
 
-          <FooterMenu />
+          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         </div>
       )}
     </div>

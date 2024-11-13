@@ -7,6 +7,7 @@ import JwtPayload from '../../utils/verifyToken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase();
+  //To return referral link for refferals
   try {
     const email = await authenticateUser(req);
     const user= await User.findOne({email:email});

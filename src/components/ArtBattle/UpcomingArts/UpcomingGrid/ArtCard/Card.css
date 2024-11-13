@@ -52,6 +52,8 @@
 
 .upcoming-popup {
     border: 1px solid #6D6D6D;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .close-icon {
@@ -77,7 +79,8 @@
     border: 0.75px solid #7E7E7E
 }
 
-.img-outer {
+.img-outer,
+.raffle-info {
     background: #272727;
 }
 
@@ -120,9 +123,9 @@
 }
 
 @media (max-width: 768px) {
-    .img-outer {
+    /* .img-outer {
         background: none;
-    }
+    } */
 }
 
 .hide:hover+.like {
@@ -135,6 +138,7 @@
         width: 12rem;
         height: 12rem;
     }
+
     .raffle-text {
         font-size: 1.1rem;
     }
@@ -143,6 +147,7 @@
         gap: 1rem;
         padding-bottom: 0.5rem;
     }
+
     .collect-btn {
         padding: 0.5rem 1.2rem;
         border-radius: 0.5rem !important;
@@ -152,13 +157,40 @@
         width: 1.5rem;
         height: 1.5rem;
     }
+
     .collect-text {
         font-size: 1rem !important;
     }
+
     .enter-input {
         height: 2.5rem;
     }
+
     .des {
         padding: 0.2rem 0;
     }
+}
+
+/* Sign In toast */
+
+.sign-in-popup {
+    background-color: #000000B2;
+}
+
+.signin-card {
+    border: 1px solid #6D6D6D;
+}
+
+.cancel-btn {
+    border: 1.27px solid #00FF00
+}
+
+.signin-btn {
+    background: linear-gradient(180deg, #000000 -14.06%, rgba(0, 255, 0, 0.668) 178.13%);
+    /* border: 1.27px solid; */
+}
+
+.signin-outer {
+    padding: 1px;
+    background: linear-gradient(99.76deg, #00FF00 8.86%, rgba(0, 153, 0, 0.342) 91.14%);
 }

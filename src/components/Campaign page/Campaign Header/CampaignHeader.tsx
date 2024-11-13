@@ -18,10 +18,7 @@ export default function CampaignHeader({
     ? baseLink + campaign.campaignUrl.split("/").pop()
     : baseLink;
   const [buttonText, setButtonText] = useState("Copy link");
-  console.log(
-    "log>>>>>>>>>>>>>>>>>>..............>>>>>>>>>>>>>>>>>>>>>>>>",
-    participantsCount
-  );
+  console.log("Participants Count ", participantsCount);
 
   const handleCopyLink = () => {
     navigator.clipboard
