@@ -35,7 +35,8 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
     useEffect(() => {
         if (activeAccountId && isConnected) {
             setWalletIcon("/icons/wallet.svg");
-        } else {
+        }
+        if (!activeAccountId && !isConnected) {
             setWalletIcon("/icons/wallet-red.svg");
         }
     }, [activeAccountId, isConnected, userDetails]);
@@ -103,7 +104,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                 {userDetails && <InlineSVG
                     src={walletIcon}
                     className="md:h-11 md:w-11 h-8 w-8 cursor-pointer"
-                    onClick={() => { activeAccountId ? disconnect() : connect() }}
+                    onClick={() => { activeAccountId ? router.push("/profile") : connect() }}
                 />}
                 {!userDetails && <div className="header-actions flex items-center gap-3">
                     {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}
