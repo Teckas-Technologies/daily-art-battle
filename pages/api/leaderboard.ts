@@ -11,7 +11,7 @@ import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } fro
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
   // This api to fetch leaderboard list 
     if(req.method=='GET'){
-        try{
+        try{  
         const email = await authenticateUser(req);    
         await connectToDatabase();
         const queryType = req.query.queryType;
@@ -19,6 +19,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         const limit = parseInt(req.query.limit as string) || 9;
         if(queryType=="points"){
             const skip = limit * (page === 1 ? 0 : page - 1);
+            const totalDocuments = await User.countDocuments({}, { firstName: 1, lastName: 1, gfxCoin: 1 });
+            const totalPages = Math.ceil(totalDocuments / limit);
             const users = await User.find({}, { firstName: 1, lastName: 1, gfxCoin: 1 }).sort({ gfxCoin: -1 }).skip(skip).limit(limit);
             const leaders = users.map((user, index) => ({
                 firstName: user.firstName,
@@ -26,9 +28,15 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 gfxvsCoins: user.gfxCoin,
                 rank: index + 1 
             }));
-        res.status(200).json({data:leaders});
+        res.status(200).json({data:leaders,totalDocuments,totalPages});
         }else if(queryType=="collectors"){
             const skip = limit * (page === 1 ? 0 : page - 1);
+            const totalDocumentsResult = await RaffleTicket.aggregate([
+              { $group: { _id: "$email" } },
+              { $count: "total" }
+          ]);
+          const totalDocuments = totalDocumentsResult[0]?.total || 0;
+          const totalPages = Math.ceil(totalDocuments / limit);
             const leaderboard = await RaffleTicket.aggregate([
                 {
                   $group: {
@@ -79,9 +87,15 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   };
                 })
               );
-              res.status(200).json({data:leaderboardWithRewards});
+              res.status(200).json({data:leaderboardWithRewards,totalDocuments,totalPages});
         }else if(queryType=="creators"){
             const skip = limit * (page === 1 ? 0 : page - 1);
+            const totalDocumentsResult = await RaffleTicket.aggregate([
+              { $group: { _id: "$email" } },
+              { $count: "total" }
+          ]);
+          const totalDocuments = totalDocumentsResult[0]?.total || 0;
+          const totalPages = Math.ceil(totalDocuments / limit);
             const leaderboard = await ArtTable.aggregate([
                 {
                   $group: {
@@ -122,7 +136,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 }
               ]).skip(skip).limit(limit);
 
-              res.status(200).json({data:leaderboard});
+              res.status(200).json({data:leaderboard,totalDocuments,totalPages});
             
         }
         }   
