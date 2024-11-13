@@ -13,6 +13,7 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const [openNav, setOpenNav] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
     
     useEffect(() => {
