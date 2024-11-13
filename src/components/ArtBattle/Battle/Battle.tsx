@@ -20,6 +20,7 @@ export interface Artwork {
   name: string;
   title: string;
   artistId: string;
+  artistName: string;
 }
 
 interface Props {
@@ -53,6 +54,7 @@ export const Battle: React.FC<Props> = ({
     imageUrl: "",
     title: "",
     artistId: "",
+    artistName: ""
   });
   const [artB, setArtB] = useState<Artwork>({
     id: "ArtB",
@@ -60,6 +62,7 @@ export const Battle: React.FC<Props> = ({
     imageUrl: "",
     title: "",
     artistId: "",
+    artistName: ""
   });
 
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
@@ -138,6 +141,7 @@ export const Battle: React.FC<Props> = ({
         imageUrl: todayBattle.artAcolouredArt,
         title: todayBattle.artAtitle,
         artistId: todayBattle.artAartistId,
+        artistName: todayBattle.artAartistName
       });
       setArtB({
         id: todayBattle?.artBId,
@@ -145,6 +149,7 @@ export const Battle: React.FC<Props> = ({
         imageUrl: todayBattle.artBcolouredArt,
         title: todayBattle.artBtitle,
         artistId: todayBattle.artBartistId,
+        artistName: todayBattle.artBartistName
       });
       setBattleId(todayBattle._id);
       setSpinnerUrl(todayBattle.grayScale);
