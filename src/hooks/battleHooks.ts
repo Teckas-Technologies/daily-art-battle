@@ -30,6 +30,12 @@ export interface BattleData {
   artBvoters?:string[];
   isSpecialWinnerMinted?:Boolean;
   tokenId:string;
+  videoSpinner: string;
+  videoSpinnerReference: string;
+  emoji1: string;
+  emoji2: string;
+  artAartistEmail: string;
+  artBartistEmail: string;
 }
 
 interface UseFetchTodayBattleResult {
@@ -101,7 +107,7 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
 
     try {
       console.log(campaignId);
-      const response = await fetchWithAuth(`/api/battle?queryType=Today&campaignId=${campaignId}`);
+      const response = await fetch(`/api/battle?queryType=Today&campaignId=${campaignId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch today\'s battle data');
       }

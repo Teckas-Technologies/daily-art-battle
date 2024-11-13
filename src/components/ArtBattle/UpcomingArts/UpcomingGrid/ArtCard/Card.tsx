@@ -5,26 +5,29 @@ import InlineSVG from 'react-inlinesvg';
 import { ArtData, useFetchArtById, useHideArt } from '@/hooks/artHooks';
 import { useArtsRaffleCount } from '@/hooks/useRaffleTickets';
 import { useMbWallet } from '@mintbase-js/react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CardProps {
-    art: ArtData;
+    art: ArtData | null;
     myTicketsNew: any;
     onImageClick: (id: string) => Promise<void>;
     campaignId: string;
     success: boolean;
-    overlayArt: ArtData | undefined;
+    overlayArt: ArtData | null;
     adminEmail: string;
-    userMail: string;
-    removeArtById: (id: string)=> void;
+    removeArtById: (id: string) => void;
 }
 
-const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtById, campaignId, success, overlayArt, adminEmail, userMail }) => {
+const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtById, campaignId, success, overlayArt, adminEmail }) => {
 
     const { activeAccountId } = useMbWallet();
     // const { raffleCount, fetchArtUserRaffleCount } = useArtsRaffleCount();
     // const [myTickets, setMyTickets] = useState<number>();
     const [artNew, setArtNew] = useState<ArtData>();
     const { fetchArtById } = useFetchArtById();
+    const { user } = useAuth();
+    let userDetails = user;
+    let userMail = userDetails?.user?.email;
     const { hideSuccess, hideArt } = useHideArt();
     // console.log("Success ", success);
 
@@ -58,19 +61,23 @@ const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtB
     // }, [success])
 
     useEffect(() => {
-        if (overlayArt && overlayArt._id === art._id && success) {
+        if (overlayArt && art && overlayArt._id === art._id && success) {
             fetchArt();
         }
     }, [success])
 
     const fetchArt = async () => {
-        const overlay = await fetchArtById(art._id);
-        setArtNew(overlay);
+        if (art) {
+            const overlay = await fetchArtById(art._id);
+            setArtNew(overlay);
+        }
     }
 
     const hideArtByAdmin = async () => {
-        await hideArt(art._id);
-        removeArtById(art._id);
+        if (art) {
+            await hideArt(art._id);
+            removeArtById(art._id);
+        }
     }
 
     return (
@@ -85,7 +92,7 @@ const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtB
                                 className="md:w-8 md:h-8 w-5 h-5 spartan-medium"
                             />
                         </div>}
-                        <div className="like transform transition-all duration-300 md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] bg-white flex justify-center items-center rounded-full z-10 ml-2 cursor-pointer" onClick={() => onImageClick(art._id)}>
+                        <div className="like transform transition-all duration-300 md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] bg-white flex justify-center items-center rounded-full z-10 ml-2 cursor-pointer" onClick={() => {art && onImageClick(art._id)}}>
                             <InlineSVG
                                 src={`/icons/${myTicketsNew as number > 0 ? "uparrow.svg" : "heart.svg"}`}
                                 className="md:w-7 md:h-7 w-4 h-4 spartan-medium"

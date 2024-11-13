@@ -1,0 +1,11 @@
+/* Enable vertical scrolling and hide scrollbar */
+.scroll-container {
+    overflow-y: auto;       /* Enables vertical scrolling */
+    scrollbar-width: none;  /* Hides scrollbar in Firefox */
+  }
+  
+  /* Hide scrollbar in WebKit browsers (Chrome, Safari, etc.) */
+  .scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  

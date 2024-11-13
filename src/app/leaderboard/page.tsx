@@ -7,9 +7,13 @@ import { signIn, useSession } from "next-auth/react";
 import { setAuthToken } from "../../../utils/authToken";
 import LeaderboardCollectors from "@/components/LeaderBoard/LeaderBoardCollectors";
 import LeaderboardCreators from "@/components/LeaderBoard/LeaderBoardCreators";
+import { GFX_CAMPAIGNID } from "@/config/constants";
 const LeaderBoardPage = ()=>{
-    const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
-    const { data: session, status } = useSession();
+const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
+    const [openNav, setOpenNav] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
     
     useEffect(() => {
     if (status === 'unauthenticated') {
@@ -28,7 +32,7 @@ const LeaderBoardPage = ()=>{
   
     return(
         <div className="bg-black w-full text-white min-h-screen flex flex-col">
-        <Header />
+        <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
         <div className="flex-grow flex flex-col items-center justify-center pt-20 w-full px-4 text-center">
           <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-20 font-bold text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
             GFXvs Leaderboard

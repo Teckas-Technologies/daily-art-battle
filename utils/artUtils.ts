@@ -8,7 +8,7 @@ import Battle from "../model/Battle";
 export async function scheduleArt(data: any): Promise<any> {
   await connectToDatabase();
   const startDate = new Date();
-  if(!data.artistId || !data.colouredArt){
+  if(!data.colouredArt){
     return;
   }
   if(!data.arttitle) {

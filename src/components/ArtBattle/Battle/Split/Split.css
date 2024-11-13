@@ -25,5 +25,32 @@
 }
 
 .art-overlay {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 19.15%, #000000 71.59%);
+    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0) 19.15%, #000000 71.59%); */
+    background: #000;
+}
+
+.lay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.02853641456582634) 0%, rgba(0, 0, 0, 0.4431022408963585) 25%, rgba(0, 0, 0, 0.6699929971988796) 50%, rgba(0, 0, 0, 0.7344187675070029) 75%, rgba(0, 0, 0, 1) 100%);
+}
+
+.overlay {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: -100%;
+    transition: all 0.6s ease;
+}
+
+.arta img,
+.artb img {
+    transition: all 0.5s ease;
+}
+
+.arta:hover img,
+.artb:hover img{
+    scale: 1.08;
+}
+.arta:hover .overlay,
+.artb:hover .overlay {
+    bottom: 0;
 }
