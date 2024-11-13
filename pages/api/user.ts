@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //Here user will be created 
     try {
       await connectToDatabase();
-      const {walletAddress} = req.body;
       const token = req.headers['authorization']?.split(' ')[1];
       if (!token) {
         return res.status(401).json({ error: 'Authorization token is required' });
@@ -31,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const payload = decoded as JwtPayload; // Cast the decoded token
       const email = payload.emails[0]; // Extract email from the decoded token
 
-      const existingUser = await User.findOne({ email: email,nearAddress:walletAddress });
+      const existingUser = await User.findOne({ email: email });
       if (existingUser) {
         return res.status(400).json({ error: 'User already exists' });
       }
@@ -52,7 +51,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         referralCode: referralCodeGenerated,
         referredBy: referrer ? referrer._id : null,
         createdAt: new Date(),
-        nearAddress:walletAddress, 
       });
 
       if (referrer) {
@@ -125,7 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const payload = decoded as JwtPayload;
       const email = payload.emails[0];
       const existingUser = await User.findOne({ email: email });
-      if (!existingUser) {
+      if (!existingUser) {  
         res.status(400).json({message:"User profile not found"});
       }
       const queryType = req.query.queryType;
