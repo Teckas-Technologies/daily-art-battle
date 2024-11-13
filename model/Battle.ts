@@ -36,9 +36,16 @@ interface Battle extends Document {
   emoji2:string;
   videoSpinnerReference:string;
   videoSpinner:string;
+  artAartistName:string;
+  artBartistName:string;
+  specialWinnerName:string;
 }
 
+
 const BattleSchema = new mongoose.Schema({
+  specialWinnerName:{ type: String, required: true },
+  artAartistName:{ type: String, required: true },
+  artBartistName:{ type: String, required: true },
   videoSpinner: { type: String, required: false },
   videoSpinnerReference: { type: String, required: false },
   emoji1: { type: String, required: true },
