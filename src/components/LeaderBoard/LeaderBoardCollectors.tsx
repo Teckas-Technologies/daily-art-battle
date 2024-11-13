@@ -7,7 +7,7 @@ import { fetchWithAuth, setAuthToken } from '../../../utils/authToken';
 import { useSession } from 'next-auth/react';
 import { LeaderBoardResponse, useLeaderBoard } from '@/hooks/leaderboard';
 
-const LeaderboardHolders = () => {
+const LeaderboardCollectors = () => {
   const {leaderBoard,fetchLeaderBoard} = useLeaderBoard();
   const[leaderboardData,setLeaderBoardData] = useState<LeaderBoardResponse[]>([]);
   const { data: session, status } = useSession();
@@ -66,11 +66,14 @@ const LeaderboardHolders = () => {
   return (
     <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
       {/* Left Section - Leaderboard Table */}
-      <div className="w-full max-w-[900px] rounded-[32px] bg-[#0f0f0f] mr-10 border-[0.5px] mb-20 border-white p-8">
-    <div className="flex justify-between mt-6 mb-6 pb-4 ml-5">
-      <span className="w-[100px] text-center">Rank</span>
-      <span className="w-[350px] text-center">Username</span>
-      <span className="w-[240px] text-center">GFX Points</span>
+      <div className="w-full max-w-[800px] rounded-[32px] bg-[#0f0f0f] mr-10 border-[0.5px] mb-20 border-white p-8">
+    <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 gap-x-8">
+      <span className="w-[60px] text-center">Rank</span>
+      <span className="w-[130px] text-center">Username</span>
+      <span className="w-[92px] text-center">Rare NFTs</span>
+      <span className="w-[164px] text-center">Participation NFTs</span>
+      <span className="w-[59px] text-center">Total</span>
+      <span className="w-[103px] text-center">GFX Points</span>
     </div>
         {leaderboardData.map((user: LeaderBoardResponse) => (
           <div
@@ -88,7 +91,7 @@ const LeaderboardHolders = () => {
               )}
             </div>
             <span className="w-[200px] text-center">{user.firstName+user.lastName}</span>
-            <div className="flex items-center text-center w-[140px] max-w-200 gap-2">
+            <div className="flex items-center text-center w-[100px] gap-2">
             {user.rank <= 3 ?(
               <>
                  <span className="text-yellow-400"><InlineSVG
@@ -147,4 +150,4 @@ const LeaderboardHolders = () => {
   );
 };
 
-export default LeaderboardHolders;
+export default LeaderboardCollectors;
