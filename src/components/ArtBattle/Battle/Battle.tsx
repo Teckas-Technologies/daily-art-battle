@@ -6,7 +6,6 @@ import { Spinner } from "./Spinner/Spinner";
 import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useRouter } from "next/navigation";
-import { useVoting } from "@/hooks/useVoting";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { NoBattle } from "./NoBattle/NoBattle";
 import Toast from "../../Toast";
@@ -65,36 +64,30 @@ export const Battle: React.FC<Props> = ({
 
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [battleId, setBattleId] = useState<string>();
-  const { fetchVotes } = useVoting();
-  const [success, setSuccess] = useState(false);
-  const [votedFor, setVoterFor] = useState("");
   const [refresh, setRefresh] = useState(false);
-  const [popupA, setPopUpA] = useState(false);
-  const [popupB, setPopUpB] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [skeletonLoad, setSkeletonLoading] = useState(true);
   const [viewTools, setViewTools] = useState(initialViewTools);
   const [spinnerUrl, setSpinnerUrl] = useState<string>();
   const { fetchArtById } = useFetchArtById();
   const [artARaffleTickets, setArtARaffleTickets] = useState(0);
   const [artBRaffleTickets, setArtBRaffleTickets] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (todayBattle && activeAccountId) {
-        const res = await fetchVotes(
-          activeAccountId,
-          todayBattle._id,
-          campaignId
-        );
-        if (res) {
-          setVoterFor(res.votedFor);
-          setSuccess(true);
-        }
-      }
-    };
-    fetchData();
-  }, [todayBattle, fetchVotes, refresh]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (todayBattle && activeAccountId) {
+  //       const res = await fetchVotes(
+  //         activeAccountId,
+  //         todayBattle._id,
+  //         campaignId
+  //       );
+  //       if (res) {
+  //         setVoterFor(res.votedFor);
+  //         setSuccess(true);
+  //       }
+  //     }
+  //   };
+  //   fetchData();
+  // }, [todayBattle, fetchVotes, refresh]);
 
   useEffect(() => {
     console.log(campaignId);
@@ -105,23 +98,23 @@ export const Battle: React.FC<Props> = ({
 
     const timeoutId = setTimeout(() => {
       fetchBattle();
-    }, 500); // 10 seconds in milliseconds
+    }, 100); // 10 seconds in milliseconds
 
     // Cleanup function to clear the timeout if the component unmounts or campaignId changes
     return () => clearTimeout(timeoutId);
   }, [campaignId]);
 
-  useEffect(() => {
-    if (battle) {
-      // console.log(battle);
-      setSkeletonLoading(false);
-    }
-  }, [battle]);
+  // useEffect(() => {
+  //   if (battle) {
+  //     // console.log(battle);
+  //     setSkeletonLoading(false);
+  //   }
+  // }, [battle]);
 
   useEffect(() => {
-    if (!battle && todayBattle) {
-      setSkeletonLoading(false);
-    }
+    // if (!battle && todayBattle) {
+    //   setSkeletonLoading(false);
+    // }
     if (todayBattle) {
       const endTime = new Date(todayBattle.endTime).getTime();
       const now = new Date().getTime();
@@ -235,7 +228,7 @@ export const Battle: React.FC<Props> = ({
           </div>
           <div className="arts flex w-full px-3">
             {!todayBattle && !loading && <NoBattle />}
-            {loading && <Loader md="24.5" sm="15" />}
+            {loading && <Loader md="21" sm="15" />}
             {todayBattle && viewTools[0].active && (
               <Split artA={artA} artB={artB} campaignId={campaignId} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} setRefresh={setRefresh} />
             )}

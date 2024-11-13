@@ -94,6 +94,12 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         }
     }, [upcomingArts]);
 
+    useEffect(() => {
+        if (sort) {
+            setSearchQuery("")
+        }
+    }, [sort])
+
     const handleSort = ({ value, label }: { value: string, label: string }) => {
         setUpcomingArts([]);
         // const sortType = event.target.value
@@ -136,6 +142,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     setEmpty("No arts found!");
                 }
             } else {
+                console.log("ToT search pages:", totalSearchPage)
                 if (page > totalSearchPage) return;
                 setLoading(true);
                 const arts = await searchArts(campaignId, searchQuery, page, limit);

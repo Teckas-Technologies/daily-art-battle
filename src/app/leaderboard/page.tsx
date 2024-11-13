@@ -14,17 +14,6 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
-    
-    useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Redirect to login if not authenticated
-      signIn('azure-ad-b2c', { callbackUrl: '/' });
-    } else if (status === 'authenticated' && session) {
-      // Set the idToken for all API requests
-      setAuthToken(session?.idToken || "");
-      console.log('Token set for API requests', session);
-    }
-  }, [status, session]);
 
   const handleTabClick = (tab:any)=>{
     setActiveTab(tab);
