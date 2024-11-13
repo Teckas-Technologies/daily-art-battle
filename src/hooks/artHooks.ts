@@ -212,7 +212,7 @@ export const useHideArt = () => {
 
 export const useSearchArts = () => {
   const [arts, setArts] = useState<ArtData[]>([]);
-  const [totalPage, setTotalPage] = useState<any>();
+  const [totalSearchPage, setTotalPage] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -235,5 +235,5 @@ export const useSearchArts = () => {
   };
 
 
-  return { arts, totalPage, loading, error, searchArts };
+  return { arts, totalSearchPage, loading, error, searchArts };
 }

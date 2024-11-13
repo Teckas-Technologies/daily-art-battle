@@ -14,16 +14,17 @@ interface Props {
     campaignId: string;
     fontColor: string;
     adminEmail: string;
+    showUploadModal: boolean;
 }
 
 const MOBILE_LIMIT = 9;
 const DESKTOP_LIMIT = 8;
 
-export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor, adminEmail }) => {
+export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, campaignId, fontColor, adminEmail, showUploadModal }) => {
     const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
     const [refresh, setRefresh] = useState(false);
     const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
-    const { searchArts } = useSearchArts();
+    const { totalSearchPage, searchArts } = useSearchArts();
     const [page, setPage] = useState<number | null>(null);
     const [sort, setSort] = useState<string | null>("dateDsc");
     const [sortLabel, setSortLabel] = useState("Latest First");
@@ -33,6 +34,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     const [loading, setLoading] = useState(false);
     const [hideSuccess, setHideSuccess] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [empty, setEmpty] = useState("");
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -50,6 +52,12 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
     const handleToggle = () => {
         setIsOpen((prev) => !prev);
     };
+
+    useEffect(() => {
+        if (!showUploadModal) {
+            handleSort({ value: 'dateDsc', label: "Latest First" });
+        }
+    }, [showUploadModal])
 
     const getLimitBasedOnScreenSize = () => {
         // Set the limit based on the window width
@@ -80,7 +88,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                         behavior: "smooth",
                     });
                 }
-            }, 3000);
+            }, 3500);
 
             return () => clearTimeout(scrollTimeout);
         }
@@ -107,11 +115,13 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         // if (page === 1) {
         //     await new Promise(resolve => setTimeout(resolve, 100));
         // }
-        setLoading(true);
         try {
             if (!searchQuery) {
+                if (page > totalPage) return;
+                setLoading(true);
                 const arts = await fetchMoreArts(campaignId, sort, page, limit);
                 if (arts && arts.length > 0) {
+                    setEmpty("");
                     // setUpcomingArts((prevArts) => [...prevArts, ...arts]);
                     setUpcomingArts((prevArts) => {
                         const artMap = new Map(prevArts.map(art => [art._id, art]));
@@ -123,11 +133,15 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     });
                 } else {
                     console.log(`1. No data returned for page ${page}`);
+                    setEmpty("No arts found!");
                 }
             } else {
+                if (page > totalSearchPage) return;
+                setLoading(true);
                 const arts = await searchArts(campaignId, searchQuery, page, limit);
                 if (arts && arts.length > 0) {
                     // setUpcomingArts((prevArts) => [...prevArts, ...arts]);
+                    setEmpty("");
                     setUpcomingArts((prevArts) => {
                         const artMap = new Map(prevArts.map(art => [art._id, art]));
                         arts.forEach((newArt: ArtData) => {
@@ -138,6 +152,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     });
                 } else {
                     console.log(`2. No data returned for page ${page}`);
+                    setEmpty("No arts found!");
                 }
             }
         } catch (error) {
@@ -311,12 +326,25 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     </div>
                 </div>
 
-                {upcomingArts.length === 0 && loading && <Loader />}
+                {/* {upcomingArts.length === 0 && loading && <Loader />} */}
 
                 {/* Upcoming arts grid view section */}
-                <div className="grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
+                <div className={`grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 ${loading ? "pb-1" : "pb-5"} bg-black`}>
                     <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} />
                 </div>
+
+                {empty && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
+                    <InlineSVG
+                        src='/icons/info.svg'
+                        className='fill-current text-white font-bold point-c w-4 h-4 cursor-pointer'
+                    />
+                    <h2 className="text-white font-semibold text-lg">{empty}</h2>
+                </div>
+                }
+
+                {loading && <div className="upcoming-loader md:h-[10rem] h-[5rem] md:mb-0 mb-8 w-full justify-center">
+                    <Loader md="10" sm="8" />
+                </div>}
 
                 {hideSuccess && <Toast
                     success={true}
