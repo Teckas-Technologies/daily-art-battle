@@ -14,7 +14,7 @@ const ConnectWallet = () => {
   };
   return (
     <div
-      className="flex lg: justify-center items-center gap-9 px-8 py-10 text-white p-6 rounded-xl  mt-[20px] mb-[800px]"
+      className="flex lg: justify-center items-center gap-9 px-8 py-10 text-white p-6 rounded-xl  mt-[20px]"
       style={{ border: "1px solid #383838" }}
     >
       <div className="flex lg: items-end flex-col justify-between gap-[60px]">
