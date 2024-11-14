@@ -8,7 +8,11 @@ import InlineSVG from "react-inlinesvg";
 import { ArtData } from "@/hooks/artHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 
-export const UploadedArtsGrid: React.FC = () => {
+interface Props {
+    rendered: boolean;
+}
+
+export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [page, setPage] = useState<number>(1);
     const [sort, setSort] = useState<string>("dateDsc");
     const { arts, loading, totalPage, fetchUserArts } = useFetchUserArts();
@@ -33,7 +37,7 @@ export const UploadedArtsGrid: React.FC = () => {
         const timeoutId = setTimeout(initializeData, 100);
 
         return () => clearTimeout(timeoutId);
-    }, [sort, page, searchQuery]);
+    }, [sort, page, searchQuery, rendered]);
 
     const [hasnext, setHasNext] = useState(false);
 
@@ -58,7 +62,7 @@ export const UploadedArtsGrid: React.FC = () => {
         if (!arts && !searchedArts && !loading) {
             setEmpty("No arts found!")
         }
-    }, [arts, searchedArts]);
+    }, [arts, searchedArts, rendered]);
 
     useEffect(() => {
         if (sort) {
