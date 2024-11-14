@@ -110,7 +110,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
 
     return (
         <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
-            <div className="upcoming-popup lg:w-[43.5rem] md:w-[40.5rem] w-full h-auto lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
+            <div className="upcoming-popup lg:w-[43.5rem] md:w-[40.5rem] w-full h-auto max-h-[97vh] overflow-scroll lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
                 <div className="close-art w-full flex justify-end">
                     <div className="close-icon md:w-[1.9rem] md:h-[1.9rem] w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-md cursor-pointer" onClick={handleClose}>
                         <InlineSVG

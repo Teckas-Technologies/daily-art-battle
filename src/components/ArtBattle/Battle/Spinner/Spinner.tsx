@@ -11,7 +11,7 @@ export const Spinner: React.FC<SpinnerProps> = ({ spinnerUrl }) => {
     <div className="flex w-full justify-center mt-5">
       <div className="spinner-img relative w-full md:max-w-[26.5rem] max-w-[17rem] rounded-2xl aspect-square m-auto overflow-hidden select-none">
         {!spinnerUrl ? (
-          <Loader />
+          <Loader md="24.5" sm="15" />
         ) : (
           <img
             alt="spinner"

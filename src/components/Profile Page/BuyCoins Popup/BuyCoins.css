@@ -1,11 +1,128 @@
-/* Enable vertical scrolling and hide scrollbar */
+*{
+  font-family: "Spartan";
+}
 .scroll-container {
-    overflow-y: auto;       /* Enables vertical scrolling */
-    scrollbar-width: none;  /* Hides scrollbar in Firefox */
+  overflow-y: auto; 
+  scrollbar-width: none; 
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+.coins-div {
+  background: linear-gradient(139.22deg, #e3e3e3 3.18%, #000000 96.82%);
+  padding: 0.75px;
+  border-radius: 8px;
+}
+.coin-btn {
+  background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
+}
+.est-btn{
+  background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
+}
+.active-btn{
+  background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
+}
+.retry-btn-Wrapper {
+  position: relative;
+  padding-left: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
+}
+
+.retry-btn {
+  width: 100%;
+  height: 100%;
+  padding: 14.41px 22.69px;
+  border-radius: 55.1px;
+  background: radial-gradient(
+    128.13% 128.13% at 50% 50%,
+    hwb(0 0% 100% / 0.952) 25%,
+    rgba(0, 255, 0, 0) 100%
+  );
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  font-size: 14.9px;
+  font-weight: 600;
+  line-height: 19.25px;
+  letter-spacing: -6%;
+  text-align: center;
+}
+
+.retry-btn-Border {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(
+    99.76deg,
+    #00ff00 8.86%,
+    rgba(0, 153, 0, 0) 91.14%
+  );
+  z-index: 0;
+  padding: 1.27px;
+  box-sizing: border-box;
+  transition: background-position 0.4s ease;
+}
+
+.retry-btn-Overlay {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+  z-index: 1;
+}
+.retry-btn-Wrapper:hover .retry-btn-Border {
+  animation: glow 1.5s infinite alternate;
+  background-size: 200% 200%;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  /* Hide scrollbar in WebKit browsers (Chrome, Safari, etc.) */
-  .scroll-container::-webkit-scrollbar {
-    display: none;
+  100% {
+    background-position: 100% 50%;
   }
-  
+}
+
+.retry-btn-Overlay {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 55.1px;
+  background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dropdown-options {
+  position: absolute;
+  background-color: #000; 
+  width: 100%;
+  border: 1px solid white;
+  border-radius: 0.5rem;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #333; 
+}

@@ -52,6 +52,8 @@
 
 .upcoming-popup {
     border: 1px solid #6D6D6D;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .close-icon {
