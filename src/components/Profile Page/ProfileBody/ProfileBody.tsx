@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UploadedArtsGrid } from "./UploadedArtsGrid/UploadedArtsGrid";
 
 const tabs = [
@@ -9,6 +9,11 @@ const tabs = [
 
 export const ProfileBody: React.FC = () => {
     const [activeTab, setActiveTab] = useState("uploads");
+    const [rendered, setRendered] = useState(false);
+
+    useEffect(() => {
+        setRendered(!rendered);
+    }, [activeTab])
 
     return (
         <div className="profile-body w-full xl:px-[7rem] lg:px-[3rem] md:px-[2rem] px-3 mt-10">
@@ -23,7 +28,7 @@ export const ProfileBody: React.FC = () => {
                     </div>
                 ))}
             </div>
-            <UploadedArtsGrid />
+            <UploadedArtsGrid rendered={rendered} />
         </div>
     )
 }
