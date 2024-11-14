@@ -89,7 +89,7 @@ export default async function handler(
             .limit(limit)
             .exec();
         
-            return res.status(200).json({arts, totalDocuments, totalPages });
+            return res.status(200).json({arts,totalPages,totalDocuments });
         }
         }
       } catch (error: any) {

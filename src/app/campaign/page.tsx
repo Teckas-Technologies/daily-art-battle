@@ -8,6 +8,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { setAuthToken } from "../../../utils/authToken";
 import { GFX_CAMPAIGNID } from "@/config/constants";
+import { MobileNav } from "@/components/MobileNav/MobileNav";
 
 const page = () => {
   const { data: session, status } = useSession();
@@ -30,6 +31,7 @@ const page = () => {
       <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <CampaignBanner />
       <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
     </div>
   );
 };

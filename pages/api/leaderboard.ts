@@ -26,7 +26,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 firstName: user.firstName,
                 lastName: user.lastName,
                 gfxvsCoins: user.gfxCoin,
-                rank: index + 1 
+                rank: skip + index + 1 
             }));
         res.status(200).json({data:leaders,totalDocuments,totalPages});
         }else if(queryType=="collectors"){
@@ -73,7 +73,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                       partitionBy: null, // Apply to all documents as a single partition
                       sortBy: { uploadedArtCount: -1 },
                       output: {
-                        rank: { $rank: {} } // Assigns rank based on sort order
+                        rank: { $documentNumber: {} } // Assign unique ranks sequentially
                       }
                     }
                 }
@@ -88,60 +88,93 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 })
               );
               res.status(200).json({data:leaderboardWithRewards,totalDocuments,totalPages});
-        }else if(queryType=="creators"){
-            const skip = limit * (page === 1 ? 0 : page - 1);
-            const totalDocumentsResult = await RaffleTicket.aggregate([
-              { $group: { _id: "$email" } },
-              { $count: "total" }
-          ]);
-          const totalDocuments = totalDocumentsResult[0]?.total || 0;
-          const totalPages = Math.ceil(totalDocuments / limit);
-            const leaderboard = await ArtTable.aggregate([
-                {
-                  $group: {
-                    _id: "$email",              
-                    uploadedArtCount: { $sum: 1 }
-                  }
-                },
-                {
-                  $lookup: {
-                    from: "usertables",        
-                    localField: "_id",          
-                    foreignField: "email",      
-                    as: "userDetails"
-                  }
-                },
-                {
-                  $unwind: "$userDetails"       
-                },
-                {
-                  $project: {
-                    email: "$_id",
-                    firstName: "$userDetails.firstName",
-                    lastName: "$userDetails.lastName",
-                    uploadedArtCount: 1
-                  }
-                },
-                {
-                  $sort: { uploadedArtCount: -1 } 
-                },
-                {
-                    $setWindowFields: {
-                      partitionBy: null, // Apply to all documents as a single partition
-                      sortBy: { uploadedArtCount: -1 },
-                      output: {
-                        rank: { $rank: {} } // Assigns rank based on sort order
+            }else if (queryType == "creators") {
+              const skip = limit * (page === 1 ? 0 : page - 1);
+          
+              // Fetch the total number of documents
+              const totalDocumentsResult = await ArtTable.aggregate([
+                  { $group: { _id: "$email" } },
+                  { $count: "total" }
+              ]);
+              const totalDocuments = totalDocumentsResult[0]?.total || 0;
+              const totalPages = Math.ceil(totalDocuments / limit);
+          
+              // Fetch leaderboard data with the count of arts involved in battles
+              const leaderboard = await ArtTable.aggregate([
+                  // Group by email to count the total uploaded arts
+                  {
+                      $group: {
+                          _id: "$email",
+                          uploadedArtCount: { $sum: 1 }
                       }
-                    }
-                }
-              ]).skip(skip).limit(limit);
-
-              res.status(200).json({data:leaderboard,totalDocuments,totalPages});
-            
+                  },
+                  // Lookup user details from the UserTable
+                  {
+                      $lookup: {
+                          from: "usertables",
+                          localField: "_id",
+                          foreignField: "email",
+                          as: "userDetails"
+                      }
+                  },
+                  { $unwind: "$userDetails" },
+          
+                  // Lookup the number of arts that have participated in battles
+                  {
+                      $lookup: {
+                          from: "arttables",
+                          let: { email: "$_id" },
+                          pipeline: [
+                              {
+                                  $match: {
+                                      $expr: { $eq: ["$email", "$$email"] },
+                                      isStartedBattle: true,
+                                      isCompleted: true
+                                  }
+                              },
+                              { $count: "battleArtCount" }
+                          ],
+                          as: "battleData"
+                      }
+                  },
+                  {
+                      $addFields: {
+                          battleArtCount: { $ifNull: [{ $arrayElemAt: ["$battleData.battleArtCount", 0] }, 0] }
+                      }
+                  },
+                  // Project the necessary fields
+                  {
+                      $project: {
+                          email: "$_id",
+                          firstName: "$userDetails.firstName",
+                          lastName: "$userDetails.lastName",
+                          uploadedArtCount: 1,
+                          battleArtCount: 1
+                      }
+                  },
+                  // Sort by the number of uploaded arts
+                  { $sort: { uploadedArtCount: -1 } },
+          
+                  // Assign a rank based on the uploaded art count
+                  {
+                      $setWindowFields: {
+                          partitionBy: null,
+                          sortBy: { uploadedArtCount: -1 },
+                          output: {
+                              rank: { $documentNumber: {} }
+                          }
+                      }
+                  }
+              ])
+              .skip(skip)
+              .limit(limit);
+          
+              res.status(200).json({ data: leaderboard, totalDocuments, totalPages });          
         }
         }   
         catch(error:any){
-            res.status(500).json({error});
+          console.log(error.message)
+            res.status(500).json({error:error.message });
         }
     }
 } 
@@ -163,5 +196,5 @@ async function getUserRewards(owner: string) {
         },
         network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
       });
-      return {participationCount,rareNftCount};
+      return {participationCount : participationCount.data.mb_views_nft_tokens_aggregate.aggregate.count,rareNftCount: rareNftCount.data.mb_views_nft_tokens_aggregate.aggregate.count};
   }

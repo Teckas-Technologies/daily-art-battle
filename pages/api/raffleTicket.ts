@@ -139,6 +139,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     const limit = parseInt(req.query.limit as string) || 9;
                     if(queryFilter=="voteAsc"){
                         const skip = (page - 1) * limit;
+                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalPages = Math.ceil(totalDocuments / limit);
                         const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({raffleCount:1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
@@ -149,9 +151,11 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                 colouredArtReference : art ? art.colouredArt : null,
                             };
                     }));
-                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }else if(queryFilter=="voteDsc"){
                         const skip = (page - 1) * limit;
+                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalPages = Math.ceil(totalDocuments / limit);
                         const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({raffleCount:-1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
@@ -162,9 +166,11 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                 colouredArtReference : art ? art.colouredArt : null,
                             };
                     }));
-                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }else if(queryFilter=="dateAsc"){
                         const skip = (page - 1) * limit;
+                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalPages = Math.ceil(totalDocuments / limit);
                         const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({createdAt:1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
@@ -175,9 +181,11 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                 colouredArtReference : art ? art.colouredArt : null,
                             };
                     }));
-                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }else if(queryFilter=="dateDsc"){
                         const skip = (page - 1) * limit;
+                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalPages = Math.ceil(totalDocuments / limit);
                         const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({createdAt:-1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
@@ -188,7 +196,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                 colouredArtReference : art ? art.colouredArt : null,
                             };
                     }));
-                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls });
+                    res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }
                //Here user can search arts based on art name
                 }else if(queryType=="search"){
@@ -198,7 +206,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         const page = parseInt(req.query.page as string) || 1;
                         const limit = parseInt(req.query.limit as string) || 9;
                         const skip = limit * (page === 1 ? 0 : page - 1);
-
+                    
                         const raffleEntries = await RaffleTicket.aggregate([
                             {
                               $lookup: {
@@ -232,8 +240,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             }
                           ]).skip(skip)
                           .limit(limit);
-                        
-                          res.status(200).json({raffleEntries});
+                          const totalDocuments = raffleEntries[0]?.total || 0;
+                         const totalPages = Math.ceil(totalDocuments / limit);
+                          res.status(200).json({raffleEntries,totalPages,totalDocuments});
                     }
                 }else{
                 const { artId,campaignId} = req.query;

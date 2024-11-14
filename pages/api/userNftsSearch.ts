@@ -5,6 +5,7 @@ import User from "../../model/User";
 import { graphQLService } from "@/data/graphqlService";
 import { SEARCH_ARTNAME } from "@/data/queries/searchByArtName.graph";
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
+import { SEARCH_TOTAL } from "@/data/queries/searchByArtNameCount";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
@@ -21,6 +22,17 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   res.status(400).json({error:"user not found"});
                 }
                 const owner = user.nearAddress
+
+                const totalDocuments = await graphQLService({
+                  query: SEARCH_TOTAL,
+                  variables: {
+                    nft_contract_ids:[SPECIAL_WINNER_CONTRACT],
+                    owner,
+                    title,
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+
                 const result = await graphQLService({
                     query: SEARCH_ARTNAME,
                     variables: {
@@ -32,13 +44,28 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     },
                     network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
                   });
-                  return res.status(200).json(result);
+                 
+        
+                  return res.status(200).json({result,totalDocuments});
                 }else{
                     const user = await User.findOne({email});
                     if(!user){
                       res.status(400).json({error:"user not found"});
                     }
+
+                    
                     const owner = user.nearAddress;
+
+                    const totalDocuments = await graphQLService({
+                      query: SEARCH_TOTAL,
+                      variables: {
+                        nft_contract_ids:[ART_BATTLE_CONTRACT],
+                        owner,
+                        title,
+                      },
+                      network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                    });
+          
                     const result = await graphQLService({
                         query: SEARCH_ARTNAME,
                         variables: {
@@ -50,7 +77,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         },
                         network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
                       });
-                      return res.status(200).json(result);
+
+                      return res.status(200).json({result,totalDocuments});
                 }
               } catch (error:any) {
                 res.status(400).json({error:error.message});

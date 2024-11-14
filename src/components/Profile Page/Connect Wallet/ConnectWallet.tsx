@@ -2,19 +2,31 @@
 import React, { useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import "./ConnectWallet.css";
+import useDailyCheckin from "@/hooks/dailyCheckinHook";
 const ConnectWallet = () => {
   const [streak, setStreak] = useState(Array(7).fill(false));
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [isClaimed, setIsClaimed] = useState(false);
+  const { dailyCheckin, loading, error } = useDailyCheckin();
+  const toggleDay = async (index: number) => {
+    if (isClaimed) return; 
 
-  const toggleDay = (index: number) => {
     setStreak((prev) =>
       prev.map((claimed, i) => (i === index ? !claimed : claimed))
     );
     setCurrentIndex(index);
+
+    const result = await dailyCheckin();
+    console.log(">>>>>", result);
+
+    if (result) {
+      console.log("Check-in successful:", result);
+      setIsClaimed(true);
+    }
   };
   return (
     <div
-      className="flex w-full flex-col justify-center items-center text-white p-6 rounded-xl gap-[30px] mt-[20px] mb-[160px] md:flex-row lg:gap-[50px] lg:px-8 lg:py-10 xl:gap-9 xl:px-8 xl:py-10 xxl:gap-9 xxl:px-8 xxl:py-10"
+      className="flex w-full flex-col justify-center items-center text-white p-6 rounded-xl gap-[30px] mt-[20px] mb-[20px] md:flex-row lg:gap-[50px] lg:px-8 lg:py-10 xl:gap-9 xl:px-8 xl:py-10 xxl:gap-9 xxl:px-8 xxl:py-10"
       style={{ border: "1px solid #383838" }}
     >
       <div className="flex items-center justify-between flex-col gap-[80px] lg:items-end md:items-end xl:items-end xxl:items-end">
@@ -38,7 +50,7 @@ const ConnectWallet = () => {
         {/* <div className="flex text-white lg:justify-center items-center">
           <div className="flex lg: justify-center items-center text-white">
             <div className="flex lg: justify-center items-center text-white"> */}
-        <div className="relative flex flex-row items-center justify-center gap-[5px] md:gap-[50px] lg:gap-[20px] xl:gap-[50px] xxl:gap-[65px]">
+        <div className="relative flex flex-row items-center justify-center gap-[3px] md:gap-[50px] lg:gap-[20px] xl:gap-[50px] xxl:gap-[65px]">
           <div className="absolute lg: top-2 left-0 right-0 h-0.5 bg-[#00FF00] z-0"></div>
 
           {streak.map((claimed, index) => (
@@ -52,10 +64,17 @@ const ConnectWallet = () => {
                     ? "bg-[#000000] text-black"
                     : "bg-[#000000] text-green-500"
                 } cursor-pointer`}
-                style={{ borderColor: "#00FF00" }}
+                style={{ borderColor: "#00FF00" ,
+                  cursor: isClaimed ? "not-allowed" : "pointer",
+                }}
                 onClick={() => toggleDay(index)}
               >
-                {claimed && <InlineSVG src="/icons/tick-green.svg" className="w-2 h-2 lg:w-3 h-3 md:w-3 h-3 xl:w-3 h-3 xxl:w-3 h-3"/>}
+                {claimed && (
+                  <InlineSVG
+                    src="/icons/tick-green.svg"
+                    className="w-2 h-2 lg:w-3 h-3 md:w-3 h-3 xl:w-3 h-3 xxl:w-3 h-3"
+                  />
+                )}
                 {currentIndex === index && claimed && (
                   <img
                     src="/images/logo.png"
@@ -63,10 +82,12 @@ const ConnectWallet = () => {
                   />
                 )}
               </div>
-              <div className={`flex mt-2 px-[10px] py-[2px] items-center justify-center rounded-sm text-[10px] md:hidden md:px-4 md:py-[3px] ${
+              <div
+                className={`flex mt-2 px-[10px] py-[px] items-center justify-center rounded-sm text-[10px] md:hidden md:px-4 md:py-[3px] ${
                   claimed ? "bg-[#00FF00] text-black" : "bg-gray-400 text-white"
                 }`}
-                onClick={() => toggleDay(index)}>
+                onClick={() => toggleDay(index)}
+              >
                 <span className="flex text-[#ffffff] flex-row items-center gap-[2px] lg:text-xs md:text-xs xl:text-sm xxl:text-lg">
                   <InlineSVG
                     src="/icons/coin.svg"
@@ -114,7 +135,7 @@ const ConnectWallet = () => {
             <span className="text-[#D3D3D3] text-sm md:text-sm lg:mt-4 text-sm xl:text-sm">
               7 Day Voting Streak
             </span>
-            <button className="bg-[#AAAAAA] text-[#ffffff] w-[100%] rounded-full mt-3 text-sm py-2 px-10 lg:px-10 lg:py-2  xl:px-10 xl:py-2  xxl:px-10 xxl:py-3 ">
+            <button className="bg-[#AAAAAA] text-[#ffffff] w-[100%] rounded-full mt-3 text-sm py-2 px-10 lg:px-10 lg:py-2  xl:px-10 xl:py-2  xxl:px-10 xxl:py-3 " disabled={isClaimed}>
               Claim
             </button>
           </div>
