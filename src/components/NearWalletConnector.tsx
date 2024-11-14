@@ -1,16 +1,15 @@
 "use client";
-import { useState } from "react";
-import { useMbWallet } from "@mintbase-js/react";
+import { useContext, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { ADMIN_ADDRESS } from "@/config/constants";
+import { NearContext } from "@/wallet/WalletSelector";
 
 export const NearWalletConnector: React.FC = () => {
-  const { isConnected, selector, connect, activeAccountId } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const handleSignout = async () => {
-    const wallet = await selector.wallet();
-    return wallet.signOut();
+    return wallet?.signOut();
   };
   console.log(ADMIN_ADDRESS);
   const toggleDropdown = () => {
@@ -18,7 +17,7 @@ export const NearWalletConnector: React.FC = () => {
   };
 
   const handleSignIn = async () => {
-    return connect();
+    return await wallet?.signIn();
   };
 
   const handleRoute = () => {
@@ -62,10 +61,10 @@ export const NearWalletConnector: React.FC = () => {
 
       
      
-      {isConnected ? (
+      {signedAccountId ? (
         <div className="flex flex-row justify-center items-center hover-trigger">
           <p className="px-2 items-center text-xs sm:text-sm md:text-base">
-            {activeAccountId}
+            {signedAccountId}
           </p>
           <img
             onClick={handleSignout}
@@ -74,7 +73,7 @@ export const NearWalletConnector: React.FC = () => {
             alt="Disconnect"
             className="w-10 h-10 cursor-pointer"
           />
-          {activeAccountId ===ADMIN_ADDRESS && (
+          {signedAccountId ===ADMIN_ADDRESS && (
             <label
               onClick={handleRoute}
               className="ml-2 px-2 bg-green-600 border hover:bg-green-500 rounded-lg cursor-pointer"

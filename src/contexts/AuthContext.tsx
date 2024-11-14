@@ -2,9 +2,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useSendWalletData } from "@/hooks/saveUserHook";
-import { useMbWallet } from "@mintbase-js/react";
 import { UserDetails } from '@/types/types';
 import { setAuthToken } from '../../utils/authToken';
+import { NearContext } from '@/wallet/WalletSelector';
 
 interface AuthContextType {
     user: UserDetails | null;
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [connected, setConnected] = useState(false);
     const { data: session, status } = useSession();
     const { sendWalletData } = useSendWalletData();
-    const { activeAccountId } = useMbWallet();
+    const { wallet, signedAccountId } = useContext(NearContext);
 
     useEffect(() => {
         // if (status === 'unauthenticated') {
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
 
         handleWalletData();
-    }, [session, activeAccountId]);
+    }, [session, signedAccountId]);
 
     const signInUser = () => {
         signIn('azure-ad-b2c', { callbackUrl: '/' });

@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import './Card.css';
 import InlineSVG from 'react-inlinesvg';
 import { ArtData, useFetchArtById, useHideArt } from '@/hooks/artHooks';
-import { useArtsRaffleCount } from '@/hooks/useRaffleTickets';
-import { useMbWallet } from '@mintbase-js/react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface CardProps {
@@ -19,46 +17,12 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtById, campaignId, success, overlayArt, adminEmail }) => {
-
-    const { activeAccountId } = useMbWallet();
-    // const { raffleCount, fetchArtUserRaffleCount } = useArtsRaffleCount();
-    // const [myTickets, setMyTickets] = useState<number>();
     const [artNew, setArtNew] = useState<ArtData>();
     const { fetchArtById } = useFetchArtById();
     const { user } = useAuth();
     let userDetails = user;
     let userMail = userDetails?.user?.email;
     const { hideSuccess, hideArt } = useHideArt();
-    // console.log("Success ", success);
-
-    // const fetchArtUserticketss = async () => {
-    //     // if (art && campaignId) {
-    //     console.log("Art:", art)
-    //     // await new Promise(resolve => setTimeout(resolve, 100));
-    //     const tickets = await fetchArtUserRaffleCount(art?._id as string, campaignId);
-    //     setMyTickets(tickets);
-    //     return tickets;
-    //     console.log("My tickets setted: ", myTickets, tickets);
-    //     // }
-    // };
-
-    // useEffect(() => {
-    //     setMyTickets(myTicketsNew);
-    // }, [myTickets, myTicketsNew])
-
-    // useEffect(() => {
-    //     fetchArtUserticketss(art);
-    // }, [activeAccountId, fetchArtUserRaffleCount, campaignId, success, overlayArt]);
-
-    // useEffect(() => {
-    //     if (overlayArt && overlayArt._id === art._id && success) {
-    //         const ferchTickets = async () => {
-    //             const tickets = await fetchArtUserticketss();
-    //             setMyTickets(tickets)
-    //         }
-    //         ferchTickets();
-    //     }
-    // }, [success])
 
     useEffect(() => {
         if (overlayArt && art && overlayArt._id === art._id && success) {

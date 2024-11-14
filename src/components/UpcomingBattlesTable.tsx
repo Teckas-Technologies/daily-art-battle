@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useFetchArts, ArtData, useFetchArtById } from "../hooks/artHooks";
-import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import Overlay from "./Overlay";
 // import { useVoting, Vote } from "../hooks/useRaffleTickets";
@@ -18,7 +17,6 @@ const UpcomingArtTable: React.FC<{
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const [refresh, setRefresh] = useState(false);
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
-  const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("dateDsc");
 

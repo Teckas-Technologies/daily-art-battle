@@ -16,7 +16,7 @@ export const ProfileBody: React.FC = () => {
     }, [activeTab])
 
     return (
-        <div className="profile-body w-full xl:px-[7rem] lg:px-[3rem] md:px-[2rem] px-3 mt-10">
+        <div className="profile-body w-full mt-10">
             <div className="tabs w-full max-w-[800px] flex items-center justify-center gap-4">
                 {tabs.map((tab) => (
                     <div

@@ -22,7 +22,6 @@ import { useSession, signIn } from "next-auth/react";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
-import { useMbWallet } from "@mintbase-js/react";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { setAuthToken } from "../../../utils/authToken";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
@@ -33,7 +32,6 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [editCampaign, setEditCampaign] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
-  const { activeAccountId } = useMbWallet();
   const { sendWalletData } = useSendWalletData();
   const [showAllParticipants, setShowAllParticipants] = useState<
     boolean | null

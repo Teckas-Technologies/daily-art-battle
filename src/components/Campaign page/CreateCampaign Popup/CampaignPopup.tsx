@@ -3,7 +3,6 @@ import "./CampaignPopup.css";
 import InlineSVG from "react-inlinesvg";
 import { CAMPAIGN_CREATION_COST, SPECIAL_WINNER } from "@/config/points";
 import { useSendWalletData } from "@/hooks/saveUserHook";
-import { useMbWallet } from "@mintbase-js/react";
 import useCampaigns from "@/hooks/CampaignHook";
 
 interface CampaignCreationPopupProps {
@@ -33,8 +32,6 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   setConnectionError
 }) => {
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
-
-  const { activeAccountId, isConnected } = useMbWallet();
   const { userDetails, sendWalletData, sufficientBalance } =
     useSendWalletData();
   useEffect(() => {

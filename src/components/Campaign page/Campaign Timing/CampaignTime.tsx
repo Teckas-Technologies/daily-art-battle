@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CampaignTime.css";
 import { CampaignPageData } from "@/hooks/CampaignHook";
-import { useMbWallet } from "@mintbase-js/react";
 import EditCampaignPopup from "../Edit Campaign Details/EditCampaign";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
+import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface CampaignTimeProps {
@@ -23,7 +23,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
     minutes: 0,
     seconds: 0,
   });
-  const { activeAccountId, isConnected } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);

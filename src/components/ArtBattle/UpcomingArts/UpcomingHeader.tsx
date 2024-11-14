@@ -1,11 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useFetchArts, ArtData, useFetchArtById } from "@/hooks/artHooks";
-import { useMbWallet } from "@mintbase-js/react";
-import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/navigation";
+import { useFetchArts, ArtData } from "@/hooks/artHooks";
 import "./UpcomingHeader.css";
 const UpcomingHeader: React.FC<{
   toggleUploadModal: () => void;
@@ -16,7 +11,6 @@ const UpcomingHeader: React.FC<{
   const [upcomingArts, setUpcomingArts] = useState<ArtData[]>([]);
   const [refresh, setRefresh] = useState(false);
   const { arts, totalPage, error, fetchMoreArts } = useFetchArts();
-  const { isConnected } = useMbWallet();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("dateDsc");
 
@@ -79,7 +73,6 @@ const UpcomingHeader: React.FC<{
 
           <div className="uploadButtonWrapper">
             <button onClick={toggleUploadModal}
-              // disabled={!isConnected}
               className="uploadButton px-4 md:mr-5 py-2 vote-btn text-black bg-white hover:bg-gray-300 rounded" 
               >Upload your Art</button>
 
