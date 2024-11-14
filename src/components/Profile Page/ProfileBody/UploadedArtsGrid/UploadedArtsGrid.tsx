@@ -53,12 +53,12 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
                 setHasNext(false);
             }
         }
-        if (!searchQuery) {
+        if (!searchQuery && arts) {
             setUserArts(arts);
             setTotal(totalPage);
             setEmpty("");
         }
-        if (searchQuery) {
+        if (searchQuery && searchedArts) {
             setUserArts(searchedArts);
             setTotal(totalSearchPage);
             setEmpty("");
