@@ -3,7 +3,6 @@ import CampaignSuccess from "@/components/Campaign page/Campaign Success/Campaig
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { Header } from "@/components/Header/Header";
 import CoinPurchasePopup from "@/components/Profile Page/BuyCoins Popup/BuyCoins";
-import ConnectWallet from "@/components/Profile Page/Connect Wallet/ConnectWallet";
 import EditProfilePopup from "@/components/Profile Page/EditProfile Popup/EditProfilePopup";
 import ProfilePath from "@/components/Profile Page/Profile Path/ProfilePath";
 import { ProfileBody } from "@/components/Profile Page/ProfileBody/ProfileBody";
@@ -12,6 +11,7 @@ import ProfileHeader from "@/components/Profile Page/ProfileHeader/ProfileHeader
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import React, { useState } from "react";
 import InlineSVG from "react-inlinesvg";
+import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
 
 const page = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -50,7 +50,7 @@ const page = () => {
       <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <ProfilePath />
       <ProfileHeader onEditClick={handleEditClick} handleCoinClick={handleCoinClick}/>
-      <ConnectWallet />
+      <DailyCheckin/>
       <ProfileBody />
       <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
     <MobileNav

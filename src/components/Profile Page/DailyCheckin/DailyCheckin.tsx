@@ -1,15 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
-import "./ConnectWallet.css";
+import "./DailyCheckin.css";
 import useDailyCheckin from "@/hooks/dailyCheckinHook";
-const ConnectWallet = () => {
+import { useAuth } from "@/contexts/AuthContext";
+import Toast from "@/components/Toast";
+const DailyCheckin = () => {
   const [streak, setStreak] = useState(Array(7).fill(false));
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [isClaimed, setIsClaimed] = useState(false);
-  const { dailyCheckin, loading, error } = useDailyCheckin();
+  const [toast, setToast] = useState(false); 
+  const [toastMessage, setToastMessage] = useState(""); 
+  const [successToast, setSuccessToast] = useState(""); 
+  const {
+    dailyCheckin,
+    weeklyCheckin,
+    fetchDailyCheckin,
+    loading,
+    error,
+    checkinData,
+    streakDays,
+    claimDate,
+  } = useDailyCheckin();
+  const { user } = useAuth();
+  let userDetails = user;
   const toggleDay = async (index: number) => {
-    if (isClaimed) return; 
+    if (isClaimed || isClaimedForToday()) return;
 
     setStreak((prev) =>
       prev.map((claimed, i) => (i === index ? !claimed : claimed))
@@ -22,6 +38,52 @@ const ConnectWallet = () => {
     if (result) {
       console.log("Check-in successful:", result);
       setIsClaimed(true);
+    }
+  };
+
+  useEffect(() => {
+    const fetchStreakData = async () => {
+      const data = await fetchDailyCheckin();
+      console.log("data .......", data);
+
+      if (data) {
+        const streakDays = data.data.streakDays || 0;
+        console.log("days", streakDays);
+
+        const updatedStreak = Array(7).fill(false);
+
+        for (let i = 0; i < streakDays; i++) {
+          updatedStreak[i] = true;
+        }
+
+        setStreak(updatedStreak);
+        if (streakDays === 7) {
+          setCurrentIndex(6);
+        } else {
+          setCurrentIndex(streakDays - 1);
+        }
+      }
+    };
+
+    fetchStreakData();
+  }, [userDetails, streakDays, claimDate]);
+  const isClaimedForToday = () => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    const claimDateString = claimDate?.split("T")[0];
+    console.log("claim Date", claimDateString);
+
+    return currentDate === claimDateString;
+  };
+  const handleWeeklyClaim = async () => {
+    if (streakDays === 7 && !isClaimed) {
+      const result = await weeklyCheckin();
+      console.log("Weekly Check-in Result:", result);
+      if (result) {
+        setIsClaimed(true);
+        setToast(true);
+        setToastMessage("Claimed 7-day streak reward!");
+        setSuccessToast("yes");
+      }
     }
   };
   return (
@@ -43,7 +105,7 @@ const ConnectWallet = () => {
             Current Streak
           </span>
           <p className="font-semibold text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
-            2 Days
+          {streak.filter((day) => day).length} Days
           </p>
         </div>
 
@@ -64,8 +126,9 @@ const ConnectWallet = () => {
                     ? "bg-[#000000] text-black"
                     : "bg-[#000000] text-green-500"
                 } cursor-pointer`}
-                style={{ borderColor: "#00FF00" ,
-                  cursor: isClaimed ? "not-allowed" : "pointer",
+                style={{
+                  borderColor: "#00FF00",
+                  cursor: isClaimedForToday() ? "not-allowed" : "pointer",
                 }}
                 onClick={() => toggleDay(index)}
               >
@@ -108,6 +171,7 @@ const ConnectWallet = () => {
                   claimed ? "bg-[#00FF00] text-black" : "bg-gray-400 text-white"
                 }`}
                 onClick={() => toggleDay(index)}
+                disabled={isClaimedForToday()}
               >
                 Claim
               </button>
@@ -135,14 +199,29 @@ const ConnectWallet = () => {
             <span className="text-[#D3D3D3] text-sm md:text-sm lg:mt-4 text-sm xl:text-sm">
               7 Day Voting Streak
             </span>
-            <button className="bg-[#AAAAAA] text-[#ffffff] w-[100%] rounded-full mt-3 text-sm py-2 px-10 lg:px-10 lg:py-2  xl:px-10 xl:py-2  xxl:px-10 xxl:py-3 " disabled={isClaimed}>
-              Claim
+            <button
+              className={`text-[#ffffff] w-[100%] rounded-full mt-3 text-sm py-2 px-10 lg:px-10 lg:py-2  xl:px-10 xl:py-2  xxl:px-10 xxl:py-3 ${
+                streakDays === 7 && !isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
+              }`}
+              onClick={handleWeeklyClaim}
+            >
+              {isClaimed ? "Claimed" : "Claim"}
             </button>
           </div>
         </div>
       </div>
+      {toast && toastMessage && <div className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden" style={{ zIndex: 55 }}>
+        <div className="relative w-full h-full">
+          <Toast
+            success={successToast === "yes" ? true : false}
+            message={toastMessage}
+            onClose={() => { setToast(false); setToastMessage(""); setSuccessToast(""); }}
+          />
+        </div>
+      </div>
+      }
     </div>
   );
 };
 
-export default ConnectWallet;
+export default DailyCheckin;
