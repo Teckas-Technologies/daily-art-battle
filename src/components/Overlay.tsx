@@ -1,10 +1,10 @@
 "use client"
-import React, { useState,useRef, useEffect } from 'react';
+import React, { useState,useRef, useEffect, useContext } from 'react';
 import { ArtData } from "../hooks/artHooks";
-import { useMbWallet } from "@mintbase-js/react";
 import {Vote } from "../hooks/useRaffleTickets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { NearContext } from '@/wallet/WalletSelector';
 interface OverlayProps {
     art: ArtData;
     onClose: () => void;
@@ -15,7 +15,7 @@ export const Overlay: React.FC<OverlayProps> = ({ art, onClose ,onVote ,votes}) 
     const overlayRef = useRef<HTMLDivElement>(null);
     const [url, setUrl] = useState('');
     const [message, setMessage] = useState('Check out this art and put your votes');
-    const { isConnected, selector, connect, activeAccountId } = useMbWallet();
+    const { wallet, signedAccountId } = useContext(NearContext);
 
     useEffect(() => {    
       function handleClickOutside(event: MouseEvent) {
@@ -60,7 +60,7 @@ export const Overlay: React.FC<OverlayProps> = ({ art, onClose ,onVote ,votes}) 
     ${
       votes.some(
         (vote) =>
-          vote.artId === art._id && vote.participantId === activeAccountId
+          vote.artId === art._id && vote.participantId === signedAccountId
       )
         ? "bg-green-800"
         : "bg-blue-700 hover:bg-blue-400"
@@ -70,7 +70,7 @@ export const Overlay: React.FC<OverlayProps> = ({ art, onClose ,onVote ,votes}) 
                   disabled={votes.some(
                     (vote) =>
                       vote.artId === art._id &&
-                      vote.participantId === activeAccountId
+                      vote.participantId === signedAccountId
                   )}
                 ><div className="flex items-center">
                 <FontAwesomeIcon

@@ -1,7 +1,6 @@
 "use client"
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent, useEffect, useContext } from 'react';
 import { uploadFile, uploadReference } from '@mintbase-js/storage';
-import { useMbWallet } from "@mintbase-js/react";
 import { useSaveData, ArtData } from "../hooks/artHooks";
 import { Button } from './ui/button';
 import { useFetchImage } from "../hooks/testImageHook";
@@ -9,6 +8,7 @@ import Badge from '../../public/images/badge.png';
 import { useFetchGeneratedImage } from "../hooks/generateImageHook";
 import Toast from './Toast'; 
 import campaign from '../../model/campaign';
+import { NearContext } from '@/wallet/WalletSelector';
 interface Artwork {
   name: string;
   file: File | null|undefined;
@@ -29,7 +29,7 @@ export const ArtworkUploadForm: React.FC<ArtworkUploadFormProps> = ({ onClose, o
   const [artworks, setArtworks] = useState<Artwork[]>(defaultArtworks);
   const [artTitle, setArtTitle] = useState("");
   const [uploading, setUploading] = useState(false);
-  const { isConnected, connect, activeAccountId } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const { saveData } = useSaveData();
   const [isFormValid, setIsFormValid] = useState(false);
   const {image,fetchImage} = useFetchImage();
@@ -160,14 +160,14 @@ useEffect(() => {
 
   const uploadArtWork = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!isConnected || !activeAccountId) {
-      connect();
+    if (!signedAccountId) {
+      await wallet?.signIn();
       return;
     }
     setUploading(true);
    
     try {
-      const artBattle: Partial<ArtData> = { artistId: activeAccountId };
+      const artBattle: Partial<ArtData> = { artistId: signedAccountId };
       if (artworks.length < 1) {
         alert("Please Upload All files");
         return;

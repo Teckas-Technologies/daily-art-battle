@@ -1,8 +1,8 @@
 import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import ArtTable from '../model/ArtTable';
-import { serverMint } from "./serverMint";
-import { participationMint,connectAccount } from "./participationMint";
+// import { serverMint } from "./serverMint";
+// import { participationMint,connectAccount } from "./participationMint";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
 import {  execute,  transfer,TransferArgs  } from "@mintbase-js/sdk"

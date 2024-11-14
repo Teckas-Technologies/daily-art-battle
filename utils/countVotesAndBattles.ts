@@ -2,7 +2,7 @@ import { connectToDatabase } from "./mongoose";
 import Battle from '../model/Battle';
 import ArtTable from '../model/ArtTable';
 import Voting from '../model/Voting';
-import { serverMint } from "./serverMint";
+// import { serverMint } from "./serverMint";
 
 export const countVotesAndUpdateBattle = async (): Promise<void> => {
     await connectToDatabase();

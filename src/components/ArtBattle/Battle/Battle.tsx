@@ -3,7 +3,6 @@ import InlineSVG from "react-inlinesvg";
 import { Slider } from "./Slider/Slider";
 import { useEffect, useState } from "react";
 import { Spinner } from "./Spinner/Spinner";
-import { useMbWallet } from "@mintbase-js/react";
 import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useRouter } from "next/navigation";
 import { GFX_CAMPAIGNID } from "@/config/constants";
@@ -44,7 +43,6 @@ export const Battle: React.FC<Props> = ({
   welcomeText,
   themeTitle,
 }) => {
-  const { isConnected, connect, activeAccountId } = useMbWallet();
   const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
   const router = useRouter();
 
@@ -75,23 +73,6 @@ export const Battle: React.FC<Props> = ({
   const [artARaffleTickets, setArtARaffleTickets] = useState(0);
   const [artBRaffleTickets, setArtBRaffleTickets] = useState(0);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (todayBattle && activeAccountId) {
-  //       const res = await fetchVotes(
-  //         activeAccountId,
-  //         todayBattle._id,
-  //         campaignId
-  //       );
-  //       if (res) {
-  //         setVoterFor(res.votedFor);
-  //         setSuccess(true);
-  //       }
-  //     }
-  //   };
-  //   fetchData();
-  // }, [todayBattle, fetchVotes, refresh]);
-
   useEffect(() => {
     console.log(campaignId);
 
@@ -107,17 +88,7 @@ export const Battle: React.FC<Props> = ({
     return () => clearTimeout(timeoutId);
   }, [campaignId]);
 
-  // useEffect(() => {
-  //   if (battle) {
-  //     // console.log(battle);
-  //     setSkeletonLoading(false);
-  //   }
-  // }, [battle]);
-
   useEffect(() => {
-    // if (!battle && todayBattle) {
-    //   setSkeletonLoading(false);
-    // }
     if (todayBattle) {
       const endTime = new Date(todayBattle.endTime).getTime();
       const now = new Date().getTime();

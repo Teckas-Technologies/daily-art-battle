@@ -1,13 +1,14 @@
-"use client"
-import CreateCampaign from '@/components/Campaign page/Create Campaign/Createcampaign'
-import CampaignPopup from '@/components/Campaign page/CreateCampaign Popup/CampaignPopup';
-import Footer from '@/components/Footer/Footer'
-import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
-import { Header } from '@/components/Header/Header'
+"use client";
+import CreateCampaign from "@/components/Campaign page/Create Campaign/Createcampaign";
+import CampaignPopup from "@/components/Campaign page/CreateCampaign Popup/CampaignPopup";
+import Footer from "@/components/Footer/Footer";
+import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
+import { Header } from "@/components/Header/Header";
 import { useSession, signIn } from "next-auth/react";
-import React, { useEffect, useState } from 'react'
-import { setAuthToken } from '../../../../utils/authToken';
-import { GFX_CAMPAIGNID } from '@/config/constants';
+import React, { useEffect, useState } from "react";
+import { setAuthToken } from "../../../../utils/authToken";
+import { GFX_CAMPAIGNID } from "@/config/constants";
+import { MobileNav } from "@/components/MobileNav/MobileNav";
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -37,14 +38,37 @@ const page = () => {
 
   return (
     <div style={{ backgroundColor: "#000000" }}>
-      <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <CreateCampaign toggleCampaignModal={toggleCampaignModal} idToken={idToken}/>
+      <Header
+        openNav={openNav}
+        setOpenNav={setOpenNav}
+        fontColor={""}
+        campaignId={GFX_CAMPAIGNID}
+        toggleUploadModal={toggleUploadModal}
+        uploadSuccess={uploadSuccess}
+      />
+      <CreateCampaign
+        toggleCampaignModal={toggleCampaignModal}
+        idToken={idToken}
+      />
       {/* {showCampaignModal && (
         <CampaignPopup onClose={() => setShowCampaignModal(false)} />
       )} */}
-      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <FooterMenu
+        fontColor={""}
+        campaignId={GFX_CAMPAIGNID}
+        toggleUploadModal={toggleUploadModal}
+        uploadSuccess={uploadSuccess}
+      />
+      <MobileNav
+        openNav={openNav}
+        setOpenNav={setOpenNav}
+        fontColor={""}
+        campaignId={GFX_CAMPAIGNID}
+        toggleUploadModal={toggleUploadModal}
+        uploadSuccess={uploadSuccess}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

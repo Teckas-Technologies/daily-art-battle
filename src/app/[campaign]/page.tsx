@@ -22,9 +22,9 @@ import { useSession, signIn } from "next-auth/react";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
-import { useMbWallet } from "@mintbase-js/react";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { setAuthToken } from "../../../utils/authToken";
+import { MobileNav } from "@/components/MobileNav/MobileNav";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -32,7 +32,6 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [editCampaign, setEditCampaign] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
-  const { activeAccountId } = useMbWallet();
   const { sendWalletData } = useSendWalletData();
   const [showAllParticipants, setShowAllParticipants] = useState<
     boolean | null
@@ -48,9 +47,9 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
 
   useEffect(() => {
     if (toast) {
-      setTimeout(() => setToast(false), 3000)
+      setTimeout(() => setToast(false), 3000);
     }
-  }, [toast])
+  }, [toast]);
 
   // useEffect(() => {
   //   if (status === "unauthenticated") {
@@ -63,8 +62,14 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   //   }
   // }, [status, session]);
 
-  const { fetchCampaignByTitle, campaignStatus, campaign, loading, error, participants } =
-    useCampaigns();
+  const {
+    fetchCampaignByTitle,
+    campaignStatus,
+    campaign,
+    loading,
+    error,
+    participants,
+  } = useCampaigns();
 
   useEffect(() => {
     fetchCampaignByTitle(params.campaign);
@@ -131,7 +136,14 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     <div style={{ backgroundColor: "#000000", width: "100%", height: "100vh" }}>
       {campaignStatus === "current" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          <Header
+            openNav={openNav}
+            setOpenNav={setOpenNav}
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -193,12 +205,32 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             toggleUploadModal={toggleUploadModal}
           /> */}
 
-          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          <FooterMenu
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          <MobileNav
+            openNav={openNav}
+            setOpenNav={setOpenNav}
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
         </div>
       )}
       {campaignStatus === "upcoming" && (
         <div style={{ backgroundColor: "#000000" }}>
-          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          <Header
+            openNav={openNav}
+            setOpenNav={setOpenNav}
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -242,14 +274,34 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             showUploadModal={showUploadModal}
           />
 
-          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          <FooterMenu
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          <MobileNav
+            openNav={openNav}
+            setOpenNav={setOpenNav}
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
         </div>
       )}
       {campaignStatus === "completed" && (
         <div
           style={{ width: "100%", minHeight: "100vh", background: "#000000" }}
         >
-          <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          <Header
+            openNav={openNav}
+            setOpenNav={setOpenNav}
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
             <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
@@ -291,7 +343,20 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             />
           )} */}
 
-          <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+          <FooterMenu
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
+          <MobileNav
+            openNav={openNav}
+            setOpenNav={setOpenNav}
+            fontColor={""}
+            campaignId={GFX_CAMPAIGNID}
+            toggleUploadModal={toggleUploadModal}
+            uploadSuccess={uploadSuccess}
+          />
         </div>
       )}
     </div>

@@ -1,14 +1,14 @@
 "use client";
 import InlineSVG from "react-inlinesvg";
 import "./CampaignDetails.css";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
 import { useSession, signIn } from "next-auth/react";
 import DistributeRewardPopup from "../DistributeReward Popup/DistributePopup";
 import FewParticipantsPopup from "../DistributeReward Popup/FewParticipants";
 import AllParticipantpopup from "../DistributeReward Popup/AllParticipants";
-import { useMbWallet } from "@mintbase-js/react";
+import { NearContext } from "@/wallet/WalletSelector";
 
 interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
@@ -105,7 +105,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   );
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
-  const { activeAccountId, isConnected } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const scrollRef = useRef<HTMLDivElement>(null);
  
   const idToken = session?.idToken || "";
@@ -236,7 +236,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     }
     return pageNumbers;
   };
-  const isCreator = campaign?.creatorId === activeAccountId;
+  const isCreator = campaign?.creatorId === signedAccountId;
   return (
     <div className="campaign-details-container">
       <h1>Campaign Ended</h1>
