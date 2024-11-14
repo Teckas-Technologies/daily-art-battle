@@ -41,7 +41,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
                           }
                           const totalNear = coins / oneNearInGfxCoin;
 
-                          return res.status(200).json({ totalNear });                          
+                          return res.status(200).json({ totalNear });                           
                     }else if(queryFilter=="usdc"){
                         const oneUsdcInGfxCoin: number = GFXCOIN_PER_USDC;
                         const coins = Number(req.query.coins);
