@@ -105,6 +105,14 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             } catch (error:any) {
                 res.status(400).json({error:error.message});
             }
+        }else if(req.method=='GET'){
+          try {
+            await connectToDatabase();
+            const dailyCheckin = await DailyCheckin.findOne({email:email});
+            res.status(200).json({data:dailyCheckin});
+          } catch (error:any) {
+            res.status(400).json({error:error.message});
+          }
         }
     } catch (error:any) {
         res.status(400).json({error:error.message});
