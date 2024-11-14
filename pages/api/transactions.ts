@@ -10,8 +10,14 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
         //Here we will return thre transaction details of the user
         if(req.method=='GET'){
             try{
-            const transaction = await Transactions.find({email:email});
-            return res.status(200).json({transaction});
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 9;
+            const skip = limit * (page === 1 ? 0 : page - 1);
+            const totalDocuments = await Transactions.find({email:email});
+            const totalPages = Math.ceil(totalDocuments.length / limit);
+            const transaction = await Transactions.find({email:email}).skip(skip)
+            .limit(limit);
+            return res.status(200).json({transaction,totalPages,totalDocuments});
             }catch(error:any){
                 return res.status(400).json({error});
             }

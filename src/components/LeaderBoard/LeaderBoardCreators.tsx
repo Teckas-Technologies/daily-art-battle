@@ -7,7 +7,7 @@ import { fetchWithAuth, setAuthToken } from '../../../utils/authToken';
 import { useSession } from 'next-auth/react';
 import { LeaderBoardCollectResponse, LeaderBoardCreatorsResponse, LeaderBoardResponse, useLeaderBoard, useLeaderBoardCollect, useLeaderBoardCreator } from '@/hooks/leaderboard';
 
-const LeaderboardHolders = () => {
+const LeaderBoardCreators = () => {
   const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoardCreator();
   const [topThreeData, setTopThreeData] = useState<LeaderBoardCreatorsResponse[]>([]);
   const [leaderboardData, setLeaderBoardData] = useState<LeaderBoardCreatorsResponse[]>([]);
@@ -97,11 +97,11 @@ const LeaderboardHolders = () => {
   const getWidthClass = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'w-full sm:w-[400px] md:w-[450px] lg:w-[480.75px]';
+        return 'w-[396.26px] sm:w-[400px] md:w-[450px] lg:h-[92.25px] lg:w-[480.75px]';
       case 2:
-        return 'w-full sm:w-[320px] md:w-[360px] lg:w-[384.75px]';
+        return 'w-[320.12px] sm:w-[320px] md:w-[360px] lg:h-[92.25px] lg:w-[384.75px]';
       case 3:
-        return 'w-full sm:w-[300px] md:w-[320px] lg:w-[341.25px]';
+        return 'w-[283.93px] sm:w-[300px] md:w-[320px] lg:h-[92.25px] lg:w-[341.25px]';
       default:
         return 'w-full';
     }
@@ -111,71 +111,107 @@ const LeaderboardHolders = () => {
 
   return (
     <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
-      {/* Left Section - Leaderboard Table */}
-      <div style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}  ref={leaderboardRef} className="w-full min-w-[800px] rounded-[32px] bg-[#0f0f0f] mr-10 border-[0.5px] mb-20 border-white p-8 max-h-[70vh]">
-      <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 gap-x-10">
-      <span className="w-[100px] text-center">Rank</span>
-      <span className="w-[200px] text-center">Username</span>
-      <span className="w-[100px] text-center">Art Uploads</span>
-      <span className="w-[200px] text-center">Battle participated</span>
-      </div>
-    <div >
-    {topThreeData.map((user: LeaderBoardCreatorsResponse) => (
-          <div
-            key={user.rank}
-            className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
-          >
-            <div className="flex items-center ml-5 text-center gap-2 w-[100px]">
-               <span className="text-yellow-400"><InlineSVG
-               src={`/icons/${getMedalColor(user.rank)}.svg`}
-               className={`h-6 w-6`}  
-           /></span>  
-            </div>
-            <span className="w-[200px] text-center">{user.firstName+user.lastName}</span>
-            <span className="w-[100px] text-center">{user.uploadedArtCount}</span>
-            <span className="w-[200px] text-center">{user.battleArtCount}</span>
+    {/* Left Section - Leaderboard Table */}
+    <div
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
+      ref={leaderboardRef}
+      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-20"
+    >
+       <div className="flex justify-between mt-6 mb-6 pb-4 ml-3 sm:ml-5 gap-x-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-10">
+  {/* Header */}
+  <span className="w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px] text-center text-xs sm:text-sm md:text-base">Rank</span>
+  <span className="w-[120px] sm:w-[160px] md:w-[200px] text-center text-xs sm:text-sm md:text-base">Username</span>
+  <span className="w-[80px] sm:w-[100px] md:w-[120px] text-center text-xs sm:text-sm md:text-base">Art Uploads</span>
+  <span className="w-[140px] sm:w-[160px] md:w-[200px] text-center text-xs sm:text-sm md:text-base">Battle participated</span>
+</div>
 
-          </div>
-        ))}
+{/* Data Rows */}
+<div>
+  {topThreeData.map((user: LeaderBoardCreatorsResponse) => (
+    <div
+      key={user.rank}
+      className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+    >
+      {/* Rank with Medal */}
+      <div className="flex items-center ml-3 sm:ml-5 gap-2 w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px]">
+        <span className="text-yellow-400">
+          <InlineSVG
+            src={`/icons/${getMedalColor(user.rank)}.svg`}
+            className="h-5 w-5 sm:h-6 sm:w-6"
+          />
+        </span>
+      </div>
+
+      {/* Username */}
+      <span className="w-[120px] sm:w-[160px] md:w-[200px] text-xs sm:text-sm md:text-base">
+        {user.firstName} {user.lastName}
+      </span>
+
+      {/* Art Upload Count */}
+      <span className="w-[80px] sm:w-[100px] md:w-[120px] text-xs sm:text-sm md:text-base">
+        {user.uploadedArtCount}
+      </span>
+
+      {/* Battle Participation Count */}
+      <span className="w-[140px] sm:w-[160px] md:w-[200px] text-xs sm:text-sm md:text-base">
+        {user.battleArtCount}
+      </span>
+    </div>
+  ))}
         {leaderboardData.map((user: LeaderBoardCreatorsResponse) => (
-          <div
+            <div
             key={user.rank}
-            className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
           >
-            <div className="flex items-center ml-5 text-center gap-2 w-[100px]">
-                <span>{user.rank}</span>
+            <div className="flex items-center ml-2 sm:ml-4 lg:ml-5 text-center gap-2 w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px]">
+            <span>{user.rank}</span>
             </div>
-            <span className="w-[200px] text-center">{user.firstName+user.lastName}</span>
-            <span className="w-[100px] text-center">{user.uploadedArtCount}</span>
-            <span className="w-[200px] text-center">{user.battleArtCount}</span>
+             <span className="w-[120px] sm:w-[160px] md:w-[200px] text-xs sm:text-sm md:text-base">
+        {user.firstName} {user.lastName}
+      </span>
+
+      {/* Art Upload Count */}
+      <span className="w-[80px] sm:w-[100px] md:w-[120px] text-xs sm:text-sm md:text-base">
+        {user.uploadedArtCount}
+      </span>
+
+      {/* Battle Participation Count */}
+      <span className="w-[140px] sm:w-[160px] md:w-[200px] text-xs sm:text-sm md:text-base">
+        {user.battleArtCount}
+      </span>
           </div>
-        ))}
+        ))} 
         </div>
       </div>
 
       {/* Right Section - Top Rankings Cards */}
-      <div className="w-full mt-[50px]">
-        <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-2xl font-bold mb-5">Top Rankings</h2>
-        { topThreeData.map((user:LeaderBoardCreatorsResponse)=>(
-            <div
-              key={user.rank}
-              className={`flex items-center gap-4 p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)}`}
-            >
-              <img
-                src={'/default-profile.png'}
-                alt={user.firstName}
-                className="w-12 h-12 rounded-full"
-              />
-             <div className="flex-1">
-              <h3 className="font-semibold flex items-center gap-2">
-                {user.firstName+user.lastName}
-                <img src='/images/Battle_Icon.png' className='w-6 h-6'></img>
-                <span className='text-white'> {user.battleArtCount} Battles</span>
-              </h3>
-            </div>
-            </div>
-          ))}
+      <div className="w-full mt-10 lg:mt-[50px]">
+  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
+    Top Rankings
+  </h2>
+  {topThreeData.map((user:LeaderBoardCreatorsResponse) => (
+    <div
+      key={user.rank}
+      className={`flex items-center gap-4 p-4 sm:p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)} flex-row`}
+    >
+      {/* Profile Image */}
+      <img
+        src="/default-profile.png"
+        alt={user.firstName}
+        className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+      />
+      
+      {/* User Information */}
+      <div className="flex-1 text-center sm:text-left">
+        <h3 className="text-white font-semibold flex items-center gap-2">
+              {user.firstName+user.lastName}
+        <img src='/images/Battle_Icon.png' className='w-6 h-6'></img>
+        <span className='text-white'> {user.battleArtCount} Battles</span>
+        </h3>
       </div>
+    </div>
+  ))}
+</div>
       <div className="fixed bottom-5 w-[110%] flex flex-col items-center gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110">
   <InlineSVG
@@ -190,4 +226,4 @@ const LeaderboardHolders = () => {
   );
 };
 
-export default LeaderboardHolders;
+export default LeaderBoardCreators;
