@@ -16,7 +16,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 const queryType = req.query.queryType;
                 if(queryType=="daily"){
                 let checkin = await DailyCheckin.findOne({ email });
-                const today = new Date().setHours(0, 0, 0, 0);  
+                const today = new Date().setUTCHours(0, 0, 0, 0);  
                 if (!checkin) {
                   checkin = await DailyCheckin.create({
                     email,
@@ -37,7 +37,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   await newTransaction.save();
                   return res.status(200).json({ message: 'Claimed day 1 reward!' });
                 }
-                const lastClaimed = new Date(checkin.lastClaimedDate).setHours(0, 0, 0, 0);
+                const lastClaimed = new Date(checkin.lastClaimedDate).setUTCHours(0, 0, 0, 0);
                 if (today === lastClaimed) {
                   return res.status(400).json({ message: 'Already claimed today!' });
                 }
@@ -78,8 +78,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   return res.status(400).json({ message: '7-day streak not completed!' });
                 }
               
-                const today = new Date().setHours(0, 0, 0, 0);
-                const lastWeeklyClaimed = new Date(checkin.lastWeeklyClaimDate).setHours(0, 0, 0, 0);
+                const today = new Date().setUTCHours(0, 0, 0, 0);
+                const lastWeeklyClaimed = new Date(checkin.lastWeeklyClaimDate).setUTCHours(0, 0, 0, 0);
                 
                 if (today === lastWeeklyClaimed) {
                   return res.status(400).json({ message: 'Weekly reward already claimed today!' });
