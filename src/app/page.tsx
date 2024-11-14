@@ -36,6 +36,7 @@ const Home: NextPage = () => {
   const [toast, setToast] = useState(false);
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (toast) {
@@ -84,13 +85,11 @@ const Home: NextPage = () => {
   //   handleWalletData();
   // }, [session, activeAccountId]);
 
-  console.log(`${toast}, ${successToast}, ${toastMessage}`)
-
   return (
     <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
       <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <Battle campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} fontColor={""} welcomeText={""} themeTitle={""} />
-      <UpcomingGrid fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} adminEmail={ADMIN_GMAIL} />
+      <UpcomingGrid fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} adminEmail={ADMIN_GMAIL} showUploadModal={showUploadModal} />
       {showUploadModal && <ArtUploadForm campaignId={GFX_CAMPAIGNID} onClose={() => setShowUploadModal(false)} onSuccessUpload={() => setUploadSuccess(true)} setSignToast={setSignToast} setErrMsg={setErrMsg} setToast={setToast} setSuccessToast={setSuccessToast} setToastMessage={setToastMessage} />}
       <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />

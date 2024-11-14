@@ -115,7 +115,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           alignItems: "center",
         }}
       >
-        <Loader />{" "}
+        <Loader md="24.5" sm="15" />{" "}
       </div>
     );
   if (error) return <div>No campaign found</div>;
@@ -171,10 +171,10 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
               campaignId={campaign?._id as string}
               onClose={() => setShowUploadModal(false)}
               onSuccessUpload={() => setUploadSuccess(true)}
-              setSignToast={setSignToast} 
-              setErrMsg={setErrMsg} 
-              setToast={setToast} 
-              setSuccessToast={setSuccessToast} 
+              setSignToast={setSignToast}
+              setErrMsg={setErrMsg}
+              setToast={setToast}
+              setSuccessToast={setSuccessToast}
               setToastMessage={setToastMessage}
             />
           )}
@@ -184,6 +184,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
             adminEmail={campaign?.email as string}
+            showUploadModal={showUploadModal}
           />
           {/* <PreviousArtHeader />
           <PreviousGrid
@@ -238,6 +239,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
             adminEmail={campaign?.email as string}
+            showUploadModal={showUploadModal}
           />
 
           <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />

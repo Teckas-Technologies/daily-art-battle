@@ -1,0 +1,53 @@
+.filters-left,
+.filters-center,
+.options {
+    border: 1px solid #535353
+}
+
+.filters-center,
+.options {
+    backdrop-filter: blur(20px);
+    background-color: #000000;
+    z-index: 40;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.104) 0%, rgba(255, 255, 255, 0.104) 100%);
+}
+
+.option::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.104) 0%, rgba(255, 255, 255, 0.104) 100%);
+    border-radius: inherit;
+    /* Match border radius */
+    z-index: 0;
+}
+
+.option {
+    position: relative;
+    z-index: 1;
+    background-color: #000000;
+}
+
+.search-input::placeholder {
+    color: #FFFFFFA3;
+    font-family: 'Spartan', sans-serif;
+    font-weight: 300;
+}
+
+.pagination {
+    padding: 0.8px 0.8px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+.page-numbers .active {
+    background: #0C450C;
+    border: 0.75px solid #00FF00;
+    border-radius: 50%;
+}
+
+.pagination-blur {
+    background-color: #000000B2;
+}

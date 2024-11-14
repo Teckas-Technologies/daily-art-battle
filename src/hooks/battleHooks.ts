@@ -36,6 +36,9 @@ export interface BattleData {
   emoji2: string;
   artAartistEmail: string;
   artBartistEmail: string;
+  artAartistName: string;
+  artBartistName: string;
+  specialWinnerName: string;
 }
 
 interface UseFetchTodayBattleResult {
