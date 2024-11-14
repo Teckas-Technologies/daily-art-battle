@@ -2,26 +2,72 @@ import React from 'react';
 import { FaTrophy } from 'react-icons/fa';
 import "./LeaderBoard.css"
 import InlineSVG from 'react-inlinesvg';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useRef } from 'react';
 import { fetchWithAuth, setAuthToken } from '../../../utils/authToken';
 import { useSession } from 'next-auth/react';
-import { LeaderBoardResponse, useLeaderBoard } from '@/hooks/leaderboard';
+import { LeaderBoardCollectResponse, LeaderBoardResponse, useLeaderBoard, useLeaderBoardCollect } from '@/hooks/leaderboard';
 
-const LeaderboardCollectors = () => {
-  const {leaderBoard,fetchLeaderBoard} = useLeaderBoard();
-  const[leaderboardData,setLeaderBoardData] = useState<LeaderBoardResponse[]>([]);
-  const { data: session, status } = useSession();
-  useEffect(()=>{
-    setAuthToken(session?.idToken || "");
-    fetchLeaderboard();
-  },[session]);
+const LeaderboardHolders = () => {
+  const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoardCollect();
+  const [topThreeData, setTopThreeData] = useState<LeaderBoardCollectResponse[]>([]);
+  const [leaderboardData, setLeaderBoardData] = useState<LeaderBoardCollectResponse[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: session } = useSession();
+  const leaderboardRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchLeaderboard = async()=>{
-    await fetchLeaderBoard();
-   setLeaderBoardData(leaderBoard);
-  }
+  useEffect(() => {
+    setAuthToken(session?.idToken || '');
+    fetchInitialData();
+  }, [session]);
 
+  const fetchInitialData = async () => {
+    await fetchLeaderboard(1);
+  };
 
+  const fetchLeaderboard = async (page: number) => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    const response = await fetchLeaderBoard(page);
+    if (response && response.length > 0) {
+      if (page === 1) {
+        setTopThreeData(response.slice(0, 3));
+        setLeaderBoardData(response.slice(3));
+      } else {
+        setLeaderBoardData((prev) => [...prev, ...response]);
+      }
+      setHasMore(response.length > 0);
+    } else {
+      setHasMore(false);
+    }
+    setLoading(false);
+  };
+
+  // Infinite Scroll Handler
+  const handleScroll = () => {
+    const container = leaderboardRef.current;
+    if (container) {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      if (scrollTop + clientHeight >= scrollHeight - 10 && !loading && hasMore) {
+        setCurrentPage((prevPage) => prevPage + 1);
+      }
+    }
+  };
+
+  // Fetch new data when currentPage changes
+  useEffect(() => {
+    if (currentPage > 1) fetchLeaderboard(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    const container = leaderboardRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [loading, hasMore]);
   const getRowClass = (rank: number) => {
     if (rank === 1) return 'bg-gradient-to-r from-[#ffb600]/30 to-[#ffac33]/20';
     if (rank === 2) return 'bg-gradient-to-r from-[#FFFFFF4D]/30 to-[#B5B5B533]/20';
@@ -66,78 +112,93 @@ const LeaderboardCollectors = () => {
   return (
     <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
       {/* Left Section - Leaderboard Table */}
-      <div className="w-full max-w-[800px] rounded-[32px] bg-[#0f0f0f] mr-10 border-[0.5px] mb-20 border-white p-8">
-    <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 gap-x-8">
-      <span className="w-[60px] text-center">Rank</span>
-      <span className="w-[130px] text-center">Username</span>
-      <span className="w-[92px] text-center">Rare NFTs</span>
-      <span className="w-[164px] text-center">Participation NFTs</span>
-      <span className="w-[59px] text-center">Total</span>
-      <span className="w-[103px] text-center">GFX Points</span>
-    </div>
-        {leaderboardData.map((user: LeaderBoardResponse) => (
+      <div style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}  ref={leaderboardRef} className="w-full min-w-[800px] rounded-[32px] bg-[#0f0f0f] mr-10 border-[0.5px] mb-20 border-white p-8 max-h-[70vh]">
+      <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 mr-5 gap-x-6">
+        <span className="w-[60px] min-w-[60px] text-center">Rank</span>
+        <span className="w-[130px] min-w-[130px] text-center">Username</span>
+        <span className="w-[92px] min-w-[92px] text-center">Rare NFTs</span>
+        <span className="w-[164px] min-w-[164px] text-center">Participation NFTs</span>
+        <span className="w-[59px] min-w-[59px] text-center">Total</span>
+        <span className="w-[103px] min-w-[103px] text-center">GFX Points</span>
+      </div>
+    <div >
+    {topThreeData.map((user: LeaderBoardCollectResponse) => (
           <div
             key={user.rank}
             className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
           >
-            <div className="flex items-center ml-5 text-center gap-2 w-[50px]">
-              {user.rank <= 3 ? (
+            <div className="flex items-center ml-5 text-center gap-2 w-[60px]">
                <span className="text-yellow-400"><InlineSVG
                src={`/icons/${getMedalColor(user.rank)}.svg`}
                className={`h-6 w-6`}  
-           /></span>
-              ) : (
-                <span>{user.rank}</span>
-              )}
+           /></span>  
             </div>
-            <span className="w-[200px] text-center">{user.firstName+user.lastName}</span>
-            <div className="flex items-center text-center w-[100px] gap-2">
-            {user.rank <= 3 ?(
+            <span className="w-[130px] text-center">{user.firstName+user.lastName}</span>
+            <span className="w-[92px] text-center">{user.rareNftCount}</span>
+            <span className="w-[164px] text-center">{user.participationCount}</span>
+            <span className="w-[59px] text-center">{user.rareNftCount+user.participationCount}</span>
+            <div className="flex items-center text-center w-[103px] max-w-[103px] break-words gap-2 overflow-hidden">
               <>
-                 <span className="text-yellow-400"><InlineSVG
-                 src={`/icons/${getCoinColor(user.rank)}.svg`}
-                 className={`h-6 w-6`}  
-             /></span>
-              <span>{user.gfxvsCoins}</span>
-             </>
-              ):(
-                <span className='ml-7 max-w-4'>{user.gfxvsCoins}</span>
-              )}
-             
+                {/* Icon */}
+                <span className="flex-shrink-0 text-yellow-400">
+                  <InlineSVG
+                    src={`/icons/${getCoinColor(user.rank)}.svg`}
+                    className="h-6 w-6"
+                  />
+                </span>
+                {/* GFX Points Text */}
+                <span className="w-[103px] max-w-[103px]">{user.gfxCoin}</span>
+              </>
+            </div>
+
+          </div>
+        ))}
+        {leaderboardData.map((user: LeaderBoardCollectResponse) => (
+          <div
+            key={user.rank}
+            className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+          >
+            <div className="flex items-center ml-5 text-center gap-2 w-[60px]">
+                <span>{user.rank}</span>
+            </div>
+            <span className="w-[130px] text-center">{user.firstName+user.lastName}</span>
+            <span className="w-[92px] text-center">{user.rareNftCount}</span>
+            <span className="w-[164px] text-center">{user.participationCount}</span>
+            <span className="w-[59px] text-center">{user.rareNftCount+user.participationCount}</span>
+            <div className="flex items-center text-center w-[103px] max-w-[103px] gap-2  break-words overflow-hidden ">
+            <span className='ml-7 w-[103px] max-w-[103px]'>{user.gfxCoin}</span>
             </div>
           </div>
         ))}
+        </div>
       </div>
 
       {/* Right Section - Top Rankings Cards */}
       <div className="w-full mt-[50px]">
         <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-2xl font-bold mb-5">Top Rankings</h2>
-        { leaderboardData.filter((user:LeaderBoardResponse) => user.rank <= 3)
-          .map((user:any) => (
+        { topThreeData.map((user:LeaderBoardCollectResponse)=>(
             <div
               key={user.rank}
               className={`flex items-center gap-4 p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)}`}
             >
               <img
-                src={user.image || '/default-profile.png'}
+                src={'/default-profile.png'}
                 alt={user.firstName}
                 className="w-12 h-12 rounded-full"
               />
              <div className="flex-1">
               <h3 className="text-white font-semibold flex items-center gap-2">
-                {user.firstName+user.lastName}
-                <span className="text-yellow-400"><InlineSVG
-                                        src="/icons/gfx-point.svg"
-                                        className="h-6 w-6"
-                                    /></span>
-                <span>{user.gfxvsCoins}</span>
+                {user.firstName+" "+user.lastName}
+                <span className="text-yellow-400"></span>
+                <span>{user.rareNftCount+user.participationCount} Collections</span>
               </h3>
             </div>
             </div>
           ))}
       </div>
       <div className="fixed bottom-5 w-[110%] flex flex-col items-center gap-2">
-  <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110">
+  <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110"     onClick={() => leaderboardRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+  >
   <InlineSVG
     src="/icons/arrow.svg"
     className="h-10 w-10 bg-black rounded-full"
@@ -150,4 +211,6 @@ const LeaderboardCollectors = () => {
   );
 };
 
-export default LeaderboardCollectors;
+export default LeaderboardHolders;
+
+
