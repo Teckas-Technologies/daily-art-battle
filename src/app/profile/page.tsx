@@ -5,6 +5,7 @@ import CoinPurchasePopup from '@/components/Profile Page/BuyCoins Popup/BuyCoins
 import ConnectWallet from '@/components/Profile Page/Connect Wallet/ConnectWallet'
 import EditProfilePopup from '@/components/Profile Page/EditProfile Popup/EditProfilePopup'
 import ProfilePath from '@/components/Profile Page/Profile Path/ProfilePath'
+import { ProfileBody } from '@/components/Profile Page/ProfileBody/ProfileBody'
 
 import ProfileHeader from '@/components/Profile Page/ProfileHeader/ProfileHeader'
 import { GFX_CAMPAIGNID } from '@/config/constants'
@@ -34,18 +35,17 @@ const page = () => {
     setIsCoinOpen(false);
   };
   return (
-
-    <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-[20px] md:px-[80px] lg:px-[90px] xl:px-[110px] xxl:px-[130px]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
+    <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'scroll' }}>
       <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-
-      <ProfilePath/>
+      <ProfilePath />
       <ProfileHeader onEditClick={handleEditClick} handleCoinClick={handleCoinClick}/>
-        <ConnectWallet/>
-        <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <ConnectWallet />
+      <ProfileBody />
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
 
-        {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
-        {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
-   </main>
+      {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
+      {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
+    </main>
   )
 }
 

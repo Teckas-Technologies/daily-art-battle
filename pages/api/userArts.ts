@@ -81,13 +81,15 @@ export default async function handler(
             queryFilter.arttitle = { $regex: name, $options: 'i' }; 
           }
           const skip = limit * (page === 1 ? 0 : page - 1);
+          const totalDocuments = await ArtTable.countDocuments(queryFilter);
+          const totalPages = Math.ceil(totalDocuments / limit);
           const arts = await ArtTable.find(queryFilter)
             .sort({ uploadedTime: -1, _id: 1 })
             .skip(skip)
             .limit(limit)
             .exec();
         
-            return res.status(200).json({arts });
+            return res.status(200).json({arts, totalDocuments, totalPages });
         }
         }
       } catch (error: any) {
