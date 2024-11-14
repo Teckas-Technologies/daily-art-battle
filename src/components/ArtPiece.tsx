@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useMbWallet } from "@mintbase-js/react";
+import React, { useContext } from "react";
 import { Button } from "./ui/button";
+import { NearContext } from "@/wallet/WalletSelector";
 interface ArtPieceProps {
   art: {
     id: string;
@@ -21,7 +21,7 @@ const ArtPiece: React.FC<ArtPieceProps> = ({
   success,
   votedFor,
 }) => {
-  const { isConnected, connect, activeAccountId } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
 
   return (
     <>
@@ -48,9 +48,9 @@ const ArtPiece: React.FC<ArtPieceProps> = ({
           {votedFor == art.name ? (
             <Button
               onClick={onVote}
-              disabled={!isConnected || success}
+              disabled={!signedAccountId || success}
               className={`px-4 text-xs mt-2 py-2 font-semibold bg-green-600 text-white rounded ${
-                !isConnected || success ? "cursor-not-allowed" : ""
+                !signedAccountId || success ? "cursor-not-allowed" : ""
               }`}
             >
               Voted {art.name}
@@ -58,9 +58,9 @@ const ArtPiece: React.FC<ArtPieceProps> = ({
           ) : (
             <Button
               onClick={onVote}
-              disabled={!isConnected || success}
+              disabled={!signedAccountId || success}
               className={`px-4 text-xs mt-2 py-2 vote-btn text-white rounded ${
-                !isConnected || success ? "cursor-not-allowed" : ""
+                !signedAccountId || success ? "cursor-not-allowed" : ""
               }`}
             >
               Pick {art.name}

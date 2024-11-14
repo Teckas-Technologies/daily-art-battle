@@ -16,7 +16,7 @@ import { signIn } from 'next-auth/react';
 // import { setAuthToken } from '../../utils/authToken';
 import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { useSendWalletData } from "@/hooks/saveUserHook";
-import { useMbWallet } from "@mintbase-js/react";
+// import { useMbWallet } from "@mintbase-js/react";
 import { useAuth } from '@/contexts/AuthContext';
 import InlineSVG from 'react-inlinesvg';
 import { MobileNav } from '@/components/MobileNav/MobileNav';

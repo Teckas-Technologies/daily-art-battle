@@ -1,9 +1,10 @@
 "use client";
 
-import { useMbWallet } from "@mintbase-js/react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const NoBattle: React.FC = () => {
-    const { isConnected } = useMbWallet();
+    const { user } = useAuth();
+    let userDetails = user;
     return (
         <div className="flex w-full justify-center mt-5">
             <div className="mt-4 mx-8 flex justify-center h-[29rem]">
@@ -29,8 +30,8 @@ export const NoBattle: React.FC = () => {
                     <div className="add-art-btn mt-5 text-center">
                         <button
                             // onClick={toggleUploadModal}
-                            disabled={!isConnected}
-                            className={`px-4 py-2 vote-btn text-white bg-gray-900 rounded ${!isConnected ? "cursor-not-allowed" : ""}`}
+                            disabled={!userDetails?.user}
+                            className={`px-4 py-2 vote-btn text-white bg-gray-900 rounded ${!userDetails?.user ? "cursor-not-allowed" : ""}`}
                         >
                             Add Artwork
                         </button>

@@ -1,12 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useMbWallet } from "@mintbase-js/react";
+import React, { useContext, useEffect, useState } from "react";
 import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useVoting } from "../hooks/useVoting";
 import { Skeleton } from "./ui/skeleton";
 import Toast from './Toast'; 
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { useRouter } from 'next/navigation';
+import { NearContext } from "@/wallet/WalletSelector";
 interface Artwork {
   id: string;
   imageUrl: string;
@@ -21,7 +21,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
 }) => {
 
 
-  const { isConnected, connect, activeAccountId } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const { todayBattle, loading,battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
     const router = useRouter();
@@ -56,8 +56,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
   useEffect(() => {
    
     const fetchData = async () => {
-      if (todayBattle && activeAccountId) {
-        const res = await fetchVotes(activeAccountId, todayBattle._id,campaignId);
+      if (todayBattle && signedAccountId) {
+        const res = await fetchVotes(signedAccountId, todayBattle._id,campaignId);
         if (res) {
           setVoterFor(res.votedFor);
           setSuccess(true);
@@ -147,8 +147,8 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
   }, [todayBattle]);
 
   const onVote = async (id: string) => {
-    if (!isConnected || !activeAccountId) {
-      await connect();
+    if (!signedAccountId) {
+      await wallet?.signIn();
       return;
     }
     if (!battleId) {
@@ -156,7 +156,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
       return;
     }
     const success = await submitVote({
-      participantId: activeAccountId,
+      participantId: signedAccountId,
       battleId: battleId,
       votedFor: id === "Art A" ? "Art A" : "Art B",
       campaignId:campaignId
@@ -291,9 +291,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
           <div className="add-art-btn mt-5 text-center">
             <button
               onClick={toggleUploadModal}
-              disabled={!isConnected}
+              disabled={!signedAccountId}
               className={`px-4 py-2 vote-btn text-white bg-gray-900 rounded ${
-                !isConnected ? "cursor-not-allowed" : ""
+                !signedAccountId ? "cursor-not-allowed" : ""
               }`}
             >
               Add Artwork
@@ -414,9 +414,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
             {votedFor === artA.name ? (
               <button
                 onClick={() => onVote(artA.id)}
-                disabled={!isConnected || success}
+                disabled={!signedAccountId || success}
                 className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
+                  !signedAccountId || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Voted {artA.name}
@@ -424,9 +424,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
             ) : (
               <button
                 onClick={() => onVote(artA.id)}
-                disabled={!isConnected || success}
+                disabled={!signedAccountId || success}
                 className={`px-2 text-xs py-3 font-semibold bg-white hover:bg-gray-300 text-black rounded ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
+                  !signedAccountId || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Pick {artA.name}
@@ -477,9 +477,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
             {votedFor === artB.name ? (
               <button
                 onClick={() => onVote(artB.id)}
-                disabled={!isConnected || success}
+                disabled={!signedAccountId || success}
                 className={`px-2 text-xs py-3 font-semibold bg-green-600 text-white rounded ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
+                  !signedAccountId || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Voted {artB.name}
@@ -487,9 +487,9 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
             ) : (
               <button
                 onClick={() => onVote(artB.id)}
-                disabled={!isConnected || success}
+                disabled={!signedAccountId || success}
                 className={`px-2 text-xs py-3 font-semibold bg-white hover:bg-gray-300 text-black rounded  ${
-                  !isConnected || success ? "cursor-not-allowed" : ""
+                  !signedAccountId || success ? "cursor-not-allowed" : ""
                 }`}
               >
                 Pick {artB.name}

@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useRouter } from "next/navigation";
 import "./Campaign.css";
 import InlineSVG from "react-inlinesvg";
 import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 import useCampaigns from "@/hooks/CampaignHook";
-import { useMbWallet } from "@mintbase-js/react";
+import { NearContext } from "@/wallet/WalletSelector";
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -22,7 +22,7 @@ interface Campaign {
 
 const CampaignBanner = () => {
   const router = useRouter();
-  const { activeAccountId, isConnected } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const [activeTab, setActiveTab] = useState("Current Campaigns");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -195,7 +195,7 @@ const CampaignBanner = () => {
               <div
                 key={index}
                 className={`campaign-row ${
-                  item.creatorId === activeAccountId ? "creater-border" : ""
+                  item.creatorId === signedAccountId ? "creater-border" : ""
                 }`}
               >
                 <div className="cell">

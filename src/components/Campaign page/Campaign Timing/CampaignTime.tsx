@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CampaignTime.css";
 import { CampaignPageData } from "@/hooks/CampaignHook";
-import { useMbWallet } from "@mintbase-js/react";
 import EditCampaignPopup from "../Edit Campaign Details/EditCampaign";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
+import { NearContext } from "@/wallet/WalletSelector";
 
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
@@ -18,7 +18,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
     minutes: 0,
     seconds: 0,
   });
-  const { activeAccountId, isConnected } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -67,7 +67,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
   }, [campaign]);
   const creatorId = campaign?.creatorId;
   const handleButtonClick = () => {
-    if (creatorId === activeAccountId) {
+    if (creatorId === signedAccountId) {
       setShowEditModal(true);
     } else {
       setShowUploadModal(true);
@@ -84,7 +84,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
       </h1>
       <div className="CampaignButtonWrapper">
         <button className="Campaignbtn" onClick={handleButtonClick}>
-          {creatorId === activeAccountId
+          {creatorId === signedAccountId
             ? "Edit Campaign Details"
             : "Upload Your Art"}
         </button>

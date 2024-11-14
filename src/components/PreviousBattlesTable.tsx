@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 // import { BattleData, useFetchBattles } from '@/hooks/battleHooks';
 // import { ArtData, useFetchBattles } from "@/hooks/artHooks";
 import{BattleData,useFetchBattles} from '@/hooks/battleHooks'
-import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import { SPECIAL_WINNER_CONTRACT } from "../config/constants";
 
@@ -11,7 +10,6 @@ const PreviousArtTable: React.FC<{ toggleUploadModal: () => void,campaignId: str
 }) => {
   const [previousBattles, setPreviousBattles] = useState<BattleData[]>([]);
   const { battles, error, loading, fetchMoreBattles } = useFetchBattles();
-  const { isConnected, selector, connect, activeAccountId } = useMbWallet();
   const [page, setPage] = useState(1);
   const [hasnext, setHasNext] = useState(false);
   const [selectedArtId, setSelectedArtId] = useState<string | null>(null);

@@ -86,3 +86,5 @@ export interface UserDetails {
   voting: number;
   rewards: Rewards;
 }
+
+export type NetworkId = "testnet" | "mainnet";

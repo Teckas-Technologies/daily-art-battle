@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useFetchCampaignByTitle } from "@/hooks/campaignHooks";
 import CampaignForm from "./components/CampaignForm";
 import CampaignTable from "./components/CampaignList";
 import { NearWalletConnector } from "@/components/NearWalletConnector";
-import { useMbWallet } from "@mintbase-js/react";
 import { ADMIN_ADDRESS } from "@/config/constants";
+import { NearContext } from "@/wallet/WalletSelector";
 
 
 const Admin: React.FC = () => {
@@ -15,7 +15,7 @@ const Admin: React.FC = () => {
   const { fetchCampaign, deleteCampaignById, updateCampaignById } = useFetchCampaignByTitle();
   const [hasnext, setHasNext] = useState(false);
  const [page, setPage] = useState(1);
- const { isConnected, connect, activeAccountId } = useMbWallet();
+ const { wallet, signedAccountId } = useContext(NearContext);
 
 
   // Fetch all campaigns on component mount
@@ -85,7 +85,7 @@ const Admin: React.FC = () => {
       console.error("Failed to delete campaign:", error);
     }
   };
-  if(activeAccountId!=ADMIN_ADDRESS){
+  if(signedAccountId!=ADMIN_ADDRESS){
     return <div className="text-black">Restricted</div>
   }
 
@@ -121,9 +121,9 @@ const Admin: React.FC = () => {
       Unleash your creativity and impact! Start your own campaign today by clicking the 'Add Campaign' button below. Share your vision, rally supporters, and drive meaningful change. Your campaign could be the next big initiative that makes a difference!  </p>
        <div className="flex justify-center">
   <button
-  disabled={!activeAccountId}
+  disabled={!signedAccountId}
     onClick={() => setShowForm(!showForm)}
-    className={`px-4 py-2 bg-blue-500 text-sm text-white rounded-lg ${activeAccountId?"":"cursor-not-allowed"}`}
+    className={`px-4 py-2 bg-blue-500 text-sm text-white rounded-lg ${signedAccountId?"":"cursor-not-allowed"}`}
   >
     {showForm ? "Show Campaigns" : "Add Campaign"}
   </button>
