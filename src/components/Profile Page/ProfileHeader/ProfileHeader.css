@@ -1,33 +1,43 @@
 * {
-    font-family: "Spartan";
-  }
+  font-family: "Spartan";
+}
 .profile-bg {
-    background: linear-gradient(90deg, #000000 45%, rgba(0, 0, 0, 0) 100%),
-      url("/images/profile-bg.png") no-repeat right center;
-    background-size: contain;
-    width: 100%;
+  background: linear-gradient(90deg, #000000 45%, rgba(0, 0, 0, 0) 100%),
+    url("/images/profile-bg.png") no-repeat right center;
+  background-size: contain;
+  width: 100%;
+}
+.gfx-text {
+  background: linear-gradient(180deg, #d8ad2a 0%, #fdea60 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.connect-button {
+  background: linear-gradient(90deg, #ff543e 0%, #ff0000 100%);
+}
+.profile-header {
+  padding: 0.75px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(187, 187, 187, 0.2) 100%
+  );
+  border-radius: 12px;
+}
+.edit-profile-btn {
+  background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.gfx-div {
+  background: linear-gradient(180deg, #ffcc4d 0%, #ffac33 100%);
+  padding: 0.75px;
+  border-radius: 12px;
+}
+@media (max-width: 768px) {
+  .profile-bg {
+    background: linear-gradient(20deg, #000000 10.23%, rgba(0, 0, 0, 0.6) 100%),
+      url("/images/profile-bg.png") no-repeat center;
+    background-size: cover;
   }
-  .gfx-text {
-    background: linear-gradient(180deg, #d8ad2a 0%, #fdea60 100%);
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-  .connect-button {
-    background: linear-gradient(90deg, #ff543e 0%, #ff0000 100%);
-  }
-  .profile-header {
-    padding: 0.75px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.5) 0%,
-      rgba(187, 187, 187, 0.2) 100%
-    );
-    border-radius: 12px;
-  }
-  .edit-profile-btn {
-    background: linear-gradient(90deg, #00ff00 0%, #009900 100%);
-    -webkit-background-clip: text;
-    color: transparent;
-   
-  }
-  
+}
