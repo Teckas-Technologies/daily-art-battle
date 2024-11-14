@@ -28,7 +28,7 @@ export const ProfileBody: React.FC = () => {
                     </div>
                 ))}
             </div>
-            <UploadedArtsGrid rendered={rendered} />
+            {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} />}
         </div>
     )
 }

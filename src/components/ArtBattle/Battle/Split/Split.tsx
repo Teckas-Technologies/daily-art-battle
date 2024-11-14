@@ -95,7 +95,7 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
                             <div className="art-overlay w-full h-auto text-white flex items-end md:px-5 md:pb-5 p-1">
                                 <div className="p-2 pt-0 w-full">
                                     <h3 className="md:text-xl text-md font-bold spartan-semibold">{artA.artistName}</h3>
-                                    <p className="text-sm">{artA.title} by {artA.artistId}</p>
+                                    <p className="text-sm">{artA.title}</p>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +129,7 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
                             <div className="art-overlay w-full h-auto text-white flex items-end md:px-5 md:pb-5 p-1">
                                 <div className="p-2 pt-0 w-full">
                                     <h3 className="md:text-xl text-md font-bold spartan-semibold">{artB.artistName}</h3>
-                                    <p className="text-sm">{artB.title} by {artB.artistId}</p>
+                                    <p className="text-sm">{artB.title}</p>
                                 </div>
                             </div>
                         </div>

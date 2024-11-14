@@ -342,12 +342,13 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                   </div>
                 </div>
 
-                <div className="popup-description md:w-[20rem] md:h-[10rem] w-full h-[8rem]">
+                <div className="popup-description md:w-[20rem] md:h-[10.2rem] w-full h-[8.8rem]">
                   <h3>Add description</h3>
                   <textarea
                     className="descriptionInput h-full rounded-xl"
                     placeholder="Enter text here"
                     onChange={handleArtName}
+                    maxLength={150}
                   ></textarea>
                 </div>
               </div>
@@ -396,13 +397,16 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                   className="ml-2 md:w-full w-full md:h-[3rem] h-[2rem] mr-3"
                   onChange={handleMessageChange}
                 />
-                <button className="generateButton md:px-[1.2rem] md:py-[0.8rem] px-[1rem] py-[0.7rem]" onClick={handleCreate}>
+                <button className={`generateButton md:px-[1.2rem] md:py-[0.8rem] px-[1rem] py-[0.7rem] ${userDetails && userDetails?.user?.gfxCoin < AI_IMAGE && "red" }`} onClick={handleCreate}>
                   <div>
-                    <InlineSVG src="/icons/blink.svg" className="md:h-5 md:w-5 h-4 w-4" />
+                    <InlineSVG src="/icons/blink.svg" color={`${userDetails && userDetails?.user?.gfxCoin < AI_IMAGE ? "#FF543E" : "#009900"}`} className="fill-current md:h-5 md:w-5 h-4 w-4" />
                   </div>{" "}
                   Generate <InlineSVG src="/icons/coin.svg" /> <span>1</span>
                 </button>
               </div>
+              {userDetails && userDetails?.user?.gfxCoin < AI_IMAGE && <div className="insuff w-full flex justify-end">
+                <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold">Insufficient Coins? <span className="text-[#00FF00] underline underline-offset-2 cursor-pointer">Purchase</span></h2>
+              </div>}
             </div>
           ))}
 

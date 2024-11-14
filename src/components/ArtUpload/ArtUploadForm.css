@@ -220,7 +220,7 @@
   background: #e7e7e7;
   border-radius: 50px;
   padding: 6px 10px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   /* height: 60px; */
 }
 
@@ -265,6 +265,11 @@
   font-weight: 600;
   line-height: 15.68px;
   letter-spacing: -9%;
+}
+
+.generateButton.red {
+  border: 1px solid #FF543E;
+  color: #FF543E;
 }
 
 .popup-bottom {
