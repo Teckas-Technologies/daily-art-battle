@@ -7,6 +7,7 @@ import { useFetchUserArts, useSearchUserArts } from "@/hooks/userArtsHook";
 import InlineSVG from "react-inlinesvg";
 import { ArtData } from "@/hooks/artHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
     rendered: boolean;
@@ -24,6 +25,8 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [empty, setEmpty] = useState("");
     const [total, setTotal] = useState(totalPage);
+    const { user } = useAuth();
+    let userDetails = user;
 
     useEffect(() => {
         const initializeData = async () => {
@@ -34,10 +37,11 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
                 searchUserArts(searchQuery, page, limit);
             }
         };
-        const timeoutId = setTimeout(initializeData, 100);
-
-        return () => clearTimeout(timeoutId);
-    }, [sort, page, searchQuery, rendered]);
+        if (userDetails) {
+            const timeoutId = setTimeout(initializeData, 100);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [sort, page, searchQuery, userDetails]);
 
     const [hasnext, setHasNext] = useState(false);
 
@@ -62,7 +66,7 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
         if (!arts && !searchedArts && !loading) {
             setEmpty("No arts found!")
         }
-    }, [arts, searchedArts, rendered]);
+    }, [arts, searchedArts, userDetails]);
 
     useEffect(() => {
         if (sort) {
