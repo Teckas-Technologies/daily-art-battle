@@ -6,6 +6,8 @@ import InlineSVG from "react-inlinesvg";
 import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 import useCampaigns from "@/hooks/CampaignHook";
 import { NearContext } from "@/wallet/WalletSelector";
+import { useAuth } from "@/contexts/AuthContext";
+
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -17,7 +19,7 @@ interface Campaign {
   endDate: string;
   totalRewards: number;
   campaignUrl: string;
-  creatorId: string;
+  email: string;
 }
 
 const CampaignBanner = () => {
@@ -36,7 +38,9 @@ const CampaignBanner = () => {
     fetchPreviousCampaigns,
     fetchMyCampaigns,
   } = useCampaigns();
-
+  const { user } = useAuth();
+  let userDetails = user;
+  const activeEmail = userDetails?.user?.email;
   const updateCampaigns = () => {
     switch (activeTab) {
       case "Current Campaigns":
@@ -195,7 +199,7 @@ const CampaignBanner = () => {
               <div
                 key={index}
                 className={`campaign-row ${
-                  item.creatorId === signedAccountId ? "creater-border" : ""
+                  item.email === activeEmail ? "creater-border" : ""
                 }`}
               >
                 <div className="cell">

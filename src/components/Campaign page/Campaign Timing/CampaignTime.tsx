@@ -4,6 +4,7 @@ import { CampaignPageData } from "@/hooks/CampaignHook";
 import EditCampaignPopup from "../Edit Campaign Details/EditCampaign";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { NearContext } from "@/wallet/WalletSelector";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
@@ -11,7 +12,11 @@ interface CampaignTimeProps {
   setEditCampaign: (value: boolean) => void;
 }
 
-const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEditCampaign }) => {
+const CampaignTime: React.FC<CampaignTimeProps> = ({
+  campaign,
+  campaignId,
+  setEditCampaign,
+}) => {
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -27,13 +32,14 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
   const [toast, setToast] = useState(false);
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
-
+  const { user } = useAuth();
+  let userDetails = user;
   useEffect(() => {
     if (toast) {
-      setTimeout(() => setToast(false), 3000)
+      setTimeout(() => setToast(false), 3000);
     }
-  }, [toast])
-  
+  }, [toast]);
+
   useEffect(() => {
     if (!campaign || !campaign.startDate) return;
 
@@ -65,9 +71,11 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
 
     return () => clearInterval(timerId);
   }, [campaign]);
-  const creatorId = campaign?.creatorId;
+  const creatorEmail = campaign?.email;
+  const activeEmail = userDetails?.user?.email;
+
   const handleButtonClick = () => {
-    if (creatorId === signedAccountId) {
+    if (creatorEmail === activeEmail) {
       setShowEditModal(true);
     } else {
       setShowUploadModal(true);
@@ -84,7 +92,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
       </h1>
       <div className="CampaignButtonWrapper">
         <button className="Campaignbtn" onClick={handleButtonClick}>
-          {creatorId === signedAccountId
+          {creatorEmail === activeEmail
             ? "Edit Campaign Details"
             : "Upload Your Art"}
         </button>
@@ -92,7 +100,11 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({ campaign, campaignId, setEd
         <div className="CampaignButtonOverlay" />
       </div>
       {showEditModal && (
-        <EditCampaignPopup onClose={() => setShowEditModal(false)} campaign={campaign} setEditCampaign={setEditCampaign} />
+        <EditCampaignPopup
+          onClose={() => setShowEditModal(false)}
+          campaign={campaign}
+          setEditCampaign={setEditCampaign}
+        />
       )}
       {showUploadModal && (
         <ArtUploadForm
