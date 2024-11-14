@@ -32,7 +32,7 @@ export const useFetchUserArts = () => {
 export const useSearchUserArts = () => {
     const [searchedArts, setArts] = useState<ArtData[]>([]);
     const [totalSearchPage, setTotalPage] = useState<any>();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [searchLoading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const searchUserArts = async (searchText: string, page: number, limit: number = 8) => {
@@ -53,5 +53,5 @@ export const useSearchUserArts = () => {
         }
     };
 
-    return { searchedArts, totalSearchPage, loading, error, searchUserArts };
+    return { searchedArts, totalSearchPage, searchLoading, error, searchUserArts };
 }
