@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { UploadedArtsGrid } from "./UploadedArtsGrid/UploadedArtsGrid";
+import { Collections } from "./Collections/Collections";
 
 const tabs = [
     { id: "uploads", label: "Uploads", active: true },
@@ -29,6 +30,7 @@ export const ProfileBody: React.FC = () => {
                 ))}
             </div>
             {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} />}
+            {activeTab === "collects" && <Collections />}
         </div>
     )
 }
