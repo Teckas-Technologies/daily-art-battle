@@ -35,6 +35,8 @@
     "@mintbase-js/storage": "^0.6.0-beta.10",
     "@mintbase-js/wallet": "0.6.1-beta.0",
     "@near-wallet-selector/bitte-wallet": "^8.9.14",
+    "@near-wallet-selector/core": "^8.9.14",
+    "@near-wallet-selector/modal-ui": "^8.9.14",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
