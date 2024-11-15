@@ -111,9 +111,13 @@ const LeaderboardHolders = () => {
 
   return (
     <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
-      {/* Left Section - Leaderboard Table */}
-      <div style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}  ref={leaderboardRef} className="w-full min-w-[800px] rounded-[32px] bg-[#0f0f0f] mr-10 border-[0.5px] mb-20 border-white p-8 max-h-[70vh]">
-      <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 mr-5 gap-x-6">
+    {/* Left Section - Leaderboard Table */}
+    <div
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
+      ref={leaderboardRef}
+      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-20"
+    >
+        <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 mr-5 gap-x-6">
         <span className="w-[60px] min-w-[60px] text-center">Rank</span>
         <span className="w-[130px] min-w-[130px] text-center">Username</span>
         <span className="w-[92px] min-w-[92px] text-center">Rare NFTs</span>
@@ -173,29 +177,35 @@ const LeaderboardHolders = () => {
         </div>
       </div>
 
-      {/* Right Section - Top Rankings Cards */}
-      <div className="w-full mt-[50px]">
-        <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-2xl font-bold mb-5">Top Rankings</h2>
-        { topThreeData.map((user:LeaderBoardCollectResponse)=>(
-            <div
-              key={user.rank}
-              className={`flex items-center gap-4 p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)}`}
-            >
-              <img
-                src={'/default-profile.png'}
-                alt={user.firstName}
-                className="w-12 h-12 rounded-full"
-              />
-             <div className="flex-1">
-              <h3 className="text-white font-semibold flex items-center gap-2">
-                {user.firstName+" "+user.lastName}
-                <span className="text-yellow-400"></span>
-                <span>{user.rareNftCount+user.participationCount} Collections</span>
-              </h3>
-            </div>
-            </div>
-          ))}
+       {/* Right Section - Top Rankings Cards */}
+       <div className="w-full mt-10 lg:mt-[50px]">
+  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
+    Top Rankings
+  </h2>
+  {topThreeData.map((user:LeaderBoardCollectResponse) => (
+    <div
+      key={user.rank}
+      className={`flex items-center gap-4 p-4 sm:p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)} flex-row`}
+    >
+      {/* Profile Image */}
+      <img
+        src="/default-profile.png"
+        alt={user.firstName}
+        className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+      />
+      
+      {/* User Information */}
+      <div className="flex-1 text-center sm:text-left">
+        <h3 className="text-white font-semibold flex items-center gap-2">
+             
+{user.firstName+" "+user.lastName}
+<span className="text-yellow-400"></span>
+<span>{user.rareNftCount+user.participationCount} Collections</span>
+        </h3>
       </div>
+    </div>
+  ))}
+</div>
       <div className="fixed bottom-5 w-[110%] flex flex-col items-center gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110"     onClick={() => leaderboardRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })}
   >
@@ -212,5 +222,4 @@ const LeaderboardHolders = () => {
 };
 
 export default LeaderboardHolders;
-
 

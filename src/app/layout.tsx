@@ -4,10 +4,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 import "../styles.css";
-
-import { MintbaseWalletContextProvider } from "@mintbase-js/react";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { WalletProvider } from "@/providers/WalletProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,11 +23,11 @@ export const getCallbackUrl = () => {
   return callbackUrl;
 };
 
-const MintbaseWalletSetup = {
-  contractAddress: process.env.ART_BATTLE_CONTRACT,
-  network: process.env.NEXT_PUBLIC_NETWORK as any,
-  callbackUrl: getCallbackUrl(),
-};
+// const MintbaseWalletSetup = {
+//   contractAddress: process.env.ART_BATTLE_CONTRACT,
+//   network: process.env.NEXT_PUBLIC_NETWORK as any,
+//   callbackUrl: getCallbackUrl(),
+// };
 
 export default function RootLayout({
   children,
@@ -37,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <SessionProvider>
-      <MintbaseWalletContextProvider {...MintbaseWalletSetup}>
+      <WalletProvider >
         <AuthProvider>
           <html lang="en">
             <body className={inter.className}>
@@ -47,7 +46,7 @@ export default function RootLayout({
             </body>
           </html>
         </AuthProvider>
-      </MintbaseWalletContextProvider>
+      </WalletProvider>
     </SessionProvider>
   );
 }

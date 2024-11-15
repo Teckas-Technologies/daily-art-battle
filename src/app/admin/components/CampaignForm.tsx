@@ -1,6 +1,6 @@
 import { useFetchCampaignByTitle } from "@/hooks/campaignHooks";
-import React, { useRef, useState, useEffect } from "react";
-import { useMbWallet } from "@mintbase-js/react";
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { NearContext } from "@/wallet/WalletSelector";
 
 interface CampaignFormProps {
   onCampaignSaved: () => void;
@@ -26,7 +26,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   });
 
   const [disable,setDisabled] = useState(false);
-  const { isConnected, connect, activeAccountId } = useMbWallet();
+  const { wallet, signedAccountId } = useContext(NearContext);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const {
@@ -101,7 +101,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
           setLoading(false);
           return;
         }
-        formData.creatorId = activeAccountId as string;
+        formData.creatorId = signedAccountId as string;
         res = await saveCampaign(formData);
       }
       setLoading(false);

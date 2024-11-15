@@ -2,10 +2,10 @@
 import InlineSVG from 'react-inlinesvg';
 import './Header.css';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useMbWallet } from '@mintbase-js/react';
 import { useAuth } from '@/contexts/AuthContext';
+import { NearContext } from '@/wallet/WalletSelector';
 
 interface Props {
     openNav: boolean;
@@ -27,19 +27,19 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
     const pathName = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { activeAccountId, isConnected, connect, disconnect } = useMbWallet();
+    const { wallet, signedAccountId } = useContext(NearContext);
     const [walletIcon, setWalletIcon] = useState("/icons/wallet-red.svg");
     const { user, signInUser } = useAuth();
     let userDetails = user;
 
     useEffect(() => {
-        if (activeAccountId && isConnected) {
+        if (signedAccountId) {
             setWalletIcon("/icons/wallet.svg");
         }
-        if (!activeAccountId && !isConnected) {
+        if (!signedAccountId) {
             setWalletIcon("/icons/wallet-red.svg");
         }
-    }, [activeAccountId, isConnected, userDetails]);
+    }, [signedAccountId, userDetails]);
 
     useEffect(() => {
         const openupload = searchParams?.get('openupload');
@@ -48,7 +48,9 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
         }
     }, [pathName, searchParams]);
 
-    // console.log(`Account connected : ${userDetails?.user?.nearAddress}, ${activeAccountId}`)
+    const handleSignIn = async () => {
+        await wallet?.signIn();
+    }
 
     return (
         <div className="header fixed bg-black h-[7rem] w-full z-50 top-0 left-0 flex items-center justify-between xl:px-[7rem] lg:px-[3rem] md:px-[2rem] px-3">
@@ -104,7 +106,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                 {userDetails && <InlineSVG
                     src={walletIcon}
                     className="md:h-11 md:w-11 h-8 w-8 cursor-pointer"
-                    onClick={() => { activeAccountId ? router.push("/profile") : connect() }}
+                    onClick={() => { signedAccountId ? router.push("/profile") : handleSignIn() }}
                 />}
                 {!userDetails && <div className="header-actions flex items-center gap-3">
                     {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}

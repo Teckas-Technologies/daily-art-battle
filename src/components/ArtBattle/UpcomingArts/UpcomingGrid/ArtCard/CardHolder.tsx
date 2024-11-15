@@ -1,7 +1,6 @@
 // CardHolder.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ArtData, useFetchArtById } from '@/hooks/artHooks';
-import { useMbWallet } from '@mintbase-js/react';
 import { useArtsRaffleCount } from '@/hooks/useRaffleTickets';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import './Card.css';
@@ -10,6 +9,7 @@ import Toast from '@/components/Toast';
 import { BuyRafflePopup } from '@/components/ArtBattle/RafflePopup/BuyRafflePopup';
 import InlineSVG from 'react-inlinesvg';
 import { SignInPopup } from '@/components/PopUps/SignInPopup';
+import { NearContext } from '@/wallet/WalletSelector';
 
 interface CardHolderProps {
     artData: ArtData[];
@@ -22,7 +22,7 @@ interface CardHolderProps {
 }
 
 const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail, setRefresh, setSelectedArt, totalPage, removeArtById }) => {
-    const { activeAccountId } = useMbWallet();
+    const { wallet, signedAccountId } = useContext(NearContext);
     const { fetchArtUserRaffleCount } = useArtsRaffleCount();
     const [success, setSuccess] = useState(false);
     const [myTickets, setMyTickets] = useState<number>(0);
@@ -115,7 +115,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
         if (overlayArt) {
             fetchArtUserticketss(overlayArt);
         }
-    }, [activeAccountId, fetchArtUserRaffleCount, overlayArt, success]);
+    }, [signedAccountId, fetchArtUserRaffleCount, overlayArt, success]);
 
     return (
         <>

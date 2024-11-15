@@ -5,6 +5,7 @@ import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } fro
 import { authenticateUser } from "../../utils/verifyToken";
 import User from "../../model/User";
 import { connectToDatabase } from "../../utils/mongoose";
+import { TOTAL_REWARDS } from "@/data/queries/totalrewards.graphql";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     const email = await authenticateUser(req);
@@ -30,7 +31,15 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 },
                 network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
               });
-              return res.status(200).json(result);
+              const totalDocuments = await graphQLService({
+                query: TOTAL_REWARDS,
+                variables: {
+                  nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                  owner,
+                },
+                network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+              });
+              return res.status(200).json({result,totalDocuments});
         }else{
             const user = await User.findOne({email});
             if(!user){
@@ -47,7 +56,15 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 },
                 network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
               });
-              return res.status(200).json(result);
+              const totalDocuments = await graphQLService({
+                query: TOTAL_REWARDS,
+                variables: {
+                  nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                  owner,
+                },
+                network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+              });
+              return res.status(200).json({result,totalDocuments});
             }
            
         }

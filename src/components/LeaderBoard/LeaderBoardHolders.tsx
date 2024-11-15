@@ -25,7 +25,7 @@ const LeaderboardHolders = () => {
       setCall(true);
     }
       fetchInitialData()
-  }, [call]);
+  }, [session]);
 
   const fetchInitialData = async () => {
     await fetchLeaderboard(1);
@@ -102,11 +102,11 @@ const LeaderboardHolders = () => {
   const getWidthClass = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'w-full sm:w-[400px] md:w-[450px] lg:w-[480.75px]';
+        return 'w-[396.26px] sm:w-[400px] md:w-[450px] lg:h-[92.25px] lg:w-[480.75px]';
       case 2:
-        return 'w-full sm:w-[320px] md:w-[360px] lg:w-[384.75px]';
+        return 'w-[320.12px] sm:w-[320px] md:w-[360px] lg:h-[92.25px] lg:w-[384.75px]';
       case 3:
-        return 'w-full sm:w-[300px] md:w-[320px] lg:w-[341.25px]';
+        return 'w-[283.93px] sm:w-[300px] md:w-[320px] lg:h-[92.25px] lg:w-[341.25px]';
       default:
         return 'w-full';
     }
@@ -173,25 +173,33 @@ const LeaderboardHolders = () => {
   
     {/* Top Rankings Section */}
     <div className="w-full mt-10 lg:mt-[50px]">
-      <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
-        Top Rankings
-      </h2>
-      {topThreeData.map((user: LeaderBoardResponse) => (
-        <div
-          key={user.rank}
-          className={`flex items-center gap-4 p-4 sm:p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)} flex-col sm:flex-row`}
-        >
-          <img src="/default-profile.png" alt={user.firstName} className="w-10 h-10 lg:w-12 lg:h-12 rounded-full" />
-          <div className="flex-1 text-center lg:text-left">
-            <h3 className="text-white font-semibold flex items-center gap-2">
-              {user.firstName + user.lastName}
-              <InlineSVG src="/icons/gfx-point.svg" className="h-6 w-6 text-yellow-400" />
-              <span>{user.gfxvsCoins}</span>
-            </h3>
-          </div>
-        </div>
-      ))}
+  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
+    Top Rankings
+  </h2>
+  {topThreeData.map((user: LeaderBoardResponse) => (
+    <div
+      key={user.rank}
+      className={`flex items-center gap-4 p-4 sm:p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)} flex-row`}
+    >
+      {/* Profile Image */}
+      <img
+        src="/default-profile.png"
+        alt={user.firstName}
+        className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+      />
+      
+      {/* User Information */}
+      <div className="flex-1 text-center sm:text-left">
+        <h3 className="text-white font-semibold flex items-center gap-2">
+          {user.firstName} {user.lastName}
+          <InlineSVG src="/icons/gfx-point.svg" className="h-6 w-6 text-yellow-400" />
+          <span>{user.gfxvsCoins}</span>
+        </h3>
+      </div>
     </div>
+  ))}
+</div>
+
   
  {/* Scroll to Top Button */}
  <div className="fixed bottom-5 w-[115%] flex flex-col items-center gap-2">

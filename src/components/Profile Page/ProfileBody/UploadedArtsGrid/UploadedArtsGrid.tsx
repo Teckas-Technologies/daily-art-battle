@@ -17,7 +17,7 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [page, setPage] = useState<number>(1);
     const [sort, setSort] = useState<string>("dateDsc");
     const { arts, loading, totalPage, fetchUserArts } = useFetchUserArts();
-    const { searchedArts, totalSearchPage, searchUserArts } = useSearchUserArts();
+    const { searchLoading, searchedArts, totalSearchPage, searchUserArts } = useSearchUserArts();
     const [userArts, setUserArts] = useState<ArtData[] | null>(null);
     const [sortLabel, setSortLabel] = useState("Latest First");
     const [isOpen, setIsOpen] = useState(false);
@@ -25,8 +25,18 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [empty, setEmpty] = useState("");
     const [total, setTotal] = useState(totalPage);
+    const [isLoading, setIsLoading] = useState(false);
     const { user } = useAuth();
     let userDetails = user;
+
+    useEffect(() => {
+        if (loading || searchLoading) {
+            setIsLoading(true);
+        }
+        if (!loading && !searchLoading) {
+            setIsLoading(false)
+        }
+    }, [loading, searchLoading])
 
     useEffect(() => {
         const initializeData = async () => {
@@ -63,10 +73,10 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
             setTotal(totalSearchPage);
             setEmpty("");
         }
-        if (!arts && !searchedArts && !loading) {
-            setEmpty("No arts found!")
+        if (!isLoading && userArts?.length === 0) {
+            setEmpty("No arts found!");
         }
-    }, [arts, searchedArts, userDetails]);
+    }, [arts, searchedArts, userDetails, searchQuery, isLoading]);
 
     useEffect(() => {
         if (sort) {
@@ -223,23 +233,25 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
                 </div>
             </div>
 
-            <div className="upload-grid grid-view w-full flex flex-col justify-center items-center" id="uploads">
+            <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[22rem]" id="uploads">
                 <UploadsHolder artData={userArts} />
+
+                {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
+                    <InlineSVG
+                        src='/icons/info.svg'
+                        className='fill-current text-white font-bold point-c w-4 h-4 cursor-pointer'
+                    />
+                    <h2 className="text-white font-semibold text-lg">{empty}</h2>
+                </div>
+                }
+
+                {isLoading && userArts && userArts?.length < 1 && !empty && <div className="uploads-loader w-full flex items-center justify-center">
+                    <Loader md="22" sm="15" />
+                </div>
+                }
             </div>
 
-            {empty && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
-                <InlineSVG
-                    src='/icons/info.svg'
-                    className='fill-current text-white font-bold point-c w-4 h-4 cursor-pointer'
-                />
-                <h2 className="text-white font-semibold text-lg">{empty}</h2>
-            </div>
-            }
 
-            {loading && userArts && userArts?.length < 1 && <div className="uploads-loader w-full min-h-[20rem] flex items-center justify-center">
-                <Loader md="22" sm="15" />
-            </div>
-            }
 
             {/* Pagination for upcoming arts */}
             {userArts && userArts?.length > 0 && <div className="pagination-section relative w-full flex justify-center py-5 mt-5 mb-20">

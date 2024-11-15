@@ -37,28 +37,29 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
       </div>
       
       <div className="w-full px-3 sm:px-6 lg:px-20">
-        {/* Tabs Section */}
-        <div className="w-full max-w-[800px] flex flex-wrap mt-10 sm:mt-20 justify-center gap-2 md:gap-4">
-          {[
-            "GFXvs Point Holders",
-            "Collectors",
-            "Creators",
-          ].map((tab) => (
-            <button
-              key={tab}
-              className={`spartan-semibold w-[180px] sm:w-[200px] lg:w-[250px] px-4 sm:px-6 lg:px-9 py-2 
-                rounded-tl-[15px] rounded-tr-[45px] rounded-bl-0 rounded-br-[45px] 
-                border-t-[0.75px] border-r-[0.75px] 
-                text-[12px] sm:text-[13.5px] font-medium leading-[15px] tracking-[-0.06em]
-                ${activeTab === tab ? 'border-[#00FF00] text-[#00FF00]' : 'border-[#888888] text-[#FFFFFF]'}
-                bg-transparent relative z-[1]`}
-              onClick={() => handleTabClick(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-    
+  {/* Tabs Section */}
+  <div className="w-full max-w-[800px] flex flex-wrap mt-10 sm:mt-20 gap-2 md:gap-4">
+    {[
+      "GFXvs Point Holders",
+      "Collectors",
+      "Creators",
+    ].map((tab, index) => (
+      <button
+        key={tab}
+        className={`spartan-semibold w-[180px] sm:w-[200px] lg:w-[250px] px-4 sm:px-6 lg:px-9 py-2 
+          rounded-tl-[15px] rounded-tr-[45px] rounded-bl-0 rounded-br-[45px] 
+          border-t-[0.75px] border-r-[0.75px] 
+          text-[12px] sm:text-[13.5px] font-medium leading-[15px] tracking-[-0.06em]
+          ${activeTab === tab ? 'border-[#00FF00] text-[#00FF00]' : 'border-[#888888] text-[#FFFFFF]'}
+          bg-transparent relative z-[1] 
+          ${index === 2 ? 'sm:ml-0 mt-2 lg:mt-0 md:mt-0' : ''}`} // Align third button to the left
+        onClick={() => handleTabClick(tab)}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+
         {/* Tab Content */}
         <div className="mt-10 sm:mt-16">
           {activeTab === "Collectors" && <LeaderboardCollectors />}

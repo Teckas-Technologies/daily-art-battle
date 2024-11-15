@@ -43,7 +43,7 @@ interface Battle extends Document {
 
 
 const BattleSchema = new mongoose.Schema({
-  specialWinnerName:{ type: String, required: true },
+  specialWinnerName:{ type: String, required: false },
   artAartistName:{ type: String, required: true },
   artBartistName:{ type: String, required: true },
   videoSpinner: { type: String, required: false },

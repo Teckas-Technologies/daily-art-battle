@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import InlineSVG from "react-inlinesvg";
 import "./ProfileHeader.css";
-import { useMbWallet } from "@mintbase-js/react";
+import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
+
 interface ProfileHeaderProps {
   onEditClick: () => void;
   handleCoinClick: () => void;
@@ -11,10 +12,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onEditClick,
   handleCoinClick,
 }) => {
-  const { isConnected, activeAccountId, connect } = useMbWallet();
+
+  const { wallet, signedAccountId } = useContext(NearContext);
   const { user } = useAuth();
   let userDetails = user;
-  
+
   return (
     <div className="profile-header">
       <div className="profile-bg flex items-center justify-center flex-col px-[20px] py-4 bg-[#000000] text-white h-[350px] rounded-xl md:flex-row md:justify-between md:h-[230px] lg:flex-row lg:justify-between lg:gap-[40px] lg:w-[100%] lg:h-[200px] lg:px-6 lg:py-10 xl:flex-row xl:justify-between xl:gap-[40px] xl:w-[100%] xl:px-7 xl:py-10 xxl:flex-row xxl:h-[250px]">
@@ -100,7 +102,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
         </div>
 
-        {isConnected ? (
+        {signedAccountId ? (
           <div className="flex flex-col items-center justify-between gap-2 button-div">
             <p className="text-[#FFFFFF] text-sm font-semibold">
               Wallet Address
@@ -109,10 +111,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               className="text-[#FFFFFF] text-xs font-light px-[30px] py-[5px] rounded-full"
               style={{ border: "1px solid #00FF00" }}
             >
-              {activeAccountId
-                ? activeAccountId.length > 20
-                  ? `${activeAccountId.slice(0, 20)}...`
-                  : activeAccountId
+              {signedAccountId
+                ? signedAccountId.length > 20
+                  ? `${signedAccountId.slice(0, 20)}...`
+                  : signedAccountId
                 : ""}
             </span>
           </div>
