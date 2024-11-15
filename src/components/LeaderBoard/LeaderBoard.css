@@ -12,3 +12,17 @@
     font-family: 'Spartan', sans-serif;
     font-weight: 400;
 }
+
+@media (min-width: 1020px) and (max-width: 1300px) {
+    .custom-flex-row {
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .custom-flex-row {
+      flex-direction: row;
+    }
+  }
+  
+  

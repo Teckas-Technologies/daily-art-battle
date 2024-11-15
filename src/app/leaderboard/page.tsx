@@ -4,15 +4,20 @@ import { Header } from "@/components/Header/Header";
 import "../../components/LeaderBoard/LeaderBoard.css";
 import LeaderboardHolders from "@/components/LeaderBoard/LeaderBoardHolders";
 import { signIn, useSession } from "next-auth/react";
-import { setAuthToken } from "../../../utils/authToken";
+import { getAuthToken, setAuthToken } from "../../../utils/authToken";
 import LeaderboardCollectors from "@/components/LeaderBoard/LeaderBoardCollectors";
 import LeaderboardCreators from "@/components/LeaderBoard/LeaderBoardCreators";
 import { GFX_CAMPAIGNID } from "@/config/constants";
+import InlineSVG from "react-inlinesvg";
+import Loader from "@/components/ArtBattle/Loader/Loader";
+import { useLeaderBoard } from "@/hooks/leaderboard";
 const LeaderBoardPage = ()=>{
 const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const [openNav, setOpenNav] = useState(false);
+    const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoard();
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const[call,setCall]=useState(false);
     const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 
@@ -20,8 +25,20 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     setActiveTab(tab);
   }
   
+  useEffect(() => {
+    const fetchAuthToken = async () => {
+      const auth = getAuthToken();
+      console.log(auth);
+      if (session) {
+        setCall(true);
+      }
+    };
+    fetchAuthToken();
+  }, [session]);
+
+  
     return(
-      <div className="bg-black w-full text-white min-h-screen flex flex-col">
+      <div className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}
@@ -30,8 +47,24 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
       />
-      <div className="flex-grow flex flex-col items-center justify-center pt-16 w-full px-4 text-center">
-        <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-20 font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
+      {/* <InlineSVG src="/icons/blur-effect.svg" className="effect" /> */}
+<div
+  className="flex spartan-semibold lg:ml-[90px] md:ml-10 sm:ml-5 ml-2 gap-1 items-center px-4 mt-[40px] pt-20"
+>
+  <button className="camapign-path-button bg-gradient-to-r from-white/10 to-white/15 text-center flex items-center justify-center h-[30.75px] px-[18px] py-[7.5px] rounded-full border-[0.75px] border-[#00ff00]">
+    GFXvs
+  </button>
+  <InlineSVG src="/icons/green-arrow.svg" className="fill-[#00ff00]" />
+  <h3
+    className="text-[#00ff00] underline cursor-pointer"
+    // onClick={handleNavigation}
+  >
+    Leaderboard
+  </h3>
+</div>
+
+      <div className="flex-grow flex flex-col items-center justify-center w-full px-4 text-center">
+        <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-10 font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
           GFXvs Leaderboard
         </h1>
       </div>
@@ -62,9 +95,18 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
 
         {/* Tab Content */}
         <div className="mt-10 sm:mt-16">
-          {activeTab === "Collectors" && <LeaderboardCollectors />}
-          {activeTab === "GFXvs Point Holders" && <LeaderboardHolders />}
-          {activeTab === "Creators" && <LeaderboardCreators />}
+          {call?(
+            <>
+              {activeTab === "Collectors" && <LeaderboardCollectors />}
+              {activeTab === "GFXvs Point Holders" && <LeaderboardHolders />}
+              {activeTab === "Creators" && <LeaderboardCreators />}
+              </>
+          ):(
+            <>
+             <Loader md="21" sm="15" />
+            </>
+          )}
+         
         </div>
       </div>
     </div>    
