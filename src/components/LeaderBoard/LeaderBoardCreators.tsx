@@ -6,6 +6,7 @@ import { useState,useEffect,useRef } from 'react';
 import { fetchWithAuth, setAuthToken } from '../../../utils/authToken';
 import { useSession } from 'next-auth/react';
 import { LeaderBoardCollectResponse, LeaderBoardCreatorsResponse, LeaderBoardResponse, useLeaderBoard, useLeaderBoardCollect, useLeaderBoardCreator } from '@/hooks/leaderboard';
+import Loader from '../ArtBattle/Loader/Loader';
 
 const LeaderBoardCreators = () => {
   const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoardCreator();
@@ -16,14 +17,15 @@ const LeaderBoardCreators = () => {
   const leaderboardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
+  const [call,setCall] = useState(false);
   useEffect(() => {
-    setAuthToken(session?.idToken || '');
-    fetchInitialData();
+      fetchInitialData()
   }, [session]);
 
   const fetchInitialData = async () => {
+    setCall(true)
     await fetchLeaderboard(1);
+    setCall(false);
   };
 
   const fetchLeaderboard = async (page: number) => {
@@ -106,7 +108,9 @@ const LeaderBoardCreators = () => {
         return 'w-full';
     }
   };
-  
+  if(call){
+    return <Loader md="21" sm="15" />
+    }
   
 
   return (
@@ -161,7 +165,7 @@ const LeaderBoardCreators = () => {
         {leaderboardData.map((user: LeaderBoardCreatorsResponse) => (
             <div
             key={user.rank}
-            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-white"} rounded-xl ${getRowClass(user.rank)}`}
           >
             <div className="flex items-center ml-2 sm:ml-4 lg:ml-5 text-center gap-2 w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px]">
             <span>{user.rank}</span>
