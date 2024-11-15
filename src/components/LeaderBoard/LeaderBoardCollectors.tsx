@@ -97,11 +97,11 @@ const LeaderboardHolders = () => {
   const getWidthClass = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'w-full sm:w-[400px] md:w-[450px] lg:w-[480.75px]';
+        return 'w-[396.26px] sm:w-[400px] md:w-[450px] lg:h-[92.25px] lg:w-[480.75px]';
       case 2:
-        return 'w-full sm:w-[320px] md:w-[360px] lg:w-[384.75px]';
+        return 'w-[320.12px] sm:w-[320px] md:w-[360px] lg:h-[92.25px] lg:w-[384.75px]';
       case 3:
-        return 'w-full sm:w-[300px] md:w-[320px] lg:w-[341.25px]';
+        return 'w-[283.93px] sm:w-[300px] md:w-[320px] lg:h-[92.25px] lg:w-[341.25px]';
       default:
         return 'w-full';
     }
@@ -110,21 +110,46 @@ const LeaderboardHolders = () => {
   
 
   return (
-    <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
+    <div className="spartan-medium custom-flex-row text-xs sm:text-sm md:text-base flex flex-col lg:flex-row items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
       ref={leaderboardRef}
-      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-20"
+      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
-        <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 mr-5 gap-x-6">
-        <span className="w-[60px] min-w-[60px] text-center">Rank</span>
-        <span className="w-[130px] min-w-[130px] text-center">Username</span>
-        <span className="w-[92px] min-w-[92px] text-center">Rare NFTs</span>
-        <span className="w-[164px] min-w-[164px] text-center">Participation NFTs</span>
-        <span className="w-[59px] min-w-[59px] text-center">Total</span>
-        <span className="w-[103px] min-w-[103px] text-center">GFX Points</span>
-      </div>
+      <div className="flex justify-between mt-6 mb-6 pb-4 ml-5 mr-5 gap-x-1 sm:gap-x-3 md:gap-x-4 lg:gap-x-6">
+  {/* Rank Column */}
+  <span className="w-[35px] sm:w-[45px] md:w-[60px] lg:w-[70px] min-w-[35px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words">
+    Rank
+  </span>
+
+  {/* Username Column */}
+  <span className="w-[80px] sm:w-[110px] md:w-[130px] lg:w-[160px] min-w-[80px] text-center text-xs sm:text-sm md:text-base lg:text-lg truncate">
+    Username
+  </span>
+
+  {/* Rare NFTs Column */}
+  <span className="w-[40px] sm:w-[60px] md:w-[90px] lg:w-[110px] min-w-[60px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words">
+    Rare NFTs
+  </span>
+
+  {/* Participation NFTs Column */}
+  <span className="w-[100px] sm:w-[120px] md:w-[140px] lg:w-[160px] min-w-[100px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words">
+    Participation NFTs
+  </span>
+
+  {/* Total Column */}
+  <span className="w-[50px] sm:w-[60px] md:w-[70px] lg:w-[80px] min-w-[50px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words">
+    Total
+  </span>
+
+  {/* GFX Points Column */}
+  <span className="w-[70px] sm:w-[90px] md:w-[110px] lg:w-[130px] min-w-[70px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words truncate">
+    GFX Points
+  </span>
+</div>
+
+
     <div >
     {topThreeData.map((user: LeaderBoardCollectResponse) => (
           <div
@@ -137,10 +162,10 @@ const LeaderboardHolders = () => {
                className={`h-6 w-6`}  
            /></span>  
             </div>
-            <span className="w-[130px] text-center">{user.firstName+user.lastName}</span>
-            <span className="w-[92px] text-center">{user.rareNftCount}</span>
-            <span className="w-[164px] text-center">{user.participationCount}</span>
-            <span className="w-[59px] text-center">{user.rareNftCount+user.participationCount}</span>
+            <span className="w-[130px] text-center text-xs sm:text-sm md:text-base">{user.firstName+user.lastName}</span>
+            <span className="w-[92px] text-center  text-xs sm:text-sm md:text-base">{user.rareNftCount}</span>
+            <span className="w-[164px] text-center  text-xs sm:text-sm md:text-base">{user.participationCount}</span>
+            <span className="w-[59px] text-center text-xs sm:text-sm md:text-base">{user.rareNftCount+user.participationCount}</span>
             <div className="flex items-center text-center w-[103px] max-w-[103px] break-words gap-2 overflow-hidden">
               <>
                 {/* Icon */}
@@ -162,15 +187,15 @@ const LeaderboardHolders = () => {
             key={user.rank}
             className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
           >
-            <div className="flex items-center ml-5 text-center gap-2 w-[60px]">
+            <div className="flex items-center ml-5 text-center gap-2 w-[60px]  text-xs sm:text-sm md:text-base">
                 <span>{user.rank}</span>
             </div>
-            <span className="w-[130px] text-center">{user.firstName+user.lastName}</span>
-            <span className="w-[92px] text-center">{user.rareNftCount}</span>
-            <span className="w-[164px] text-center">{user.participationCount}</span>
-            <span className="w-[59px] text-center">{user.rareNftCount+user.participationCount}</span>
-            <div className="flex items-center text-center w-[103px] max-w-[103px] gap-2  break-words overflow-hidden ">
-            <span className='ml-7 w-[103px] max-w-[103px]'>{user.gfxCoin}</span>
+            <span className="w-[130px] text-center  text-xs sm:text-sm md:text-base">{user.firstName+user.lastName}</span>
+            <span className="w-[92px] text-center  text-xs sm:text-sm md:text-base">{user.rareNftCount}</span>
+            <span className="w-[164px] text-center text-xs sm:text-sm md:text-base">{user.participationCount}</span>
+            <span className="w-[59px] text-center  text-xs sm:text-sm md:text-base">{user.rareNftCount+user.participationCount}</span>
+            <div className="flex items-center text-center w-[103px] max-w-[103px] gap-2  break-words overflow-hidden  text-xs sm:text-sm md:text-base ">
+            <span className='ml-7 w-[103px] max-w-[103px]  text-xs sm:text-sm md:text-base'>{user.gfxCoin}</span>
             </div>
           </div>
         ))}
@@ -178,8 +203,8 @@ const LeaderboardHolders = () => {
       </div>
 
        {/* Right Section - Top Rankings Cards */}
-       <div className="w-full mt-10 lg:mt-[50px]">
-  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
+       <div className="w-full mt-1 md:mt-10 lg:mt-[50px]">
+  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-start lg:text-left">
     Top Rankings
   </h2>
   {topThreeData.map((user:LeaderBoardCollectResponse) => (

@@ -110,12 +110,12 @@ const LeaderBoardCreators = () => {
   
 
   return (
-    <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
+    <div className="spartan-medium custom-flex-row flex flex-col lg:flex-row items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
       ref={leaderboardRef}
-      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-20"
+      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
        <div className="flex justify-between mt-6 mb-6 pb-4 ml-3 sm:ml-5 gap-x-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-10">
   {/* Header */}
@@ -185,8 +185,8 @@ const LeaderBoardCreators = () => {
       </div>
 
       {/* Right Section - Top Rankings Cards */}
-      <div className="w-full mt-10 lg:mt-[50px]">
-  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
+      <div className="w-full mt-1 md:mt-10 lg:mt-[50px]">
+  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-start lg:text-left">
     Top Rankings
   </h2>
   {topThreeData.map((user:LeaderBoardCreatorsResponse) => (
