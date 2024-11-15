@@ -38,6 +38,9 @@ const DailyCheckin = () => {
     if (result) {
       console.log("Check-in successful:", result);
       setIsClaimed(true);
+      setToastMessage(`Claimed reward for Day ${index + 1}!`);
+      setSuccessToast("yes");
+      setToast(true);
     }
   };
 
@@ -205,7 +208,7 @@ const DailyCheckin = () => {
               }`}
               onClick={handleWeeklyClaim}
             >
-              {isClaimed ? "Claimed" : "Claim"}
+              {streakDays === 7 && isClaimed ? "Claimed" : "Claim"}
             </button>
           </div>
         </div>
