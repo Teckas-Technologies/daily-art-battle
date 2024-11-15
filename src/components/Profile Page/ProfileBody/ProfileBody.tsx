@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { UploadedArtsGrid } from "./UploadedArtsGrid/UploadedArtsGrid";
+import WalletHistory from "./WalletHistory/WalletHistory";
 
 const tabs = [
     { id: "uploads", label: "Uploads", active: true },
@@ -16,7 +17,7 @@ export const ProfileBody: React.FC = () => {
     }, [activeTab])
 
     return (
-        <div className="profile-body w-full xl:px-[7rem] lg:px-[3rem] md:px-[2rem] px-3 mt-10">
+        <div className="profile-body w-full mt-10">
             <div className="tabs w-full max-w-[800px] flex items-center justify-center gap-4">
                 {tabs.map((tab) => (
                     <div
@@ -28,7 +29,8 @@ export const ProfileBody: React.FC = () => {
                     </div>
                 ))}
             </div>
-            <UploadedArtsGrid rendered={rendered} />
+            {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} />}
+            {activeTab === "wallet" && <WalletHistory rendered={rendered} />}
         </div>
     )
 }
