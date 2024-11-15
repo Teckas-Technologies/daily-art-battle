@@ -18,14 +18,15 @@ const LeaderboardHolders = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [call,setCall] = useState(false);
-
   
   useEffect(() => {
       fetchInitialData()
   }, [session]);
 
   const fetchInitialData = async () => {
+    setCall(true)
     await fetchLeaderboard(1);
+    setCall(false);
   };
 
   const fetchLeaderboard = async (page: number) => {
@@ -108,7 +109,9 @@ const LeaderboardHolders = () => {
       return 'w-full';
   }
 };
-
+if(call){
+return <Loader md="21" sm="15" />
+}
 
   
  return (
@@ -155,7 +158,7 @@ const LeaderboardHolders = () => {
         {leaderboardData.map((user: LeaderBoardResponse) => (
           <div
             key={user.rank}
-            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
+            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-white"} rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
           >
             <div className="w-[40px] sm:w-[50px] text-xs sm:text-sm md:text-base">{user.rank}</div>
             <span className="w-[100px] sm:w-[120px] md:w-[200px] lg:w-[250px] text-center break-words text-xs sm:text-sm md:text-base">

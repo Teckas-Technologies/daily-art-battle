@@ -6,6 +6,7 @@ import { useState,useEffect,useRef } from 'react';
 import { fetchWithAuth, setAuthToken } from '../../../utils/authToken';
 import { useSession } from 'next-auth/react';
 import { LeaderBoardCollectResponse, LeaderBoardResponse, useLeaderBoard, useLeaderBoardCollect } from '@/hooks/leaderboard';
+import Loader from '../ArtBattle/Loader/Loader';
 
 const LeaderboardHolders = () => {
   const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoardCollect();
@@ -16,14 +17,17 @@ const LeaderboardHolders = () => {
   const leaderboardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [call,setCall] = useState(false);
 
+  
   useEffect(() => {
-    setAuthToken(session?.idToken || '');
-    fetchInitialData();
+      fetchInitialData()
   }, [session]);
 
   const fetchInitialData = async () => {
+    setCall(true)
     await fetchLeaderboard(1);
+    setCall(false);
   };
 
   const fetchLeaderboard = async (page: number) => {
@@ -107,7 +111,9 @@ const LeaderboardHolders = () => {
     }
   };
   
-  
+  if(call){
+    return <Loader md="21" sm="15" />
+    }
 
   return (
     <div className="spartan-medium custom-flex-row text-xs sm:text-sm md:text-base flex flex-col lg:flex-row items-start justify-start w-full mt-10">
@@ -185,7 +191,7 @@ const LeaderboardHolders = () => {
         {leaderboardData.map((user: LeaderBoardCollectResponse) => (
           <div
             key={user.rank}
-            className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+            className={`flex items-center text-center  justify-between p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-white"} rounded-xl ${getRowClass(user.rank)}`}
           >
             <div className="flex items-center ml-5 text-center gap-2 w-[60px]  text-xs sm:text-sm md:text-base">
                 <span>{user.rank}</span>
