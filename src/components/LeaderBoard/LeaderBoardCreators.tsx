@@ -114,7 +114,7 @@ const LeaderBoardCreators = () => {
   
 
   return (
-    <div className="spartan-medium custom-flex-row flex flex-col lg:flex-row items-start justify-start w-full mt-10">
+    <div className="spartan-medium custom-flex-row flex flex-col lg:flex-row mb-20 items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
@@ -216,7 +216,7 @@ const LeaderBoardCreators = () => {
     </div>
   ))}
 </div>
-      <div className="fixed bottom-5 w-[110%] flex flex-col items-center gap-2">
+      <div className="fixed bottom-5 w-[110%] flex flex-col mb-20 items-center gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110">
   <InlineSVG
     src="/icons/arrow.svg"
