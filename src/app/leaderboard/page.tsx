@@ -81,7 +81,7 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     ].map((tab, index) => (
       <button
         key={tab}
-        className={`spartan-semibold w-[180px] sm:w-[200px] lg:w-[250px] px-4 sm:px-6 lg:px-9 py-2 
+        className={`spartan-semibold w-[150px] sm:w-[200px] lg:w-[250px] px-4 sm:px-6 lg:px-9 py-2 
           rounded-tl-[15px] rounded-tr-[45px] rounded-bl-0 rounded-br-[45px] 
           border-t-[0.75px] border-r-[0.75px] 
           text-[12px] sm:text-[13.5px] font-medium leading-[15px] tracking-[-0.06em]
