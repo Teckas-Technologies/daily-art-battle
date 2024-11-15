@@ -115,7 +115,7 @@ return <Loader md="21" sm="15" />
 
   
  return (
-    <div className="spartan-medium flex custom-flex-row lg:felx-row flex-col text-lg sm:text-sm md:text-base items-start justify-start w-full mt-10">
+    <div className="spartan-medium flex custom-flex-row lg:felx-row mb-20 flex-col text-lg sm:text-sm md:text-base items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
@@ -202,7 +202,7 @@ return <Loader md="21" sm="15" />
 
   
  {/* Scroll to Top Button */}
- <div className="fixed bottom-5 w-[115%] flex flex-col items-center gap-2">
+ <div className="fixed bottom-5 w-[115%] flex flex-col items-center mb-20 gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110"     onClick={() => leaderboardRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })}
   >
   <InlineSVG

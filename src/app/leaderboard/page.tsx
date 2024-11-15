@@ -11,6 +11,8 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import InlineSVG from "react-inlinesvg";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useLeaderBoard } from "@/hooks/leaderboard";
+import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
+import { MobileNav } from "@/components/MobileNav/MobileNav";
 const LeaderBoardPage = ()=>{
 const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const [openNav, setOpenNav] = useState(false);
@@ -109,6 +111,8 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
          
         </div>
       </div>
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
     </div>    
     )
 }

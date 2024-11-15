@@ -116,7 +116,7 @@ const LeaderboardHolders = () => {
     }
 
   return (
-    <div className="spartan-medium custom-flex-row text-xs sm:text-sm md:text-base flex flex-col lg:flex-row items-start justify-start w-full mt-10">
+    <div className="spartan-medium custom-flex-row mb-20 text-xs sm:text-sm md:text-base flex flex-col lg:flex-row items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
@@ -143,16 +143,6 @@ const LeaderboardHolders = () => {
   <span className="w-[100px] sm:w-[120px] md:w-[140px] lg:w-[160px] min-w-[100px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words">
     Participation NFTs
   </span>
-
-  {/* Total Column */}
-  <span className="w-[50px] sm:w-[60px] md:w-[70px] lg:w-[80px] min-w-[50px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words">
-    Total
-  </span>
-
-  {/* GFX Points Column */}
-  <span className="w-[70px] sm:w-[90px] md:w-[110px] lg:w-[130px] min-w-[70px] text-center text-xs sm:text-sm md:text-base lg:text-lg break-words truncate">
-    GFX Points
-  </span>
 </div>
 
 
@@ -171,21 +161,6 @@ const LeaderboardHolders = () => {
             <span className="w-[130px] text-center text-xs sm:text-sm md:text-base">{user.firstName+user.lastName}</span>
             <span className="w-[92px] text-center  text-xs sm:text-sm md:text-base">{user.rareNftCount}</span>
             <span className="w-[164px] text-center  text-xs sm:text-sm md:text-base">{user.participationCount}</span>
-            <span className="w-[59px] text-center text-xs sm:text-sm md:text-base">{user.rareNftCount+user.participationCount}</span>
-            <div className="flex items-center text-center w-[103px] max-w-[103px] break-words gap-2 overflow-hidden">
-              <>
-                {/* Icon */}
-                <span className="flex-shrink-0 text-yellow-400">
-                  <InlineSVG
-                    src={`/icons/${getCoinColor(user.rank)}.svg`}
-                    className="h-6 w-6"
-                  />
-                </span>
-                {/* GFX Points Text */}
-                <span className="w-[103px] max-w-[103px]">{user.gfxCoin}</span>
-              </>
-            </div>
-
           </div>
         ))}
         {leaderboardData.map((user: LeaderBoardCollectResponse) => (
@@ -199,10 +174,6 @@ const LeaderboardHolders = () => {
             <span className="w-[130px] text-center  text-xs sm:text-sm md:text-base">{user.firstName+user.lastName}</span>
             <span className="w-[92px] text-center  text-xs sm:text-sm md:text-base">{user.rareNftCount}</span>
             <span className="w-[164px] text-center text-xs sm:text-sm md:text-base">{user.participationCount}</span>
-            <span className="w-[59px] text-center  text-xs sm:text-sm md:text-base">{user.rareNftCount+user.participationCount}</span>
-            <div className="flex items-center text-center w-[103px] max-w-[103px] gap-2  break-words overflow-hidden  text-xs sm:text-sm md:text-base ">
-            <span className='ml-7 w-[103px] max-w-[103px]  text-xs sm:text-sm md:text-base'>{user.gfxCoin}</span>
-            </div>
           </div>
         ))}
         </div>
@@ -237,7 +208,7 @@ const LeaderboardHolders = () => {
     </div>
   ))}
 </div>
-      <div className="fixed bottom-5 w-[110%] flex flex-col items-center gap-2">
+      <div className="fixed bottom-5 w-[110%] mb-20 flex flex-col items-center gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110"     onClick={() => leaderboardRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })}
   >
   <InlineSVG
