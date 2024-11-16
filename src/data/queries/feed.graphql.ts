@@ -3,11 +3,12 @@ import { gql } from 'graphql-request';
 
 export const FETCH_FEED = gql`
   query gfxvs($nft_contract_id: String!, $owner: String!, $limit: Int
-    $offset: Int) {
+    $offset: Int,  $order: order_by!) {
     mb_views_nft_tokens(
       where: { nft_contract_id: { _eq: $nft_contract_id }, owner: { _eq: $owner } }
       offset: $offset,
-      limit: $limit
+      limit: $limit,
+      order_by: { minted_timestamp: $order }
     ) {
       base_uri
       burned_receipt_id

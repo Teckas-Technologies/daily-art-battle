@@ -16,6 +16,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         const queryType = req.query.queryType;
         const {limit = 10, offset = 0 } = req.query;
         if(queryType=='spinners'){
+           const sort = req.query.sort;
+           if(sort=="dateAsc"){
             const user = await User.findOne({email});
             if(!user){
               res.status(400).json({error:"user not found"});
@@ -28,6 +30,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   owner,  
                   limit: parseInt(limit as string),
                   offset: parseInt(offset as string),
+                  order: "asc",
                 },
                 network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
               });
@@ -39,34 +42,94 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 },
                 network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
               });
-              return res.status(200).json({result,totalDocuments});
+              const totalPages = Math.ceil(totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count/ parseInt(limit as string));
+              return res.status(200).json({result,totalDocuments,totalPages});
+            }else  if(sort=="dateDsc"){
+              const user = await User.findOne({email});
+              if(!user){
+                res.status(400).json({error:"user not found"});
+              }
+              const owner = user.nearAddress
+              const result = await graphQLService({
+                  query: FETCH_FEED,
+                  variables: {
+                    nft_contract_id:SPECIAL_WINNER_CONTRACT,
+                    owner,  
+                    limit: parseInt(limit as string),
+                    offset: parseInt(offset as string),
+                    order: "desc",
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+                const totalDocuments = await graphQLService({
+                  query: TOTAL_REWARDS,
+                  variables: {
+                    nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                    owner,
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+                const totalPages = Math.ceil(totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count/ parseInt(limit as string));
+                return res.status(200).json({result,totalDocuments,totalPages});
+              }
         }else{
-            const user = await User.findOne({email});
-            if(!user){
-              res.status(400).json({error:"user not found"});
+            const sort = req.query.sort;
+            if(sort=="dateAsc"){
+              const user = await User.findOne({email});
+              if(!user){
+                res.status(400).json({error:"user not found"});
+              }
+              const owner = user.nearAddress
+              const result = await graphQLService({
+                  query: FETCH_FEED,
+                  variables: {
+                    nft_contract_id: ART_BATTLE_CONTRACT,
+                    owner,
+                    limit: parseInt(limit as string),
+                    offset: parseInt(offset as string),
+                    order: "asc",
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+                const totalDocuments = await graphQLService({
+                  query: TOTAL_REWARDS,
+                  variables: {
+                    nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                    owner,
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+                const totalPages = Math.ceil(totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count/ parseInt(limit as string));
+                return res.status(200).json({result,totalDocuments,totalPages});
+            }else if(sort=="dateDsc"){
+              const user = await User.findOne({email});
+              if(!user){
+                res.status(400).json({error:"user not found"});
+              }
+              const owner = user.nearAddress
+              const result = await graphQLService({
+                  query: FETCH_FEED,
+                  variables: {
+                    nft_contract_id: ART_BATTLE_CONTRACT,
+                    owner,
+                    limit: parseInt(limit as string),
+                    offset: parseInt(offset as string),
+                    order: "desc",
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+                const totalDocuments = await graphQLService({
+                  query: TOTAL_REWARDS,
+                  variables: {
+                    nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                    owner,
+                  },
+                  network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
+                });
+                const totalPages = Math.ceil(totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count/ parseInt(limit as string));
+                return res.status(200).json({result,totalDocuments,totalPages});
+              }
             }
-            const owner = user.nearAddress
-            const result = await graphQLService({
-                query: FETCH_FEED,
-                variables: {
-                  nft_contract_id: ART_BATTLE_CONTRACT,
-                  owner,
-                  limit: parseInt(limit as string),
-                  offset: parseInt(offset as string),
-                },
-                network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
-              });
-              const totalDocuments = await graphQLService({
-                query: TOTAL_REWARDS,
-                variables: {
-                  nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
-                  owner,
-                },
-                network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
-              });
-              return res.status(200).json({result,totalDocuments});
-            }
-           
         }
         catch(error:any){
             res.status(400).json({error:error.message});
