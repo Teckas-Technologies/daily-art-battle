@@ -46,7 +46,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   });
                  
         
-                  return res.status(200).json({result,totalDocuments});
+                  const totalPages = Math.ceil(totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count/ parseInt(limit as string));
+                   return res.status(200).json({result,totalDocuments,totalPages});
                 }else{
                     const user = await User.findOne({email});
                     if(!user){
@@ -78,7 +79,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
                       });
 
-                      return res.status(200).json({result,totalDocuments});
+                      const totalPages = Math.ceil(totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count/ parseInt(limit as string));
+                      return res.status(200).json({result,totalDocuments,totalPages});
                 }
               } catch (error:any) {
                 res.status(400).json({error:error.message});
