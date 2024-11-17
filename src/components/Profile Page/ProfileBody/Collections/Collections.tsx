@@ -2,6 +2,9 @@ import InlineSVG from "react-inlinesvg"
 import "./Collections.css"
 import { RareNftGrid } from "./RareNftGrid/RareNftGrid"
 import { useEffect, useState } from "react"
+import { ParticipationNftGrid } from "./ParticipationNft/ParticipationNftGrid";
+import { useFetchArtsAnalytics } from "@/hooks/profileAnalyticsHook";
+import { RaffleArtsGrid } from "./RaffleTicketArts/RaffleArtsGrid";
 
 interface Menu {
     id: string;
@@ -17,6 +20,7 @@ const initialCollectionsMenu: Menu[] = [
 
 export const Collections: React.FC = () => {
     const [collectionsMenu, setCollectionsMenu] = useState(initialCollectionsMenu);
+    const { analytics, fetchArtsAnalytics } = useFetchArtsAnalytics();
     const [rendered, setRendered] = useState(false);
 
     const handleMenuClick = (id: string) => {
@@ -32,9 +36,17 @@ export const Collections: React.FC = () => {
         setRendered(!rendered);
     }, [collectionsMenu])
 
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            await fetchArtsAnalytics();
+        }
+
+        fetchAnalytics();
+    }, [collectionsMenu])
+
     return (
         <div className="collections">
-            <div className="collections-menus w-full flex md:flex-row flex-col gap-6 items-center justify-between my-10">
+            {analytics && <div className="collections-menus w-full flex md:flex-row flex-col gap-6 items-center justify-between my-10">
                 {collectionsMenu.map((menu, index) => (
                     <div
                         key={menu.id}
@@ -46,7 +58,7 @@ export const Collections: React.FC = () => {
                                 {menu.label}
                             </h2>
                             <h4 className="font-semibold md:text-[3rem] text-[2rem] text-green leading-tight">
-                                4
+                                {menu.id === "rare" ? analytics?.rareNftCount : menu.id === "participant" ? analytics?.participationCount : analytics?.raffleCount}
                             </h4>
                         </div>
                         <div className="go-to md:w-full w-auto flex justify-end">
@@ -60,9 +72,11 @@ export const Collections: React.FC = () => {
                         </div>
                     </div>
                 ))}
-            </div>
+            </div>}
 
             {collectionsMenu[0]?.active && <RareNftGrid rendered={rendered} />}
+            {collectionsMenu[1]?.active && <ParticipationNftGrid rendered={rendered} />}
+            {collectionsMenu[2]?.active && <RaffleArtsGrid rendered={rendered} />}
         </div>
     )
 }
