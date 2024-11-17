@@ -207,6 +207,7 @@ const DailyCheckin = () => {
                 streakDays === 7 && !isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
               }`}
               onClick={handleWeeklyClaim}
+              id="content-top"
             >
               {streakDays === 7 && isClaimed ? "Claimed" : "Claim"}
             </button>

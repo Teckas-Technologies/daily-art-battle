@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./BuyCoins.css";
 import InlineSVG from "react-inlinesvg";
+import useFetchBuyCoin from "@/hooks/BuyCoinhook";
+import estFetchAmount from "@/hooks/EstHook";
+import useNEARTransfer from "@/hooks/useTransfer";
 interface CoinPurchasePopupProps {
   onClose: () => void;
+}
+interface CoinMap {
+  [key: string]: number;
+}
+
+interface FetchBuyCoinData {
+  gfxCoinMap: CoinMap;
 }
 const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
   const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
@@ -14,8 +24,39 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
   const [dropdownSelectedCoin, setDropdownSelectedCoin] = useState<
     string | null
   >("USDT");
+  const { transfer, loading, error } = useNEARTransfer();
+  const numericCustomValue = customValue ? parseFloat(customValue) : 0;
+  const { data } = useFetchBuyCoin(
+    dropdownSelectedCoin === "USDT" ? "usdc" : "near"
+  ) as {
+    data: FetchBuyCoinData | null;
+    loading: boolean;
+    error: string | null;
+  };
+  const { amount, fetchBuyCoinAmount } = estFetchAmount(
+    dropdownSelectedCoin === "USDT" ? "usdc" : "near",
+    numericCustomValue
+  );
+
+  useEffect(() => {
+    if (numericCustomValue > 0) {
+      fetchBuyCoinAmount();
+    }
+  }, [customValue, dropdownSelectedCoin]);
+  useEffect(() => {
+    setCustomValue("");
+    setSelectedCoin("");
+  }, [dropdownSelectedCoin]);
+  const buttonText =
+    numericCustomValue > 0 && amount
+      ? dropdownSelectedCoin === "USDT"
+        ? `${amount.totalUsdc || 0} USDT`
+        : `${amount.totalNear || 0} NEAR`
+      : `Est ${dropdownSelectedCoin}`;
   const handleCoinSelect = (value: string) => {
-    setSelectedCoin(value);
+    const numericValue = value.split(" ")[0];
+    setSelectedCoin(numericValue);
+    console.log("Selected Coin:", numericValue);
   };
 
   const handleCustomValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +87,35 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
     setDropdownSelectedCoin(value);
     setIsDropdownOpen(false);
   };
+  const coinOptions = data
+    ? Object.entries(data.gfxCoinMap).map(([key, value]) => ({
+        gfx: `${value} GFX`,
+        near: `${key} ${dropdownSelectedCoin}`,
+      }))
+    : [];
+  const handleTransfer = async () => {
+    if (!selectedCoin && !amount) {
+      console.error("No coin selected or amount calculated for transfer.");
+      return;
+    }
+
+    const coinValue =
+      selectedCoin || (amount?.totalNear || amount?.totalUsdc)?.toString();
+    console.log(">>>", amount?.totalNear);
+
+    if (!coinValue) {
+      console.error("Invalid coin value.");
+      return;
+    }
+
+    const result = await transfer(coinValue);
+    if (result?.success) {
+      console.log("Transfer successful:", result);
+    } else {
+      console.error("Transfer failed:", result?.error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div
@@ -140,34 +210,30 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
             )}
 
             <div className="grid grid-cols-3 gap-3 md:mb-4 mb-6">
-              {[
-                { gfx: "100 GFX", near: "1 NEAR" },
-                { gfx: "500 GFX", near: "5 NEAR" },
-                { gfx: "1100 GFX", near: "10 NEAR" },
-                { gfx: "1100 GFX", near: "10 NEAR" },
-                { gfx: "1100 GFX", near: "10 NEAR" },
-                { gfx: "1100 GFX", near: "10 NEAR" },
-              ].map((coin, index) => (
-                <div className="coins-div" key={index}>
-                  <div
-                    className={`flex flex-col items-center p-2 sm:p-3 rounded-lg cursor-pointer bg-[#171717] ${
-                      selectedCoin === coin.near
-                        ? " border border-[#00FF00]"
-                        : " "
-                    }`}
-                    onClick={() => handleCoinSelect(coin.near)}
-                  >
-                    <InlineSVG
-                      src="/icons/coin.svg"
-                      className="md:w-8 w-7 md:h-8 h-7 mb-2"
-                    />
-                    <p className="text-[7px] md:text-sm">{coin.gfx}</p>
-                    <button className="coin-btn text-[#FFFFFF] rounded-full text-[8px] md:px-4 px-2 md:py-2 py-[5px] mt-1 md:text-xs w-full">
-                      {coin.near}
-                    </button>
+              {coinOptions.map((coin, index) => {
+                const numericValue = coin.near.split(" ")[0];
+                return (
+                  <div className="coins-div" key={index}>
+                    <div
+                      className={`flex flex-col items-center p-2 sm:p-3 rounded-lg cursor-pointer bg-[#171717] ${
+                        selectedCoin === numericValue
+                          ? "border border-[#00FF00]"
+                          : ""
+                      }`}
+                      onClick={() => handleCoinSelect(coin.near)}
+                    >
+                      <InlineSVG
+                        src="/icons/coin.svg"
+                        className="md:w-8 w-7 md:h-8 h-7 mb-2"
+                      />
+                      <p className="text-[7px] md:text-sm">{coin.gfx}</p>
+                      <button className="coin-btn text-[#FFFFFF] rounded-full text-[8px] md:px-4 px-2 md:py-2 py-[5px] mt-1 md:text-xs w-full">
+                        {coin.near}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="text-center text-gray-500 mb-4 flex flex-row items-center justify-center gap-5">
@@ -189,7 +255,7 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
                 className="bg-transparent text-black flex-grow outline-none px-2 text-xs placeholder:text-xs md:text-sm md:px-4"
               />
               <button className="text-white bg-[#00FF00] rounded-full px-4 py-2 text-xs md:text-sm md:px-8 md:py-4 md:ml-3">
-                Est USDT
+                {buttonText}
               </button>
             </div>
 
@@ -207,7 +273,7 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
                     : "bg-[#AAAAAA] text-[#FFFFFF] cursor-not-allowed"
                 }`}
                 disabled={!selectedCoin && !customValue}
-                onClick={handlePurchase}
+                onClick={handleTransfer}
               >
                 Continue Purchase
               </button>

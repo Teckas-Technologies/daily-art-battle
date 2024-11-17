@@ -13,8 +13,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 9;
             const skip = limit * (page === 1 ? 0 : page - 1);
-            const totalDocuments = await Transactions.find({email:email});
-            const totalPages = Math.ceil(totalDocuments.length / limit);
+            const totalDocuments = (await Transactions.find({email:email})).length;
+            const totalPages = Math.ceil(totalDocuments/ limit);
             const transaction = await Transactions.find({email:email}).skip(skip)
             .limit(limit);
             return res.status(200).json({transaction,totalPages,totalDocuments});
