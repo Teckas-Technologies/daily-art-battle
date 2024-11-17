@@ -88,3 +88,35 @@ export interface UserDetails {
 }
 
 export type NetworkId = "testnet" | "mainnet";
+
+export interface NftToken {
+  base_uri: string;
+  burned_receipt_id: string | null;
+  burned_timestamp: string | null;
+  copies: number;
+  description: string | null;
+  id: string;
+  metadata_id: string;
+  minter: string;
+  minted_timestamp: string;
+  owner: string;
+  title: string | null;
+  media: string | null;
+  media_hash: string | null;
+  extra: string | null;
+  reference: string | null;
+  reference_hash: string | null;
+}
+
+export interface MbViewsNftTokensAggregate {
+  aggregate: {
+    count: number;
+  };
+}
+
+export interface RareNfts {
+  data: {
+    mb_views_nft_tokens: NftToken[];
+    mb_views_nft_tokens_aggregate: MbViewsNftTokensAggregate;
+  };
+}
