@@ -1,8 +1,9 @@
 import { ArtData } from "@/hooks/artHooks";
 import { UploadsCard } from "./UploadsCard";
+import { NftToken } from "@/types/types";
 
 interface UploadsHolderProps {
-    artData: ArtData[] | null;
+    artData: ArtData[] | NftToken[] |  null;
 }
 
 export const UploadsHolder: React.FC<UploadsHolderProps> = ({ artData }) => {
