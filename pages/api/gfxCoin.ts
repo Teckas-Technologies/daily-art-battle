@@ -188,6 +188,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     catch(error:any){
         return res.status(400).json({error:error.message});
     }
+    }else if(req.method=="GET"){
+        await connectToDatabase();
+        try {
+            const transactionHash = req.query.transactionHash;
+            const existinghash = await Hashes.findOne({hash:transactionHash});
+            if(existinghash){
+                return res.status(400).json({error:"Hash already used"});
+            }else{
+                return res.status(200).json({message:"Hash not used"});
+            }
+        } catch(error:any){
+            return res.status(400).json({error:error.message});
+        }
     }
     else {
         return res.status(405).json({ message: "Method not allowed" });
