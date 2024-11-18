@@ -39,7 +39,7 @@ const fetchInitialData = async () => {
 
   
     return(
-      <div className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
+      <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]" style={{ backgroundPosition: 'top', backgroundSize: 'cover', overflowX: 'hidden', overflowY: 'auto' }}>
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}
@@ -64,13 +64,13 @@ const fetchInitialData = async () => {
   </h3>
 </div>
 
-      <div className="flex-grow flex flex-col items-center justify-center w-full px-4 text-center">
+      <div className="flex flex-col items-center justify-center w-full px-4 text-center">
         <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-10 font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
           GFXvs Leaderboard
         </h1>
       </div>
       
-      <div className="w-full px-3 sm:px-6 lg:px-20">
+      <div className="w-full min-h-[100vh] px-3 sm:px-6 lg:px-20">
   {/* Tabs Section */}
   <div className="w-full max-w-[800px] flex flex-wrap mt-10 sm:mt-20 gap-2 md:gap-4">
     {[
@@ -112,7 +112,7 @@ const fetchInitialData = async () => {
       </div>
       <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
       <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-    </div>    
+    </main>    
     )
 }
 export default LeaderBoardPage;
