@@ -14,6 +14,7 @@ import {
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import Battle from "../../model/Battle";
 import { connectToDatabase } from "../../utils/mongoose";
+import { validateUser } from "../../utils/validateClient";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,6 +32,7 @@ export default async function handler(
         return res.status(201).json(scheduledBattle);
       //GET method is used for fetching battles
       case "GET":
+        await validateUser(req);
         const timeout = (ms: any) =>
           new Promise((resolve) => setTimeout(resolve, ms));
         const { queryType } = req.query;
@@ -95,6 +97,7 @@ export default async function handler(
         return res.status(200).json({ message: "Battle Updated" });
       //DELETE method is used to delete battle by id
       case "DELETE":
+        await validateUser(req);
         await deleteAll();
         return res.status(200).json({ message: "All battles deleted" });
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { fetchWithAuth } from '../../utils/authToken';
+import { NEXT_PUBLIC_VALID_CLIENT_ID, NEXT_PUBLIC_VALID_CLIENT_SECRET } from '@/config/constants';
 
 export interface LeaderBoardResponse {
   firstName: string;
@@ -42,7 +42,13 @@ export const useLeaderBoard = () => {
     setLoading(true);
     try {
       console.log(page,limit);
-      const response = await fetchWithAuth(`/api/leaderboard?queryType=points&page=${page}&limit=${limit}`);
+      const response = await fetch(`/api/leaderboard?queryType=points&page=${page}&limit=${limit}`,{
+        headers:{
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+      });
       const data = await response.json();
       if (response.ok) {
         setError(null);
@@ -80,7 +86,13 @@ export const useLeaderBoardCollect = () => {
     setLoading(true);
     try {
       console.log(page,limit);
-      const response = await fetchWithAuth(`/api/leaderboard?queryType=collectors&page=${page}&limit=${limit}`);
+      const response = await fetch(`/api/leaderboard?queryType=collectors&page=${page}&limit=${limit}`,{
+        headers:{
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+    });
       const data = await response.json();
       if (response.ok) {
         setError(null);
@@ -119,7 +131,15 @@ export const useLeaderBoardCreator = () => {
     setLoading(true);
     try {
       console.log(page,limit);
-      const response = await fetchWithAuth(`/api/leaderboard?queryType=creators&page=${page}&limit=${limit}`);
+      console.log("Client ID:", NEXT_PUBLIC_VALID_CLIENT_ID);
+      console.log("Client Secret:", NEXT_PUBLIC_VALID_CLIENT_SECRET);
+      const response = await fetch(`/api/leaderboard?queryType=creators&page=${page}&limit=${limit}`,{
+        headers:{
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+    });
       const data = await response.json();
       if (response.ok) {
         setError(null);
