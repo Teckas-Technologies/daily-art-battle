@@ -6,7 +6,7 @@ export const SEARCH_TOTAL = gql`
       where: {
         nft_contract_id: { _in: $nft_contract_ids }
         owner: { _eq: $owner }
-        title: { _ilike: $title }
+        title: { _iregex: $title }
       }
     ) {
       aggregate {

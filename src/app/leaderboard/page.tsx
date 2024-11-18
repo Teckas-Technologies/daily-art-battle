@@ -28,15 +28,14 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
   }
   
   useEffect(() => {
-    const fetchAuthToken = async () => {
-      const auth = getAuthToken();
-      console.log(auth);
-      if (session) {
-        setCall(true);
-      }
-    };
-    fetchAuthToken();
-  }, [session]);
+    fetchInitialData()
+}, []);
+
+const fetchInitialData = async () => {
+  setCall(true)
+  await fetchLeaderBoard(1);
+  setCall(false);
+};
 
   
     return(
@@ -97,17 +96,17 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
 
         {/* Tab Content */}
         <div className="mt-10 sm:mt-16">
-          {call?(
-            <>
+          {/* {call?(
+            <> */}
               {activeTab === "Collectors" && <LeaderboardCollectors />}
               {activeTab === "GFXvs Point Holders" && <LeaderboardHolders />}
               {activeTab === "Creators" && <LeaderboardCreators />}
-              </>
+              {/* </>
           ):(
             <>
              <Loader md="21" sm="15" />
             </>
-          )}
+          )} */}
          
         </div>
       </div>

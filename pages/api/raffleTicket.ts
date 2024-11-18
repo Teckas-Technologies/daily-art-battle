@@ -240,7 +240,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             }
                           ]).skip(skip)
                           .limit(limit);
-                          const totalDocuments = raffleEntries[0]?.total || 0;
+                          const totalDocuments = raffleEntries.length;
                          const totalPages = Math.ceil(totalDocuments / limit);
                           res.status(200).json({raffleEntries,totalPages,totalDocuments});
                     }
