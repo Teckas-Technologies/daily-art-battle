@@ -4,6 +4,7 @@ import { fetchWithAuth } from '../../utils/authToken';
 export interface LeaderBoardResponse {
   firstName: string;
   lastName: string;
+  email:string;
   gfxvsCoins: any;
   rank: any;
 }

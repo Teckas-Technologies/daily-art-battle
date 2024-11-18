@@ -204,7 +204,7 @@ export const Battle: React.FC<Props> = ({
           </div>
           <div className="arts flex w-full px-3">
             {!todayBattle && !loading && <NoBattle />}
-            {loading && <Loader md="21" sm="15" />}
+            {loading && <Loader md="22" sm="15" />}
             {todayBattle && viewTools[0].active && (
               <Split artA={artA} artB={artB} campaignId={campaignId} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} setRefresh={setRefresh} />
             )}

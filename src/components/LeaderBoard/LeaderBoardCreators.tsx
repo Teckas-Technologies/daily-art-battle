@@ -6,6 +6,7 @@ import { useState,useEffect,useRef } from 'react';
 import { fetchWithAuth, setAuthToken } from '../../../utils/authToken';
 import { useSession } from 'next-auth/react';
 import { LeaderBoardCollectResponse, LeaderBoardCreatorsResponse, LeaderBoardResponse, useLeaderBoard, useLeaderBoardCollect, useLeaderBoardCreator } from '@/hooks/leaderboard';
+import Loader from '../ArtBattle/Loader/Loader';
 
 const LeaderBoardCreators = () => {
   const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoardCreator();
@@ -16,14 +17,15 @@ const LeaderBoardCreators = () => {
   const leaderboardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
+  const [call,setCall] = useState(false);
   useEffect(() => {
-    setAuthToken(session?.idToken || '');
-    fetchInitialData();
+      fetchInitialData()
   }, [session]);
 
   const fetchInitialData = async () => {
+    setCall(true)
     await fetchLeaderboard(1);
+    setCall(false);
   };
 
   const fetchLeaderboard = async (page: number) => {
@@ -106,16 +108,18 @@ const LeaderBoardCreators = () => {
         return 'w-full';
     }
   };
-  
+  if(call){
+    return <Loader md="21" sm="15" />
+    }
   
 
   return (
-    <div className="spartan-medium flex flex-col lg:flex-row items-start justify-start w-full mt-10">
+    <div className="spartan-medium custom-flex-row flex flex-col lg:flex-row mb-20 items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
       ref={leaderboardRef}
-      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-20"
+      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
        <div className="flex justify-between mt-6 mb-6 pb-4 ml-3 sm:ml-5 gap-x-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-10">
   {/* Header */}
@@ -161,7 +165,7 @@ const LeaderBoardCreators = () => {
         {leaderboardData.map((user: LeaderBoardCreatorsResponse) => (
             <div
             key={user.rank}
-            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-white"} rounded-xl ${getRowClass(user.rank)}`}
           >
             <div className="flex items-center ml-2 sm:ml-4 lg:ml-5 text-center gap-2 w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px]">
             <span>{user.rank}</span>
@@ -185,8 +189,8 @@ const LeaderBoardCreators = () => {
       </div>
 
       {/* Right Section - Top Rankings Cards */}
-      <div className="w-full mt-10 lg:mt-[50px]">
-  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-center lg:text-left">
+      <div className="w-full mt-1 md:mt-10 lg:mt-[50px]">
+  <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-start lg:text-left">
     Top Rankings
   </h2>
   {topThreeData.map((user:LeaderBoardCreatorsResponse) => (
@@ -212,7 +216,7 @@ const LeaderBoardCreators = () => {
     </div>
   ))}
 </div>
-      <div className="fixed bottom-5 w-[110%] flex flex-col items-center gap-2">
+      <div className="fixed bottom-5 w-[110%] flex flex-col mb-20 items-center gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110">
   <InlineSVG
     src="/icons/arrow.svg"
