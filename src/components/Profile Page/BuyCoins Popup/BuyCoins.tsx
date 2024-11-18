@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./BuyCoins.css";
 import InlineSVG from "react-inlinesvg";
 import useFetchBuyCoin from "@/hooks/BuyCoinhook";
 import estFetchAmount from "@/hooks/EstHook";
 import useNEARTransfer from "@/hooks/useTransfer";
+import { NearContext } from "@/wallet/WalletSelector";
 interface CoinPurchasePopupProps {
   onClose: () => void;
 }
@@ -37,7 +38,7 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
     dropdownSelectedCoin === "USDT" ? "usdc" : "near",
     numericCustomValue
   );
-
+  const { wallet, signedAccountId } = useContext(NearContext);
   useEffect(() => {
     if (numericCustomValue > 0) {
       fetchBuyCoinAmount();

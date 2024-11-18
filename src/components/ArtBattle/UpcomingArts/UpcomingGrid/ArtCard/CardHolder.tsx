@@ -49,7 +49,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
         if (artid) {
             setArtId(artid);
         }
-    }, [searchParams, pathName]);
+    }, [searchParams, pathName]); 
 
 
     const getQueryParam = (param: string): string | null => {
