@@ -12,6 +12,8 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import React, { useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
+import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { ConfirmPopupInfo } from "@/types/types";
 
 const page = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -21,6 +23,11 @@ const page = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openNav, setOpenNav] = useState(false);
+  const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
+    info: "",
+    text: "",
+    isMint: false
+  });
 
   const handleEditClick = () => {
     setIsEditOpen(true);
@@ -35,6 +42,10 @@ const page = () => {
   const closeCoinModal = () => {
     setIsCoinOpen(false);
   };
+
+  const closeMintBurnPopup = () => {
+    setConfirmPopup({ info: "", text: "", isMint: false })
+  }
 
   return (
     <main
@@ -60,7 +71,7 @@ const page = () => {
         handleCoinClick={handleCoinClick}
       />
       <DailyCheckin />
-      <ProfileBody />
+      <ProfileBody setConfirmPopup={setConfirmPopup} />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
@@ -77,6 +88,7 @@ const page = () => {
       />
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
       {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
+      {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} />}
     </main>
   );
 };
