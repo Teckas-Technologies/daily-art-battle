@@ -10,19 +10,49 @@ const useNearTransfer = () => {
     walletAddress: string,
     transactionHash: string
   ) => {
-    console.log("postNearTransfer called with:", {
-      walletAddress,
-      transactionHash,
-    });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetchWithAuth(
+        `/api/gfxCoin?queryType=nearTransfer&walletAddress=${walletAddress}&transactionHash=${transactionHash}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        }
+      );
+
+      console.log("Response received:", response);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log("Parsed response >>:", result);
+      setData(result);
+      return result;
+    } catch (err: any) {
+      console.error("Error occurred:", err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      console.log("Loading state set to false");
+    }
+  };
+  const getNearTransfer = async (transactionHash: string): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
     try {
       console.log("Fetching with auth...");
-      const response = await fetch(
-        `/api/gfxCoin?queryType=nearTransfer&walletAddress=${walletAddress}&transactionHash=${transactionHash}`,
+      const response = await fetchWithAuth(
+        `/api/gfxCoin?transactionHash=${transactionHash}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getAuthToken()}`,
@@ -37,22 +67,24 @@ const useNearTransfer = () => {
           status: response.status,
           statusText: response.statusText,
         });
-        throw new Error(`Error: ${response.statusText}`);
+        return false;
       }
 
       const result = await response.json();
-      console.log("Parsed response JSON:", result);
-      setData(result);
+      console.log("Parsed response >>>:", result);
+
+      return result;
     } catch (err: any) {
       console.error("Error occurred:", err);
       setError(err.message || "Something went wrong");
+      return false;
     } finally {
       setLoading(false);
       console.log("Loading state set to false");
     }
   };
 
-  return { postNearTransfer, data, loading, error };
+  return { postNearTransfer, data, loading, error, getNearTransfer };
 };
 
 export default useNearTransfer;

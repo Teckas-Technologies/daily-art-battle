@@ -10,8 +10,6 @@ const useFetchBuyCoin = (queryFilter: "usdc" | "near") => {
     setLoading(true);
     setError(null);
 
-    console.log("Fetching buy coin data with query filter:", queryFilter);
-
     try {
       const response = await fetchWithAuth(
         `/api/buyCoin?queryType=list&queryFilter=${queryFilter}`
