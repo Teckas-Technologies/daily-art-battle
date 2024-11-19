@@ -94,7 +94,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 const totalDocuments = await graphQLService({
                   query: TOTAL_REWARDS,
                   variables: {
-                    nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                    nft_contract_ids: [ART_BATTLE_CONTRACT],
                     owner,
                   },
                   network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
@@ -121,7 +121,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 const totalDocuments = await graphQLService({
                   query: TOTAL_REWARDS,
                   variables: {
-                    nft_contract_ids: [SPECIAL_WINNER_CONTRACT],
+                    nft_contract_ids: [ART_BATTLE_CONTRACT],
                     owner,
                   },
                   network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",

@@ -22,21 +22,22 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const[call,setCall]=useState(false);
     const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+    const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   const handleTabClick = (tab:any)=>{
     setActiveTab(tab);
   }
   
   useEffect(() => {
-    const fetchAuthToken = async () => {
-      const auth = getAuthToken();
-      console.log(auth);
-      if (session) {
-        setCall(true);
-      }
-    };
-    fetchAuthToken();
-  }, [session]);
+    fetchInitialData()
+}, []);
+
+const fetchInitialData = async () => {
+  setCall(true)
+  await fetchLeaderBoard(1);
+  setCall(false);
+};
 
   
     return(
@@ -48,6 +49,8 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       {/* <InlineSVG src="/icons/blur-effect.svg" className="effect" /> */}
 <div
@@ -97,22 +100,22 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
 
         {/* Tab Content */}
         <div className="mt-10 sm:mt-16">
-          {call?(
-            <>
+          {/* {call?(
+            <> */}
               {activeTab === "Collectors" && <LeaderboardCollectors />}
               {activeTab === "GFXvs Point Holders" && <LeaderboardHolders />}
               {activeTab === "Creators" && <LeaderboardCreators />}
-              </>
+              {/* </>
           ):(
             <>
              <Loader md="21" sm="15" />
             </>
-          )}
+          )} */}
          
         </div>
       </div>
-      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
+      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
     </div>    
     )
 }

@@ -143,6 +143,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
@@ -210,6 +212,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
           <MobileNav
             openNav={openNav}
@@ -218,6 +222,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
         </div>
       )}
@@ -230,6 +236,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
@@ -279,6 +287,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
           <MobileNav
             openNav={openNav}
@@ -287,6 +297,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
         </div>
       )}
@@ -301,6 +313,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
@@ -348,6 +362,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
           <MobileNav
             openNav={openNav}
@@ -356,6 +372,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
+            setSignToast={setSignToast} 
+            setErrMsg={setErrMsg}
           />
         </div>
       )}

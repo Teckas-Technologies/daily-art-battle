@@ -389,7 +389,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                       <img
                         src={winnerImage}
                         alt={winnerTitle}
-                        className="art-img"
+                        className="art-img-campaign"
                       />
                       <p className="flex items-center justify-end mt-3">
                         <InlineSVG

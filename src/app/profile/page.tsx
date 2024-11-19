@@ -12,6 +12,8 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import React, { useContext, useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
+import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
 import { getTxnStatus } from "@mintbase-js/rpc";
@@ -31,10 +33,18 @@ const page = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
   const pathName = usePathname();
+  const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
+    info: "",
+    text: "",
+    isMint: false
+  });
+
   const handleEditClick = () => {
     setIsEditOpen(true);
   };
@@ -110,6 +120,10 @@ const page = () => {
     }
   }, [searchParams, pathName, userDetails]);
 
+      const closeMintBurnPopup = () => {
+        setConfirmPopup({ info: "", text: "", isMint: false })
+      }
+      
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -127,6 +141,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <ProfilePath />
       <ProfileHeader
@@ -134,12 +150,14 @@ const page = () => {
         handleCoinClick={handleCoinClick}
       />
       <DailyCheckin />
-      <ProfileBody />
+      <ProfileBody setConfirmPopup={setConfirmPopup} />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <MobileNav
         openNav={openNav}
@@ -148,6 +166,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
       {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
@@ -169,6 +189,7 @@ const page = () => {
           </div>
         </div>
       )}
+      {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} />}
     </main>
   );
 };

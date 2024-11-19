@@ -20,14 +20,14 @@ const LeaderboardHolders = () => {
   const [call,setCall] = useState(false);
   
   useEffect(() => {
-      fetchInitialData()
-  }, [session]);
+    fetchInitialData()
+}, []);
 
-  const fetchInitialData = async () => {
-    setCall(true)
-    await fetchLeaderboard(1);
-    setCall(false);
-  };
+const fetchInitialData = async () => {
+  setCall(true)
+  await fetchLeaderboard(1);
+  setCall(false);
+};
 
   const fetchLeaderboard = async (page: number) => {
     if (loading || !hasMore) return;
@@ -35,6 +35,7 @@ const LeaderboardHolders = () => {
     setLoading(true);
     const response = await fetchLeaderBoard(page);
     if (response && response.length > 0) {
+      console.log(response);
       if (page === 1) {
         setTopThreeData(response.slice(0, 3));
         setLeaderBoardData(response.slice(3));
