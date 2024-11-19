@@ -70,10 +70,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     error,
     participants,
   } = useCampaigns();
-
   useEffect(() => {
+    console.log("Fetching campaign with the following details:");
+    console.log("Campaign:", params.campaign);
+
     fetchCampaignByTitle(params.campaign);
-  }, [params.campaign, session?.idToken, editCampaign]);
+  }, [params.campaign, editCampaign]);
 
   console.log("Participants:", participants);
 
@@ -120,7 +122,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           alignItems: "center",
         }}
       >
-        <Loader md="28.5" sm="15" />{" "}
+        <Loader md="80" sm="15" />
       </div>
     );
   if (error) return <div>No campaign found</div>;
@@ -143,7 +145,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
           <div className="camapign-path-container">
@@ -212,7 +214,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
           <MobileNav
@@ -222,7 +224,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
         </div>
@@ -236,7 +238,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
           <div className="camapign-path-container">
@@ -287,7 +289,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
           <MobileNav
@@ -297,7 +299,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
         </div>
@@ -313,7 +315,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
           <div className="camapign-path-container">
@@ -362,7 +364,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
           <MobileNav
@@ -372,7 +374,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             campaignId={GFX_CAMPAIGNID}
             toggleUploadModal={toggleUploadModal}
             uploadSuccess={uploadSuccess}
-            setSignToast={setSignToast} 
+            setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
         </div>

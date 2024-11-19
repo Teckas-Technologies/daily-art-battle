@@ -17,6 +17,7 @@ interface CampaignCreationPopupProps {
   specialRewards: string;
   resetFormFields:()=>void;
   setConnectionError:(value:boolean)=>void;
+  inSufficientbalance:boolean;
 }
 const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   onClose,
@@ -29,28 +30,10 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   connectionError,
   specialRewards,
   resetFormFields,
-  setConnectionError
+  setConnectionError,
+  inSufficientbalance
 }) => {
-  const [inSufficientbalance, setInSufficientbalance] = useState(true);
-  const { userDetails, sendWalletData, sufficientBalance } =
-    useSendWalletData();
-  useEffect(() => {
-    if (isOpen) {
-      // const walletAddress = activeAccountId;
-      sendWalletData();
-    }
-  }, [isOpen, idToken, sendWalletData]);
-
-  useEffect(() => {
-    const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
-    const specialRewardCost = (specialWinner || 0) * Number(specialRewards);
-    const totalCost = creationCost + specialRewardCost;
-
-    if (sufficientBalance !== null) {
-      setInSufficientbalance(sufficientBalance >= totalCost);
-    }
-  }, [sufficientBalance, campaignDays, specialWinner]);
-
+ 
   if (!isOpen) return null;
   const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
   const specialRewardCost = (specialWinner || 0) * SPECIAL_WINNER;
@@ -129,7 +112,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
             </>
           ) : (
             <div className="flex flex-col items-center">
-              <button className="close" onClick={onClose}>
+              <button className="close" onClick={closeRetry}>
                 Close
               </button>
               <p className="alert">Insufficient Balance</p>

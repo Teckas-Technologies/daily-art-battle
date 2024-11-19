@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
+import {
+  NEXT_PUBLIC_VALID_CLIENT_ID,
+  NEXT_PUBLIC_VALID_CLIENT_SECRET,
+} from "@/config/constants";
 export interface CampaignPageData {
   _id: string;
   campaignUrl?: string;
@@ -67,8 +71,62 @@ const useCampaigns = () => {
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [battles, setBattles] = useState<any[]>([]);
   const [participants, setParticipants] = useState<any>(null);
+  const idToken = getAuthToken();
+  // console.log("token", idToken);
   const fetchCampaigns = async (
-    queryType: "current" | "upcoming" | "completed" | "myCampaigns",
+    queryType: "current" | "upcoming" | "completed",
+    page: number = currentPage,
+    limit: number = 10
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/api/campaign?queryType=${queryType}&page=${page}&limit=${limit}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${queryType} campaigns`);
+      }
+
+      const data = await response.json();
+      console.log(`${queryType} campaign data:`, data);
+      setCampaignData(data.data.campaign);
+      setTotalDocuments(data.data.totalDocuments);
+      setTotalPages(data.data.totalPages);
+      setCurrentPage(page);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchCurrentCampaign = (
+    page: number = currentPage,
+    limit: number = 10
+  ) => fetchCampaigns("current", page, limit);
+  const fetchUpcomingCampaigns = (
+    page: number = currentPage,
+    limit: number = 10
+  ) => fetchCampaigns("upcoming", page, limit);
+  const fetchPreviousCampaigns = (
+    page: number = currentPage,
+    limit: number = 10
+  ) => fetchCampaigns("completed", page, limit);
+  const fetchMyCampaigns = async (
+    queryType: "myCampaigns",
     page: number = currentPage,
     limit: number = 10
   ) => {
@@ -100,6 +158,12 @@ const useCampaigns = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (idToken) {
+      fetchCurrentCampaign();
+    }
+  }, [idToken]);
   const fetchCampaignFromArtAPI = async (
     campaignId: string,
     page: number = 1,
@@ -174,7 +238,16 @@ const useCampaigns = () => {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(`/api/campaign?title=${title}`);
+      const apiUrl = `/api/campaign?title=${title}`;
+      console.log("API Request URL:", apiUrl); 
+
+      const response = await fetchWithAuth(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch campaign data");
@@ -182,12 +255,16 @@ const useCampaigns = () => {
 
       const data = await response.json();
       setCampaign(data.campaign);
+      console.log("Campaign >>>", data.campaign);
+
       setCampaignStatus(data.status);
+      console.log("Status >>>", data.status);
+
       setParticipants(data.participants);
-      console.log(")))))", participants);
       console.log("Fetched participants:", data.participants);
     } catch (err) {
-      setError(null);
+     
+      console.error("Error fetching campaign:", err);
     } finally {
       setLoading(false);
     }
@@ -223,29 +300,6 @@ const useCampaigns = () => {
       setLoading(false);
     }
   };
-const idToken = getAuthToken();
-console.log("token",idToken);
-
-  const fetchCurrentCampaign = (
-    page: number = currentPage,
-    limit: number = 10
-  ) => fetchCampaigns("current", page, limit);
-  const fetchUpcomingCampaigns = (
-    page: number = currentPage,
-    limit: number = 10
-  ) => fetchCampaigns("upcoming", page, limit);
-  const fetchPreviousCampaigns = (
-    page: number = currentPage,
-    limit: number = 10
-  ) => fetchCampaigns("completed", page, limit);
-  const fetchMyCampaigns = (page: number = currentPage, limit: number = 10) =>
-    fetchCampaigns("myCampaigns", page, limit);
-
-  useEffect(() => {
-    if (idToken) {
-      fetchCurrentCampaign();
-    }
-  }, [idToken]);
 
   const createCampaign = async (campaignData: {
     campaignUrl: string;

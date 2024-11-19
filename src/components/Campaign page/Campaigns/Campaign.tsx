@@ -54,7 +54,7 @@ const CampaignBanner = () => {
         fetchPreviousCampaigns(page, limit);
         break;
       case "My Campaigns":
-        fetchMyCampaigns(page, limit);
+        fetchMyCampaigns("myCampaigns", page, limit);
         break;
       default:
         fetchCurrentCampaign(page, limit);
@@ -172,7 +172,7 @@ const CampaignBanner = () => {
           "Current Campaigns",
           "Upcoming Campaigns",
           "Previous Campaigns",
-          "My Campaigns",
+          ...(userDetails ? ["My Campaigns"] : []), 
         ].map((tab) => (
           <button
             key={tab}
@@ -183,6 +183,7 @@ const CampaignBanner = () => {
           </button>
         ))}
       </div>
+
       {loading ? (
         <div className="flex items-center justify-center">
           <Loader md="22" sm="15" />
