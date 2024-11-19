@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchUserArts } from "@/hooks/userArtsHook";
 import InlineSVG from "react-inlinesvg";
 import { ArtData } from "@/hooks/artHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useAuth } from "@/contexts/AuthContext";
 import { UploadsHolder } from "../../Uploads/UploadsHolder";
-import { useFetchRaffleArts } from "@/hooks/raffleArtsHook";
+import { useFetchRaffleArts, useSearchRaffleArts } from "@/hooks/raffleArtsHook";
+import { ConfirmPopupInfo } from "@/types/types";
 
 interface Props {
     rendered: boolean;
+    setConfirmPopup: (e: ConfirmPopupInfo) => void;
 }
 
-export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
+export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) => {
     const [page, setPage] = useState<number>(1);
     const [sort, setSort] = useState<string>("dateDsc");
     const { arts, loading, totalPage, fetchUserRaffleArts } = useFetchRaffleArts();
-    const { searchLoading, searchedArts, totalSearchPage, searchUserArts } = useSearchUserArts();
+    const { searchLoading, searchedArts, totalSearchPage, searchRaffleArts } = useSearchRaffleArts();
     const [userArts, setUserArts] = useState<ArtData[] | null>(null);
     const [sortLabel, setSortLabel] = useState("Latest First");
     const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +45,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             if (!searchQuery) {
                 fetchUserRaffleArts(sort, page, limit);
             } else {
-                searchUserArts(searchQuery, page, limit);
+                searchRaffleArts(searchQuery, page, limit);
             }
         };
         if (userDetails) {
@@ -234,7 +235,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             </div>
 
             <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[22rem]" id="uploads">
-                <UploadsHolder artData={userArts} />
+                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} setConfirmPopup={setConfirmPopup} />
 
                 {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
                     <InlineSVG

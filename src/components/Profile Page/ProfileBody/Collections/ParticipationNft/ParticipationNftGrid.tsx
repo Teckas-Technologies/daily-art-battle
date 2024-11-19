@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchUserArts } from "@/hooks/userArtsHook";
 import InlineSVG from "react-inlinesvg";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useAuth } from "@/contexts/AuthContext";
 import { UploadsHolder } from "../../Uploads/UploadsHolder";
 import { useFetchParticipantsNfts } from "@/hooks/userNftsHook";
-import { NftToken } from "@/types/types";
+import { ConfirmPopupInfo, NftToken } from "@/types/types";
+import { useSearchUserParticipationNfts } from "@/hooks/searchUserNfts";
 
 interface Props {
     rendered: boolean;
+    setConfirmPopup: (e: ConfirmPopupInfo) => void;
 }
 
-export const ParticipationNftGrid: React.FC<Props> = ({ rendered }) => {
+export const ParticipationNftGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) => {
     const [page, setPage] = useState<number>(1);
     const [sort, setSort] = useState<string>("dateDsc");
     const { arts, loading, totalPage, fetchParticipantNfts } = useFetchParticipantsNfts();
-    const { searchLoading, searchedArts, totalSearchPage, searchUserArts } = useSearchUserArts();
+    const { searchLoading, searchedArts, totalSearchPage, searchUserParticipationNfts } = useSearchUserParticipationNfts();
     const [userArts, setUserArts] = useState<NftToken[] | null>(null);
     const [sortLabel, setSortLabel] = useState("Latest First");
     const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +45,7 @@ export const ParticipationNftGrid: React.FC<Props> = ({ rendered }) => {
             if (!searchQuery) {
                 fetchParticipantNfts(sort, page, limit);
             } else {
-                searchUserArts(searchQuery, page, limit);
+                searchUserParticipationNfts(searchQuery, page, limit);
             }
         };
         if (userDetails) {
@@ -69,7 +70,7 @@ export const ParticipationNftGrid: React.FC<Props> = ({ rendered }) => {
             setEmpty("");
         }
         if (searchQuery && searchedArts) {
-            // setUserArts(searchedArts);
+            setUserArts(searchedArts);
             setTotal(totalSearchPage);
             setEmpty("");
         }
@@ -228,7 +229,7 @@ export const ParticipationNftGrid: React.FC<Props> = ({ rendered }) => {
             </div>
 
             <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[22rem]" id="uploads">
-                <UploadsHolder artData={userArts} />
+                <UploadsHolder artData={userArts} isNFT={true} isUploaded={false} setConfirmPopup={setConfirmPopup}/>
 
                 {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
                     <InlineSVG

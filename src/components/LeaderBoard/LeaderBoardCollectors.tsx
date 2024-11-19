@@ -21,14 +21,14 @@ const LeaderboardHolders = () => {
 
   
   useEffect(() => {
-      fetchInitialData()
-  }, [session]);
+    fetchInitialData()
+}, []);
 
-  const fetchInitialData = async () => {
-    setCall(true)
-    await fetchLeaderboard(1);
-    setCall(false);
-  };
+const fetchInitialData = async () => {
+  setCall(true)
+  await fetchLeaderboard(1);
+  setCall(false);
+};
 
   const fetchLeaderboard = async (page: number) => {
     if (loading || !hasMore) return;

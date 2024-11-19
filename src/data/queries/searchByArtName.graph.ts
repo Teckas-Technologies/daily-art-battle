@@ -12,7 +12,7 @@ export const SEARCH_ARTNAME = gql`
       where: {
         nft_contract_id: { _eq: $nft_contract_id },
         owner: { _eq: $owner },
-        title: { _ilike: $title }
+        title: { _iregex: $title }
       },
       limit: $limit,
       offset: $offset

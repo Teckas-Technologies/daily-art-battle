@@ -120,3 +120,9 @@ export interface RareNfts {
     mb_views_nft_tokens_aggregate: MbViewsNftTokensAggregate;
   };
 }
+
+export interface ConfirmPopupInfo {
+  info: string;
+  text: string;
+  isMint: boolean;
+}

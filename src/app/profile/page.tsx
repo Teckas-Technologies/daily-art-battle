@@ -12,6 +12,8 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import React, { useContext, useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
+import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
 import { getTxnStatus } from "@mintbase-js/rpc";
@@ -29,6 +31,12 @@ const page = () => {
   const [openNav, setOpenNav] = useState(false);
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
+  const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
+    info: "",
+    text: "",
+    isMint: false
+  });
+
   const handleEditClick = () => {
     setIsEditOpen(true);
   };
@@ -94,6 +102,10 @@ const page = () => {
     fetchTransaction();
   }, [signedAccountId]);
 
+      const closeMintBurnPopup = () => {
+        setConfirmPopup({ info: "", text: "", isMint: false })
+      }
+      
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -118,7 +130,7 @@ const page = () => {
         handleCoinClick={handleCoinClick}
       />
       <DailyCheckin />
-      <ProfileBody />
+      <ProfileBody setConfirmPopup={setConfirmPopup} />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
@@ -153,6 +165,7 @@ const page = () => {
           </div>
         </div>
       )}
+      {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} />}
     </main>
   );
 };

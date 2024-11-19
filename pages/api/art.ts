@@ -19,6 +19,7 @@ import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import User from "../../model/User";
 import Transactions from "../../model/Transactions";
 import { ART_UPLOAD } from "@/config/points";
+import { validateUser } from "../../utils/validateClient";
 
 export default async function handler(
   req: NextApiRequest,
@@ -60,6 +61,7 @@ export default async function handler(
 
       //GET method is used to fetch arts with pagination.
       case "GET":
+        await validateUser(req);
         const { queryType } = req.query;
         if (queryType == "upcoming") {
           const id = req.query.id;
@@ -115,6 +117,7 @@ export default async function handler(
         } 
         //Fetch upcoming arts with sorting
         else {
+          await validateUser(req);
           const sort = req.query.sort;
           const campaignId = req.query.campaignId as string;
           const page = parseInt(req.query.page as string) || 1;
