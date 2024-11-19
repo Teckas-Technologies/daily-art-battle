@@ -67,6 +67,7 @@ export const FooterMenu: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, 
                     setErrMsg("Sign In to see your Profile!");
                     return;
                 }
+                router.push(selectedMenu.path);
             } else {
                 router.push(selectedMenu.path);
             }

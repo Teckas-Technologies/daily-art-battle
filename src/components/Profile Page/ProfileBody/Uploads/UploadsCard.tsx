@@ -2,14 +2,16 @@ import "./Uploads.css"
 import InlineSVG from "react-inlinesvg";
 import { ArtData } from "@/hooks/artHooks";
 import { ConfirmPopupInfo, NftToken, RaffleArt } from "@/types/types";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { BASE_URL } from "@/config/constants";
 import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { NearContext } from "@/wallet/WalletSelector";
 
 interface UploadsCardProps {
     art: ArtData | NftToken | RaffleArt;
     isNFT: boolean;
     isUploaded: boolean;
+    isSpinner?: boolean;
 }
 
 const socials = [
@@ -18,8 +20,8 @@ const socials = [
     { id: "telegram", label: "Telegram", icon: "/images/telegram_r.png", link: "https://telegram.me/share/url?text=Collect%20and%20win!%0A&url=" }
 ]
 
-export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded }) => {
-
+export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, isSpinner }) => {
+    const { wallet, signedAccountId } = useContext(NearContext);
     const [artOverlay, setArtOverlay] = useState(false);
     const overlayRef = useRef<HTMLDivElement | null>(null);
     const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
@@ -74,11 +76,19 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
 
     const artId = isArtData(art) && art?._id;
 
-    const handleMint = () => {
+    const handleMint = async () => {
+        if(!signedAccountId) {
+            await wallet?.signIn();
+            return;
+        }
         setConfirmPopup({ info: "Mint NFT", text: "Mint this NFT to get Participation NFT", isMint: true });
     }
 
-    const handleBurn = () => {
+    const handleBurn = async () => {
+        if(!signedAccountId) {
+            await wallet?.signIn();
+            return;
+        }
         setConfirmPopup({ info: "Earn GFXvs Points", text: "Burn this rare NFT for<br />1000 GFXvs Coins", isMint: false });
     }
 
@@ -132,7 +142,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                 </div>}
             </div>
 
-            {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} art={art} />}
+            {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} art={art} isSpinner={isSpinner} />}
         </div>
     )
 }

@@ -5,6 +5,9 @@ import "./Popup.css";
 import useMintImage from "@/hooks/useMint";
 import { ArtData } from "@/hooks/artHooks";
 import { NftToken, RaffleArt } from "@/types/types";
+import { ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
+import { useContext } from "react";
+import { NearContext } from "@/wallet/WalletSelector";
 
 interface Props {
     info: string;
@@ -12,18 +15,22 @@ interface Props {
     isMint: boolean;
     onClose: () => void;
     art: ArtData | NftToken | RaffleArt;
+    isSpinner?: boolean;
 }
 
-export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art }) => {
+export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art, isSpinner }) => {
     const { mintImage } = useMintImage();
 
+
     const isRaffleArt = (data: ArtData | NftToken | RaffleArt): data is RaffleArt => "raffleCount" in data;
+
+    const contractId = isSpinner ? SPECIAL_WINNER_CONTRACT : ART_BATTLE_CONTRACT;
 
     const handleConfirm = async () => {
         if (isMint) {
             console.log("Mint initiated!");
             if(isRaffleArt(art)) {
-                mintImage({ title: art?.colouredArt, mediaUrl: art?.colouredArt, referenceUrl: art?.colouredArtReference, count: 5, contractId: "" })
+                await mintImage({ title: "Coloured Art", mediaUrl: art?.colouredArt, referenceUrl: art?.colouredArtReference, count: art?.raffleCount, contractId: contractId })
             }
         } else {
             console.log("Burn initiated!");
@@ -50,7 +57,7 @@ export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, ar
                     </div>
                     <div className="signin-outer w-auto rounded-3xl cursor-pointer">
                         <div className="signin-btn px-10 py-2 rounded-3xl cursor-pointer" onClick={handleConfirm}>
-                            <h2>Sign in</h2>
+                            <h2>Confirm</h2>
                         </div>
                     </div>
                 </div>
