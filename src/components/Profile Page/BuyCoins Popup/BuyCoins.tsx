@@ -6,6 +6,7 @@ import estFetchAmount from "@/hooks/EstHook";
 import useNEARTransfer from "@/hooks/useTransfer";
 import { NearContext } from "@/wallet/WalletSelector";
 import Loader from "@/components/ArtBattle/Loader/Loader";
+import { useAuth } from "@/contexts/AuthContext";
 interface CoinPurchasePopupProps {
   onClose: () => void;
 }
@@ -26,6 +27,8 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
   const [dropdownSelectedCoin, setDropdownSelectedCoin] = useState<
     string | null
   >("USDT");
+  const { user } = useAuth();
+  let userDetails = user;
   const { transfer, error, Usdttransfer } = useNEARTransfer();
   const numericCustomValue = customValue ? parseFloat(customValue) : 0;
   const { data, loading } = useFetchBuyCoin(
