@@ -1,14 +1,49 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import "./NoBattle.css"
+import { useState } from "react";
+import { SignInPopup } from "@/components/PopUps/SignInPopup";
 
-export const NoBattle: React.FC = () => {
+interface Props {
+    toggleUploadModal: () => void;
+}
+
+export const NoBattle: React.FC<Props> = ({ toggleUploadModal }) => {
+    const [signToast, setSignToast] = useState(false);
+    const [errMsg, setErrMsg] = useState("");
     const { user } = useAuth();
     let userDetails = user;
+
+    const handleUpload = () => {
+        if (!userDetails) {
+            setSignToast(true);
+            setErrMsg("Sign In to upload your Art!");
+            return;
+        }
+
+        if (userDetails) {
+            toggleUploadModal();
+        }
+    }
+
     return (
         <div className="flex w-full justify-center mt-5">
-            <div className="mt-4 mx-8 flex justify-center h-[29rem]">
-                <div
+            <div className="mt-4 md:mx-8 mx-0 flex flex-col justify-start items-center gap-6 md:pt-20 pt-10 h-[20rem] w-full xxl:px-[25rem] xl:px-[20rem] lg:px-[15rem] md:px-[10rem] px-0">
+
+                <h2 className="text-[1.5rem] font-semibold leading-[2rem] text-center">Want to show your Talent? Upload your own masterpiece and join the competition!</h2>
+
+                <div className="currentButtonWrapper">
+                    <button className="currentbtn" onClick={handleUpload}>
+                        Upload Art
+                    </button>
+
+                    <div className="currentButtonBorder" />
+
+                    <div className="currentButtonOverlay" />
+                </div>
+
+                {/* <div
                     className="no-battle flex mt-5"
                     style={{
                         width: 300,
@@ -36,8 +71,9 @@ export const NoBattle: React.FC = () => {
                             Add Artwork
                         </button>
                     </div>
-                </div>
+                </div> */}
             </div>
+            {signToast && <SignInPopup text={errMsg} onClose={() => setSignToast(false)} />}
         </div>
     )
 }

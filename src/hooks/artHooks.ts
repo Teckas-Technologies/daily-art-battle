@@ -1,6 +1,7 @@
 //artHooks.ts is used for calling the art api.
 import { useState, useEffect } from 'react';
 import { fetchWithAuth } from '../../utils/authToken';
+import { NEXT_PUBLIC_VALID_CLIENT_ID, NEXT_PUBLIC_VALID_CLIENT_SECRET } from '@/config/constants';
 
 export interface ArtData {
   _id: string;
@@ -89,7 +90,13 @@ export const useFetchArts = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/art?campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`);
+      const response = await fetch(`/api/art?campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+      });
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log("data:", data)
@@ -118,7 +125,13 @@ export const useFetchBattles = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`);
+      const response = await fetchWithAuth(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+      });
       if (!response.ok) throw new Error('Network response was not ok');
       const data: BattlesResponse = await response.json();
 
@@ -152,7 +165,13 @@ export const useFetchArtById = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/art?queryType=upcoming&id=${id}`);
+      const response = await fetch(`/api/art?queryType=upcoming&id=${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+      });
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
 
@@ -220,7 +239,13 @@ export const useSearchArts = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&page=${page}&limit=${limit}`);
+      const response = await fetch(`/api/art?queryType=coming&campaignId=${campaignId}&name=${name}&page=${page}&limit=${limit}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        }
+      });
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log("data:", data)

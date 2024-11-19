@@ -14,6 +14,8 @@ interface Props {
     uploadSuccess: boolean;
     campaignId: string;
     fontColor: string;
+    setSignToast: (e: boolean) => void;
+    setErrMsg: (e: string) => void;
 }
 
 const navs = [
@@ -23,7 +25,7 @@ const navs = [
     { id: "create", label: "Create", path: "/", icon: "/images/Create_Icon.png" },
 ];
 
-export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
+export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
     const pathName = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -76,6 +78,11 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                             {nav.id === "create" ? (
                                 <>
                                     <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm`} onClick={() => {
+                                        if (!userDetails) {
+                                            setSignToast(true);
+                                            setErrMsg("Sign In to upload your Art!");
+                                            return;
+                                        }
                                         if (pathName === "/") {
                                             toggleUploadModal();
                                         } else {

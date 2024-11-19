@@ -24,6 +24,8 @@ const page = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
     info: "",
     text: "",
@@ -84,6 +86,8 @@ const {postNearTransfer} = useNearTransfer();
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <ProfilePath />
       <ProfileHeader
@@ -97,6 +101,8 @@ const {postNearTransfer} = useNearTransfer();
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <MobileNav
         openNav={openNav}
@@ -105,6 +111,8 @@ const {postNearTransfer} = useNearTransfer();
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
       {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
