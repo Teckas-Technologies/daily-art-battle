@@ -140,7 +140,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     transactionType: "received"
                 });
                 await newTransaction.save();
-            }else if(query ==='nearTransfer'){
+            } else if (query === 'mint') {
+                const transactionHash = req.query.transactionHash;
+                const existinghash = await Hashes.findOne({hash:transactionHash});
+                if(existinghash){
+                    return res.status(500).json({error:"Hash already used"});
+                }
+                const newHash = new Hashes({
+                    email:email,
+                    walletAddress:walletAddress,
+                    hash:transactionHash
+                })
+                await newHash.save();
+            }
+            else if(query ==='nearTransfer'){
                 try {
                     const transactionHash = req.query.transactionHash;
                     const existinghash = await Hashes.findOne({hash:transactionHash});
