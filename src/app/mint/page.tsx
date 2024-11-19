@@ -10,6 +10,8 @@ export default function LoginPage() {
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const[call,setCall]=useState(false);
+    const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
     // const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 const {mintImage}= useMintImage();
@@ -32,6 +34,8 @@ const mint = async()=>{
     campaignId={GFX_CAMPAIGNID}
     toggleUploadModal={toggleUploadModal}
     uploadSuccess={uploadSuccess}
+    setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
   />
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
  
