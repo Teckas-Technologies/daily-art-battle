@@ -73,7 +73,7 @@ const DailyCheckin = () => {
   const isClaimedForToday = () => {
     const currentDate = new Date().toISOString().split("T")[0];
     const claimDateString = claimDate?.split("T")[0];
-    console.log("claim Date", claimDateString);
+    // console.log("claim Date", claimDateString);
 
     return currentDate === claimDateString;
   };
@@ -207,6 +207,7 @@ const DailyCheckin = () => {
                 streakDays === 7 && !isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
               }`}
               onClick={handleWeeklyClaim}
+              id="content-top"
             >
               {streakDays === 7 && isClaimed ? "Claimed" : "Claim"}
             </button>

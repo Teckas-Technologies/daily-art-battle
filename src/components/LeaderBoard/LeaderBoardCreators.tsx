@@ -20,7 +20,7 @@ const LeaderBoardCreators = () => {
   const [call,setCall] = useState(false);
   useEffect(() => {
       fetchInitialData()
-  }, [session]);
+  }, []);
 
   const fetchInitialData = async () => {
     setCall(true)
