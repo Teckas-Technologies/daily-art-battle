@@ -12,6 +12,8 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import React, { useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
+import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 
 const page = () => {
@@ -22,7 +24,14 @@ const page = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openNav, setOpenNav] = useState(false);
+  const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
+    info: "",
+    text: "",
+    isMint: false
+  });
+
 const {postNearTransfer} = useNearTransfer();
+
   const handleEditClick = () => {
     setIsEditOpen(true);
   };
@@ -54,6 +63,10 @@ const {postNearTransfer} = useNearTransfer();
 
     fetchTransactionStatusAndHandleAccount();
   }, []);
+
+      const closeMintBurnPopup = () => {
+        setConfirmPopup({ info: "", text: "", isMint: false })
+      }
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -78,7 +91,7 @@ const {postNearTransfer} = useNearTransfer();
         handleCoinClick={handleCoinClick}
       />
       <DailyCheckin />
-      <ProfileBody />
+      <ProfileBody setConfirmPopup={setConfirmPopup} />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
@@ -95,6 +108,7 @@ const {postNearTransfer} = useNearTransfer();
       />
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
       {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
+      {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} />}
     </main>
   );
 };

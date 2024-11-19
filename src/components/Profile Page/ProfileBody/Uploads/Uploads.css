@@ -7,3 +7,22 @@
     font-size: 13px;
     font-weight: 500;
 }
+
+.mint-btn,
+.burn-btn {
+    background: #070707;
+    border: 1px solid #00FF00;
+}
+
+.art-share {
+    border: 1px solid #00FF00;
+    background: #070707;
+}
+
+.art-share h4 {
+    color: #00FF00;
+}
+
+.social-share {
+    border: 1px solid #ADADAD
+}
