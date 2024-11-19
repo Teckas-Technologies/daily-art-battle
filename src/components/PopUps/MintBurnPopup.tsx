@@ -2,22 +2,29 @@
 
 import InlineSVG from "react-inlinesvg";
 import "./Popup.css";
+import useMintImage from "@/hooks/useMint";
+import { ArtData } from "@/hooks/artHooks";
+import { NftToken, RaffleArt } from "@/types/types";
 
 interface Props {
     info: string;
     text: string;
     isMint: boolean;
     onClose: () => void;
+    art: ArtData | NftToken | RaffleArt;
 }
 
-export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose }) => {
+export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art }) => {
+    const { mintImage } = useMintImage();
+
+    const isRaffleArt = (data: ArtData | NftToken | RaffleArt): data is RaffleArt => "raffleCount" in data;
 
     const handleConfirm = async () => {
-
-        console.log("IsMint:", isMint)
-
-        if(isMint) {
+        if (isMint) {
             console.log("Mint initiated!");
+            if(isRaffleArt(art)) {
+                mintImage({ title: art?.colouredArt, mediaUrl: art?.colouredArt, referenceUrl: art?.colouredArtReference, count: 5, contractId: "" })
+            }
         } else {
             console.log("Burn initiated!");
         }

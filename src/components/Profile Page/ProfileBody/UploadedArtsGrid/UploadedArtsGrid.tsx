@@ -8,14 +8,12 @@ import InlineSVG from "react-inlinesvg";
 import { ArtData } from "@/hooks/artHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useAuth } from "@/contexts/AuthContext";
-import { ConfirmPopupInfo } from "@/types/types";
 
 interface Props {
     rendered: boolean;
-    setConfirmPopup: (e: ConfirmPopupInfo) => void;
 }
 
-export const UploadedArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) => {
+export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [page, setPage] = useState<number>(1);
     const [sort, setSort] = useState<string>("dateDsc");
     const { arts, loading, totalPage, fetchUserArts } = useFetchUserArts();
@@ -236,7 +234,7 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup })
             </div>
 
             <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[22rem]" id="uploads">
-                <UploadsHolder artData={userArts} isNFT={false} isUploaded={true} setConfirmPopup={setConfirmPopup} />
+                <UploadsHolder artData={userArts} isNFT={false} isUploaded={true} />
 
                 {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
                     <InlineSVG

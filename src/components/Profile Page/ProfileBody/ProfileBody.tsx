@@ -2,11 +2,6 @@ import { useEffect, useState } from "react";
 import { UploadedArtsGrid } from "./UploadedArtsGrid/UploadedArtsGrid";
 import { Collections } from "./Collections/Collections";
 import WalletHistory from "./WalletHistory/WalletHistory";
-import { ConfirmPopupInfo } from "@/types/types";
-
-interface Props {
-    setConfirmPopup: (e: ConfirmPopupInfo) => void;
-}
 
 const tabs = [
     { id: "uploads", label: "Uploads", active: true },
@@ -14,7 +9,7 @@ const tabs = [
     { id: "wallet", label: "Wallet History", active: false }
 ]
 
-export const ProfileBody: React.FC<Props> = ({ setConfirmPopup }) => {
+export const ProfileBody: React.FC = () => {
     const [activeTab, setActiveTab] = useState("uploads");
     const [rendered, setRendered] = useState(false);
 
@@ -35,8 +30,8 @@ export const ProfileBody: React.FC<Props> = ({ setConfirmPopup }) => {
                     </div>
                 ))}
             </div>
-            {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} setConfirmPopup={setConfirmPopup} />}
-            {activeTab === "collects" && <Collections setConfirmPopup={setConfirmPopup} />}
+            {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} />}
+            {activeTab === "collects" && <Collections />}
             {activeTab === "wallet" && <WalletHistory rendered={rendered} />}
         </div>
     )

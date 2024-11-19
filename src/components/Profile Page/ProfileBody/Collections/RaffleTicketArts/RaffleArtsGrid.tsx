@@ -2,25 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import InlineSVG from "react-inlinesvg";
-import { ArtData } from "@/hooks/artHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useAuth } from "@/contexts/AuthContext";
 import { UploadsHolder } from "../../Uploads/UploadsHolder";
 import { useFetchRaffleArts, useSearchRaffleArts } from "@/hooks/raffleArtsHook";
-import { ConfirmPopupInfo } from "@/types/types";
+import { RaffleArt } from "@/types/types";
 
 interface Props {
     rendered: boolean;
-    setConfirmPopup: (e: ConfirmPopupInfo) => void;
 }
 
-export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) => {
+export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [page, setPage] = useState<number>(1);
-    const [sort, setSort] = useState<string>("dateDsc");
+    // const [sort, setSort] = useState<string>("dateDsc");
+    // const [sortLabel, setSortLabel] = useState("Latest First");
+    const [sort, setSort] = useState<string>("spinner");
+    const [sortLabel, setSortLabel] = useState("Rare Nft Arts");
     const { arts, loading, totalPage, fetchUserRaffleArts } = useFetchRaffleArts();
     const { searchLoading, searchedArts, totalSearchPage, searchRaffleArts } = useSearchRaffleArts();
-    const [userArts, setUserArts] = useState<ArtData[] | null>(null);
-    const [sortLabel, setSortLabel] = useState("Latest First");
+    const [userArts, setUserArts] = useState<RaffleArt[] | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -42,6 +42,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) =
     useEffect(() => {
         const initializeData = async () => {
             const limit = 8;
+            console.log("STEP1")
             if (!searchQuery) {
                 fetchUserRaffleArts(sort, page, limit);
             } else {
@@ -82,6 +83,10 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) =
     useEffect(() => {
         if (sort) {
             setSearchQuery("")
+        }
+
+        if(!arts) {
+            setUserArts([]);
         }
     }, [sort])
 
@@ -216,8 +221,14 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) =
                         />
                     </div>
                     {isOpen && (
-                        <div className="options absolute top-[100%] left-0 w-[150%] pt-4 rounded-3xl bg-black">
-                            <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Voted" })}>
+                        <div className="options absolute top-[100%] left-0 w-[125%] pt-4 rounded-3xl bg-black">
+                            <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'spinner', label: "Rare Nft Arts" })}>
+                                <h2 className="spartan-light text-sm text-white">Rare Nft Arts</h2>
+                            </div>
+                            <div className="option px-5 pt-3 pb-7 oldest-first bg-black rounded-bl-3xl rounded-br-3xl" onClick={() => handleSort({ value: 'raffles', label: "Participation Nft Arts" })}>
+                                <h2 className="spartan-light text-sm">Participation Nft Arts</h2>
+                            </div>
+                            {/* <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Voted" })}>
                                 <h2 className="spartan-light text-sm text-white">Top Voted Arts</h2>
                             </div>
                             <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ value: 'voteAsc', label: "Least Voted" })}>
@@ -228,14 +239,14 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setConfirmPopup }) =
                             </div>
                             <div className="option px-5 pt-3 pb-7 oldest-first bg-black rounded-bl-3xl rounded-br-3xl" onClick={() => handleSort({ value: 'dateAsc', label: "Oldest First" })}>
                                 <h2 className="spartan-light text-sm">Oldest First</h2>
-                            </div>
+                            </div> */}
                         </div>
                     )}
                 </div>
             </div>
 
             <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[22rem]" id="uploads">
-                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} setConfirmPopup={setConfirmPopup} />
+                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} />
 
                 {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
                     <InlineSVG

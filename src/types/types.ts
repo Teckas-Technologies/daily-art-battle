@@ -126,3 +126,61 @@ export interface ConfirmPopupInfo {
   text: string;
   isMint: boolean;
 }
+
+export interface RaffleArt {
+  _id: string;
+  email: string;
+  participantId: string;
+  artId: string;
+  campaignId: string;
+  raffleCount: number;
+  isMintedNft: boolean;
+  createdAt: string; // Use `Date` type if you plan to parse this string into a Date object
+  updatedAt: string; // Use `Date` type if you plan to parse this string into a Date object
+  __v: number;
+  colouredArt: string;
+  colouredArtReference: string;
+}
+
+export interface SpinnerItem {
+  _id: string;
+  videoSpinner: string;
+  videoSpinnerReference: string;
+  emoji1: string;
+  emoji2: string;
+  artAId?: string;
+  artAVotes?: number;
+  artAartistEmail?: string;
+  artAartistId?: string;
+  artAartistName?: string;
+  artAcolouredArt?: string;
+  artAcolouredArtReference?: string;
+  artAtitle?: string;
+  artAvoters?: string[];
+  artBId?: string;
+  artBVotes?: number;
+  artBartistEmail?: string;
+  artBartistId?: string;
+  artBartistName?: string;
+  artBcolouredArt?: string;
+  artBcolouredArtReference?: string;
+  artBtitle?: string;
+  artBvoters?: string[];
+  grayScale?: string;
+  grayScaleReference?: string;
+  campaignId?: string;
+  isBattleEnded?: boolean;
+  isNftMinted?: boolean;
+  isSpecialWinnerMinted?: boolean;
+  specialWinner?: string;
+  startTime?: string;
+  endTime?: string;
+  totalVotes?: number;
+  winningArt?: string;
+}
+
+export interface PaginatedResponse {
+  spinner: SpinnerItem[];
+  totalDocuments: number;
+  totalPages: number;
+}
