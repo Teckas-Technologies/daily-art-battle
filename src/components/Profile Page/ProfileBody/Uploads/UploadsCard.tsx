@@ -76,7 +76,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
 
     return (
         <div className="uploads-card w-auto gap-0 md:rounded-[1.25rem] rounded-[1rem] md:mt-5 mt-0 shadow-md p-[0.5rem] flex flex-col items-center">
-            <div className="relative art-img xxl:w-[17.5rem] xxl:h-[17.5rem] xl:w-[14rem] xl:h-[14rem] lg:w-[15rem] lg:h-[15rem] md:w-[15rem] md:h-[15rem] w-[10rem] h-[10rem] rounded-lg" >
+            <div className="relative art-img-holder xxl:w-[17.5rem] xxl:h-[17.5rem] xl:w-[14rem] xl:h-[14rem] lg:w-[15rem] lg:h-[15rem] md:w-[15rem] md:h-[15rem] w-[10rem] h-[10rem] rounded-lg" >
                 <img src={isArtData(art) ? art?.colouredArt : art?.media as string} alt={isArtData(art) ? art?.artistName : art?.owner} className="w-full h-full object-cover rounded-lg" />
                 <div className={`overlay-holder absolute bottom-0 w-full h-full flex ${isUploaded ? "justify-end" : "justify-center"} items-end`}>
                     {isNFT && <div className="burn-btn md:px-6 md:py-3 px-4 py-2 md:mb-5 mb-3 md:rounded-lg rounded-md cursor-pointer" onClick={handleBurn}>

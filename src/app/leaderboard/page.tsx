@@ -22,6 +22,8 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const[call,setCall]=useState(false);
     const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+    const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   const handleTabClick = (tab:any)=>{
     setActiveTab(tab);
@@ -47,6 +49,8 @@ const fetchInitialData = async () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       {/* <InlineSVG src="/icons/blur-effect.svg" className="effect" /> */}
 <div
@@ -110,8 +114,8 @@ const fetchInitialData = async () => {
          
         </div>
       </div>
-      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
+      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
     </div>    
     )
 }

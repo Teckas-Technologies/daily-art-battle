@@ -35,6 +35,8 @@ const page = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   return (
     <div style={{ backgroundColor: "#000000" }}>
@@ -45,6 +47,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <CreateCampaign
         toggleCampaignModal={toggleCampaignModal}
@@ -58,6 +62,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <MobileNav
         openNav={openNav}
@@ -66,6 +72,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
     </div>
   );

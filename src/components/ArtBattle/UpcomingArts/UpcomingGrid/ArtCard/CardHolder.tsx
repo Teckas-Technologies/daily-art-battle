@@ -126,7 +126,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
                     </div>
                 ))}
             </div>
-            {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={myTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
+            {selectedArtId && overlayArt && !signToast && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={myTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
 
             {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => setSignToast(false)} />}
 

@@ -29,6 +29,8 @@ const page = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
   const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
@@ -123,6 +125,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <ProfilePath />
       <ProfileHeader
@@ -136,6 +140,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <MobileNav
         openNav={openNav}
@@ -144,6 +150,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
       {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
