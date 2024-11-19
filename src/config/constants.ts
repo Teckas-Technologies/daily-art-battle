@@ -16,3 +16,4 @@ export const ADMIN_GMAIL = process.env.ADMIN_GMAIL || "sathish@kalakendradao.org
 export const ADMIN_PASS = process.env.ADMIN_PASS || ""
 export const NEXT_PUBLIC_VALID_CLIENT_ID = process.env.NEXT_PUBLIC_VALID_CLIENT_ID || ""
 export const NEXT_PUBLIC_VALID_CLIENT_SECRET = process.env.NEXT_PUBLIC_VALID_CLIENT_SECRET || ""
+export const NEXT_PUBLIC_PROXY_ADDRESS = process.env.NEXT_PUBLIC_PROXY_ADDRESS||""

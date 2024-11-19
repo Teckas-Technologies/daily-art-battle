@@ -223,6 +223,8 @@ const useCampaigns = () => {
       setLoading(false);
     }
   };
+const idToken = getAuthToken();
+console.log("token",idToken);
 
   const fetchCurrentCampaign = (
     page: number = currentPage,
@@ -239,11 +241,11 @@ const useCampaigns = () => {
   const fetchMyCampaigns = (page: number = currentPage, limit: number = 10) =>
     fetchCampaigns("myCampaigns", page, limit);
 
-  // useEffect(() => {
-  //   if (idToken) {
-  //     fetchCurrentCampaign();
-  //   }
-  // }, [idToken]);
+  useEffect(() => {
+    if (idToken) {
+      fetchCurrentCampaign();
+    }
+  }, [idToken]);
 
   const createCampaign = async (campaignData: {
     campaignUrl: string;
@@ -353,8 +355,8 @@ const useCampaigns = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text(); 
-        console.error("API Error:", errorText); 
+        const errorText = await response.text();
+        console.error("API Error:", errorText);
         throw new Error("Failed to distribute art");
       }
 
@@ -363,10 +365,10 @@ const useCampaigns = () => {
       return data;
     } catch (err) {
       if (err instanceof Error) {
-        console.error("Error distributing art:", err); 
+        console.error("Error distributing art:", err);
         setError(err.message);
       } else {
-        console.error("An unknown error occurred:", err); 
+        console.error("An unknown error occurred:", err);
         setError("An unknown error occurred");
       }
       return null;

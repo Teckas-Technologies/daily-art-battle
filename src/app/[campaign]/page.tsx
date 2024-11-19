@@ -120,7 +120,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           alignItems: "center",
         }}
       >
-        <Loader md="24.5" sm="15" />{" "}
+        <Loader md="28.5" sm="15" />{" "}
       </div>
     );
   if (error) return <div>No campaign found</div>;
