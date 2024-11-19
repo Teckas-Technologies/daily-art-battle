@@ -24,7 +24,7 @@ const navs = [
     { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_Icon.png" },
     { id: "create", label: "Create", path: "/", icon: "/images/Create_Icon.png" },
 ];
-
+ 
 export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
     const pathName = usePathname();
     const router = useRouter();
