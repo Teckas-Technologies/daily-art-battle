@@ -368,7 +368,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   className="flex items-center gap-2"
                 >
                   Special Winner
-                  <InlineSVG src="/icons/required-icon.svg" />
+                  {/* <InlineSVG src="/icons/required-icon.svg" /> */}
                 </label>
                 <input
                   type="text"
@@ -389,7 +389,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   className="flex items-center gap-2"
                 >
                   Special Rewards
-                  <InlineSVG src="/icons/required-icon.svg" />
+                  {/* <InlineSVG src="/icons/required-icon.svg" /> */}
                 </label>
                 <input
                   type="text"

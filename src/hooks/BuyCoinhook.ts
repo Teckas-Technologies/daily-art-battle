@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
+import { useAuth } from "@/contexts/AuthContext";
 
 const useFetchBuyCoin = (queryFilter: "usdc" | "near") => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const { user } = useAuth();
+  let userDetails = user;
   const fetchBuyCoinData = async () => {
     setLoading(true);
     setError(null);
@@ -42,7 +44,7 @@ const useFetchBuyCoin = (queryFilter: "usdc" | "near") => {
   useEffect(() => {
     console.log("useEffect triggered for queryFilter:", queryFilter);
     fetchBuyCoinData();
-  }, [queryFilter]);
+  }, [queryFilter, userDetails]);
 
   return { data, loading, error };
 };

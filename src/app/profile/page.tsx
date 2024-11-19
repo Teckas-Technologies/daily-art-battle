@@ -15,7 +15,9 @@ import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
 import { getTxnStatus } from "@mintbase-js/rpc";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Toast from "@/components/Toast";
+import { useAuth } from "@/contexts/AuthContext";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -24,11 +26,15 @@ const page = () => {
   const [isCoinOpen, setIsCoinOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [coin, setCoin] = useState("");
+  const [buyCoin, setBuyCoin] = useState("");
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openNav, setOpenNav] = useState(false);
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
   const handleEditClick = () => {
     setIsEditOpen(true);
   };
@@ -42,6 +48,8 @@ const page = () => {
   const closeCoinModal = () => {
     setIsCoinOpen(false);
   };
+  const { user } = useAuth();
+  let userDetails = user;
   useEffect(() => {
     const fetchTransaction = async () => {
       const searchParams = new URLSearchParams(window.location.search);
@@ -93,6 +101,14 @@ const page = () => {
 
     fetchTransaction();
   }, [signedAccountId]);
+  useEffect(() => {
+    const buycoin = searchParams?.get("buyCoin");
+    console.log("BuyCoin Query Parameter:", buycoin);
+    if (buycoin) {
+      setIsCoinOpen(true);
+      console.log("isCoinOpen set to true");
+    }
+  }, [searchParams, pathName, userDetails]);
 
   return (
     <main
@@ -156,6 +172,5 @@ const page = () => {
     </main>
   );
 };
-
 
 export default page;
