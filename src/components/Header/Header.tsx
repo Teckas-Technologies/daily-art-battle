@@ -36,11 +36,11 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
     let userDetails = user;
     const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
-    // useEffect(() => {
-    //     if (pathName === "/profile" && !userDetails) {
-    //         router.push("/");
-    //     }
-    // }, [pathName, userDetails, router]);
+    useEffect(() => {
+        if (pathName === "/profile" && !userDetails) {
+            router.push("/");
+        }
+    }, [pathName, userDetails, router]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

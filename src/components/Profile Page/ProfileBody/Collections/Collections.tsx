@@ -5,16 +5,11 @@ import { useEffect, useState } from "react"
 import { ParticipationNftGrid } from "./ParticipationNft/ParticipationNftGrid";
 import { useFetchArtsAnalytics } from "@/hooks/profileAnalyticsHook";
 import { RaffleArtsGrid } from "./RaffleTicketArts/RaffleArtsGrid";
-import { ConfirmPopupInfo } from "@/types/types";
 
 interface Menu {
     id: string;
     label: string;
     active: boolean;
-}
-
-interface Props {
-    setConfirmPopup: (e: ConfirmPopupInfo) => void;
 }
 
 const initialCollectionsMenu: Menu[] = [
@@ -23,7 +18,7 @@ const initialCollectionsMenu: Menu[] = [
     { id: "raffle", label: "Raffle Tickets", active: false }
 ]
 
-export const Collections: React.FC<Props> = ({ setConfirmPopup }) => {
+export const Collections: React.FC = () => {
     const [collectionsMenu, setCollectionsMenu] = useState(initialCollectionsMenu);
     const { analytics, fetchArtsAnalytics } = useFetchArtsAnalytics();
     const [rendered, setRendered] = useState(false);
@@ -79,9 +74,9 @@ export const Collections: React.FC<Props> = ({ setConfirmPopup }) => {
                 ))}
             </div>}
 
-            {collectionsMenu[0]?.active && <RareNftGrid rendered={rendered} setConfirmPopup={setConfirmPopup} />}
-            {collectionsMenu[1]?.active && <ParticipationNftGrid rendered={rendered} setConfirmPopup={setConfirmPopup} />}
-            {collectionsMenu[2]?.active && <RaffleArtsGrid rendered={rendered} setConfirmPopup={setConfirmPopup} />}
+            {collectionsMenu[0]?.active && <RareNftGrid rendered={rendered} />}
+            {collectionsMenu[1]?.active && <ParticipationNftGrid rendered={rendered} />}
+            {collectionsMenu[2]?.active && <RaffleArtsGrid rendered={rendered} />}
         </div>
     )
 }
