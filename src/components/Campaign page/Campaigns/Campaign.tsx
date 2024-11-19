@@ -7,6 +7,7 @@ import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
 import useCampaigns from "@/hooks/CampaignHook";
 import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import Loader from "@/components/ArtBattle/Loader/Loader";
 
 interface Props {
   toggleUploadModal: () => void;
@@ -182,8 +183,11 @@ const CampaignBanner = () => {
           </button>
         ))}
       </div>
-
-      {campaignData && campaignData.length > 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center">
+          <Loader md="22" sm="15" />
+        </div>
+      ) : campaignData && campaignData.length > 0 ? (
         <div className="table-container">
           <div className="table-header">
             <div className="header-cell">Campaign Name</div>
@@ -233,54 +237,57 @@ const CampaignBanner = () => {
       ) : (
         <p className="no-campaign">No campaigns available.</p>
       )}
+      {!loading && campaignData && campaignData.length > 0 && (
+        <div className="pagination-section relative w-full flex justify-center py-5">
+          <div className="pagination rounded-[7rem]">
+            <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
+              <div
+                className={`previous flex items-center gap-1 ${
+                  page === 1
+                    ? "cursor-not-allowed opacity-50"
+                    : "cursor-pointer"
+                }`}
+                onClick={page !== 1 ? handlePrevious : undefined}
+              >
+                <InlineSVG
+                  src="/icons/left-arrow.svg"
+                  className="w-3 h-3 spartan-light"
+                />
+                <h2 className="hidden md:block">Previous</h2>
+              </div>
 
-      <div className="pagination-section relative w-full flex justify-center py-5">
-        <div className="pagination rounded-[7rem]">
-          <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
-            <div
-              className={`previous flex items-center gap-1 ${
-                page === 1 ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-              }`}
-              onClick={page !== 1 ? handlePrevious : undefined}
-            >
-              <InlineSVG
-                src="/icons/left-arrow.svg"
-                className="w-3 h-3 spartan-light"
-              />
-              <h2 className="hidden md:block">Previous</h2>
-            </div>
+              <div className="page-numbers flex items-center justify-center gap-2">
+                {renderPageNumbers().map((pageNumber) => (
+                  <div
+                    key={pageNumber}
+                    className={`page md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center ${
+                      page === pageNumber ? "active" : "cursor-pointer"
+                    }`}
+                    onClick={() => handlePageClick(pageNumber)}
+                  >
+                    <h2>{pageNumber}</h2>
+                  </div>
+                ))}
+              </div>
 
-            <div className="page-numbers flex items-center justify-center gap-2">
-              {renderPageNumbers().map((pageNumber) => (
-                <div
-                  key={pageNumber}
-                  className={`page md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center ${
-                    page === pageNumber ? "active" : "cursor-pointer"
-                  }`}
-                  onClick={() => handlePageClick(pageNumber)}
-                >
-                  <h2>{pageNumber}</h2>
-                </div>
-              ))}
-            </div>
-
-            <div
-              className={`next flex items-center gap-1 ${
-                page === totalPages
-                  ? "cursor-not-allowed opacity-50"
-                  : "cursor-pointer"
-              }`}
-              onClick={page !== totalPages ? handleNext : undefined}
-            >
-              <h2 className="hidden md:block">Next</h2>
-              <InlineSVG
-                src="/icons/right-arrow.svg"
-                className="w-3 h-3 spartan-light"
-              />
+              <div
+                className={`next flex items-center gap-1 ${
+                  page === totalPages
+                    ? "cursor-not-allowed opacity-50"
+                    : "cursor-pointer"
+                }`}
+                onClick={page !== totalPages ? handleNext : undefined}
+              >
+                <h2 className="hidden md:block">Next</h2>
+                <InlineSVG
+                  src="/icons/right-arrow.svg"
+                  className="w-3 h-3 spartan-light"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

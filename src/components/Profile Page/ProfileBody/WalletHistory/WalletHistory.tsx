@@ -115,7 +115,11 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                   ) : (
                     <InlineSVG src="/icons/green-downarrow.svg" />
                   )}
-                  <InlineSVG src="/icons/coin.svg" />
+                  <img
+                    src="/icons/coin.svg"
+                    alt="Coin Icon"
+                    className="w-[15px] h-[15px]"
+                  />
                   <span
                     className={`md:text-[12px] text-[10px] font-semibold ${
                       transaction.transactionType === "spent"
@@ -135,60 +139,66 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
         </>
       ) : (
         !loading && (
-          <p className="flex items-center justify-center mt-[60px] mb-[30px]">
-            No transaction History
+          <p className="flex items-center justify-center gap-1 mt-[60px] mb-[30px] text-white font-semibold text-lg">
+            <InlineSVG
+              src="/icons/info.svg"
+              className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+            />{" "}
+            No transaction History!
           </p>
         )
       )}
-      <div className="pagination-section relative w-full flex justify-center py-5 mb-[90px]">
-        <div className="pagination rounded-[7rem]">
-          <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
-            <div
-              className={`previous flex items-center gap-1 ${
-                currentPage === 1
-                  ? "cursor-not-allowed opacity-50"
-                  : "cursor-pointer"
-              }`}
-              onClick={currentPage !== 1 ? handlePrevious : undefined}
-            >
-              <InlineSVG
-                src="/icons/left-arrow.svg"
-                className="w-3 h-3 spartan-light"
-              />
-              <h2 className="hidden md:block">Previous</h2>
-            </div>
+      {!loading && transactions && transactions.length > 0 && (
+        <div className="pagination-section relative w-full flex justify-center py-5 mb-[90px]">
+          <div className="pagination rounded-[7rem]">
+            <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
+              <div
+                className={`previous flex items-center gap-1 ${
+                  currentPage === 1
+                    ? "cursor-not-allowed opacity-50"
+                    : "cursor-pointer"
+                }`}
+                onClick={currentPage !== 1 ? handlePrevious : undefined}
+              >
+                <InlineSVG
+                  src="/icons/left-arrow.svg"
+                  className="w-3 h-3 spartan-light"
+                />
+                <h2 className="hidden md:block">Previous</h2>
+              </div>
 
-            <div className="page-numbers flex items-center justify-center gap-2">
-              {renderPageNumbers().map((pageNumber) => (
-                <div
-                  key={pageNumber}
-                  className={`page md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center ${
-                    currentPage === pageNumber ? "active" : "cursor-pointer"
-                  }`}
-                  onClick={() => handlePageClick(pageNumber)}
-                >
-                  <h2>{pageNumber}</h2>
-                </div>
-              ))}
-            </div>
+              <div className="page-numbers flex items-center justify-center gap-2">
+                {renderPageNumbers().map((pageNumber) => (
+                  <div
+                    key={pageNumber}
+                    className={`page md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center ${
+                      currentPage === pageNumber ? "active" : "cursor-pointer"
+                    }`}
+                    onClick={() => handlePageClick(pageNumber)}
+                  >
+                    <h2>{pageNumber}</h2>
+                  </div>
+                ))}
+              </div>
 
-            <div
-              className={`next flex items-center gap-1 ${
-                currentPage === totalPages
-                  ? "cursor-not-allowed opacity-50"
-                  : "cursor-pointer"
-              }`}
-              onClick={currentPage !== totalPages ? handleNext : undefined}
-            >
-              <h2 className="hidden md:block">Next</h2>
-              <InlineSVG
-                src="/icons/right-arrow.svg"
-                className="w-3 h-3 spartan-light"
-              />
+              <div
+                className={`next flex items-center gap-1 ${
+                  currentPage === totalPages
+                    ? "cursor-not-allowed opacity-50"
+                    : "cursor-pointer"
+                }`}
+                onClick={currentPage !== totalPages ? handleNext : undefined}
+              >
+                <h2 className="hidden md:block">Next</h2>
+                <InlineSVG
+                  src="/icons/right-arrow.svg"
+                  className="w-3 h-3 spartan-light"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
