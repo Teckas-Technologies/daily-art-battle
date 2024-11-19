@@ -35,7 +35,7 @@ const burn = async()=>{
         count:4,
         contractId:ART_BATTLE_CONTRACT,
       };
-    await burnNft(5234);
+    await burnNft(5233);
 }
   return (
     <>

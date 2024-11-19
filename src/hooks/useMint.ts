@@ -53,7 +53,7 @@ const useMintImage = () => {
     try {
       const res = await wallet.callMethod({
         contractId: NEXT_PUBLIC_PROXY_ADDRESS,
-        method: 'nft_burn',  // Assuming 'burn' is the method in your contract to burn the NFT
+        method: 'nft_batch_burn',  // Assuming 'burn' is the method in your contract to burn the NFT
         args: {
           nft_contract_id: ART_BATTLE_CONTRACT,
           token_id: tokenId,  // Token ID to burn
