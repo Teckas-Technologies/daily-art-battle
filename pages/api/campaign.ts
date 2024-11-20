@@ -174,11 +174,13 @@ export default async function handler(
           today.setUTCHours(0, 0, 0, 0);
           const totalDocuments = await Campaign.countDocuments({
             startDate: { $lt: today },
+            endDate: { $lt: today },
             publiclyVisible: true,
           });
           const totalPages = Math.ceil(totalDocuments / limit);
           const campaign = await Campaign.find({
             startDate: { $lt: today },
+            endDate: { $lt: today },
             publiclyVisible: true,
           })
             .skip(skip)

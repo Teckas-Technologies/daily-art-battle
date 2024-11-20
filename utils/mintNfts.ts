@@ -28,7 +28,7 @@ export const mintNfts = async (): Promise<void> => {
     console.log(battle);
     console.log("Fetching completed battles",battle);
     if(battle){
-      if(battle.isSpecialWinnerMinted==false){
+      if(battle.isNftMinted==false){
         const artAvoters = await RaffleTicket.find({artId:battle.artAId});
         const artBvoters = await RaffleTicket.find({artId:battle.artBId});
         const combinedVoters = [...artAvoters, ...artBvoters];
@@ -54,7 +54,6 @@ export const mintNfts = async (): Promise<void> => {
         battle.specialWinner = specialWinner; 
         battle.specialWinnerName = user.firstName+" "+user.lastName;
         battle.isNftMinted = true;
-        battle.isSpecialWinnerMinted = true;
        const res =  await battle.save();
        console.log("saved",res);
     }

@@ -64,11 +64,11 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     const limit = parseInt(req.query.limit as string) || 9;
                     if(queryFilter=="voteAsc"){
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await Battle.countDocuments({ specialWinner:email});
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email,isSpecialWinnerMinted:false});
                         const totalPages = Math.ceil(totalDocuments / limit);
                         const spinner = await Battle.aggregate([
                             {
-                              $match: { specialWinner: email}
+                              $match: { specialWinner: email,isSpecialWinnerMinted:false}
                             },
                             {
                               $addFields: {
@@ -89,11 +89,11 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     res.status(200).json({ totalDocuments,totalPages,spinner});
                     }else if(queryFilter=="voteDsc"){
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await Battle.countDocuments({ specialWinner:email});
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email,isSpecialWinnerMinted:false});
                         const totalPages = Math.ceil(totalDocuments / limit);
                         const spinner = await Battle.aggregate([
                             {
-                              $match: { specialWinner: email}
+                              $match: { specialWinner: email,isSpecialWinnerMinted:false}
                             },
                             {
                               $addFields: {
@@ -117,18 +117,18 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await Battle.countDocuments({ specialWinner:email, endTime: { $lt: today }});
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email,isSpecialWinnerMinted:false, endTime: { $lt: today }});
                         const totalPages = Math.ceil(totalDocuments / limit);
-                        const pastBattles = await Battle.find({ specialWinner:email, endTime: { $lt: today }}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
+                        const pastBattles = await Battle.find({ specialWinner:email,isSpecialWinnerMinted:false, endTime: { $lt: today }}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
                         return { pastBattles,totalDocuments,totalPages };
 
                     }else if(queryFilter=="dateDsc"){
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await Battle.countDocuments({ specialWinner:email, endTime: { $lt: today }});
+                        const totalDocuments = await Battle.countDocuments({ specialWinner:email,isSpecialWinnerMinted:false, endTime: { $lt: today }});
                         const totalPages = Math.ceil(totalDocuments / limit);
-                        const pastBattles = await Battle.find({ specialWinner:email, endTime: { $lt: today }}).sort({ startTime: -1 ,_id: 1 }).skip(skip).limit(limit);
+                        const pastBattles = await Battle.find({ specialWinner:email,isSpecialWinnerMinted:false, endTime: { $lt: today }}).sort({ startTime: -1 ,_id: 1 }).skip(skip).limit(limit);
                         return { pastBattles,totalDocuments,totalPages };
 
                     }
@@ -258,21 +258,39 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             }
     }else if(req.method=="PUT"){
       const raffleId = req.query.raffleId;
+      const queryType = req.query.queryType;
       try {
-        const updatedRaffle = await RaffleTicket.findOneAndUpdate(
-          { _id:raffleId }, 
-          { $set: {isMintedNft: true} }, 
-          { new: true, upsert: false } 
-        );
-      
-        if (!updatedRaffle) {
-          return res.status(404).json({ message: "Raffle not found" });
+        if(queryType=="spinner"){
+          const updatedRaffle = await Battle.findOneAndUpdate(
+            { _id:raffleId }, 
+            { $set: {isSpecialWinnerMinted: true} }, 
+            { new: true, upsert: false } 
+          );
+        
+          if (!updatedRaffle) {
+            return res.status(404).json({ message: "Raffle not found" });
+          }
+        
+          return res.status(200).json({
+            message: "Raffle updated successfully",
+            data: updatedRaffle,
+          });
+        }else if(queryType=="raffles"){
+          const updatedRaffle = await RaffleTicket.findOneAndUpdate(
+            { _id:raffleId }, 
+            { $set: {isMintedNft: true} }, 
+            { new: true, upsert: false } 
+          );
+        
+          if (!updatedRaffle) {
+            return res.status(404).json({ message: "Raffle not found" });
+          }
+        
+          return res.status(200).json({
+            message: "Raffle updated successfully",
+            data: updatedRaffle,
+          });
         }
-      
-        return res.status(200).json({
-          message: "Raffle updated successfully",
-          data: updatedRaffle,
-        });
       } catch (error) {
         console.error("Error updating raffle:", error);
         return res.status(500).json({ message: "Internal Server Error" });
