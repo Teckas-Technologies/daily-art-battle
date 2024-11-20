@@ -2,6 +2,7 @@ import { uploadReference } from "@mintbase-js/storage";
 import { useContext, useState } from "react";
 import { NearContext, Wallet } from "@/wallet/WalletSelector";
 import { ART_BATTLE_CONTRACT, ART_BATTLE_PROXY_CONTRACT, NEXT_PUBLIC_PROXY_ADDRESS } from "@/config/constants";
+import { fetchWithAuth } from "../../utils/authToken";
 
 type mintObj = {
   title: string;
@@ -66,7 +67,47 @@ const useMintImage = () => {
       // throw new Error("Failed to sign and send transaction");
     }
   };
-  return { mintImage,burnNft, loading, error };
+
+
+  const saveHash = async(transactionHash:string)=>{
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchWithAuth(`/api/gfxCoin?queryType=mint&transactionHash=${transactionHash}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if(res.ok){
+        return true;
+      }  
+    } catch (error:any) {
+      console.log(error.message);
+      setError(error.message);
+      return false;
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  const getHash = async(transactionHash:string)=>{
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchWithAuth(`/api/gfxCoin?transactionHash=${transactionHash}`);
+      if(res.ok){
+        return true;
+      }  
+    } catch (error:any) {
+      console.log(error.message);
+      setError(error.message);
+      return false;
+    }finally{
+      setLoading(false);
+    }
+  }
+  return { mintImage,burnNft,saveHash,getHash,loading, error };
 };
 
 export default useMintImage;
