@@ -25,6 +25,7 @@ import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { setAuthToken } from "../../../utils/authToken";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
+import NoPage from "@/components/404 Page/NoPage";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -122,7 +123,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           alignItems: "center",
         }}
       >
-        <Loader md="80" sm="15" />
+        <Loader md="22" sm="15" />
       </div>
     );
   if (error) return <div>No campaign found</div>;
@@ -378,6 +379,11 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             setErrMsg={setErrMsg}
           />
         </div>
+      )}
+      {!["current", "upcoming", "completed"].includes(campaignStatus ?? "") && (
+        <main className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]">
+          <NoPage />
+        </main>
       )}
     </div>
   );
