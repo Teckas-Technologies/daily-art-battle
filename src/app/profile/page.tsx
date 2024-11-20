@@ -8,11 +8,11 @@ import ProfilePath from "@/components/Profile Page/Profile Path/ProfilePath";
 import { ProfileBody } from "@/components/Profile Page/ProfileBody/ProfileBody";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
 import ProfileHeader from "@/components/Profile Page/ProfileHeader/ProfileHeader";
-import { GFX_CAMPAIGNID } from "@/config/constants";
+import { GFX_CAMPAIGNID, NEXT_PUBLIC_NETWORK } from "@/config/constants";
 import React, { useContext, useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
-import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { getFromLocalStorage, MintBurnPopup, saveToLocalStorage } from "@/components/PopUps/MintBurnPopup";
 import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
@@ -20,6 +20,8 @@ import { getTxnStatus } from "@mintbase-js/rpc";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Toast from "@/components/Toast";
 import { useAuth } from "@/contexts/AuthContext";
+import useMintImage from "@/hooks/useMint";
+import { useArtsRaffleCount } from "@/hooks/useRaffleTickets";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -39,15 +41,23 @@ const page = () => {
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
   const pathName = usePathname();
+  const { getHash, saveHash } = useMintImage();
+  const { updateRaffleMint } = useArtsRaffleCount();
+
+  const isMint = getFromLocalStorage("isMint");
+  const isBurn = getFromLocalStorage("isBurn");
+  const mintArtId = getFromLocalStorage("mintArtId");
+  const mintQueryType = getFromLocalStorage("mintQueryType");
+  const isBuyCoin = getFromLocalStorage("isBuyCoin");
 
   useEffect(() => {
     if (toast) {
-        setTimeout(() => setToast(false), 3000);
+      setTimeout(() => setToast(false), 3000);
     }
     if (toastMessage) {
       setTimeout(() => setToastMessage(""), 3000);
-  }
-}, [toast, toastMessage])
+    }
+  }, [toast, toastMessage])
 
   const handleEditClick = () => {
     setIsEditOpen(true);
@@ -75,40 +85,81 @@ const page = () => {
       console.log("Transaction Hash:", txnHash);
 
       if (signedAccountId) {
-        try {
-          if (txnHash) {
-            const existingTxn = await getNearTransfer(txnHash);
-            if (existingTxn) {
-              console.log("Transaction hash already exists in the database.");
-            } else {
-              const senderId = accountId;
-              const rpcUrl = "https://rpc.testnet.near.org";
-              const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
-              console.log("Transaction Status:", txnStatus);
+        console.log("IS MINT1:", isMint)
+        if (isMint === "true") {
+          console.log("IS MINT2:", isMint)
+          try {
+            if (txnHash) {
+              const notExist = await getHash(txnHash);
+              if (!notExist) {
+                const senderId = accountId;
+                const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
+                const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
+                console.log("Transaction Status:", txnStatus);
 
-              if (txnStatus === "success") {
-                console.log("Storing ID and transaction hash...");
-                console.log("Active Account ID:", accountId);
-                console.log("Transaction Hash:", txnHash);
-                await postNearTransfer(accountId, txnHash);
-
-                setToastMessage(`Transaction Successful!`);
-                setSuccessToast("yes");
-                setToast(true);
+                if (txnStatus === "success") {
+                  saveToLocalStorage("isMint", "false");
+                  setToastMessage(`Minting Successful!`);
+                  setSuccessToast("yes");
+                  setToast(true);
+                  await updateRaffleMint(mintArtId as string, mintQueryType as string);
+                  await saveHash(txnHash);
+                } else {
+                  saveToLocalStorage("isMint", "false");
+                  setToastMessage(`Minting Failed!`);
+                  setSuccessToast("no");
+                  setToast(true);
+                }
               } else {
-                setToastMessage(`Transaction Failed!`);
-                setSuccessToast("no");
-                setToast(true);
+                console.log("Transaction hash already exists in the database.");
               }
             }
+          } catch (error) {
+            saveToLocalStorage("isMint", "false");
+            setToastMessage(`Minting Failed!`);
+            setSuccessToast("no");
+            setToast(true);
           }
-        } catch (error) {
-          console.error("Error in fetchTransaction:", error);
-          setToastMessage(`Transaction Failed!`);
-          setSuccessToast("no");
-          setToast(true);
+        } else if(isBuyCoin === "true") {
+          console.log("IS MINT3:", isMint)
+          try {
+            if (txnHash) {
+              const existingTxn = await getNearTransfer(txnHash);
+              if (existingTxn) {
+                console.log("Transaction hash already exists in the database.");
+              } else {
+                const senderId = accountId;
+                const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
+                const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
+                console.log("Transaction Status:", txnStatus);
+
+                if (txnStatus === "success") {
+                  console.log("Storing ID and transaction hash...");
+                  console.log("Active Account ID:", accountId);
+                  console.log("Transaction Hash:", txnHash);
+                  await postNearTransfer(accountId, txnHash);
+                  saveToLocalStorage("isBuyCoin", "false");
+
+                  setToastMessage(`Transaction Successful!`);
+                  setSuccessToast("yes");
+                  setToast(true);
+                } else {
+                  saveToLocalStorage("isBuyCoin", "false");
+                  setToastMessage(`Transaction Failed!`);
+                  setSuccessToast("no");
+                  setToast(true);
+                }
+              }
+            }
+          } catch (error) {
+            console.error("Error in fetchTransaction:", error);
+            setToastMessage(`Transaction Failed!`);
+            setSuccessToast("no");
+            setToast(true);
+          }
         }
       } else {
+        console.log("IS MINT4:", isMint)
         console.log("No transaction hash found in the URL.");
       }
     };
@@ -141,7 +192,7 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
-        setSignToast={setSignToast} 
+        setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
       <ProfilePath />
@@ -156,7 +207,7 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
-        setSignToast={setSignToast} 
+        setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
       <MobileNav
@@ -166,7 +217,7 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
-        setSignToast={setSignToast} 
+        setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}

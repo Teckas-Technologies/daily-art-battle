@@ -91,18 +91,20 @@ export class Wallet {
         args = {},
         gas = THIRTY_TGAS,
         deposit = NO_DEPOSIT,
+        callbackUrl = window.location.origin,
     }: {
         contractId: string;
         method: string;
         args?: object;
         gas?: string;
         deposit?: string;
+        callbackUrl?: string;
     }) => {
         // Sign a transaction with the "FunctionCall" action
         const selectedWallet = await (await this.selector).wallet();
         const outcome = await selectedWallet.signAndSendTransaction({
             receiverId: contractId,
-            callbackUrl: window.location.origin,
+            callbackUrl: callbackUrl,
             actions: [
                 {
                     type: 'FunctionCall',

@@ -139,9 +139,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     const limit = parseInt(req.query.limit as string) || 9;
                     if(queryFilter=="voteAsc"){
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalDocuments = await RaffleTicket.countDocuments({ email, isMintedNft: false });
                         const totalPages = Math.ceil(totalDocuments / limit);
-                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({raffleCount:1});
+                        const raffles = await RaffleTicket.find({email:email, isMintedNft: false}).skip(skip).limit(limit).sort({raffleCount:1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
                             const plainRaffle = raffle.toObject();
@@ -155,9 +155,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }else if(queryFilter=="voteDsc"){
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalDocuments = await RaffleTicket.countDocuments({ email, isMintedNft: false });
                         const totalPages = Math.ceil(totalDocuments / limit);
-                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({raffleCount:-1});
+                        const raffles = await RaffleTicket.find({email:email, isMintedNft: false}).skip(skip).limit(limit).sort({raffleCount:-1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
                             const plainRaffle = raffle.toObject();
@@ -171,9 +171,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }else if(queryFilter=="dateAsc"){
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalDocuments = await RaffleTicket.countDocuments({ email, isMintedNft: false });
                         const totalPages = Math.ceil(totalDocuments / limit);
-                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({createdAt:1});
+                        const raffles = await RaffleTicket.find({email:email, isMintedNft: false}).skip(skip).limit(limit).sort({createdAt:1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
                             const plainRaffle = raffle.toObject();
@@ -187,9 +187,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
                     }else if(queryFilter=="dateDsc"){
                         const skip = (page - 1) * limit;
-                        const totalDocuments = await RaffleTicket.countDocuments({ email });
+                        const totalDocuments = await RaffleTicket.countDocuments({ email, isMintedNft: false });
                         const totalPages = Math.ceil(totalDocuments / limit);
-                        const raffles = await RaffleTicket.find({email:email}).skip(skip).limit(limit).sort({createdAt:-1});
+                        const raffles = await RaffleTicket.find({email:email, isMintedNft: false}).skip(skip).limit(limit).sort({createdAt:-1});
                         const rafflesWithArtUrls = await Promise.all(raffles.map(async (raffle) => {
                             const art = await ArtTable.findOne({ _id: new mongoose.Types.ObjectId(raffle.artId) });
                             const plainRaffle = raffle.toObject();
