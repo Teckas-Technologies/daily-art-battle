@@ -18,6 +18,7 @@ interface CampaignCreationPopupProps {
   resetFormFields:()=>void;
   setConnectionError:(value:boolean)=>void;
   inSufficientbalance:boolean;
+  setInSufficientbalance:(value:boolean)=>void;
 }
 const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   onClose,
@@ -31,7 +32,8 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   specialRewards,
   resetFormFields,
   setConnectionError,
-  inSufficientbalance
+  inSufficientbalance,
+  setInSufficientbalance
 }) => {
  
   if (!isOpen) return null;
@@ -41,6 +43,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
 
   const closeRetry =()=>{
     setConnectionError(false);
+    setInSufficientbalance(true);
     onClose();
     resetFormFields();
   }

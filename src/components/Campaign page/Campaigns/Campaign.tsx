@@ -68,6 +68,9 @@ const CampaignBanner = () => {
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     setPage(1);
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handlePageClick = (newPage: number) => {
@@ -172,7 +175,7 @@ const CampaignBanner = () => {
           "Current Campaigns",
           "Upcoming Campaigns",
           "Previous Campaigns",
-          ...(userDetails ? ["My Campaigns"] : []), 
+          ...(userDetails ? ["My Campaigns"] : []),
         ].map((tab) => (
           <button
             key={tab}
@@ -190,6 +193,7 @@ const CampaignBanner = () => {
         </div>
       ) : campaignData && campaignData.length > 0 ? (
         <div className="table-container">
+          {/* ref={scrollRef} */}
           <div className="table-header">
             <div className="header-cell">Campaign Name</div>
             <div className="header-cell">Start Date</div>
@@ -227,7 +231,9 @@ const CampaignBanner = () => {
                 <div className="cell">
                   <button
                     className="view-details-btn"
-                    onClick={() => router.push(`/${item.campaignUrl}`)}
+                    onClick={() =>
+                      window.open(`/${item.campaignUrl}`, "_blank")
+                    }
                   >
                     View Details
                   </button>
@@ -236,7 +242,20 @@ const CampaignBanner = () => {
             ))}
         </div>
       ) : (
-        <p className="no-campaign">No campaigns available.</p>
+        <p className="no-campaign flex items-center justify-center gap-2 text-white font-semibold text-lg">
+          <InlineSVG
+            src="/icons/info.svg"
+            className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+          />
+          {activeTab === "Current Campaigns" &&
+            "No current campaigns available."}
+          {activeTab === "Upcoming Campaigns" &&
+            "No upcoming campaigns available."}
+          {activeTab === "Previous Campaigns" &&
+            "No previous campaigns available."}
+          {activeTab === "My Campaigns" &&
+            "You have not created any campaigns yet."}
+        </p>
       )}
       {!loading && campaignData && campaignData.length > 0 && (
         <div className="pagination-section relative w-full flex justify-center py-5">
