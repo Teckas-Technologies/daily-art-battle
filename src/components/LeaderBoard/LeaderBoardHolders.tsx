@@ -138,7 +138,7 @@ const fetchInitialData = async () => {
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll', position: 'relative', }}
       ref={leaderboardRef}
-      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
+      className="w-full relative lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
       {/* Leaderboard Header */}
       <div className="flex justify-between mt-6 mb-6 pb-4 gap-2 md:gap-4">
@@ -187,7 +187,7 @@ const fetchInitialData = async () => {
         ))}
       </div>
       {showScrollButton && (
-      <div className="sticky bottom-5 flex flex-col items-end">
+      <div className="sticky bottom-1 flex flex-col items-end">
     <button
       className="p-3 rounded-full shadow-lg transition-transform hover:scale-110"
       onClick={() => leaderboardRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -222,10 +222,11 @@ const fetchInitialData = async () => {
             className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
             />
       ):(
-        <InlineSVG
-        src="/icons/user.svg"
-        className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
-    />
+        <img
+            src="/icons/User.png"
+            alt={user.firstName}
+            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+            />
       )}
       
       {/* User Information */}
