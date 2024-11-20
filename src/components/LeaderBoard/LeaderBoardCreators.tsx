@@ -11,6 +11,7 @@ import Loader from '../ArtBattle/Loader/Loader';
 const LeaderBoardCreators = () => {
   const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoardCreator();
   const [topThreeData, setTopThreeData] = useState<LeaderBoardCreatorsResponse[]>([]);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [leaderboardData, setLeaderBoardData] = useState<LeaderBoardCreatorsResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { data: session } = useSession();
@@ -50,11 +51,18 @@ const LeaderBoardCreators = () => {
   // Infinite Scroll Handler
   const handleScroll = () => {
     const container = leaderboardRef.current;
+  
     if (container) {
       const { scrollTop, scrollHeight, clientHeight } = container;
+  
+      // Check if scrolled to the bottom (for infinite scrolling)
       if (scrollTop + clientHeight >= scrollHeight - 10 && !loading && hasMore) {
         setCurrentPage((prevPage) => prevPage + 1);
       }
+  
+      // Check if scrolled past halfway (for "Scroll to top" button visibility)
+      const halfwayPoint = scrollHeight / 5;
+      setShowScrollButton(scrollTop >= halfwayPoint);
     }
   };
 
@@ -108,16 +116,22 @@ const LeaderBoardCreators = () => {
         return 'w-full';
     }
   };
-  if(call){
-    return <Loader md="21" sm="15" />
-    }
+  // if(call){
+  //   return <Loader md="21" sm="15" />
+  //   }
   
 
   return (
+    <div>
+    {call ? (
+        <div className="flex items-center  mnb-10 justify-center">
+          <Loader md="22" sm="15" />
+        </div>
+      ):(
     <div className="spartan-medium custom-flex-row flex flex-col lg:flex-row mb-20 items-start justify-start w-full mt-10">
     {/* Left Section - Leaderboard Table */}
     <div
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' }}
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' ,position: 'relative',}}
       ref={leaderboardRef}
       className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
@@ -186,6 +200,21 @@ const LeaderBoardCreators = () => {
           </div>
         ))} 
         </div>
+        {showScrollButton && (
+        <div className="sticky bottom-5 flex flex-col items-end">
+    <button
+      className="p-3 rounded-full shadow-lg transition-transform hover:scale-110"
+      onClick={() => leaderboardRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+    >
+      <InlineSVG
+        src="/icons/arrow.svg"
+        className="h-10 w-10 bg-black rounded-full"
+      />
+    </button>
+    <span className="text-white text-sm">Scroll to top</span>
+  </div>
+        )}
+
       </div>
 
       {/* Right Section - Top Rankings Cards */}
@@ -199,11 +228,18 @@ const LeaderBoardCreators = () => {
       className={`flex items-center gap-4 p-4 sm:p-5 mb-5 rounded-r-xl ${gettopRowClass(user.rank)} ${getWidthClass(user.rank)} flex-row`}
     >
       {/* Profile Image */}
-      <img
-        src="/default-profile.png"
-        alt={user.firstName}
+      {user.profileImg?(
+            <img
+            src={`${user.profileImg}`}
+            alt={user.firstName}
+            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+            />
+      ):(
+        <InlineSVG
+        src="/icons/user.svg"
         className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
-      />
+    />
+      )}
       
       {/* User Information */}
       <div className="flex-1 text-center sm:text-left">
@@ -216,7 +252,7 @@ const LeaderBoardCreators = () => {
     </div>
   ))}
 </div>
-      <div className="fixed bottom-5 w-[110%] flex flex-col mb-20 items-center gap-2">
+      {/* <div className="fixed bottom-5 w-[110%] flex flex-col mb-20 items-center gap-2">
   <button className="p-3 rounded-full shadow-lg transition-transform hover:scale-110">
   <InlineSVG
     src="/icons/arrow.svg"
@@ -224,9 +260,12 @@ const LeaderBoardCreators = () => {
 />
   </button>
   <span className="text-white text-sm">Scroll to top</span>
-</div>
+</div> */}
 
     </div>
+      ) 
+    }
+   </div>
   );
 };
 
