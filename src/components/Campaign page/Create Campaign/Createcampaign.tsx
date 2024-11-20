@@ -10,6 +10,7 @@ import useCampaigns from "@/hooks/CampaignHook";
 import CampaignPopup from "../CreateCampaign Popup/CampaignPopup";
 import { CAMPAIGN_CREATION_COST } from "@/config/points";
 import { useSendWalletData } from "@/hooks/saveUserHook";
+import { useAuth } from "@/contexts/AuthContext";
 interface CampaignCreationProps {
   toggleCampaignModal: () => void;
   idToken: string;
@@ -40,14 +41,10 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [connectionError, setConnectionError] = useState(false);
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
   const router = useRouter();
-  const { userDetails, sendWalletData, sufficientBalance } =
-    useSendWalletData();
-  useEffect(() => {
-    if (isPopupOpen) {
-      // const walletAddress = activeAccountId;
-      sendWalletData();
-    }
-  }, [isPopupOpen, idToken, sendWalletData]);
+  const { user } = useAuth();
+  let userDetails = user;
+  console.log("Sufficient Balance", userDetails?.user?.gfxCoin);
+
   const { createCampaign } = useCampaigns();
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsPubliclyVisible(event.target.checked);
@@ -92,12 +89,12 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
 
   const confirmCampaignCreation = async () => {
     setConnectionError(false);
-
+    setInSufficientbalance(true);
     const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
     const specialRewardCost = (specialWinner || 0) * Number(specialRewards);
     const totalCost = creationCost + specialRewardCost;
 
-    if (sufficientBalance === null) {
+    if (userDetails?.user?.gfxCoin === null) {
       console.error("Balance information is not available.");
       setInSufficientbalance(false);
       setConnectionError(true);
@@ -105,7 +102,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
       return;
     }
 
-    if (sufficientBalance < totalCost) {
+    if (userDetails?.user?.gfxCoin && userDetails?.user?.gfxCoin < totalCost) {
       console.error("Insufficient balance to create campaign.");
       setInSufficientbalance(false);
       return;
@@ -481,6 +478,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           specialRewards={specialRewards}
           resetFormFields={resetFormFields}
           inSufficientbalance={inSufficientbalance}
+          setInSufficientbalance={setInSufficientbalance}
         />
       </div>
     </>
