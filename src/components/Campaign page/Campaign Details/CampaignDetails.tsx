@@ -9,6 +9,7 @@ import DistributeRewardPopup from "../DistributeReward Popup/DistributePopup";
 import FewParticipantsPopup from "../DistributeReward Popup/FewParticipants";
 import AllParticipantpopup from "../DistributeReward Popup/AllParticipants";
 import { NearContext } from "@/wallet/WalletSelector";
+import Toast from "@/components/Toast";
 
 interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
@@ -94,7 +95,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const [participants, setParticipants] = useState<string[]>([]);
   const [dayWinners, setDayWinners] = useState([]);
   const [showRewardModal, setShowRewardModal] = useState(false);
-  const [isRewardDistributed, setIsRewardDistributed] = useState(campaign?.distributedRewards ?? false);
+  const [isRewardDistributed, setIsRewardDistributed] = useState(
+    campaign?.distributedRewards ?? false
+  );
   const [selectedArt, setSelectedArt] = useState<number[]>([]);
   const [showAllParticipantsPopup, setShowAllParticipantsPopup] =
     useState(false);
@@ -103,11 +106,14 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const [specialWinnerCount, setSpecialWinnerCount] = useState<number | null>(
     null
   );
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [successToast, setSuccessToast] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
   const { wallet, signedAccountId } = useContext(NearContext);
   const scrollRef = useRef<HTMLDivElement>(null);
- 
+
   const idToken = session?.idToken || "";
   const {
     fetchCampaignAnalytics,
@@ -143,8 +149,6 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   };
 
   const SpecialWinnerCount = campaign?.specialWinnerCount ?? "";
-  
- 
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -207,8 +211,14 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       setIsRewardDistributed(true);
       setShowAllParticipantsPopup(false);
       setShowFewParticipantsPopup(false);
+      setToastMessage("Reward distributed successfully");
+      setSuccessToast("yes");
+      setToast(true);
     } else {
       console.error("Failed to distribute art");
+      setToastMessage("Failed to distribute reward");
+      setSuccessToast("no");
+      setToast(true);
     }
   };
   const handlePopups = () => {
@@ -379,7 +389,11 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                     <div className="daywise-winner">
                       <h3>Winner: Day {index + 1}</h3>
                       <div className="profile-section">
-                        <img src="images/no-profile.png" alt="Profile" className="profile-image" />
+                        <img
+                          src="images/no-profile.png"
+                          alt="Profile"
+                          className="profile-image"
+                        />
                         <h4>
                           {winnerArtist.length > 10
                             ? `${winnerArtist.slice(0, 10)}...`
@@ -389,7 +403,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                       <img
                         src={winnerImage}
                         alt={winnerTitle}
-                        className="art-img"
+                        className="art-img-campaign"
                       />
                       <p className="flex items-center justify-end mt-3">
                         <InlineSVG
@@ -442,8 +456,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
               </>
             )}
           </>
-        ):""}
-        <div className="summary">
+        ) : (
+          ""
+        )}
+        <div className="summary mt-6">
           <div className="participants">
             <h2>Participants</h2>
             {participants && participants.length > 0 ? (
@@ -465,73 +481,83 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
           </div>
 
           <div className="summary-arts">
-            <h3>Arts</h3>
-            <div className="arts-grid">
-              {art.length > 0 ? (
-                art.map((artItem, index) => (
-                  <div key={index} className="art-card">
-                    <img src={artItem.colouredArt} alt={`Art ${index + 1}`} />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center p-4">No art data available</div>
-              )}
-            </div>
+            {art.length > 0 ? (
+              <>
+                <h3>Arts</h3>
+                <div className="arts-grid">
+                  {art.map((artItem, index) => (
+                    <div key={index} className="art-card">
+                      <img src={artItem.colouredArt} alt={`Art ${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+             <p className="flex items-center justify-center gap-2 mt-[60px] mb-[30px] text-white font-semibold text-lg">
+            <InlineSVG
+              src="/icons/info.svg"
+              className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+            />{" "}
+            No arts available!
+          </p>
+            )}
 
-            <div className="pagination-section relative w-full flex justify-center py-5">
-              <div className="pagination rounded-[7rem]">
-                <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
-                  <div
-                    className={`previous flex items-center gap-1 ${
-                      currentPage === 1
-                        ? "cursor-not-allowed opacity-50 text-gray-400"
-                        : "cursor-pointer text-white"
-                    }`}
-                    onClick={() =>
-                      currentPage > 1 && handlePageChange(currentPage - 1)
-                    }
-                  >
-                    <InlineSVG
-                      src="/icons/left-arrow.svg"
-                      className="w-3 h-3 spartan-light"
-                    />
-                    <h2 className="hidden md:block">Previous</h2>
-                  </div>
+            {art.length > 0 && (
+              <div className="pagination-section relative w-full flex justify-center py-5">
+                <div className="pagination rounded-[7rem]">
+                  <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
+                    <div
+                      className={`previous flex items-center gap-1 ${
+                        currentPage === 1
+                          ? "cursor-not-allowed opacity-50 text-gray-400"
+                          : "cursor-pointer text-white"
+                      }`}
+                      onClick={() =>
+                        currentPage > 1 && handlePageChange(currentPage - 1)
+                      }
+                    >
+                      <InlineSVG
+                        src="/icons/left-arrow.svg"
+                        className="w-3 h-3 spartan-light"
+                      />
+                      <h2 className="hidden md:block">Previous</h2>
+                    </div>
 
-                  <div className="page-numbers flex items-center justify-center gap-2">
-                    {renderPageNumbers().map((pageNumber: number) => (
-                      <div
-                        key={pageNumber}
-                        className={`page-number md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center rounded-full cursor-pointer ${
-                          currentPage === pageNumber ? "active-page" : ""
-                        }`}
-                        onClick={() => handlePageChange(pageNumber)}
-                      >
-                        <h2>{pageNumber}</h2>
-                      </div>
-                    ))}
-                  </div>
+                    <div className="page-numbers flex items-center justify-center gap-2">
+                      {renderPageNumbers().map((pageNumber: number) => (
+                        <div
+                          key={pageNumber}
+                          className={`page-number md:h-[3rem] md:w-[3rem] h-[2rem] w-[2rem] flex justify-center items-center rounded-full cursor-pointer ${
+                            currentPage === pageNumber ? "active-page" : ""
+                          }`}
+                          onClick={() => handlePageChange(pageNumber)}
+                        >
+                          <h2>{pageNumber}</h2>
+                        </div>
+                      ))}
+                    </div>
 
-                  <div
-                    className={`next flex items-center gap-1 ${
-                      currentPage === totalPages
-                        ? "cursor-not-allowed opacity-50 text-gray-400"
-                        : "cursor-pointer text-white"
-                    }`}
-                    onClick={() =>
-                      currentPage < totalPages &&
-                      handlePageChange(currentPage + 1)
-                    }
-                  >
-                    <h2 className="hidden md:block">Next</h2>
-                    <InlineSVG
-                      src="/icons/right-arrow.svg"
-                      className="w-3 h-3 spartan-light"
-                    />
+                    <div
+                      className={`next flex items-center gap-1 ${
+                        currentPage === totalPages
+                          ? "cursor-not-allowed opacity-50 text-gray-400"
+                          : "cursor-pointer text-white"
+                      }`}
+                      onClick={() =>
+                        currentPage < totalPages &&
+                        handlePageChange(currentPage + 1)
+                      }
+                    >
+                      <h2 className="hidden md:block">Next</h2>
+                      <InlineSVG
+                        src="/icons/right-arrow.svg"
+                        className="w-3 h-3 spartan-light"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         {showRewardModal && (
@@ -552,7 +578,6 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             onDistribute={handleDistribute}
             selectedArtLength={selectedArt.length}
             artLength={art.length}
-            
           />
         )}
         {showFewParticipantsPopup && (
@@ -565,6 +590,24 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
           />
         )}
       </div>
+      {toast && toastMessage && (
+        <div
+          className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"
+          style={{ zIndex: 55 }}
+        >
+          <div className="relative w-full h-full">
+            <Toast
+              success={successToast === "yes" ? true : false}
+              message={toastMessage}
+              onClose={() => {
+                setToast(false);
+                setToastMessage("");
+                setSuccessToast("");
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

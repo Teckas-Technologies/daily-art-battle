@@ -170,7 +170,7 @@
   align-items: center;
   margin-bottom: 35px;
 }
-.daywise-winner .art-img {
+.daywise-winner .art-img-campaign {
   width: 230px;
   height: 230px;
   border-radius: 10.5px;
@@ -538,7 +538,7 @@
     padding: 10px;
     border-radius: 15px;
   }
-  .daywise-winner .art-img {
+  .daywise-winner .art-img-campaign {
     width: 130px;
     height: 130px;
   }

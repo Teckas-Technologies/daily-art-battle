@@ -4,6 +4,7 @@ import './MobileNav.css';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Props {
     openNav: boolean;
@@ -12,23 +13,27 @@ interface Props {
     uploadSuccess: boolean;
     campaignId: string;
     fontColor: string;
+    setSignToast: (e: boolean) => void;
+    setErrMsg: (e: string) => void;
 }
 
 const menus = [
     {
-        id: "artbattles", label: "ART BATTLES", path: "/", icon: "/images/Battle_Icon.png",
+        id: "artbattles", label: "ART BATTLES", path: "/", icon: "/images/Battle_New.png",
         subMenu: { id: "prevbattles", label: "PREVIOUS BATTLES", path: "/previousbattles", icon: "/images/right-arrow.png" }
     },
-    { id: "leaderboard", label: "LEADERBOARD", path: "/leaderboard", icon: "/images/Trophy_Icon.png" },
-    { id: "campaigns", label: "CAMPAIGNS", path: "/campaign", icon: "/images/Campaign_Icon.png" },
-    { id: "create", label: "CREATE", path: "/", icon: "/images/Create_Icon.png" },
+    { id: "leaderboard", label: "LEADERBOARD", path: "/leaderboard", icon: "/images/Leaderboard_New.png" },
+    { id: "campaigns", label: "CAMPAIGNS", path: "/campaign", icon: "/images/Campaign_New.png" },
+    { id: "create", label: "CREATE", path: "/", icon: "/images/Create_New.png" },
 ];
 
-export const MobileNav: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor }) => {
+export const MobileNav: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
     const [subMenu, setSubMenu] = useState(false);
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const router = useRouter();
+    const { user } = useAuth();
+    let userDetails = user;
     // useEffect(() => {
     //     const openupload = searchParams?.get('openupload');
     //     if (openupload === 'true') {
@@ -45,6 +50,12 @@ export const MobileNav: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadMo
                                 <div
                                     className="mob-menu w-full flex items-center py-3 px-2"
                                     onClick={() => {
+                                        if (!userDetails) {
+                                            setOpenNav(false);
+                                            setSignToast(true);
+                                            setErrMsg("Sign In to upload your Art!");
+                                            return;
+                                        }
                                         if (pathName === "/") {
                                             setOpenNav(false);
                                             toggleUploadModal();

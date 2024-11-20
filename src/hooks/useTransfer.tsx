@@ -68,8 +68,82 @@ const useNEARTransfer = () => {
             setLoading(false);
         }
     }
-
-    return { transfer, loading, error };
+    const Usdttransfer = async (selectedCoin: string) => {
+        if (!signedAccountId) {
+            setError("Active account ID is not set.");
+            return;
+        }
+        setLoading(true);
+    
+        try {
+            if (!wallet) {
+                throw new Error("Wallet is undefined");
+            }
+    
+          
+            const amountInYocto = (parseFloat(selectedCoin) * Math.pow(10, 6)).toString();
+            console.log("Amount in Yocto:", amountInYocto);
+            
+    
+            console.log("Amount >>", selectedCoin);
+            console.log("Selected Coin (USDT):", selectedCoin);
+            console.log("Converted Yocto Amount:", amountInYocto);
+    
+            const transaction = {
+                receiverId: "usdt.fakes.testnet", 
+                actions: [
+                    {
+                        type: "FunctionCall",
+                        params: {
+                            methodName: "ft_transfer",
+                            args: {
+                                receiver_id: receiverId,
+                                amount: amountInYocto.toString(), 
+                            },
+                            gas: "30000000000000",
+                            deposit: "1", 
+                        },
+                    },
+                ],
+            };
+    
+            const results = await wallet.signAndSendTransactions({ transactions: [transaction] });
+            let signerId: string | undefined;
+            let depositAmount: string | undefined;
+            let hash: string | undefined;
+    
+            results?.forEach((result) => {
+                signerId = result.transaction.signer_id;
+                console.log("..", signedAccountId);
+                
+                hash = result.transaction.hash;
+                const action = result.transaction.actions[0];
+                
+                if (action?.Transfer) {
+                    depositAmount = action.Transfer.deposit;
+                }
+            });
+    
+            return {
+                success: true,
+                signerId,
+                depositAmount,
+                hash
+            };
+        } catch (error: any) {
+            setError(
+                error?.message || "An error occurred during the transaction process."
+            );
+            return {
+                success: false,
+                error: error?.message || "An error occurred during the transaction process."
+            };
+        } finally {
+            setLoading(false);
+        }
+    }
+    
+    return { transfer, loading, error,Usdttransfer };
 }
 
 export default useNEARTransfer;
