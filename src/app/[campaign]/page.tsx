@@ -25,6 +25,7 @@ import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { setAuthToken } from "../../../utils/authToken";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
+import { BattleData } from "@/hooks/battleHooks";
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -177,6 +178,9 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             fontColor={""}
             welcomeText={""}
             themeTitle={""}
+            todayBattle={{} as BattleData}
+            loading={true}
+            error={""}
           />
           <CurrentCampaigUploadArt
             toggleUploadModal={toggleUploadModal}

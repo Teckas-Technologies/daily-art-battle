@@ -19,12 +19,12 @@ interface Props {
 }
 
 const navs = [
-    { id: "battles", label: "Battles", path: "/", icon: "/images/Battle_Icon.png" },
-    { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Trophy_Icon.png" },
-    { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_Icon.png" },
-    { id: "create", label: "Create", path: "/", icon: "/images/Create_Icon.png" },
+    { id: "battles", label: "Battles", path: "/", icon: "/images/Battle_New.png" },
+    { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Leaderboard_New.png" },
+    { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_New.png" },
+    { id: "create", label: "Create", path: "/", icon: "/images/Create_New.png" },
 ];
- 
+
 export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
     const pathName = usePathname();
     const router = useRouter();
@@ -35,12 +35,43 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
     const { user, signInUser, signOutUser } = useAuth();
     let userDetails = user;
     const profileMenuRef = useRef<HTMLDivElement | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (pathName === "/profile" && !userDetails) {
+        const fetchUserDetails = async () => {
+            try {
+                setIsLoading(true);
+                // Simulate fetching user details
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+                // Example: Replace the above with actual logic to fetch user details.
+            } catch (error) {
+                console.error("Error fetching user details", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (!user) {
+            fetchUserDetails();
+        } else {
+            setIsLoading(false);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (!isLoading && pathName === "/profile" && !userDetails) {
             router.push("/");
         }
-    }, [pathName, userDetails, router]);
+    }, [isLoading, pathName, userDetails, router]);
+
+    // useEffect(() => {
+    //     const handleRedirect = () => {
+    //         if (pathName === "/profile" && !userDetails) {
+    //             router.push("/");
+    //         }
+    //     }
+    //     setTimeout(handleRedirect, 10000);
+    // }, [pathName, userDetails, router]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -113,7 +144,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                             router.push(`${nav?.path}?openupload=true`);
                                         }
                                     }}>
-                                        <div className={`md:hidden lg:block w-[1.5rem] h-[1.5rem]`}>
+                                        <div className={`md:hidden lg:block w-[1.3rem] h-[1.3rem]`}>
                                             <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
                                         </div>
                                         {nav?.label}
@@ -122,7 +153,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                             ) : (
                                 <Link href={nav?.path}>
                                     <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
-                                        <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.5rem] h-[1.5rem]"}`}>
+                                        <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.3rem] h-[1.3rem]"}`}>
                                             <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
                                         </div>
                                         {nav?.label}
@@ -160,17 +191,17 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                         className="fill-current md:h-4 md:w-4 h-3 w-3 text-white"
                                     />
                                 </div>
-                                <div className="name-id hidden md:block md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[12rem]">
-                                    <h2 className='spartan-bold font-bold text-md text-center truncate'>{userDetails?.user?.firstName}</h2>
+                                <div className="name-id hidden lg:block md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[12rem]">
+                                    <h2 className='spartan-bold font-bold text-md text-center truncate'>{userDetails?.user?.firstName + " " + userDetails?.user?.lastName}</h2>
                                     <h4 className='spartan-light text-sm text-center email truncate'>{userDetails?.user?.email}</h4>
                                 </div>
-                                <div className="gfx-points flex md:flex-col md:gap-0 gap-1">
+                                <div className="gfx-points flex lg:flex-col gap-1">
                                     <div className="point-name flex items-center gap-1">
                                         <InlineSVG
                                             src="/icons/gfx-point.svg"
                                             className="h-5 w-5"
                                         />
-                                        <h2 className='spartan-semibold hidden md:block'>GFXvs</h2>
+                                        <h2 className='spartan-semibold hidden lg:block'>GFXvs</h2>
                                     </div>
                                     <div className="points">
                                         <h2 className='md:spartan-bold spartan-semibold text-center font-bold'>{userDetails?.user?.gfxCoin?.toFixed(1)}</h2>
@@ -189,13 +220,15 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                         <h2>Go to profile</h2>
                                     </div>
                                 </Link>
-                                <div className="wallet-history flex items-center justify-start gap-2 cursor-pointer">
-                                    <InlineSVG
-                                        src="/icons/swap.svg"
-                                        className="h-5 w-5"
-                                    />
-                                    <h2>Transaction History</h2>
-                                </div>
+                                <Link href={"/profile?walletHistory=true"}>
+                                    <div className="wallet-history flex items-center justify-start gap-2 cursor-pointer">
+                                        <InlineSVG
+                                            src="/icons/swap.svg"
+                                            className="h-5 w-5"
+                                        />
+                                        <h2>Transaction History</h2>
+                                    </div>
+                                </Link>
                             </div>
                             <div className="signout-btn flex items-center justify-center gap-2 rounded-md py-2 mt-5 cursor-pointer" onClick={signOutUser}>
                                 <InlineSVG
