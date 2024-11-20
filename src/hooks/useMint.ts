@@ -11,7 +11,7 @@ type mintObj = {
   count:number;
   contractId:string;
 };
-
+ 
 const useMintImage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,6 +1,6 @@
 "use client"
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { UserDetails } from '@/types/types';
 import { setAuthToken } from '../../utils/authToken';
@@ -10,6 +10,7 @@ interface AuthContextType {
     user: UserDetails | null;
     idToken: string | null;
     signInUser: () => void;
+    signOutUser: () => void;
     connected: boolean;
 }
 
@@ -56,8 +57,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn('azure-ad-b2c', { callbackUrl: '/' });
     };
 
+    const signOutUser = () => {
+        signOut();
+    };
+
     return (
-        <AuthContext.Provider value={{ user, idToken, signInUser, connected }}>
+        <AuthContext.Provider value={{ user, idToken, signInUser, signOutUser, connected }}>
             {children}
         </AuthContext.Provider>
     );

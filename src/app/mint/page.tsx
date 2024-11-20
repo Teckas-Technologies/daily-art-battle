@@ -12,6 +12,8 @@ export default function LoginPage() {
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const[call,setCall]=useState(false);
     const {telegramDrop} = usetelegramDrop();
+    const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
     // const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 const {mintImage,burnNft}= useMintImage();
@@ -46,6 +48,8 @@ const burn = async()=>{
     campaignId={GFX_CAMPAIGNID}
     toggleUploadModal={toggleUploadModal}
     uploadSuccess={uploadSuccess}
+    setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
   />
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
  

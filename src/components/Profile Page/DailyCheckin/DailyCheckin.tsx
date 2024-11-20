@@ -9,9 +9,9 @@ const DailyCheckin = () => {
   const [streak, setStreak] = useState(Array(7).fill(false));
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [isClaimed, setIsClaimed] = useState(false);
-  const [toast, setToast] = useState(false); 
-  const [toastMessage, setToastMessage] = useState(""); 
-  const [successToast, setSuccessToast] = useState(""); 
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [successToast, setSuccessToast] = useState("");
   const {
     dailyCheckin,
     weeklyCheckin,
@@ -108,7 +108,7 @@ const DailyCheckin = () => {
             Current Streak
           </span>
           <p className="font-semibold text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
-          {streak.filter((day) => day).length} Days
+            {streak.filter((day) => day).length} Days
           </p>
         </div>
 
@@ -163,10 +163,11 @@ const DailyCheckin = () => {
                 </span>
               </div>
               <span className="hidden md:flex lg:mt-2 text-[#ffffff] flex-row items-center gap-1 text-xs xl:text-sm xxl:text-lg">
-                <InlineSVG
+                <img
                   src="/icons/coin.svg"
-                  className="2-4 h-4 md:w-4 h-4 lg:w-4 h-4 xl:w-5 h-5 xxl:w-6 h-6"
-                />{" "}
+                  alt="Coin Icon"
+                  className="w-4 h-4 md:w-4 h-4 lg:w-4 h-4 xl:w-5 h-5 xxl:w-6 h-6"
+                />
                 1
               </span>
               <button
@@ -207,23 +208,31 @@ const DailyCheckin = () => {
                 streakDays === 7 && !isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
               }`}
               onClick={handleWeeklyClaim}
-              id="content-top"
             >
               {streakDays === 7 && isClaimed ? "Claimed" : "Claim"}
             </button>
+            <div id="content-top"></div>
           </div>
         </div>
       </div>
-      {toast && toastMessage && <div className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden" style={{ zIndex: 55 }}>
-        <div className="relative w-full h-full">
-          <Toast
-            success={successToast === "yes" ? true : false}
-            message={toastMessage}
-            onClose={() => { setToast(false); setToastMessage(""); setSuccessToast(""); }}
-          />
+      {toast && toastMessage && (
+        <div
+          className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"
+          style={{ zIndex: 55 }}
+        >
+          <div className="relative w-full h-full">
+            <Toast
+              success={successToast === "yes" ? true : false}
+              message={toastMessage}
+              onClose={() => {
+                setToast(false);
+                setToastMessage("");
+                setSuccessToast("");
+              }}
+            />
+          </div>
         </div>
-      </div>
-      }
+      )}
     </div>
   );
 };

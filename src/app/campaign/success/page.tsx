@@ -12,6 +12,9 @@ const page = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+
   return (
     <div>
       <Header
@@ -21,6 +24,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <CampaignSuccess />
       <FooterMenu
@@ -28,6 +33,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
       <MobileNav
         openNav={openNav}
@@ -36,6 +43,8 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast} 
+        setErrMsg={setErrMsg}
       />
     </div>
   );

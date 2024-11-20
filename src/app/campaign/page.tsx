@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { setAuthToken } from "../../../utils/authToken";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
+import NoPage from "@/components/404 Page/NoPage";
 
 const page = () => {
   const { data: session, status } = useSession();
@@ -16,6 +17,8 @@ const page = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [openNav, setOpenNav] = useState(false);
+  const [signToast, setSignToast] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   // useEffect(() => {
   //   if (status === 'unauthenticated') {
   //     // Redirect to login if not authenticated
@@ -28,11 +31,39 @@ const page = () => {
   // }, [status, session]);
   return (
     <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>
-      <Header openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <Header
+        openNav={openNav}
+        setOpenNav={setOpenNav}
+        fontColor={""}
+        campaignId={GFX_CAMPAIGNID}
+        toggleUploadModal={toggleUploadModal}
+        uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast}
+        setErrMsg={setErrMsg}
+      />
       <CampaignBanner />
-      <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
-      <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} />
+      <FooterMenu
+        fontColor={""}
+        campaignId={GFX_CAMPAIGNID}
+        toggleUploadModal={toggleUploadModal}
+        uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast}
+        setErrMsg={setErrMsg}
+      />
+      <MobileNav
+        openNav={openNav}
+        setOpenNav={setOpenNav}
+        fontColor={""}
+        campaignId={GFX_CAMPAIGNID}
+        toggleUploadModal={toggleUploadModal}
+        uploadSuccess={uploadSuccess}
+        setSignToast={setSignToast}
+        setErrMsg={setErrMsg}
+      />
     </div>
+    // <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>
+    // <NoPage/>
+    // </div>
   );
 };
 
