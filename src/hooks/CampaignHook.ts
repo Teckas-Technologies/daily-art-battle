@@ -62,8 +62,8 @@ const useCampaigns = () => {
   const [campaignData, setCampaignData] = useState<any>(null);
   const [campaignStatus, setCampaignStatus] = useState<string | null>(null);
   const [art, setArt] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<string | null>(null);
   const [totalDocuments, setTotalDocuments] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -78,8 +78,8 @@ const useCampaigns = () => {
     page: number = currentPage,
     limit: number = 10
   ) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetch(
@@ -105,12 +105,12 @@ const useCampaigns = () => {
       setCurrentPage(page);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
   const fetchCurrentCampaign = (
@@ -130,8 +130,8 @@ const useCampaigns = () => {
     page: number = currentPage,
     limit: number = 10
   ) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth(
@@ -150,12 +150,12 @@ const useCampaigns = () => {
       setCurrentPage(page);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -169,8 +169,8 @@ const useCampaigns = () => {
     page: number = 1,
     limit: number = 6
   ) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       console.log("Fetching art for Campaign ID:", campaignId);
@@ -203,19 +203,19 @@ const useCampaigns = () => {
       return data;
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchBattles = async (campaignId: string, sort: string = "voteDsc") => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth(
@@ -231,18 +231,18 @@ const useCampaigns = () => {
       console.log("Fetched battles data:", data);
       return data;
     } catch (err) {
-      setError(
+      setIsError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchCampaignByTitle = async (title: string) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const apiUrl = `/api/campaign?title=${title}`;
@@ -272,13 +272,13 @@ const useCampaigns = () => {
     } catch (err) {
       console.error("Error fetching campaign:", err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchCampaignAnalytics = async (campaignId: string) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth(
@@ -299,11 +299,11 @@ const useCampaigns = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
-      setError(errorMessage);
+      setIsError(errorMessage);
       console.error("Error in fetchCampaignAnalytics:", errorMessage);
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -320,8 +320,8 @@ const useCampaigns = () => {
     noOfWinners: number;
     specialWinnerCount: number;
   }) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth("/api/campaign", {
@@ -342,18 +342,18 @@ const useCampaigns = () => {
       return data;
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
   const updateCampaign = async (updatedCampaignData: CampaignPageData) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth("/api/campaign", {
@@ -381,12 +381,12 @@ const useCampaigns = () => {
 
       return data;
     } catch (err) {
-      setError(
+      setIsError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -394,8 +394,8 @@ const useCampaigns = () => {
     campaignId: string,
     artList: ArtItem[]
   ): Promise<ArtData | null> => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     const body: ArtData = {
       campaignId,
@@ -426,22 +426,22 @@ const useCampaigns = () => {
     } catch (err) {
       if (err instanceof Error) {
         console.error("Error distributing art:", err);
-        setError(err.message);
+        setIsError(err.message);
       } else {
         console.error("An unknown error occurred:", err);
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return {
     campaign,
     campaignData,
-    loading,
-    error,
+    isLoading,
+    isError,
     totalDocuments,
     totalPages,
     currentPage,

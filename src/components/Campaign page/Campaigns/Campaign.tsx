@@ -32,7 +32,7 @@ const CampaignBanner = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const {
     campaignData,
-    loading,
+    isLoading,
     totalPages,
     fetchCurrentCampaign,
     fetchUpcomingCampaigns,
@@ -188,7 +188,7 @@ const CampaignBanner = () => {
         ))}
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <div className="flex items-center justify-center">
           <Loader md="22" sm="15" />
         </div>
@@ -258,7 +258,7 @@ const CampaignBanner = () => {
             "You have not created any campaigns yet."}
         </p>
       )}
-      {!loading && campaignData && campaignData.length > 0 && (
+      {!isLoading && campaignData && campaignData.length > 0 && (
         <div className="pagination-section relative w-full flex justify-center py-5">
           <div className="pagination rounded-[7rem]">
             <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">

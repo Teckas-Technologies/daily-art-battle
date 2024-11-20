@@ -26,10 +26,9 @@ import { useSendWalletData } from "@/hooks/saveUserHook";
 import { setAuthToken } from "../../../utils/authToken";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
 import NoPage from "@/components/404 Page/NoPage";
-import { BattleData } from "@/hooks/battleHooks";
+import { BattleData, useFetchTodayBattle } from "@/hooks/battleHooks";
 
 const Campaign = ({ params }: { params: { campaign: string } }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [editCampaign, setEditCampaign] = useState(false);
@@ -69,8 +68,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     fetchCampaignByTitle,
     campaignStatus,
     campaign,
-    loading,
-    error,
+    isLoading,
+    isError,
     participants,
   } = useCampaigns();
   useEffect(() => {
@@ -81,7 +80,19 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   }, [params.campaign, editCampaign]);
 
   console.log("Participants:", participants);
+  const { todayBattle, loading, battle, error, fetchTodayBattle } =
+    useFetchTodayBattle();
+  useEffect(() => {
+    const fetchBattle = async () => {
+      await fetchTodayBattle(campaign?._id as string);
+    };
 
+    const timeoutId = setTimeout(() => {
+      fetchBattle();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [campaign?._id as string]);
   // useEffect(() => {
   //   const handleWalletData = async () => {
   //     if (session && session.user) {
@@ -128,7 +139,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
         <Loader md="22" sm="15" />
       </div>
     );
-  if (error) return <div>No campaign found</div>;
+  if (isError) return <div>No campaign found</div>;
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
@@ -180,14 +191,16 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             fontColor={""}
             welcomeText={""}
             themeTitle={""}
-            todayBattle={{} as BattleData}
-            loading={true}
-            error={""}
+            todayBattle={todayBattle}
+            loading={loading}
+            error={error}
           />
-          <CurrentCampaigUploadArt
-            toggleUploadModal={toggleUploadModal}
-            uploadSuccess={uploadSuccess}
-          />
+          {todayBattle && (
+            <CurrentCampaigUploadArt
+              toggleUploadModal={toggleUploadModal}
+              uploadSuccess={uploadSuccess}
+            />
+          )}
           {showUploadModal && (
             <ArtUploadForm
               campaignId={campaign?._id as string}

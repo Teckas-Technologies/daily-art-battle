@@ -120,7 +120,6 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     fetchCampaignFromArtAPI,
     art,
     totalDocuments,
-    loading,
   } = useCampaigns();
   useEffect(() => {
     const fetchData = async () => {
@@ -463,20 +462,29 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
           <div className="participants">
             <h2>Participants</h2>
             {participants && participants.length > 0 ? (
-              participants.map((participant, index) => (
-                <div
-                  key={index}
-                  className="participant"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <div className="flex flex-row items-center justify-center">
-                    <span className="participant-number">{index + 1}</span>
-                    <span className="participant-name">{participant}</span>
+              <div className="participants-grid">
+                {participants.map((participant, index) => (
+                  <div
+                    key={index}
+                    className="participant"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <div className="flex flex-row items-center justify-center">
+                      <span className="participant-number">{index + 1}</span>
+                      <span className="participant-name">{participant}</span>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <div>No participants available.</div>
+              <div className="flex flex-row items-center justify-center gap-2 font-semibold text-base">
+                {" "}
+                <InlineSVG
+                  src="/icons/info.svg"
+                  className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+                />
+                <div>No participants available!</div>
+              </div>
             )}
           </div>
 
@@ -493,13 +501,13 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                 </div>
               </>
             ) : (
-             <p className="flex items-center justify-center gap-2 mt-[60px] mb-[30px] text-white font-semibold text-lg">
-            <InlineSVG
-              src="/icons/info.svg"
-              className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
-            />{" "}
-            No arts available!
-          </p>
+              <p className="flex items-center justify-center gap-2 mt-[60px] mb-[30px] text-white font-semibold text-lg">
+                <InlineSVG
+                  src="/icons/info.svg"
+                  className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+                />{" "}
+                No arts available!
+              </p>
             )}
 
             {art.length > 0 && (

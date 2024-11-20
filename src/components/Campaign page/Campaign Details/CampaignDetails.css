@@ -310,7 +310,7 @@
 }
 /* Container styling */
 .participants {
-  width: 250px; 
+  width: 250px;
   background: #171717bd;
   border-radius: 15px;
   padding: 20px;
@@ -371,7 +371,7 @@
 }
 
 .participants::-webkit-scrollbar-thumb {
-  background-color: #00ff00; 
+  background-color: #00ff00;
   border-radius: 3px;
 }
 
@@ -387,6 +387,9 @@
   letter-spacing: -6%;
   color: #ffffff;
   margin-top: 60px;
+}
+.summary-arts {
+  min-width: 500px;
 }
 .arts-grid {
   display: grid;
@@ -417,7 +420,7 @@
   );
 }
 
-.pagination-section .active-page{
+.pagination-section .active-page {
   background: #0c450c;
   border: 0.75px solid #00ff00;
   border-radius: 50%;
@@ -560,6 +563,9 @@
   .summary {
     flex-direction: column;
   }
+  .summary-arts {
+    min-width: 200px;
+  }
   .summary-arts h3 {
     margin-top: 5px;
   }
@@ -568,22 +574,23 @@
     width: 100%;
     height: auto;
     max-height: 200px;
+    padding: 10px;
+  }
+  .participants-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
     border-radius: 12px;
-    padding: 10px;
   }
   .participants h2 {
     font-size: 18px;
-    margin-bottom: 0px;
+    margin-bottom: 20px;
     grid-column: 1 / -1;
   }
   .participant {
     padding: 7px 5px;
     width: 100px;
     height: 40px;
-    margin-top: 20px;
   }
   .participant-name {
     font-size: 8px;
@@ -723,7 +730,6 @@
   .participants {
     width: 300px;
     height: 500px;
-    
   }
 
   .participant {

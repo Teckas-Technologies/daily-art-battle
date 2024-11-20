@@ -126,7 +126,7 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                         ? "text-red-500"
                         : "text-green-500"
                     }`}
-                    style={{ minWidth: "50px", textAlign: "left" }}
+                    style={{ minWidth: "90px", textAlign: "left" }}
                   >
                     {transaction.transactionType === "spent"
                       ? `-${transaction.gfxCoin.toFixed(2)}`
