@@ -2,11 +2,6 @@ import { useEffect, useState } from "react";
 import { UploadedArtsGrid } from "./UploadedArtsGrid/UploadedArtsGrid";
 import { Collections } from "./Collections/Collections";
 import WalletHistory from "./WalletHistory/WalletHistory";
-import { ConfirmPopupInfo } from "@/types/types";
-
-interface Props {
-  setConfirmPopup: (e: ConfirmPopupInfo) => void;
-}
 
 const tabs = [
   { id: "uploads", label: "Uploads", active: true },
@@ -14,13 +9,30 @@ const tabs = [
   { id: "wallet", label: "Wallet History", active: false },
 ];
 
-export const ProfileBody: React.FC<Props> = ({ setConfirmPopup }) => {
-  const [activeTab, setActiveTab] = useState("uploads");
-  const [rendered, setRendered] = useState(false);
+export const ProfileBody: React.FC = () => {
+    const [activeTab, setActiveTab] = useState("uploads");
+    const [rendered, setRendered] = useState(false);
 
   useEffect(() => {
     setRendered(!rendered);
   }, [activeTab]);
+  
+  const handleTabClick = (tabId: string) => {
+        setActiveTab(tabId);
+
+        // Scroll to the top of the `profile-body` element with an extra 16px offset
+        const profileBodyElement = document.getElementById("profile-body");
+        if (profileBodyElement) {
+            const offset = -130; // Move 16px above the element
+            const elementPosition = profileBodyElement.getBoundingClientRect().top + window.pageYOffset;
+            const scrollToPosition = elementPosition + offset;
+
+            window.scrollTo({
+                top: scrollToPosition,
+                behavior: "smooth",
+            });
+        }
+    };
 
   return (
     <>
@@ -31,7 +43,7 @@ export const ProfileBody: React.FC<Props> = ({ setConfirmPopup }) => {
           {tabs.map((tab) => (
             <div
               key={tab?.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
               className={`tab cursor-pointer spartan-semibold text-center md:text-md text-sm ${
                 tab.id !== tabs[0].id && ""
               } md:w-[16rem] w-[10rem] py-2 rounded-tl-[15px] rounded-tr-[45px] rounded-bl-0 rounded-br-[45px] border-t-[0.75px] border-r-[0.75px] font-medium tracking-[-0.06em] ${
@@ -43,17 +55,10 @@ export const ProfileBody: React.FC<Props> = ({ setConfirmPopup }) => {
               {tab.label}
             </div>
           ))}
-        </div>
-        {activeTab === "uploads" && (
-          <UploadedArtsGrid
-            rendered={rendered}
-            setConfirmPopup={setConfirmPopup}
-          />
-        )}
-        {activeTab === "collects" && (
-          <Collections setConfirmPopup={setConfirmPopup} />
-        )}
-        {activeTab === "wallet" && <WalletHistory rendered={rendered} />}
+          </div>
+        {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} />}
+            {activeTab === "collects" && <Collections />}
+            {activeTab === "wallet" && <WalletHistory rendered={rendered} />}
       </div>
     </>
   );

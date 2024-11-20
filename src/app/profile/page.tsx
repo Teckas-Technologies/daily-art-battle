@@ -39,11 +39,6 @@ const page = () => {
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
   const pathName = usePathname();
-  const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
-    info: "",
-    text: "",
-    isMint: false
-  });
 
   const handleEditClick = () => {
     setIsEditOpen(true);
@@ -120,10 +115,6 @@ const page = () => {
     }
   }, [searchParams, pathName, userDetails]);
 
-      const closeMintBurnPopup = () => {
-        setConfirmPopup({ info: "", text: "", isMint: false })
-      }
-      
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -150,7 +141,7 @@ const page = () => {
         handleCoinClick={handleCoinClick}
       />
       <DailyCheckin />
-      <ProfileBody setConfirmPopup={setConfirmPopup} />
+      <ProfileBody />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
@@ -189,7 +180,6 @@ const page = () => {
           </div>
         </div>
       )}
-      {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} />}
     </main>
   );
 };

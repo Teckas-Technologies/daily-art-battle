@@ -1,15 +1,17 @@
 import "./Uploads.css"
 import InlineSVG from "react-inlinesvg";
 import { ArtData } from "@/hooks/artHooks";
-import { ConfirmPopupInfo, NftToken } from "@/types/types";
-import { useEffect, useRef, useState } from "react";
+import { ConfirmPopupInfo, NftToken, RaffleArt } from "@/types/types";
+import { useContext, useEffect, useRef, useState } from "react";
 import { BASE_URL } from "@/config/constants";
+import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { NearContext } from "@/wallet/WalletSelector";
 
 interface UploadsCardProps {
-    art: ArtData | NftToken;
+    art: ArtData | NftToken | RaffleArt;
     isNFT: boolean;
     isUploaded: boolean;
-    setConfirmPopup: (e: ConfirmPopupInfo) => void;
+    isSpinner?: boolean;
 }
 
 const socials = [
@@ -18,10 +20,15 @@ const socials = [
     { id: "telegram", label: "Telegram", icon: "/images/telegram_r.png", link: "https://telegram.me/share/url?text=Collect%20and%20win!%0A&url=" }
 ]
 
-export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, setConfirmPopup }) => {
-
+export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, isSpinner }) => {
+    const { wallet, signedAccountId } = useContext(NearContext);
     const [artOverlay, setArtOverlay] = useState(false);
     const overlayRef = useRef<HTMLDivElement | null>(null);
+    const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
+        info: "",
+        text: "",
+        isMint: false
+    });
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -54,30 +61,45 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
         });
     };
 
-    const isArtData = (data: ArtData | NftToken): data is ArtData =>
-        "colouredArt" in data;
+    const isArtData = (data: ArtData | NftToken | RaffleArt): data is ArtData =>
+        "colouredArt" in data &&
+        "artistName" in data;
     // "uploadedTime" in data &&
     // "artistName" in data &&
     // "raffleTickets" in data;
 
-    const isArtDataRaffle = (data: ArtData | NftToken): data is ArtData =>
-        "uploadedTime" in data &&
-        "raffleTickets" in data;
+    const isNFTData = (data: ArtData | NftToken | RaffleArt): data is NftToken =>
+        "media" in data;
+
+    const isRaffleArt = (data: ArtData | NftToken | RaffleArt): data is RaffleArt =>
+        "raffleCount" in data;
 
     const artId = isArtData(art) && art?._id;
 
-    const handleMint = () => {
+    const handleMint = async () => {
+        if(!signedAccountId) {
+            await wallet?.signIn();
+            return;
+        }
         setConfirmPopup({ info: "Mint NFT", text: "Mint this NFT to get Participation NFT", isMint: true });
     }
 
-    const handleBurn = () => {
+    const handleBurn = async () => {
+        if(!signedAccountId) {
+            await wallet?.signIn();
+            return;
+        }
         setConfirmPopup({ info: "Earn GFXvs Points", text: "Burn this rare NFT for<br />1000 GFXvs Coins", isMint: false });
+    }
+
+    const closeMintBurnPopup = () => {
+        setConfirmPopup({ info: "", text: "", isMint: false })
     }
 
     return (
         <div className="uploads-card w-auto gap-0 md:rounded-[1.25rem] rounded-[1rem] md:mt-5 mt-0 shadow-md p-[0.5rem] flex flex-col items-center">
             <div className="relative art-img-holder xxl:w-[17.5rem] xxl:h-[17.5rem] xl:w-[14rem] xl:h-[14rem] lg:w-[15rem] lg:h-[15rem] md:w-[15rem] md:h-[15rem] w-[10rem] h-[10rem] rounded-lg" >
-                <img src={isArtData(art) ? art?.colouredArt : art?.media as string} alt={isArtData(art) ? art?.artistName : art?.owner} className="w-full h-full object-cover rounded-lg" />
+                <img src={isArtData(art) ? art?.colouredArt : isNFTData(art) ? art?.media as string : art?.colouredArt} alt={isArtData(art) ? art?.artistName : isNFTData(art) ? art?.media as string : art?.participantId} className="w-full h-full object-cover rounded-lg" />
                 <div className={`overlay-holder absolute bottom-0 w-full h-full flex ${isUploaded ? "justify-end" : "justify-center"} items-end`}>
                     {isNFT && <div className="burn-btn md:px-6 md:py-3 px-4 py-2 md:mb-5 mb-3 md:rounded-lg rounded-md cursor-pointer" onClick={handleBurn}>
                         <h2 className="text-green font-medium md:text-md text-sm">Burn NFT</h2>
@@ -110,7 +132,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                 <div className="date">
                     <h2 className="uploads-text">{isArtData(art) && formatDate(art?.uploadedTime)}</h2>
                 </div>
-                {isArtDataRaffle(art) && <div className="collects flex items-center gap-1">
+                {isArtData(art) && <div className="collects flex items-center gap-1">
                     <InlineSVG
                         src="/icons/red-heart.svg"
                         className="w-4 h-4 spartan-light"
@@ -119,6 +141,8 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                     <h2 className="uploads-text hidden md:flex">Collects</h2>
                 </div>}
             </div>
+
+            {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} art={art} isSpinner={isSpinner} />}
         </div>
     )
 }

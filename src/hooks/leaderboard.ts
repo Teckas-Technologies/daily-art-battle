@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { NEXT_PUBLIC_VALID_CLIENT_ID, NEXT_PUBLIC_VALID_CLIENT_SECRET } from '@/config/constants';
 
 export interface LeaderBoardResponse {
+  profileImg?: string;
   firstName: string;
   lastName: string;
   email:string;
@@ -10,6 +11,7 @@ export interface LeaderBoardResponse {
 }
 
 export interface LeaderBoardCollectResponse {
+  profileImg?: string;
   _id: string;
   raffleTicketCount: number;
   email:string;
@@ -23,6 +25,7 @@ export interface LeaderBoardCollectResponse {
 }
 
 export interface LeaderBoardCreatorsResponse {
+  profileImg?: string;
   _id: string;
   uploadedArtCount: number;
   email:string;
