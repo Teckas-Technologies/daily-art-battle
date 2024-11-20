@@ -45,6 +45,12 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
     }, [err])
 
     useEffect(() => {
+        if (success) {
+            setTimeout(() => setSuccess(false), 3000);
+        }
+    }, [success])
+
+    useEffect(() => {
         const artid = searchParams?.get('artId');
         if (artid) {
             setArtId(artid);

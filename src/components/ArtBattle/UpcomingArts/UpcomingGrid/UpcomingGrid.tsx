@@ -113,6 +113,19 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         setSearchQuery(query);
         setUpcomingArts([]);
         setPage(0);
+        console.log("Q:", query)
+
+        const upcomingElement = document.getElementById("upcoming");
+        if (upcomingElement) {
+            const offset = -64; // Move 16px above the element
+            const elementPosition = upcomingElement.getBoundingClientRect().top + window.pageYOffset;
+            const scrollToPosition = elementPosition + offset;
+
+            window.scrollTo({
+                top: scrollToPosition,
+                behavior: "smooth",
+            });
+        }
     };
 
     const getArts = async () => {
@@ -123,7 +136,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
         // }
         try {
             if (!searchQuery) {
-                if (page > totalPage) return;
+                if (page !== 1 && page > totalPage) return;
                 setLoading(true);
                 const arts = await fetchMoreArts(campaignId, sort, page, limit);
                 if (arts && arts.length > 0) {
@@ -142,8 +155,8 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     setEmpty("No arts found!");
                 }
             } else {
-                console.log("ToT search pages:", totalSearchPage)
-                if (page > totalSearchPage) return;
+                console.log("ToT search pages:", totalSearchPage, page)
+                if (page !== 1 && page > totalSearchPage) return;
                 setLoading(true);
                 const arts = await searchArts(campaignId, searchQuery, page, limit);
                 if (arts && arts.length > 0) {
@@ -160,6 +173,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                 } else {
                     console.log(`2. No data returned for page ${page}`);
                     setEmpty("No arts found!");
+                    return;
                 }
             }
         } catch (error) {
@@ -196,7 +210,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
 
     useEffect(() => {
         getArts();
-    }, [page, sort, refresh, uploadSuccess]);
+    }, [page, sort, searchQuery, refresh, uploadSuccess]);
 
     return (
         <>
@@ -261,7 +275,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} />
                 </div>
 
-                {empty && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
+                {empty && <div className={`empty w-full ${page === 1 && "min-h-[25rem]" } md:h-[10rem] h-[5rem] flex items-center justify-center gap-2 pb-20`}>
                     <InlineSVG
                         src='/icons/info.svg'
                         className='fill-current text-white font-bold point-c w-4 h-4 cursor-pointer'
@@ -270,7 +284,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                 </div>
                 }
 
-                {loading && <div className="upcoming-loader md:h-[10rem] h-[5rem] md:mb-0 mb-8 w-full justify-center">
+                {loading && <div className={`upcoming-loader ${page === 1 && "min-h-[25rem]" } md:h-[10rem] h-[5rem] md:mb-0 mb-8 w-full justify-center`}> {/* md:h-[10rem] h-[5rem] */}
                     <Loader md="10" sm="8" />
                 </div>}
 

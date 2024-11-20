@@ -26,6 +26,8 @@ import { useSendWalletData } from "@/hooks/saveUserHook";
 import { setAuthToken } from "../../../utils/authToken";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
 import NoPage from "@/components/404 Page/NoPage";
+import { BattleData } from "@/hooks/battleHooks";
+
 const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -178,6 +180,9 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             fontColor={""}
             welcomeText={""}
             themeTitle={""}
+            todayBattle={{} as BattleData}
+            loading={true}
+            error={""}
           />
           <CurrentCampaigUploadArt
             toggleUploadModal={toggleUploadModal}
