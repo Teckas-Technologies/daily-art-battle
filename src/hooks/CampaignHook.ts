@@ -252,6 +252,7 @@ const useCampaigns = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch campaign data");
       }
+      
 
       const data = await response.json();
       setCampaign(data.campaign);
