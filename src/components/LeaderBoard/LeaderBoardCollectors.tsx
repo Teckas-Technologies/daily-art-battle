@@ -225,19 +225,20 @@ const fetchInitialData = async () => {
             className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
             />
       ):(
-        <InlineSVG
-        src="/icons/user.svg"
-        className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
-    />
+        <img
+            src="/icons/User.png"
+            alt={user.firstName}
+            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+            />
       )}
       
       {/* User Information */}
       <div className="flex-1 text-center sm:text-left">
         <h3 className="text-white font-semibold flex items-center gap-2">
              
-{user.firstName+" "+user.lastName}
-<span className="text-yellow-400"></span>
-<span>{user.rareNftCount+user.participationCount} Collections</span>
+        {user.firstName+" "+user.lastName}
+        <span className="text-yellow-400"></span>
+        <span>{user.rareNftCount+user.participationCount} Collections</span>
         </h3>
       </div>
     </div>

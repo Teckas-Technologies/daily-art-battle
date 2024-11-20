@@ -124,7 +124,7 @@ const LeaderBoardCreators = () => {
   return (
     <div>
     {call ? (
-        <div className="flex items-center  mnb-10 justify-center">
+        <div className="flex items-center mb-10 justify-center">
           <Loader md="22" sm="15" />
         </div>
       ):(
@@ -235,10 +235,11 @@ const LeaderBoardCreators = () => {
             className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
             />
       ):(
-        <InlineSVG
-        src="/icons/user.svg"
-        className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
-    />
+        <img
+              src="/icons/User.png"
+            alt={user.firstName}
+            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
+            />
       )}
       
       {/* User Information */}
