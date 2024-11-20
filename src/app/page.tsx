@@ -11,10 +11,10 @@ import { FooterMenu } from '@/components/FooterMenu/FooterMenu';
 import { MobileNav } from '@/components/MobileNav/MobileNav';
 import { SignInPopup } from '@/components/PopUps/SignInPopup';
 import Toast from '@/components/Toast';
-import Script from 'next/script';
-import usetelegramDrop from '@/hooks/telegramHooks';
 import { useFetchTodayBattle } from '@/hooks/battleHooks';
 import Loader from '@/components/ArtBattle/Loader/Loader';
+import { signIn, useSession } from "next-auth/react";
+import usetelegramDrop from '@/hooks/telegramHooks';
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -26,11 +26,10 @@ const Home: NextPage = () => {
   const [toast, setToast] = useState(false);
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
   const [userId,setUserId] = useState<Number>();
   const { data: session, status } = useSession();
   const {telegramDrop} = usetelegramDrop();
-  const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
 
   useEffect(() => {
     if (toast) {
@@ -39,7 +38,6 @@ const Home: NextPage = () => {
   }, [toast]);
 
   useEffect(() => {
-
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       Telegram.WebApp.ready();
       const user = Telegram.WebApp.initDataUnsafe?.user;
@@ -50,31 +48,11 @@ const Home: NextPage = () => {
       }
     }
   }, [session]);
-
   const telegram = async ()=>{
     await telegramDrop(userId)
   }
-  // useEffect(() => {
-  //   if (status === 'unauthenticated') {
-  //     // Redirect to login if not authenticated
-  //     signIn('azure-ad-b2c', { callbackUrl: '/' });
-  //   } else if (status === 'authenticated' && session) {
-  //     // Set the idToken for all API requests
-  //     setAuthToken(session?.idToken || "");
-  //     console.log('Token set for API requests', session);
-  //   }
-  // }, [status, session]);
-  // useEffect(() => {
-  //   const handleWalletData = async () => {
-  //     if (session && session.user) {
-  //       const idToken = session.idToken as string;
-  //       console.log("ID Token:", idToken);
 
-  //       const walletAddress = activeAccountId;
-  //       if (!walletAddress) {
-  //         console.warn("No wallet address available.");
-  //         return;
-  //       }
+  useEffect(() => {
     const fetchBattle = async () => {
       await fetchTodayBattle(GFX_CAMPAIGNID);
     };
@@ -111,9 +89,6 @@ const Home: NextPage = () => {
             />
           </div>
         </div>
-      </div>
-      }
-       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       )}
     </main>
   );
