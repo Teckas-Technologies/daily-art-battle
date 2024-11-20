@@ -130,6 +130,7 @@ const CampaignBanner = () => {
     window.location.href = "/campaign";
   };
 
+  
   return (
     <div className="campaign-container">
       {/* <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG> */}
