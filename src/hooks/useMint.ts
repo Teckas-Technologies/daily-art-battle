@@ -58,8 +58,6 @@ const useMintImage = () => {
           nft_contract_id: ART_BATTLE_CONTRACT,
           token_id: tokenId,  // Token ID to burn
         },
-        gas: '200000000000000', 
-        deposit: '0'  // No deposit needed for burning NFTs
       });
       console.log("Ress 1 >>> ", res);
       return res;

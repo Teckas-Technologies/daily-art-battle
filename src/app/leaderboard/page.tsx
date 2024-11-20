@@ -95,7 +95,7 @@ const fetchInitialData = async () => {
   </div>
 
         {/* Tab Content */}
-        <div className="mt-10 sm:mt-16">
+        <div className="">
           {/* {call?(
             <> */}
               {activeTab === "Collectors" && <LeaderboardCollectors />}

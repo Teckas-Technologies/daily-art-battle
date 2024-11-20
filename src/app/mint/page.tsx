@@ -33,7 +33,7 @@ const burn = async()=>{
         count:4,
         contractId:ART_BATTLE_CONTRACT,
       };
-    await burnNft(5233);
+    await burnNft(5230);
 }
   return (
     <>
@@ -54,7 +54,7 @@ const burn = async()=>{
           onClick={burn}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
-          Login with Azure B2C
+          burn
         </button>
       </div>
     </div>
