@@ -59,14 +59,15 @@ const Home: NextPage = () => {
       <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
       <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
       {signToast && <SignInPopup text={errMsg} onClose={() => setSignToast(false)} />}
-      {toast && toastMessage && <div className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden" style={{ zIndex: 55 }}>
-        <div className="relative w-full h-full">
-          <Toast
-            success={successToast === "yes" ? true : false}
-            message={toastMessage}
-            onClose={() => { setToast(false); setToastMessage(""); setSuccessToast(""); }}
-          />
-
+      {toast && toastMessage && (
+        <div className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden" style={{ zIndex: 55 }}>
+          <div className="relative w-full h-full">
+            <Toast
+              success={successToast === "yes"}
+              message={toastMessage}
+              onClose={() => { setToast(false); setToastMessage(""); setSuccessToast(""); }}
+            />
+          </div>
         </div>
       )}
     </main>
