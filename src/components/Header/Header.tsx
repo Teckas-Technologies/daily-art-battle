@@ -42,7 +42,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
             try {
                 setIsLoading(true);
                 // Simulate fetching user details
-                await new Promise((resolve) => setTimeout(resolve, 3000)); 
+                await new Promise((resolve) => setTimeout(resolve, 3000));
                 // Example: Replace the above with actual logic to fetch user details.
             } catch (error) {
                 console.error("Error fetching user details", error);
@@ -220,13 +220,15 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                         <h2>Go to profile</h2>
                                     </div>
                                 </Link>
-                                <div className="wallet-history flex items-center justify-start gap-2 cursor-pointer">
-                                    <InlineSVG
-                                        src="/icons/swap.svg"
-                                        className="h-5 w-5"
-                                    />
-                                    <h2>Transaction History</h2>
-                                </div>
+                                <Link href={"/profile?walletHistory=true"}>
+                                    <div className="wallet-history flex items-center justify-start gap-2 cursor-pointer">
+                                        <InlineSVG
+                                            src="/icons/swap.svg"
+                                            className="h-5 w-5"
+                                        />
+                                        <h2>Transaction History</h2>
+                                    </div>
+                                </Link>
                             </div>
                             <div className="signout-btn flex items-center justify-center gap-2 rounded-md py-2 mt-5 cursor-pointer" onClick={signOutUser}>
                                 <InlineSVG
