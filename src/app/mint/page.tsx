@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Header } from "@/components/Header/Header";
 import useMintImage from "@/hooks/useMint";
 import { ART_BATTLE_CONTRACT, GFX_CAMPAIGNID } from "@/config/constants";
-import usetelegramDrop from "@/hooks/telegramHooks";
 
 export default function LoginPage() {
     const [openNav, setOpenNav] = useState(false);
@@ -11,7 +10,6 @@ export default function LoginPage() {
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const[call,setCall]=useState(false);
-    const {telegramDrop} = usetelegramDrop();
     const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
     // const { data: session, status } = useSession();
@@ -37,7 +35,7 @@ const burn = async()=>{
         count:4,
         contractId:ART_BATTLE_CONTRACT,
       };
-    await telegramDrop(5230);
+    await burnNft(5230);
 }
   return (
     <>
