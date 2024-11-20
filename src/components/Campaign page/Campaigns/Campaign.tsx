@@ -130,9 +130,10 @@ const CampaignBanner = () => {
     window.location.href = "/campaign";
   };
 
+  
   return (
     <div className="campaign-container">
-      <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG>
+      {/* <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG> */}
       <div
         className="flex gap-1 items-center camapign-path md:mb-10"
         style={{ paddingTop: "80px" }}

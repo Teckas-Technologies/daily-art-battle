@@ -174,8 +174,15 @@ const useCampaigns = () => {
 
     try {
       console.log("Fetching art for Campaign ID:", campaignId);
-      const response = await fetchWithAuth(
-        `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`
+      const response = await fetch(
+        `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -239,9 +246,9 @@ const useCampaigns = () => {
 
     try {
       const apiUrl = `/api/campaign?title=${title}`;
-      console.log("API Request URL:", apiUrl); 
+      console.log("API Request URL:", apiUrl);
 
-      const response = await fetchWithAuth(apiUrl, {
+      const response = await fetch(apiUrl, {
         headers: {
           "Content-Type": "application/json",
           "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
@@ -252,7 +259,6 @@ const useCampaigns = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch campaign data");
       }
-      
 
       const data = await response.json();
       setCampaign(data.campaign);
@@ -264,7 +270,6 @@ const useCampaigns = () => {
       setParticipants(data.participants);
       console.log("Fetched participants:", data.participants);
     } catch (err) {
-     
       console.error("Error fetching campaign:", err);
     } finally {
       setLoading(false);
@@ -400,7 +405,7 @@ const useCampaigns = () => {
     // console.log("Sending data to API:", body, idToken); // Log request details
 
     try {
-      const response = await fetch("/api/distribute", {
+      const response = await fetchWithAuth("/api/distribute", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
