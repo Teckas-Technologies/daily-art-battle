@@ -260,7 +260,7 @@ async function handleDrop(email: string, coins: number, isClaimedField: string) 
 }
 
 async function calculateTelegramDropCoins(userId: any) {
-    const response = await axios.get(`http://127.0.0.1:5000/airdrop/${userId}`)
+    const response = await axios.get(`https://spinner-cscbetbtbfepcrdc.canadacentral-01.azurewebsites.net/api/airdrop/${userId}`)
     const creationDate = response.data.date;
     console.log(creationDate);
     const accountCreationYear = new Date(creationDate).getFullYear();
