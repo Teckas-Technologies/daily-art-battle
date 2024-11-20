@@ -125,7 +125,7 @@ export const useFetchBattles = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithAuth(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`, {
+      const response = await fetch(`/api/art?queryType=battles&sort=${sort}&page=${page}&limit=${limit}`, {
         headers: {
           "Content-Type": "application/json",
           "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
@@ -162,6 +162,10 @@ export const useFetchArtById = () => {
 
 
   const fetchArtById = async (id: string) => {
+    if(!id) {
+      console.log("NOT ID");
+    }
+    console.log(" ID ", id);
     setLoading(true);
     setError(null);
     try {

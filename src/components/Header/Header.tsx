@@ -19,10 +19,10 @@ interface Props {
 }
 
 const navs = [
-    { id: "battles", label: "Battles", path: "/", icon: "/images/Battle_Icon.png" },
-    { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Trophy_Icon.png" },
-    { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_Icon.png" },
-    { id: "create", label: "Create", path: "/", icon: "/images/Create_Icon.png" },
+    { id: "battles", label: "Battles", path: "/", icon: "/images/Battle_New.png" },
+    { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Leaderboard_New.png" },
+    { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_New.png" },
+    { id: "create", label: "Create", path: "/", icon: "/images/Create_New.png" },
 ];
 
 export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
@@ -144,7 +144,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                             router.push(`${nav?.path}?openupload=true`);
                                         }
                                     }}>
-                                        <div className={`md:hidden lg:block w-[1.5rem] h-[1.5rem]`}>
+                                        <div className={`md:hidden lg:block w-[1.3rem] h-[1.3rem]`}>
                                             <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
                                         </div>
                                         {nav?.label}
@@ -153,7 +153,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                             ) : (
                                 <Link href={nav?.path}>
                                     <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
-                                        <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.5rem] h-[1.5rem]"}`}>
+                                        <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.3rem] h-[1.3rem]"}`}>
                                             <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
                                         </div>
                                         {nav?.label}
@@ -192,7 +192,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                     />
                                 </div>
                                 <div className="name-id hidden lg:block md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[12rem]">
-                                    <h2 className='spartan-bold font-bold text-md text-center truncate'>{userDetails?.user?.firstName}</h2>
+                                    <h2 className='spartan-bold font-bold text-md text-center truncate'>{userDetails?.user?.firstName + " " + userDetails?.user?.lastName}</h2>
                                     <h4 className='spartan-light text-sm text-center email truncate'>{userDetails?.user?.email}</h4>
                                 </div>
                                 <div className="gfx-points flex lg:flex-col gap-1">
