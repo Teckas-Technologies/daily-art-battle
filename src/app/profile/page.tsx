@@ -40,6 +40,15 @@ const page = () => {
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
+  useEffect(() => {
+    if (toast) {
+        setTimeout(() => setToast(false), 3000);
+    }
+    if (toastMessage) {
+      setTimeout(() => setToastMessage(""), 3000);
+  }
+}, [toast, toastMessage])
+
   const handleEditClick = () => {
     setIsEditOpen(true);
   };

@@ -15,14 +15,14 @@
 }
 
 .art-share {
-    border: 1px solid #00FF00;
-    background: #070707;
+    border: 1px solid #ADADAD;
+    background: #ffffff;
 }
 
 .art-share h4 {
-    color: #00FF00;
+    color: #000000;
 }
 
-.social-share {
+/* .social-share {
     border: 1px solid #ADADAD
-}
+} */

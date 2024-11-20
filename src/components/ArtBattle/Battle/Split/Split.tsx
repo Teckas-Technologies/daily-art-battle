@@ -38,6 +38,12 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
         }
     }, [err])
 
+    useEffect(() => {
+        if (success) {
+            setTimeout(() => setSuccess(false), 3000);
+        }
+    }, [success])
+
     // Toggle overlay visibility
     const toggleOverlayA = () => {
         setShowOverlayA(!showOverlayA);
