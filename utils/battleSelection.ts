@@ -33,7 +33,7 @@ export const findTopTwoArts = async (campaignId:string): Promise<any[]> => {
     { $sort: { raffleTickets: -1 } }, 
     {
       $group: {
-        _id: "$artistId",
+        _id: "$email",
         topArt: { $first: "$$ROOT" }
       }
     },

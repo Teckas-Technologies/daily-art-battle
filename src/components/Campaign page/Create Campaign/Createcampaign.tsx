@@ -9,6 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import useCampaigns from "@/hooks/CampaignHook";
 import CampaignPopup from "../CreateCampaign Popup/CampaignPopup";
 import { CAMPAIGN_CREATION_COST } from "@/config/points";
+import { useSendWalletData } from "@/hooks/saveUserHook";
+import { useAuth } from "@/contexts/AuthContext";
 interface CampaignCreationProps {
   toggleCampaignModal: () => void;
   idToken: string;
@@ -37,7 +39,12 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [isPubliclyVisible, setIsPubliclyVisible] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
+  const [inSufficientbalance, setInSufficientbalance] = useState(true);
   const router = useRouter();
+  const { user } = useAuth();
+  let userDetails = user;
+  console.log("Sufficient Balance", userDetails?.user?.gfxCoin);
+
   const { createCampaign } = useCampaigns();
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsPubliclyVisible(event.target.checked);
@@ -82,6 +89,25 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
 
   const confirmCampaignCreation = async () => {
     setConnectionError(false);
+    setInSufficientbalance(true);
+    const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
+    const specialRewardCost = (specialWinner || 0) * Number(specialRewards);
+    const totalCost = creationCost + specialRewardCost;
+
+    if (userDetails?.user?.gfxCoin === null) {
+      console.error("Balance information is not available.");
+      setInSufficientbalance(false);
+      setConnectionError(true);
+      setIsPopupOpen(true);
+      return;
+    }
+
+    if (userDetails?.user?.gfxCoin && userDetails?.user?.gfxCoin < totalCost) {
+      console.error("Insufficient balance to create campaign.");
+      setInSufficientbalance(false);
+      return;
+    }
+
     console.log("Submitting Campaign Data:", campaignData);
 
     const response = await createCampaign(campaignData);
@@ -451,6 +477,8 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           setConnectionError={setConnectionError}
           specialRewards={specialRewards}
           resetFormFields={resetFormFields}
+          inSufficientbalance={inSufficientbalance}
+          setInSufficientbalance={setInSufficientbalance}
         />
       </div>
     </>

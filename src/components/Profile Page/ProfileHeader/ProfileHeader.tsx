@@ -28,6 +28,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         console.log("Failed to copy!");
       });
   };
+  const handleSignIn = async () => {
+    console.log("clicked login");
+    return wallet?.signIn();
+  };
   return (
     <div className="profile-header">
       <div className="profile-bg flex items-center justify-center flex-col px-[20px] py-4 bg-[#000000] text-white h-[350px] rounded-xl md:flex-row md:justify-between md:h-[230px] lg:flex-row lg:justify-between lg:gap-[40px] lg:w-[100%] lg:h-[200px] lg:px-6 lg:py-10 xl:flex-row xl:justify-between xl:gap-[40px] xl:w-[100%] xl:px-7 xl:py-10 xxl:flex-row xxl:h-[250px]">
@@ -101,7 +105,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                   </span>
                 </div>
               ) : (
-                <button className="flex items-center text-[#FFFFFF] text-[10px] px-[10px] py-[8px] rounded-full connect-button">
+                <button
+                  className="flex items-center text-[#FFFFFF] text-[10px] px-[10px] py-[8px] rounded-full connect-button"
+                  onClick={handleSignIn}
+                >
                   Connect Wallet
                   <InlineSVG src="/icons/side-arrow.svg" />
                 </button>
@@ -238,7 +245,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </span>
             </div>
           ) : (
-            <button className="flex items-center text-[#FFFFFF] text-xs px-[18px] py-[10px] rounded-full connect-button md:text-[8px] md:px-[18px] md:py-[10px] lg:px-6 lg:py-[10px] lg:text-xs xl:px-6 xl:py-[10px] xl:text-xs xxl:px-8 xxl:py-[13px] xxl:text-sm">
+            <button
+              className="flex items-center text-[#FFFFFF] text-xs px-[18px] py-[10px] rounded-full connect-button md:text-[8px] md:px-[18px] md:py-[10px] lg:px-6 lg:py-[10px] lg:text-xs xl:px-6 xl:py-[10px] xl:text-xs xxl:px-8 xxl:py-[13px] xxl:text-sm"
+              onClick={handleSignIn}
+            >
               Connect Wallet
               <InlineSVG src="/icons/side-arrow.svg" />
             </button>

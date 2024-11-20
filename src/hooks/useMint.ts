@@ -24,16 +24,15 @@ const useMintImage = () => {
     }
 
     try {
-      const metadata = { media:data.mediaUrl,reference: data.referenceUrl,title: data.title };
+      const metadata = { media:data.mediaUrl,reference: data.referenceUrl,title: data.title,copies:data.count };
       const res = await wallet.callMethod({
         contractId: NEXT_PUBLIC_PROXY_ADDRESS,
         method: 'mint',
         args: {
           metadata: JSON.stringify(metadata),   
           nft_contract_id:data.contractId,
-          count: data.count
         },
-        gas: '200000000000000',
+        gas: '200000000000000', 
         deposit: '10000000000000000000000'
       });
       console.log("Ress 1 >>> ", res);
@@ -43,7 +42,31 @@ const useMintImage = () => {
       // throw new Error("Failed to sign and send transaction");
     }
   };
-  return { mintImage, loading, error };
+
+  const burnNft = async (
+    tokenId:any
+  ) => {
+    if (!wallet) {
+      throw new Error("Wallet is not defined.");
+    }
+
+    try {
+      const res = await wallet.callMethod({
+        contractId: NEXT_PUBLIC_PROXY_ADDRESS,
+        method: 'nft_batch_burn',  // Assuming 'burn' is the method in your contract to burn the NFT
+        args: {
+          nft_contract_id: ART_BATTLE_CONTRACT,
+          token_id: tokenId,  // Token ID to burn
+        },
+      });
+      console.log("Ress 1 >>> ", res);
+      return res;
+    } catch (error) {
+      console.error("Failed to sign and send transaction:", error);
+      // throw new Error("Failed to sign and send transaction");
+    }
+  };
+  return { mintImage,burnNft, loading, error };
 };
 
 export default useMintImage;

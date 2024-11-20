@@ -148,7 +148,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             return {
                                 ...plainRaffle, 
                                 colouredArt: art ? art.colouredArt : null,
-                                colouredArtReference : art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArtReference : null,
+                                arttitle:art ? art.arttitle : "",
                             };
                     }));
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
@@ -163,7 +164,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             return {
                                 ...plainRaffle, 
                                 colouredArt: art ? art.colouredArt : null,
-                                colouredArtReference : art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArtReference : null,
+                                arttitle:art ? art.arttitle : "",
                             };
                     }));
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
@@ -178,7 +180,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             return {
                                 ...plainRaffle, 
                                 colouredArt: art ? art.colouredArt : null,
-                                colouredArtReference : art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArtReference : null,
+                                arttitle:art ? art.arttitle : "",
                             };
                     }));
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
@@ -193,7 +196,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             return {
                                 ...plainRaffle, 
                                 colouredArt: art ? art.colouredArt : null,
-                                colouredArtReference : art ? art.colouredArt : null,
+                                colouredArtReference : art ? art.colouredArtReference : null,
+                                arttitle:art ? art.arttitle : "",
                             };
                     }));
                     res.status(200).json({ message: 'User raffles',rafflesWithArtUrls,totalDocuments,totalPages });
