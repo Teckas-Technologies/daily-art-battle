@@ -45,6 +45,7 @@ export const useFetchParticipantsNfts = () => {
             const response = await fetchWithAuth(`/api/userNfts?sort=${sort}&offset=${page - 1}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
+            console.log("DATA:::", data)
             setArts(data.result.data.mb_views_nft_tokens);
             const totalDocuments = data.totalDocuments.data.mb_views_nft_tokens_aggregate.aggregate.count;
             const totalPages = Math.ceil(totalDocuments / limit);

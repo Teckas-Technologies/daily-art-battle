@@ -33,7 +33,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   },
                   network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
                 });
-                const rafleCount = (await RaffleTicket.find({email:email})).length;
+                const rafleCount = (await RaffleTicket.find({email:email, isMintedNft: false})).length;
                 return res.status(200).json({participationCount,rareNftCount,rafleCount});
             } catch (error:any) {
                 res.status(400).json({error:error.message});

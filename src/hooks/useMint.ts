@@ -23,11 +23,12 @@ const useMintImage = () => {
     if (!wallet) {
       throw new Error("Wallet is not defined.");
     }
-
+ 
     try {
       const metadata = { media:data.mediaUrl,reference: data.referenceUrl,title: data.title,copies:data.count };
       const res = await wallet.callMethod({
         contractId: NEXT_PUBLIC_PROXY_ADDRESS,
+        callbackUrl: window.location.origin + "/profile",
         method: 'mint',
         args: {
           metadata: JSON.stringify(metadata),   

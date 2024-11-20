@@ -48,7 +48,7 @@ export const ProfileBody: React.FC = () => {
     <>
       <div id="content-top"></div>
 
-      <div className="profile-body w-full mt-10">
+      <div className="profile-body w-full mt-10" id="profile-body">
         <div className="tabs w-full max-w-[800px] flex items-center justify-center gap-4">
           {tabs.map((tab) => (
             <div
