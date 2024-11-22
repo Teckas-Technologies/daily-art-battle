@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
+import {
+  NEXT_PUBLIC_VALID_CLIENT_ID,
+  NEXT_PUBLIC_VALID_CLIENT_SECRET,
+} from "@/config/constants";
 export interface CampaignPageData {
   _id: string;
   campaignUrl?: string;
@@ -58,8 +62,8 @@ const useCampaigns = () => {
   const [campaignData, setCampaignData] = useState<any>(null);
   const [campaignStatus, setCampaignStatus] = useState<string | null>(null);
   const [art, setArt] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<string | null>(null);
   const [totalDocuments, setTotalDocuments] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -67,13 +71,67 @@ const useCampaigns = () => {
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [battles, setBattles] = useState<any[]>([]);
   const [participants, setParticipants] = useState<any>(null);
+  const idToken = getAuthToken();
+  // console.log("token", idToken);
   const fetchCampaigns = async (
-    queryType: "current" | "upcoming" | "completed" | "myCampaigns",
+    queryType: "current" | "upcoming" | "completed",
     page: number = currentPage,
     limit: number = 10
   ) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
+
+    try {
+      const response = await fetch(
+        `/api/campaign?queryType=${queryType}&page=${page}&limit=${limit}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${queryType} campaigns`);
+      }
+
+      const data = await response.json();
+      console.log(`${queryType} campaign data:`, data);
+      setCampaignData(data.data.campaign);
+      setTotalDocuments(data.data.totalDocuments);
+      setTotalPages(data.data.totalPages);
+      setCurrentPage(page);
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsError(err.message);
+      } else {
+        setIsError("An unknown error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchCurrentCampaign = (
+    page: number = currentPage,
+    limit: number = 10
+  ) => fetchCampaigns("current", page, limit);
+  const fetchUpcomingCampaigns = (
+    page: number = currentPage,
+    limit: number = 10
+  ) => fetchCampaigns("upcoming", page, limit);
+  const fetchPreviousCampaigns = (
+    page: number = currentPage,
+    limit: number = 10
+  ) => fetchCampaigns("completed", page, limit);
+  const fetchMyCampaigns = async (
+    queryType: "myCampaigns",
+    page: number = currentPage,
+    limit: number = 10
+  ) => {
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth(
@@ -92,26 +150,39 @@ const useCampaigns = () => {
       setCurrentPage(page);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (idToken) {
+      fetchCurrentCampaign();
+    }
+  }, [idToken]);
   const fetchCampaignFromArtAPI = async (
     campaignId: string,
     page: number = 1,
     limit: number = 6
   ) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       console.log("Fetching art for Campaign ID:", campaignId);
-      const response = await fetchWithAuth(
-        `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`
+      const response = await fetch(
+        `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -132,19 +203,19 @@ const useCampaigns = () => {
       return data;
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchBattles = async (campaignId: string, sort: string = "voteDsc") => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth(
@@ -160,21 +231,30 @@ const useCampaigns = () => {
       console.log("Fetched battles data:", data);
       return data;
     } catch (err) {
-      setError(
+      setIsError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchCampaignByTitle = async (title: string) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
-      const response = await fetchWithAuth(`/api/campaign?title=${title}`);
+      const apiUrl = `/api/campaign?title=${title}`;
+      console.log("API Request URL:", apiUrl);
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch campaign data");
@@ -182,20 +262,23 @@ const useCampaigns = () => {
 
       const data = await response.json();
       setCampaign(data.campaign);
+      console.log("Campaign >>>", data.campaign);
+
       setCampaignStatus(data.status);
+      console.log("Status >>>", data.status);
+
       setParticipants(data.participants);
-      console.log(")))))", participants);
       console.log("Fetched participants:", data.participants);
     } catch (err) {
-      setError(null);
+      console.error("Error fetching campaign:", err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchCampaignAnalytics = async (campaignId: string) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth(
@@ -216,34 +299,13 @@ const useCampaigns = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
-      setError(errorMessage);
+      setIsError(errorMessage);
       console.error("Error in fetchCampaignAnalytics:", errorMessage);
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
-
-  const fetchCurrentCampaign = (
-    page: number = currentPage,
-    limit: number = 10
-  ) => fetchCampaigns("current", page, limit);
-  const fetchUpcomingCampaigns = (
-    page: number = currentPage,
-    limit: number = 10
-  ) => fetchCampaigns("upcoming", page, limit);
-  const fetchPreviousCampaigns = (
-    page: number = currentPage,
-    limit: number = 10
-  ) => fetchCampaigns("completed", page, limit);
-  const fetchMyCampaigns = (page: number = currentPage, limit: number = 10) =>
-    fetchCampaigns("myCampaigns", page, limit);
-
-  // useEffect(() => {
-  //   if (idToken) {
-  //     fetchCurrentCampaign();
-  //   }
-  // }, [idToken]);
 
   const createCampaign = async (campaignData: {
     campaignUrl: string;
@@ -258,8 +320,8 @@ const useCampaigns = () => {
     noOfWinners: number;
     specialWinnerCount: number;
   }) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth("/api/campaign", {
@@ -280,18 +342,18 @@ const useCampaigns = () => {
       return data;
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setIsError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setIsError("An unknown error occurred");
       }
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
   const updateCampaign = async (updatedCampaignData: CampaignPageData) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const response = await fetchWithAuth("/api/campaign", {
@@ -319,12 +381,12 @@ const useCampaigns = () => {
 
       return data;
     } catch (err) {
-      setError(
+      setIsError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -332,8 +394,8 @@ const useCampaigns = () => {
     campaignId: string,
     artList: ArtItem[]
   ): Promise<ArtData | null> => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(null);
 
     const body: ArtData = {
       campaignId,
@@ -343,7 +405,7 @@ const useCampaigns = () => {
     // console.log("Sending data to API:", body, idToken); // Log request details
 
     try {
-      const response = await fetch("/api/distribute", {
+      const response = await fetchWithAuth("/api/distribute", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -353,8 +415,8 @@ const useCampaigns = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text(); 
-        console.error("API Error:", errorText); 
+        const errorText = await response.text();
+        console.error("API Error:", errorText);
         throw new Error("Failed to distribute art");
       }
 
@@ -363,23 +425,23 @@ const useCampaigns = () => {
       return data;
     } catch (err) {
       if (err instanceof Error) {
-        console.error("Error distributing art:", err); 
-        setError(err.message);
+        console.error("Error distributing art:", err);
+        setIsError(err.message);
       } else {
-        console.error("An unknown error occurred:", err); 
-        setError("An unknown error occurred");
+        console.error("An unknown error occurred:", err);
+        setIsError("An unknown error occurred");
       }
       return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return {
     campaign,
     campaignData,
-    loading,
-    error,
+    isLoading,
+    isError,
     totalDocuments,
     totalPages,
     currentPage,

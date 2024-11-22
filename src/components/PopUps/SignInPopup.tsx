@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import InlineSVG from "react-inlinesvg";
+import "./Popup.css";
 
 interface Props {
     text: string;

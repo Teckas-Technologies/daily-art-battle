@@ -45,11 +45,17 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
     }, [err])
 
     useEffect(() => {
+        if (success) {
+            setTimeout(() => setSuccess(false), 3000);
+        }
+    }, [success])
+
+    useEffect(() => {
         const artid = searchParams?.get('artId');
         if (artid) {
             setArtId(artid);
         }
-    }, [searchParams, pathName]);
+    }, [searchParams, pathName]); 
 
 
     const getQueryParam = (param: string): string | null => {
@@ -126,7 +132,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
                     </div>
                 ))}
             </div>
-            {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={myTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
+            {selectedArtId && overlayArt && !signToast && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={myTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
 
             {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => setSignToast(false)} />}
 

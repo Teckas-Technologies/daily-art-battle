@@ -7,6 +7,7 @@ import { useSaveData, ArtData } from "@/hooks/artHooks";
 import { useFetchGeneratedImage } from "@/hooks/generateImageHook";
 import { useAuth } from "@/contexts/AuthContext";
 import { AI_IMAGE, ART_UPLOAD } from "@/config/points";
+import { useRouter } from "next/navigation";
 
 interface Artwork {
   name: string;
@@ -53,6 +54,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
   const [disable, setDisable] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isAiGenerated, setIsAiGenerated] = useState(false);
+  const router = useRouter();
   const { user } = useAuth();
   let userDetails = user;
 
@@ -397,7 +399,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                   className="ml-2 md:w-full w-full md:h-[3rem] h-[2rem] mr-3"
                   onChange={handleMessageChange}
                 />
-                <button className={`generateButton md:px-[1.2rem] md:py-[0.8rem] px-[1rem] py-[0.7rem] ${userDetails && userDetails?.user?.gfxCoin < AI_IMAGE && "red" }`} onClick={handleCreate}>
+                <button className={`generateButton md:px-[1.2rem] md:py-[0.8rem] px-[1rem] py-[0.7rem] ${userDetails && userDetails?.user?.gfxCoin < AI_IMAGE && "red"}`} onClick={handleCreate}>
                   <div>
                     <InlineSVG src="/icons/blink.svg" color={`${userDetails && userDetails?.user?.gfxCoin < AI_IMAGE ? "#FF543E" : "#009900"}`} className="fill-current md:h-5 md:w-5 h-4 w-4" />
                   </div>{" "}
@@ -405,7 +407,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                 </button>
               </div>
               {userDetails && userDetails?.user?.gfxCoin < AI_IMAGE && <div className="insuff w-full flex justify-end">
-                <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold">Insufficient Coins? <span className="text-[#00FF00] underline underline-offset-2 cursor-pointer">Purchase</span></h2>
+                <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold">Insufficient Coins? <span className="text-[#00FF00] underline underline-offset-2 cursor-pointer" onClick={() => router?.push("/profile?buyCoin=true")}>Purchase</span></h2>
               </div>}
             </div>
           ))}
@@ -428,6 +430,9 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
               </div>}
             </button>
           </div>
+          {userDetails && userDetails?.user?.gfxCoin < ART_UPLOAD && <div className="insuff w-full flex justify-center">
+            <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold pt-4">Insufficient Coins? <span className="text-[#00FF00] underline underline-offset-2 cursor-pointer" onClick={() => router?.push("/profile?buyCoin=true")}>Purchase</span></h2>
+          </div>}
         </form>
       </div>
     </div>

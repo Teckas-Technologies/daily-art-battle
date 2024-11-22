@@ -174,11 +174,13 @@ export default async function handler(
           today.setUTCHours(0, 0, 0, 0);
           const totalDocuments = await Campaign.countDocuments({
             startDate: { $lt: today },
+            endDate: { $lt: today },
             publiclyVisible: true,
           });
           const totalPages = Math.ceil(totalDocuments / limit);
           const campaign = await Campaign.find({
             startDate: { $lt: today },
+            endDate: { $lt: today },
             publiclyVisible: true,
           })
             .skip(skip)
@@ -188,7 +190,7 @@ export default async function handler(
             data: { campaign, totalDocuments, totalPages },
           });
         }
-        const email = await authenticateUser(req);
+        await validateUser(req);
         const title = req.query.title;
         const campaign = await Campaign.findOne({ campaignUrl: title });
         if (!campaign) {

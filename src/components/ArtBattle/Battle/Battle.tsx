@@ -3,7 +3,7 @@ import InlineSVG from "react-inlinesvg";
 import { Slider } from "./Slider/Slider";
 import { useEffect, useState } from "react";
 import { Spinner } from "./Spinner/Spinner";
-import { useFetchTodayBattle } from "@/hooks/battleHooks";
+import { BattleData, useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useRouter } from "next/navigation";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { NoBattle } from "./NoBattle/NoBattle";
@@ -28,6 +28,9 @@ interface Props {
   fontColor: string;
   welcomeText: string;
   themeTitle: String;
+  loading: boolean;
+  error: string | null;
+  todayBattle: BattleData | null;
 }
 
 const initialViewTools = [
@@ -42,12 +45,15 @@ export const Battle: React.FC<Props> = ({
   fontColor,
   welcomeText,
   themeTitle,
+  loading,
+  error,
+  todayBattle
 }) => {
-  const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
+  // const { todayBattle, loading, battle, error, fetchTodayBattle } = useFetchTodayBattle();
   const router = useRouter();
 
   const [artA, setArtA] = useState<Artwork>({
-    id: "ArtA",
+    id: "",
     name: "Art A",
     imageUrl: "",
     title: "",
@@ -55,7 +61,7 @@ export const Battle: React.FC<Props> = ({
     artistName: ""
   });
   const [artB, setArtB] = useState<Artwork>({
-    id: "ArtB",
+    id: "",
     name: "Art B",
     imageUrl: "",
     title: "",
@@ -72,21 +78,24 @@ export const Battle: React.FC<Props> = ({
   const { fetchArtById } = useFetchArtById();
   const [artARaffleTickets, setArtARaffleTickets] = useState(0);
   const [artBRaffleTickets, setArtBRaffleTickets] = useState(0);
+  const [openArtA, setOpenArtA] = useState(false);
+  const [openArtB, setOpenArtB] = useState(false);
 
-  useEffect(() => {
-    console.log(campaignId);
 
-    const fetchBattle = async () => {
-      await fetchTodayBattle(campaignId);
-    };
+  // useEffect(() => {
+  //   console.log(campaignId);
 
-    const timeoutId = setTimeout(() => {
-      fetchBattle();
-    }, 100); // 10 seconds in milliseconds
+  //   const fetchBattle = async () => {
+  //     await fetchTodayBattle(campaignId);
+  //   };
 
-    // Cleanup function to clear the timeout if the component unmounts or campaignId changes
-    return () => clearTimeout(timeoutId);
-  }, [campaignId]);
+  //   const timeoutId = setTimeout(() => {
+  //     fetchBattle();
+  //   }, 100); // 10 seconds in milliseconds
+
+  //   // Cleanup function to clear the timeout if the component unmounts or campaignId changes
+  //   return () => clearTimeout(timeoutId);
+  // }, [campaignId]);  // moved =======
 
   useEffect(() => {
     if (todayBattle) {
@@ -130,7 +139,8 @@ export const Battle: React.FC<Props> = ({
   useEffect(() => {
     if (artA && campaignId) {
       const fetchArtAtickets = async () => {
-        const art = await fetchArtById(artA?.id);
+        if(!artA.id) return;
+        const art = await fetchArtById(artA.id);
         setArtARaffleTickets(art?.raffleTickets);
       };
       fetchArtAtickets();
@@ -138,7 +148,8 @@ export const Battle: React.FC<Props> = ({
 
     if (artB && campaignId) {
       const fetchArtBtickets = async () => {
-        const art = await fetchArtById(artB?.id);
+        if(!artA.id) return;
+        const art = await fetchArtById(artB.id);
         setArtBRaffleTickets(art?.raffleTickets);
       };
       fetchArtBtickets();
@@ -203,10 +214,10 @@ export const Battle: React.FC<Props> = ({
             )}
           </div>
           <div className="arts flex w-full px-3">
-            {!todayBattle && !loading && <NoBattle />}
-            {loading && <Loader md="21" sm="15" />}
+            {!todayBattle && !loading && <NoBattle toggleUploadModal={toggleUploadModal} />}
+            {loading && <Loader md="22" sm="15" />}
             {todayBattle && viewTools[0].active && (
-              <Split artA={artA} artB={artB} campaignId={campaignId} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} setRefresh={setRefresh} />
+              <Split artA={artA} artB={artB} openArtA={openArtA} openArtB={openArtB} setOpenArtA={setOpenArtA} setOpenArtB={setOpenArtB} campaignId={campaignId} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} setRefresh={setRefresh} />
             )}
             {todayBattle && viewTools[1].active && (
               <Slider artA={artA} artB={artB} />
@@ -219,10 +230,10 @@ export const Battle: React.FC<Props> = ({
           {todayBattle && (
             <div className={`battle-vote-btns md:flex ${viewTools[0].active ? "hidden" : "flex"} w-full flex items-center h-auto mt-8 pb-5 px-3`}>
               <div className={`vote-btn w-[50%] flex justify-center md:justify-end ${viewTools[1].active || viewTools[2].active ? "xl:pr-[9rem] md:pr-[8rem]" : "md:pr-[8.5rem]"}`}>
-                <div className="total-collects md:flex hidden w-auto h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem]">
+                <div className="total-collects md:flex hidden w-auto h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem] cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
                   <h2 className="font-semibold text-lg">Total Collects <span className="text-green font-semibold text-lg">{artARaffleTickets}</span></h2>
                 </div>
-                <div className="outside md:hidden flex w-auto h-auto rounded-3xl">
+                <div className="outside md:hidden flex w-auto h-auto rounded-3xl cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
                   <div className="second-layer w-auto h-auto rounded-3xl">
                     <button className={` battle-vote-btn px-6 py-3 rounded-3xl cursor-pointer`} >
                       <h2 className="md:spartan-bold spartan-semibold font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji1} Collects <span className='text-green'>{artARaffleTickets}</span></h2>
@@ -230,13 +241,14 @@ export const Battle: React.FC<Props> = ({
                   </div>
                 </div>
               </div>
+
               <div className={`vote-btn w-[50%] flex justify-center md:justify-start ${viewTools[1].active || viewTools[2].active ? "xl:pl-[9rem] md:pl-[8rem]" : "md:pl-[8.5rem]"} `}>
-                <div className="total-collects md:flex hidden w-auto h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem]">
+                <div className="total-collects md:flex hidden w-auto h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem] cursor-pointer"> {/** onClick={() => setOpenArtB(true)} */}
                   <h2 className="font-semibold text-lg">Total Collects <span className="text-green font-semibold text-lg">{artBRaffleTickets}</span></h2>
                 </div>
                 <div className="outside md:hidden flex w-auto h-auto rounded-3xl">
                   <div className="second-layer w-auto h-auto rounded-3xl">
-                    <button className={` battle-vote-btn px-6 py-3 rounded-3xl cursor-pointer`} >
+                    <button className={` battle-vote-btn px-6 py-3 rounded-3xl cursor-pointer`}> {/** onClick={() => setOpenArtB(true)} */}
                       <h2 className="md:spartan-bold spartan-semibold font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji2} Collects <span className='text-green'>{artBRaffleTickets}</span>
                       </h2>
                     </button>

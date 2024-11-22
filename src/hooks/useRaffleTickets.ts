@@ -14,6 +14,7 @@ interface UseTicketReturn {
   loading: boolean;
   fetchArtUserRaffleCount: (artId: string, campaignId: string) => Promise<number>;
   submitVote: (voteData: Vote) => Promise<boolean>;
+  updateRaffleMint: (raffleId: string, queryType: string) => Promise<boolean>;
 }
 
 export const useArtsRaffleCount = (): UseTicketReturn => {
@@ -72,11 +73,35 @@ export const useArtsRaffleCount = (): UseTicketReturn => {
     }
   }, []);
 
+  const updateRaffleMint = useCallback(async (raffleId: string, queryType: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      console.log("TEST 1")
+      const response = await fetchWithAuth(`/api/raffleTicket?raffleId=${raffleId}&queryType=${queryType}`, {
+        method: 'PUT', 
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Response OKK!!!!!!!!!!!")
+        return true;
+      } else {
+        throw new Error('Error' + data.message || 'Failed to update vote');
+      }
+    } catch (err) {
+      setError('Error');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     raffleCount,
     error,
     loading,
     fetchArtUserRaffleCount,
     submitVote,
+    updateRaffleMint
   };
 };

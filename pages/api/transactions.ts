@@ -15,7 +15,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
             const skip = limit * (page === 1 ? 0 : page - 1);
             const totalDocuments = (await Transactions.find({email:email})).length;
             const totalPages = Math.ceil(totalDocuments / limit);
-            const transaction = await Transactions.find({email:email}).skip(skip)
+            const transaction = await Transactions.find({email:email}).skip(skip).sort({createdAt: -1})
             .limit(limit);
             return res.status(200).json({transaction,totalPages,totalDocuments});
             }catch(error:any){

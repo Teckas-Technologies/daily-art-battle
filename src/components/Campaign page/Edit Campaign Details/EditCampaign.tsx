@@ -29,7 +29,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   const { data: session, status } = useSession();
   const idToken = session?.idToken || "";
 
-  const { updateCampaign, loading, error } = useCampaigns();
+  const { updateCampaign, isLoading, isError } = useCampaigns();
 
   useEffect(() => {
     if (campaign) {

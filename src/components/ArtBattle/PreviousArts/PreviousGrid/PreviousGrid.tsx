@@ -144,7 +144,7 @@ export const PreviousGrid: React.FC<Props> = ({ toggleUploadModal, campaignId, f
 
     return (
         <>
-            <div className="previous-hero w-full h-auto bg-black md:pt-4 pt-0 pb-6" id="previous">
+            <div className="previous-hero w-full h-auto bg-black md:pt-4 pt-0 pb-6 mb-[60px]" id="previous">
 
                 {/* Filters top section */}
                 <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:px-[7.8rem] px-3 pb-5 pt-10">

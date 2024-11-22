@@ -16,9 +16,13 @@ interface Props {
     artATickets: number;
     artBTickets: number;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+    openArtA: boolean;
+    openArtB: boolean;
+    setOpenArtA: (e: boolean) => void;
+    setOpenArtB: (e: boolean) => void;
 }
 
-export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, artBTickets, setRefresh }) => {
+export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, artBTickets, setRefresh, openArtA, openArtB, setOpenArtA, setOpenArtB }) => {
     const { fetchArtById } = useFetchArtById();
     const { fetchArtUserRaffleCount } = useArtsRaffleCount();
     const [showOverlayA, setShowOverlayA] = useState(false);
@@ -37,6 +41,12 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
             setTimeout(() => setErr(false), 3000);
         }
     }, [err])
+
+    useEffect(() => {
+        if (success) {
+            setTimeout(() => setSuccess(false), 3000);
+        }
+    }, [success])
 
     // Toggle overlay visibility
     const toggleOverlayA = () => {
@@ -58,6 +68,22 @@ export const Split: React.FC<Props> = ({ artA, artB, campaignId, artATickets, ar
         url.searchParams.set('artId', id);
         window.history.pushState({}, '', url.toString());
     };
+
+    useEffect(() => {
+        if(openArtA) {
+            handleImageClick(artA?.id);
+        }
+
+        if(openArtB) {
+            handleImageClick(artB?.id);
+        }
+
+        if(!selectedArtId) {
+            setOpenArtA(false);
+            setOpenArtB(false);
+        }
+
+    }, [openArtA, openArtB, selectedArtId])
 
     useEffect(() => {
         if (artA && campaignId) {
