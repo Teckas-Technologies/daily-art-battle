@@ -5,7 +5,11 @@ import "./DailyCheckin.css";
 import useDailyCheckin from "@/hooks/dailyCheckinHook";
 import { useAuth } from "@/contexts/AuthContext";
 import Toast from "@/components/Toast";
-const DailyCheckin = () => {
+interface DailyCheckinProps {
+  coin: number;
+  // setCoin: (value: number) => void;
+}
+const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
   const [streak, setStreak] = useState(Array(7).fill(false));
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [isClaimed, setIsClaimed] = useState(false);
@@ -19,11 +23,39 @@ const DailyCheckin = () => {
     loading,
     error,
     checkinData,
+    lastWeeklyClaimDate,
     streakDays,
     claimDate,
   } = useDailyCheckin();
   const { user } = useAuth();
+  console.log("is claimed", isClaimed);
+
   let userDetails = user;
+  const fetchStreakData = async () => {
+    const data = await fetchDailyCheckin();
+    console.log("data .......", data);
+
+    if (data) {
+      const streakDays = data.data.streakDays || 0;
+      console.log("updated days", streakDays);
+
+      const updatedStreak = Array(7).fill(false);
+
+      for (let i = 0; i < streakDays; i++) {
+        updatedStreak[i] = true;
+      }
+
+      setStreak(updatedStreak);
+      if (streakDays === 7) {
+        console.log("....");
+
+        setCurrentIndex(6);
+      } else {
+        setCurrentIndex(streakDays - 1);
+      }
+    }
+  };
+
   const toggleDay = async (index: number) => {
     if (isClaimed || isClaimedForToday()) return;
 
@@ -33,7 +65,6 @@ const DailyCheckin = () => {
     setCurrentIndex(index);
 
     const result = await dailyCheckin();
-    console.log(">>>>>", result);
 
     if (result) {
       console.log("Check-in successful:", result);
@@ -41,35 +72,16 @@ const DailyCheckin = () => {
       setToastMessage(`Claimed reward for Day ${index + 1}!`);
       setSuccessToast("yes");
       setToast(true);
+
+      await fetchStreakData();
+      window.location.reload();
     }
   };
 
   useEffect(() => {
-    const fetchStreakData = async () => {
-      const data = await fetchDailyCheckin();
-      console.log("data .......", data);
-
-      if (data) {
-        const streakDays = data.data.streakDays || 0;
-        console.log("days", streakDays);
-
-        const updatedStreak = Array(7).fill(false);
-
-        for (let i = 0; i < streakDays; i++) {
-          updatedStreak[i] = true;
-        }
-
-        setStreak(updatedStreak);
-        if (streakDays === 7) {
-          setCurrentIndex(6);
-        } else {
-          setCurrentIndex(streakDays - 1);
-        }
-      }
-    };
-
     fetchStreakData();
-  }, [userDetails, streakDays, claimDate]);
+  }, [userDetails]);
+
   const isClaimedForToday = () => {
     const currentDate = new Date().toISOString().split("T")[0];
     const claimDateString = claimDate?.split("T")[0];
@@ -78,7 +90,7 @@ const DailyCheckin = () => {
     return currentDate === claimDateString;
   };
   const handleWeeklyClaim = async () => {
-    if (streakDays === 7 && !isClaimed) {
+    if (streakDays === 7 && isClaimed) {
       const result = await weeklyCheckin();
       console.log("Weekly Check-in Result:", result);
       if (result) {
@@ -86,9 +98,30 @@ const DailyCheckin = () => {
         setToast(true);
         setToastMessage("Claimed 7-day streak reward!");
         setSuccessToast("yes");
+
+        await fetchStreakData();
+        window.location.reload();
       }
     }
   };
+  useEffect(() => {
+    if (toast) {
+      const timeout = setTimeout(() => {
+        setToast(false);
+        setToastMessage("");
+        setSuccessToast("");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [toast]);
+  const isWeeklyClaimedToday = () => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    const lastClaimDateString = lastWeeklyClaimDate?.split("T")[0];
+    return currentDate === lastClaimDateString;
+  };
+  console.log("streak days.....", streakDays);
+
   return (
     <div
       className="flex w-full flex-col justify-center items-center text-white p-6 rounded-xl gap-[30px] mt-[20px] mb-[20px] md:flex-row lg:gap-[50px] lg:px-8 lg:py-10 xl:gap-9 xl:px-8 xl:py-10 xxl:gap-9 xxl:px-8 xxl:py-10"
@@ -104,12 +137,20 @@ const DailyCheckin = () => {
             alt="GFXvs Icon"
             className="w-[30px] h-[30px] lg:w-[30px] lg:h-[30px] xl:w-[30px] xl:h-[30px] xxl:w-[45px] xxl:h-[45px]"
           />
-          <span className="font-medium text-xs md:text-xs lg:text-xs xl:font-sm xxl:text-lg">
-            Current Streak
-          </span>
-          <p className="font-semibold text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
-            {streak.filter((day) => day).length} Days
-          </p>
+          {isWeeklyClaimedToday() ? (
+            <span className="font-medium text-xs md:text-xs lg:text-xs xl:font-sm xxl:text-lg">
+              Reward Claimed for 7 days
+            </span>
+          ) : (
+            <>
+              <span className="font-medium text-xs md:text-xs lg:text-xs xl:font-sm xxl:text-lg">
+                Current Streak
+              </span>
+              <p className="font-semibold text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
+                {streak.filter((day) => day).length} Days
+              </p>
+            </>
+          )}
         </div>
 
         {/* <div className="flex text-white lg:justify-center items-center">
@@ -135,12 +176,13 @@ const DailyCheckin = () => {
                 }}
                 onClick={() => toggleDay(index)}
               >
-                {claimed && (
+                {(claimed || isWeeklyClaimedToday()) && (
                   <InlineSVG
                     src="/icons/tick-green.svg"
                     className="w-2 h-2 lg:w-3 h-3 md:w-3 h-3 xl:w-3 h-3 xxl:w-3 h-3"
                   />
                 )}
+
                 {currentIndex === index && claimed && (
                   <img
                     src="/images/logo.png"
@@ -150,7 +192,9 @@ const DailyCheckin = () => {
               </div>
               <div
                 className={`flex mt-2 px-[10px] py-[px] items-center justify-center rounded-sm text-[10px] md:hidden md:px-4 md:py-[3px] ${
-                  claimed ? "bg-[#00FF00] text-black" : "bg-gray-400 text-white"
+                  claimed || isWeeklyClaimedToday()
+                    ? "bg-[#00FF00] text-black"
+                    : "bg-gray-400 text-white"
                 }`}
                 onClick={() => toggleDay(index)}
               >
@@ -171,13 +215,15 @@ const DailyCheckin = () => {
                 1
               </span>
               <button
-                className={`hidden mt-2 px-6 py-[5px] rounded-md text-[10px] md:px-4 md:py-[3px] md:flex ${
-                  claimed ? "bg-[#00FF00] text-black" : "bg-gray-400 text-white"
-                }`}
+                className={`hidden mt-2 py-[5px] rounded-md text-[10px] md:py-[3px] md:flex ${
+                  claimed || isWeeklyClaimedToday()
+                    ? "bg-[#00FF00] text-black"
+                    : "bg-gray-400 text-white"
+                } ${isWeeklyClaimedToday() ? "px-[6px]" : "px-6 md:px-4"}`}
                 onClick={() => toggleDay(index)}
                 disabled={isClaimedForToday()}
               >
-                Claim
+                {isWeeklyClaimedToday() ? "Claimed" : "Claim"}
               </button>
             </div>
           ))}
@@ -205,11 +251,15 @@ const DailyCheckin = () => {
             </span>
             <button
               className={`text-[#ffffff] w-[100%] rounded-full mt-3 text-sm py-2 px-10 lg:px-10 lg:py-2  xl:px-10 xl:py-2  xxl:px-10 xxl:py-3 ${
-                streakDays === 7 && !isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
+                streakDays === 7 && isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
               }`}
               onClick={handleWeeklyClaim}
             >
-              {streakDays === 7 && isClaimed ? "Claimed" : "Claim"}
+              {isWeeklyClaimedToday()
+                ? "Claimed"
+                : streakDays === 7
+                ? "Claim"
+                : "Claim"}
             </button>
             <div id="content-top"></div>
           </div>

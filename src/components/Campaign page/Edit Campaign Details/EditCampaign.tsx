@@ -7,17 +7,23 @@ import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
 import { signOut, useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import { setAuthToken } from "../../../../utils/authToken";
+import Toast from "@/components/Toast";
 interface EditCampaignPopupProps {
   onClose: () => void;
   campaign?: CampaignPageData | null;
   setEditCampaign:(value:boolean)=>void ;
+  editCampaign: boolean;
 }
 
 const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   onClose,
   campaign,
   setEditCampaign,
+  editCampaign
 }) => {
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [successToast, setSuccessToast] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isStartDatePickerOpen, setStartDatePickerOpen] = useState(false);
@@ -87,8 +93,16 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
     const result = await updateCampaign(updatedCampaignData);
 
     if (result) {
-      setEditCampaign(true);
+      setEditCampaign(!editCampaign);
       onClose();
+      setToastMessage("Campaign Edited Successfully");
+      setSuccessToast("yes");
+      setToast(true);
+    }else {
+      console.error("Failed to distribute art");
+      setToastMessage("Failed to edit campaign details");
+      setSuccessToast("no");
+      setToast(true);
     }
   };
 
@@ -236,6 +250,24 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
           </div>
         </form>
       </div>
+      {toast && toastMessage && (
+        <div
+          className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"
+          style={{ zIndex: 55 }}
+        >
+          <div className="relative w-full h-full">
+            <Toast
+              success={successToast === "yes" ? true : false}
+              message={toastMessage}
+              onClose={() => {
+                setToast(false);
+                setToastMessage("");
+                setSuccessToast("");
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

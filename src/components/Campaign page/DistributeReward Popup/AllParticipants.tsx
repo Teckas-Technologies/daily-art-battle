@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./AllParticipants.css";
 interface AllParticipantsPopupProps {
   onClose: () => void;
-  onDistribute:()=>void;
+  onDistribute: () => void;
   selectedArtLength: number;
   artLength: number;
 }
@@ -11,7 +11,7 @@ const AllParticipantpopup: React.FC<AllParticipantsPopupProps> = ({
   onClose,
   onDistribute,
   selectedArtLength,
-  artLength
+  artLength,
 }) => {
   return (
     <div className="Allparticipant-popup-overlay">
@@ -29,7 +29,9 @@ const AllParticipantpopup: React.FC<AllParticipantsPopupProps> = ({
             Cancel
           </button>
           <div className="distributepopup-btn-Wrapper">
-            <button className="distributepopup-btn " onClick={onDistribute}>Distribute Rewards</button>
+            <button className="distributepopup-btn " onClick={onDistribute}>
+              Distribute Rewards
+            </button>
 
             <div className="distributepopup-btn-Border" />
 

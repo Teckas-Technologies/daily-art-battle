@@ -6,6 +6,9 @@ const useDailyCheckin = () => {
   const [error, setError] = useState<string | null>(null);
   const [streakDays, setStreakDays] = useState<number | null>(null);
   const [claimDate, setClaimDate] = useState<String | null>(null);
+  const [lastWeeklyClaimDate, setLastWeeklyClaimDate] = useState<String | null>(
+    null
+  );
   const [checkinData, setCheckinData] = useState<any>(null);
   const dailyCheckin = async () => {
     setLoading(true);
@@ -24,9 +27,9 @@ const useDailyCheckin = () => {
         throw new Error("Failed to complete daily check-in");
       }
 
-      const data = await response.json();
-      console.log("Daily check-in response:", data);
-      return data;
+      const postData = await response.json();
+      console.log("Daily check-in response:", postData);
+      return postData;
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -91,6 +94,7 @@ const useDailyCheckin = () => {
       setCheckinData(data);
       setStreakDays(data.data.streakDays);
       setClaimDate(data.data.lastClaimedDate);
+      setLastWeeklyClaimDate(data.data.lastWeeklyClaimDate);
       console.log("Last claim date", claimDate);
 
       console.log("Fetched daily check-in data:", data);
@@ -114,6 +118,7 @@ const useDailyCheckin = () => {
     checkinData,
     streakDays,
     claimDate,
+    lastWeeklyClaimDate,
     loading,
     error,
   };

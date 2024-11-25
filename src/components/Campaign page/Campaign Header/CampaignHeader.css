@@ -24,7 +24,7 @@
   font-weight: 600;
   line-height: 40.32px;
   letter-spacing: -6%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #ffffff;
 }
 
@@ -56,10 +56,9 @@
     #000000 100%
   );
 }
-.span-date{
+.span-date {
   font-size: 15px;
   font-weight: 600;
-
 }
 .span-text {
   font-size: 11.5px;
@@ -84,10 +83,9 @@
   padding: 5px 7.5px;
   border: 0.75px solid #7a7a7a;
   height: 40px;
-  width:350px;
- 
+  width: 350px;
 }
-.campaign-header-input p{
+.campaign-header-input p {
   font-size: 15px;
 }
 .campaign-header-input button {
@@ -102,9 +100,9 @@
   color: #00ff00;
   gap: 3px;
 }
-.copy-icon{
-  width:17px;
-  height:17px;
+.copy-icon {
+  width: 17px;
+  height: 17px;
 }
 .share-span {
   font-size: 11.5px;
@@ -113,9 +111,9 @@
   letter-spacing: -6%;
   color: #ffffff;
 }
-.header-social-share{
-  width:22px;
-  height:22px;
+.header-social-share {
+  width: 16px;
+  height: 16px;
 }
 .linkInput {
   border: none;
@@ -124,7 +122,7 @@
   width: 80%;
 }
 
-.campaign-status span{
+.campaign-status span {
   font-size: 16px;
   font-weight: 600;
   line-height: 20.16px;
@@ -137,7 +135,7 @@
   border: 0.75px solid #00ff99;
   padding: 3px 17.5px;
   border-radius: 5px;
- 
+
   border-radius: 41.25px;
   font-size: 15px;
   font-weight: 500;
@@ -160,10 +158,78 @@
     rgba(255, 255, 255, 0.15) 100%
   );
 }
+
+.social-share-icons {
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.social-share-icons.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.social-share-icons.hide {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+@keyframes icon-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes icon-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+}
+
+.social-share-icons.animated-show {
+  animation: icon-slide-in 0.5s ease forwards;
+}
+
+.social-share-icons.animated-hide {
+  animation: icon-slide-out 0.3s ease forwards;
+}
+
+.copy-icon-container {
+  position: relative;
+}
+
+.copied-toast {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: #ffffff;
+
+  padding: 4px 5px;
+  border-radius: 8px;
+  white-space: nowrap;
+  border: 1px solid #00ff00;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
 @media screen and (max-width: 768px) {
   .campaign-details h1 {
-    display: block;
-    font-size: 25.04px;
+    font-size: 23.04px;
     line-height: 33.65px;
     text-align: center;
   }
@@ -195,7 +261,7 @@
     font-size: 10.08px;
     line-height: 11.29px;
   }
- 
+
   .header-social-share {
     width: 17.91px;
     height: 17.91px;
@@ -205,9 +271,9 @@
     line-height: 15.05px;
   }
   .publicStatus {
-    height: 26.2px;
-    padding: 5px 16px;
-    font-size: 13px;
+    height: 21.2px;
+    padding: 3px 10px;
+    font-size: 10px;
     line-height: 15px;
   }
   .span-date {
@@ -219,7 +285,7 @@
     text-align: left;
   }
   .campaign-header-container {
-    padding: 5px 20px;
+    padding: 5px 12px;
   }
   .mob-vertical {
     display: none;
@@ -247,7 +313,7 @@
     padding: 30px 30px;
     margin: 0 auto;
   }
-  
+
   .campaign-header-card {
     display: flex;
     flex-direction: column;
@@ -271,7 +337,7 @@
     margin-bottom: 20px;
     color: #ffffff;
   }
-  
+
   .row {
     display: flex;
     justify-content: space-between;
@@ -279,12 +345,12 @@
     text-align: center;
     padding: 10px 0;
   }
-  
+
   .row span:first-child {
     position: relative;
     padding-bottom: 10px;
   }
-  
+
   .row span:first-child::after {
     content: "";
     position: absolute;
@@ -300,10 +366,9 @@
       #000000 100%
     );
   }
-  .span-date{
+  .span-date {
     font-size: 15px;
     font-weight: 600;
-  
   }
   .span-text {
     font-size: 11.5px;
@@ -313,7 +378,7 @@
     color: #00ff00;
     margin-top: 10px;
   }
-  
+
   .linkSection {
     display: flex;
     align-items: center;
@@ -328,10 +393,9 @@
     padding: 5px 7.5px;
     border: 0.75px solid #7a7a7a;
     height: 45px;
-    width:340px;
-   
+    width: 340px;
   }
-  .campaign-header-input p{
+  .campaign-header-input p {
     font-size: 15px;
   }
   .campaign-header-input button {
@@ -346,9 +410,9 @@
     color: #00ff00;
     gap: 3px;
   }
-  .copy-icon{
-    width:17px;
-    height:17px;
+  .copy-icon {
+    width: 17px;
+    height: 17px;
   }
   .share-span {
     font-size: 11.5px;
@@ -357,9 +421,9 @@
     letter-spacing: -6%;
     color: #ffffff;
   }
-  .header-social-share{
-    width:22px;
-    height:22px;
+  .header-social-share {
+    width: 22px;
+    height: 22px;
   }
   .linkInput {
     border: none;
@@ -367,15 +431,15 @@
     color: #fff;
     width: 80%;
   }
-  
-  .campaign-status span{
+
+  .campaign-status span {
     font-size: 16px;
     font-weight: 600;
     line-height: 20.16px;
     letter-spacing: -6%;
     color: #ffffff;
   }
-  
+
   .publicStatus {
     background: #00ff001a;
     border: 0.75px solid #00ff99;

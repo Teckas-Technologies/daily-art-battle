@@ -10,7 +10,9 @@ import { setAuthToken } from "../../../utils/authToken";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
 import NoPage from "@/components/404 Page/NoPage";
-
+import { SignInPopup } from "@/components/PopUps/SignInPopup";
+import { useAuth } from "@/contexts/AuthContext";
+import { usePathname, useRouter } from "next/navigation";
 const page = () => {
   const { data: session, status } = useSession();
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -19,7 +21,11 @@ const page = () => {
   const [openNav, setOpenNav] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [infoMsg, setInfoMsg] = useState("");
+  const router = useRouter();
+
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
+
   // useEffect(() => {
   //   if (status === 'unauthenticated') {
   //     // Redirect to login if not authenticated
@@ -30,6 +36,7 @@ const page = () => {
   //     console.log('Token set for API requests', session);
   //   }
   // }, [status, session]);
+
   return (
     <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>
       <Header
@@ -43,7 +50,11 @@ const page = () => {
         setErrMsg={setErrMsg}
         setWalletMismatchPopup={setWalletMismatchPopup}
       />
-      <CampaignBanner />
+      <CampaignBanner
+        setSignToast={setSignToast}
+        setErrMsg={setErrMsg}
+        setInfoMsg={setInfoMsg}
+      />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
@@ -62,6 +73,13 @@ const page = () => {
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
+      {signToast && (
+        <SignInPopup
+          text={errMsg}
+          infoMsg={infoMsg}
+          onClose={() => setSignToast(false)}
+        />
+      )}
     </div>
     // <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>
     // <NoPage/>

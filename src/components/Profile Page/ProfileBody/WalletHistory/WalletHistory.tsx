@@ -67,7 +67,7 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
   };
 
   return (
-    <div className="bg-transparent min-h-screen text-white mt-[50px] " >
+    <div className="bg-transparent min-h-screen text-white mt-[50px] ">
       {loading && (
         <div className="flex justify-center items-center">
           <Loader md="22" sm="15" />
@@ -121,12 +121,12 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                     className="w-[15px] h-[15px]"
                   />
                   <span
-                    className={`md:text-[12px] text-[10px] font-semibold ${
+                    className={`md:text-[12px] text-[10px] font-semibold w-[55px] md:w-[60px] ${
                       transaction.transactionType === "spent"
                         ? "text-red-500"
                         : "text-green-500"
                     }`}
-                    style={{ minWidth: "90px", textAlign: "left" }}
+                    style={{ textAlign: "left" }}
                   >
                     {transaction.transactionType === "spent"
                       ? `-${transaction.gfxCoin.toFixed(2)}`

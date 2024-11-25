@@ -10,6 +10,7 @@ import FewParticipantsPopup from "../DistributeReward Popup/FewParticipants";
 import AllParticipantpopup from "../DistributeReward Popup/AllParticipants";
 import { NearContext } from "@/wallet/WalletSelector";
 import Toast from "@/components/Toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
@@ -115,12 +116,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const idToken = session?.idToken || "";
-  const {
-    fetchCampaignAnalytics,
-    fetchCampaignFromArtAPI,
-    art,
-    totalDocuments,
-  } = useCampaigns();
+  const { fetchCampaignAnalytics, fetchCampaignFromArtAPI, art, documents } =
+    useCampaigns();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -245,7 +243,20 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     }
     return pageNumbers;
   };
-  const isCreator = campaign?.creatorId === signedAccountId;
+  const { user } = useAuth();
+  let userDetails = user;
+  const isCreator = campaign?.email === userDetails?.user?.email;
+  useEffect(() => {
+    if (toast) {
+      const timeout = setTimeout(() => {
+        setToast(false);
+        setToastMessage("");
+        setSuccessToast("");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [toast]);
   return (
     <div className="campaign-details-container">
       <h1>Campaign Ended</h1>
@@ -578,6 +589,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             toggleSelection={toggleSelection}
             handlePopups={handlePopups}
             SpecialWinnerCount={SpecialWinnerCount}
+            artLength={documents}
           />
         )}
         {showAllParticipantsPopup && (
@@ -585,7 +597,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             onClose={() => setShowAllParticipantsPopup(false)}
             onDistribute={handleDistribute}
             selectedArtLength={selectedArt.length}
-            artLength={art.length}
+            artLength={documents}
           />
         )}
         {showFewParticipantsPopup && (
@@ -593,7 +605,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             onClose={() => setShowFewParticipantsPopup(false)}
             onDistribute={handleDistribute}
             selectedArtLength={selectedArt.length}
-            artLength={art.length}
+            artLength={documents}
             isLoading={isLoading}
           />
         )}

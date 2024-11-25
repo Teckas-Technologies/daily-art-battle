@@ -3,20 +3,23 @@ import InlineSVG from "react-inlinesvg";
 import "./ProfileHeader.css";
 import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import { BASE_URL } from "@/config/constants";
 
 interface ProfileHeaderProps {
   onEditClick: () => void;
   handleCoinClick: () => void;
+  coin: number;
 }
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onEditClick,
   handleCoinClick,
+  coin
 }) => {
   const { wallet, signedAccountId } = useContext(NearContext);
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
   const { user } = useAuth();
   let userDetails = user;
-  const referralLink = `https://gfxvs.com/${userDetails?.user?.referralCode}`;
+  const referralLink = `${BASE_URL}/${userDetails?.user?.referralCode}`;
   const handleCopy = () => {
     navigator.clipboard
       .writeText(referralLink)
@@ -43,11 +46,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           />
           <div>
             <h2 className="font-semibold text-sm lg:text-base xl:text-xl xxl:text-xl md:text-sm">
-              {`${userDetails?.user?.firstName} ${userDetails?.user?.lastName}`}
+              {userDetails?.user?.firstName && userDetails?.user?.lastName
+                ? `${userDetails.user.firstName} ${userDetails.user.lastName}`
+                : "No Name"}
             </h2>
             <p className="text-[#818181] text-xs font-light lg:text-xs font-light xl:text-xs font-light xxl:text-base font-light md:text-[13px]">
-              {userDetails?.user?.email}
+              {userDetails?.user?.email ? userDetails.user.email : "No Email"}
             </p>
+
             <div className="flex mt-3 gap-2">
               <button
                 className="rounded-full bg-transparent edit-profile-btn px-3 py-1 text-[10px] font-semibold md:text-[8px] md:px-[15px] md:py-[3px] lg:text-[8px] lg:py-[7px] lg:px-[10px] xl:text-[8px] xl:py-[7px] xl:px-[20px] xxl:text-[11px] xxl:py-[11px] xxl:px-[25px]"
@@ -58,7 +64,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </button>
               <button
                 className={`rounded-full buy-coin-btn px-3 py-1 text-[10px] font-light md:text-[8px] md:px-[15px] md:py-[1px] lg:text-[8px] lg:py-[7px] lg:px-[10px] xl:text-[8px] xl:py-[7px] xl:px-[20px] xxl:text-[11px] xxl:py-[11px] xxl:px-[25px] ${
-                  signedAccountId ? "buy-coin" : "bg-[#7A7A7A]"
+                  signedAccountId
+                    ? "buy-coin"
+                    : "bg-[#7A7A7A] cursor-not-allowed"
                 }`}
                 onClick={handleCoinClick}
               >
