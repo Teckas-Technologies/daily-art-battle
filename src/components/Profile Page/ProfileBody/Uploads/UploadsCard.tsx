@@ -15,9 +15,9 @@ interface UploadsCardProps {
 }
 
 const socials = [
-    { id: "facebook", label: "Facebook", icon: "/images/Facebook_New.png", link: "https://www.facebook.com/sharer/sharer.php?text=Collect%20and%20win!%0A&u=" },
+    { id: "facebook", label: "Facebook", icon: "/images/Facebook_New.png", link: `https://www.facebook.com/sharer/sharer.php?u=` }, // quote=${encodeURIComponent("Collect and win!")}
     { id: "twitter", label: "Twitter", icon: "/images/Twitter_New.png", link: "https://twitter.com/intent/tweet?text=Collect%20and%20win!%0A&url=" },
-    { id: "telegram", label: "Telegram", icon: "/images/Telegram_New.png", link: "https://telegram.me/share/url?text=Collect%20and%20win!%0A&url=" }
+    { id: "telegram", label: "Telegram", icon: "/images/Telegram_New.png", link: "https://t.me/share/url?text=Collect%20and%20win!%0A&url=" }
 ]
 
 export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, isSpinner }) => {
@@ -116,8 +116,8 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                         />
                     </div>}
                 </div>
-                {isUploaded && artOverlay && <div ref={overlayRef} className="art-share-overlay absolute bottom-0 w-full h-full flex justify-center items-center">
-                    <div className="social-shares flex items-center justify-center">
+                {isUploaded && artOverlay && <div className="art-share-overlay absolute bottom-0 w-full h-full flex justify-center items-center">
+                    <div ref={overlayRef} className="social-shares flex items-center justify-center">
                         {socials.map((social, index) => (
                             <a key={index} href={`${social.link + BASE_URL + "?artId=" + artId}`} className="social-share md:w-[3.6rem] md:h-[3.6rem] w-[2.8rem] h-[2.8rem] flex justify-center items-center rounded-full cursor-pointer" target="_blank" rel="noopener noreferrer">
                                 {/* <div className="share-icon-holder md:w-[1.8rem] md:h-[1.8rem] w-[1.5rem] h-[1.5rem]"> */}

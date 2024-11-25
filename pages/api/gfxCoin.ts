@@ -7,7 +7,7 @@ import { providers, utils } from 'near-api-js';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import Hashes from "../../model/Hashes";
 import  { authenticateUser } from "../../utils/verifyToken";
-import { BEFORE_MAY_2021, DEFAULT, EMAIL_VERIFY, GFXCOIN_PER_NEAR, INSTA_CONNECT, MAY_2021_AND_AFTER, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT, YEAR_2022, YEAR_2023 } from "@/config/points";
+import { BEFORE_MAY_2021, DEFAULT, EMAIL_VERIFY, GFXCOIN_PER_NEAR, GFXCOIN_PER_USDC, INSTA_CONNECT, MAY_2021_AND_AFTER, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT, YEAR_2022, YEAR_2023 } from "@/config/points";
 import { error } from "console";
 import Transactions from "../../model/Transactions";
 import axios from "axios";
@@ -152,6 +152,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     hash:transactionHash
                 })
                 await newHash.save();
+            }
+            else if(query=="USDCTransfer"){
+                const transactionHash = req.query.transactionHash;
+                const existinghash = await Hashes.findOne({hash:transactionHash});
+                if(existinghash){
+                    return res.status(500).json({error:"Hash already used"});
+                }
+                const provider = new providers.JsonRpcProvider({ url: `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org` });
+                const transaction = await provider.txStatus(transactionHash as string, 'unused') as providers.FinalExecutionOutcome;
+                if (isFinalExecutionStatusWithSuccessValue(transaction.status)) {
+                    // console.log(transaction.transaction.actions[0].FunctionCall.args);
+                   const signer_id = transaction.transaction.signer_id;
+                   if(signer_id!=walletAddress){
+                    return res.status(500).json({error:"wallet doesn't match"});
+                }
+                    const decodedString = Buffer.from(transaction.transaction.actions[0].FunctionCall.args, 'base64').toString('utf-8');
+                    const decodedArgs = JSON.parse(decodedString);
+                    const receiverId = decodedArgs.receiver_id;
+                    const amounts = decodedArgs.amount;
+                    console.log(`Receiver: ${receiverId}`);
+                    console.log(`Amount: ${amounts}`);
+                    const decimals = 6;
+                    const amount = parseFloat(amounts) / Math.pow(10, decimals);
+                    console.log(amount)
+                    const coins = calculateUSDCGfxPoints(amount)
+                    await updateUserCoins(email, coins);
+                    const newHash = new Hashes({
+                        email:email,
+                        walletAddress:walletAddress,
+                        hash:transactionHash
+                    })
+                    await newHash.save();
+                    const newTransaction = new Transactions({
+                        email: email,
+                        gfxCoin: coins,
+                        transactionType: "received"
+                    });
+                    await newTransaction.save();
+                }
             }
             else if(query ==='nearTransfer'){
                 try {
@@ -301,6 +340,12 @@ async function calculateNearDropCoins(walletAddress: string) {
 function calculateGfxPoints(nearAmount:any) {
     const gfxPointsPerNear = GFXCOIN_PER_NEAR; 
     const gfxPoints = nearAmount * gfxPointsPerNear;
+    return gfxPoints;
+  }
+
+  function calculateUSDCGfxPoints(usdcAmount:any) {
+    const gfxPointsPerUSDC = GFXCOIN_PER_USDC; 
+    const gfxPoints = usdcAmount * gfxPointsPerUSDC;
     return gfxPoints;
   }
     

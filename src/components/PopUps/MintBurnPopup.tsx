@@ -6,8 +6,6 @@ import useMintImage from "@/hooks/useMint";
 import { ArtData } from "@/hooks/artHooks";
 import { NftToken, RaffleArt } from "@/types/types";
 import { ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
-import { useContext } from "react";
-import { NearContext } from "@/wallet/WalletSelector";
 
 interface Props {
     info: string;
@@ -17,6 +15,19 @@ interface Props {
     art: ArtData | NftToken | RaffleArt;
     isSpinner?: boolean;
 }
+
+export const saveToLocalStorage = (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem(key, value);
+    }
+};
+
+export const getFromLocalStorage = (key: string) => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem(key);
+    }
+    return null;
+};
 
 export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art, isSpinner }) => {
     const { mintImage } = useMintImage();
@@ -29,11 +40,15 @@ export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, ar
     const handleConfirm = async () => {
         if (isMint) {
             console.log("Mint initiated!");
-            if(isRaffleArt(art)) {
-                await mintImage({ title: "Coloured Art", mediaUrl: art?.colouredArt, referenceUrl: art?.colouredArtReference, count: art?.raffleCount, contractId: contractId })
+            if (isRaffleArt(art)) {
+                saveToLocalStorage("isMint", "true");
+                saveToLocalStorage("mintArtId", art?._id);
+                saveToLocalStorage("mintQueryType", "raffles");
+                await mintImage({ title: "Art Battle", mediaUrl: art?.colouredArt, referenceUrl: art?.colouredArtReference, count: art?.raffleCount, contractId: contractId })
             }
         } else {
             console.log("Burn initiated!");
+            saveToLocalStorage("isBurn", "true");
         }
 
     }

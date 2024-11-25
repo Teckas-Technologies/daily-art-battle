@@ -19,12 +19,16 @@ interface Props {
 
 const menus = [
     {
-        id: "artbattles", label: "ART BATTLES", path: "/", icon: "/images/Battle_New.png",
-        subMenu: { id: "prevbattles", label: "PREVIOUS BATTLES", path: "/previousbattles", icon: "/images/right-arrow.png" }
+        id: "artbattles", label: "Art Battles", path: "/", icon: "/images/Battle_New.png",
+        subMenu: [
+            { id: "currentbattles", label: "Current Battles", path: "/", icon: "/images/right-arrow.png" },
+            { id: "previousbattles", label: "Previous Battles", path: "/previous", icon: "/images/right-arrow.png" },
+            { id: "upcomingbattles", label: "Upcoming Battles", path: "#upcoming", icon: "/images/right-arrow.png" }
+        ]
     },
-    { id: "leaderboard", label: "LEADERBOARD", path: "/leaderboard", icon: "/images/Leaderboard_New.png" },
-    { id: "campaigns", label: "CAMPAIGNS", path: "/campaign", icon: "/images/Campaign_New.png" },
-    { id: "create", label: "CREATE", path: "/", icon: "/images/Create_New.png" },
+    { id: "leaderboard", label: "Leaderboard", path: "/leaderboard", icon: "/images/Leaderboard_New.png" },
+    { id: "campaigns", label: "Campaigns", path: "/campaign", icon: "/images/Campaign_New.png" },
+    { id: "create", label: "Create", path: "/", icon: "/images/Create_New.png" },
 ];
 
 export const MobileNav: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
@@ -41,7 +45,7 @@ export const MobileNav: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadMo
     //     }
     // }, [searchParams]);
     return (
-        <div className={`mobile-nav fixed z-40 w-full h-auto ${openNav ? "top-0" : "top-[-100%]"} md:hidden flex flex-col pt-[7rem] bg-red bg-black`}>
+        <div className={`mobile-nav fixed  w-full h-auto ${openNav ? "top-0" : "top-[-100%]"} md:hidden flex flex-col pt-[7rem] bg-red bg-black`}>
             <div className="mob-menus w-full px-[2rem]">
                 {menus.map((menu) => (
                     <div key={menu.id}>
@@ -80,30 +84,34 @@ export const MobileNav: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadMo
                                 />
                             </>
                         ) : (
-                            <Link href={menu?.path} key={menu.id}>
-                                <div className="mob-menu w-full flex items-center py-3 px-2" onClick={() => setSubMenu(!subMenu)}>
+                            <Link href={menu.path === "/" ? "#" : menu?.path} key={menu.id}>
+                                <div className="mob-menu w-full flex items-center py-3 px-2" onClick={() => { menu.id === "artbattles" && setSubMenu(!subMenu) }}>
                                     <div className="menu-left w-full flex items-center gap-2">
                                         <div className="mob-icon-holder w-[1.5rem] h-[1.5rem]">
                                             <img src={menu?.icon} alt="gfxvs" className='w-full h-full object-cover' />
                                         </div>
                                         <h2 className='text-[0.9rem]'>{menu?.label}</h2>
                                     </div>
-                                    <div className="menu-right w-2 h-5">
+                                    <div className={`menu-right w-2 h-5 transition-transform duration-300 ${menu.id === "artbattles" && subMenu && "rotate-90"}`}>
                                         <img src="/images/right-arrow.png" alt="gfxvs" className='w-full h-full object-cover' />
                                     </div>
                                 </div>
-                                {/* {menu?.id === "artbattles" && subMenu &&
-                            <Link href={menu?.subMenu?.path ?? ""}>
-                                <div className="mob-submenu flex items-center justify-between py-3 pl-6 pr-2">
-                                    <div className="menu-left w-full flex items-center gap-3">
-                                        <div className="mob-icon-holder w-2 h-5">
-                                            <img src={menu?.subMenu?.icon} alt="gfxvs" className='w-full h-full object-cover' />
-                                        </div>
-                                        <h2 className='text-[0.9rem]'>{menu?.subMenu?.label}</h2>
+                                {menu?.id === "artbattles" && subMenu &&
+                                    <div className="submenus">
+                                        {menu?.subMenu?.map((menu, index) => (
+                                            <Link key={index} href={menu.path === "#upcoming" ? "/#upcoming" : menu.path} onClick={() => setOpenNav(false)}>
+                                                <div className="mob-submenu flex items-center justify-between py-3 pl-6 pr-2">
+                                                    <div className="menu-left w-full flex items-center gap-3">
+                                                        <div className="mob-icon-holder w-2 h-5">
+                                                            <img src={menu?.icon} alt="gfxvs" className='w-full h-full object-cover' />
+                                                        </div>
+                                                        <h2 className='text-[0.9rem]'>{menu?.label}</h2>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        ))}
                                     </div>
-                                </div>
-                            </Link>
-                        } */}
+                                }
                                 <InlineSVG
                                     src="/icons/mobile-nav-border.svg"
                                     className="h-6 w-full"

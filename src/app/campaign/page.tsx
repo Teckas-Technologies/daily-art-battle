@@ -23,7 +23,8 @@ const page = () => {
   const [errMsg, setErrMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const router = useRouter();
- 
+
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   // useEffect(() => {
   //   if (status === 'unauthenticated') {
@@ -47,6 +48,7 @@ const page = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <CampaignBanner
         setSignToast={setSignToast}

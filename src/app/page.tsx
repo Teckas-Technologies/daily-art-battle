@@ -13,6 +13,7 @@ import { SignInPopup } from "@/components/PopUps/SignInPopup";
 import Toast from "@/components/Toast";
 import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
+import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [openNav, setOpenNav] = useState(false);
   const [signToast, setSignToast] = useState(false);
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const [toast, setToast] = useState(false);
@@ -73,6 +75,7 @@ const Home: NextPage = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <Battle
         campaignId={GFX_CAMPAIGNID}
@@ -125,6 +128,7 @@ const Home: NextPage = () => {
       {signToast && (
         <SignInPopup text={errMsg} infoMsg={infoMsg} onClose={() => setSignToast(false)} />
       )}
+      {walltMisMatchPopup && (<WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />)}
       {toast && toastMessage && (
         <div
           className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"

@@ -34,7 +34,7 @@ export const SignInPopup: React.FC<Props> = ({ text, onClose, infoMsg }) => {
         </h2>
         <div className="popup-btns w-full flex justify-center items-center gap-3 py-1 mb-5">
           <div
-            className="cancel-btn px-10 py-2 rounded-3xl cursor-pointer"
+            className="cancel-btn-new px-10 py-2 rounded-3xl cursor-pointer"
             onClick={onClose}
           >
             <h2 className="font-semibold text-md">Cancel</h2>

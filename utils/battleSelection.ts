@@ -119,7 +119,6 @@ export const createBattle = async (): Promise<any> => {
 
 
 export const createGfxvsBattle = async (): Promise<any> => {
-  
   const  campaignId = GFX_CAMPAIGNID;
   const battles = await Battle.find({isBattleEnded:false,campaignId:campaignId});
   const [artA, artB] = await findTopTwoArts(campaignId);

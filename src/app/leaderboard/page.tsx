@@ -24,6 +24,7 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
     const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   const handleTabClick = (tab:any)=>{
     setActiveTab(tab);
@@ -51,6 +52,7 @@ const fetchInitialData = async () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast} 
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       {/* <InlineSVG src="/icons/blur-effect.svg" className="effect" /> */}
 <div
@@ -68,15 +70,24 @@ const fetchInitialData = async () => {
   </h3>
 </div>
 
-      <div className="flex-grow flex flex-col items-center justify-center w-full px-4 text-center">
-        <h1 className="spartan-semibold bg-clip-text text-center text-transparent mt-10 font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
-          GFXvs Leaderboard
-        </h1>
-      </div>
+<div className="flex flex-col gap-1 mr-20 w-full px-4 md:px-[100px] lg:px-[100px] text-center">
+  <div
+    className="w-full h-[230px] flex mt-5 py-[20px] items-center justify-center rounded-[11.2px] border-[0.75px] border-[#939393] text-white"
+    style={{
+      background:
+        "linear-gradient(90deg, #000000 55%, rgba(0, 0, 0, 0) 100%), url('/images/campaignbg.png') no-repeat right center",
+      backgroundSize: "contain",
+    }}
+  >
+    <h1 className="spartan-semibold bg-clip-text text-center text-transparent font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
+      GFXvs Leaderboard
+    </h1>
+  </div>
+</div>
       
       <div className="w-full px-3 sm:px-6 lg:px-20">
   {/* Tabs Section */}
-  <div className="w-full max-w-[800px] flex flex-wrap mt-10 sm:mt-20 gap-2 md:gap-4">
+  <div className="w-full max-w-[800px] flex flex-wrap justify-center mt-10 sm:mt-20 gap-2 md:gap-4">
     {[
       "GFXvs Point Holders",
       "Collectors",
@@ -90,7 +101,7 @@ const fetchInitialData = async () => {
           text-[12px] sm:text-[13.5px] font-medium leading-[15px] tracking-[-0.06em]
           ${activeTab === tab ? 'border-[#00FF00] text-[#00FF00]' : 'border-[#888888] text-[#FFFFFF]'}
           bg-transparent relative z-[1] 
-          ${index === 2 ? 'sm:ml-0 mt-2 lg:mt-0 md:mt-0' : ''}`} // Align third button to the left
+          ${index === 2 ? 'self-center sm:ml-0 lg:mt-0 md:mt-0' : ''}`} // Align third button to the left
         onClick={() => handleTabClick(tab)}
       >
         {tab}

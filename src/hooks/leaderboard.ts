@@ -13,12 +13,9 @@ export interface LeaderBoardResponse {
 export interface LeaderBoardCollectResponse {
   profileImg?: string;
   _id: string;
-  raffleTicketCount: number;
   email:string;
   firstName: string;
   lastName: string;
-  gfxCoin: number;
-  nearAddress: string;
   rank: number;
   participationCount: number;
   rareNftCount: number;

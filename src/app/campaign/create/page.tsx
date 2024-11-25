@@ -53,6 +53,7 @@ const page = () => {
       router.push("/campaign");
     }
   }, [pathName, userDetails, router]);
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   return (
     <div style={{ backgroundColor: "#000000" }}>
@@ -65,6 +66,7 @@ const page = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <CreateCampaign
         toggleCampaignModal={toggleCampaignModal}

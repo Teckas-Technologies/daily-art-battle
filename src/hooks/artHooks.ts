@@ -197,7 +197,7 @@ export const useHideArt = () => {
   const [error, setError] = useState<string | null>(null);
   const [hideSuccess, setSuccess] = useState<boolean | null>(null);
 
-  const hideArt = async (artId: string): Promise<void> => {
+  const hideArt = async (artId: string) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -221,10 +221,11 @@ export const useHideArt = () => {
       console.log("Response Data >> ", responseData);
 
       setSuccess(true);
-      return;
+      return responseData;
     } catch (error) {
       console.error('Error saving data:', error);
       setError('Failed to save data');
+      return { message: "failed"}
     } finally {
       setLoading(false);
     }
