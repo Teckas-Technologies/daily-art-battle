@@ -22,10 +22,10 @@ export const SignInPopup: React.FC<Props> = ({ text, onClose }) => {
                         />
                     </div>
                 </div>
-                <h6 className='text-center text-xs leading-tight font-light py-2'>To collect an art or upload an art<br />you need to sign in</h6>
-                <h2 className='text-green font-bold text-lg text-center py-3'>{text}</h2>
+                <h6 className='text-center text-sm leading-tight font-light py-2'>To collect an art or upload an art<br />you need to sign in</h6>
+                <h2 className='text-green font-bold text-xl text-center pt-3 pb-4'>{text}</h2>
                 <div className="popup-btns w-full flex justify-center items-center gap-3 py-1 mb-5">
-                    <div className="cancel-btn px-10 py-2 rounded-3xl cursor-pointer" onClick={onClose}>
+                    <div className="cancel-btn-new px-10 py-2 rounded-3xl cursor-pointer" onClick={onClose}>
                         <h2 className='font-semibold text-md'>Cancel</h2>
                     </div>
                     <div className="signin-outer w-auto rounded-3xl cursor-pointer">

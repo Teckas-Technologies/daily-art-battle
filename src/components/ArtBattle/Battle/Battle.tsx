@@ -12,6 +12,7 @@ import "./Battle.css";
 import { Split } from "./Split/Split";
 import Loader from "../Loader/Loader";
 import { useFetchArtById } from "@/hooks/artHooks";
+import { usePathname } from "next/navigation";
 
 export interface Artwork {
   id: string;
@@ -80,6 +81,7 @@ export const Battle: React.FC<Props> = ({
   const [artBRaffleTickets, setArtBRaffleTickets] = useState(0);
   const [openArtA, setOpenArtA] = useState(false);
   const [openArtB, setOpenArtB] = useState(false);
+  const pathName = usePathname();
 
 
   // useEffect(() => {
@@ -139,7 +141,7 @@ export const Battle: React.FC<Props> = ({
   useEffect(() => {
     if (artA && campaignId) {
       const fetchArtAtickets = async () => {
-        if(!artA.id) return;
+        if (!artA.id) return;
         const art = await fetchArtById(artA.id);
         setArtARaffleTickets(art?.raffleTickets);
       };
@@ -148,7 +150,7 @@ export const Battle: React.FC<Props> = ({
 
     if (artB && campaignId) {
       const fetchArtBtickets = async () => {
-        if(!artA.id) return;
+        if (!artA.id) return;
         const art = await fetchArtById(artB.id);
         setArtBRaffleTickets(art?.raffleTickets);
       };
@@ -174,9 +176,20 @@ export const Battle: React.FC<Props> = ({
     );
   };
 
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768; // Mobile screen width threshold
+    if (isMobile) {
+      setViewTools((prevTools) =>
+        prevTools.map((tool) =>
+          tool.id === "slide" ? { ...tool, active: true } : { ...tool, active: false }
+        )
+      );
+    }
+  }, []);
+
   return (
     <>
-      <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[0.5rem] flex flex-col items-center justify-center bg-black">
+      <div className={`hero-section ${pathName === "/" ? "mt-[7rem]" : "mt-0"} pt-[0.6rem] w-full h-auto pb-[0.5rem] flex flex-col items-center justify-center bg-black`}>
         <div className="bottom-hero w-full h-auto">
           <div className="top-hero md:mt-5 mt-0 flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] xl:px-[15.5rem] lg:px-[10rem] md:px-[5rem] px-3 py-[0.5rem]">
             {timeRemaining !== null ? (

@@ -88,7 +88,7 @@ export const FooterMenu: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, 
                                         </div>
                                         <h2 className="md:block hidden">{menu.label}</h2>
                                     </div>
-                                    <h2 className={`md:hidden ${menu.active ? "flex" : "hidden"}`}>{menu.label}</h2>
+                                    {/* <h2 className={`md:hidden ${menu.active ? "flex" : "hidden"}`}>{menu.label}</h2> */}
                                 </div>
                             </>
                         ) : (
@@ -99,7 +99,7 @@ export const FooterMenu: React.FC<Props> = ({ toggleUploadModal, uploadSuccess, 
                                     </div>
                                     <h2 className="md:block hidden">{menu.label}</h2>
                                 </div>
-                                <h2 className={`md:hidden ${menu.active ? "flex" : "hidden"}`}>{menu.label}</h2>
+                                {/* <h2 className={`md:hidden ${menu.active ? "flex" : "hidden"}`}>{menu.label}</h2> */}
                             </div>
                         )}
                     </div>

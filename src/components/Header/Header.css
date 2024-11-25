@@ -24,6 +24,11 @@
     /* background: linear-gradient(90deg, rgba(252, 252, 255, 0.175) 0%, rgba(54, 54, 54, 0.279) 30%, rgba(0, 0, 0, 0.471) 78%); */
 }
 
+.sub-navs {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
+    backdrop-filter: blur(20px)
+}
+
 .nav-links .active {
     color: #00F900;
     text-decoration: underline;

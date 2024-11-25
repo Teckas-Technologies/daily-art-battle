@@ -1,10 +1,11 @@
 "use state";
 import Toast from "@/components/Toast";
+import { BASE_URL } from "@/config/constants";
 import { RAFFLE_TICKET } from "@/config/points";
 import { useAuth } from "@/contexts/AuthContext";
 import { ArtData, useFetchArtById } from "@/hooks/artHooks";
 import { useArtsRaffleCount } from "@/hooks/useRaffleTickets";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 
 interface Props {
@@ -19,19 +20,43 @@ interface Props {
     setSignToast: (e: boolean) => void;
 }
 
+const socials = [
+    { id: "facebook", label: "Facebook", icon: "/images/Facebook_New.png", link: `https://www.facebook.com/sharer/sharer.php?u=` }, // quote=${encodeURIComponent("Collect and win!")}
+    { id: "twitter", label: "Twitter", icon: "/images/Twitter_New.png", link: "https://twitter.com/intent/tweet?text=Collect%20and%20win!%0A&url=" },
+    { id: "telegram", label: "Telegram", icon: "/images/Telegram_New.png", link: "https://t.me/share/url?text=Collect%20and%20win!%0A&url=" }
+]
+
 export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campaignId, setSuccess, myTickets, setSelectedArtId, setErr, setErrMsg, setSignToast }) => {
     const { submitVote } = useArtsRaffleCount();
     const { fetchArtById } = useFetchArtById();
-    const [tokenCount, setTokenCount] = useState<number | null>(1);
+    const [tokenCount, setTokenCount] = useState<number | null>(0);
     const [raffleInfo, setRaffleInfo] = useState(false);
     const [insufficientBal, setInsufficientBal] = useState(false);
     const [loading, setLoading] = useState(false);
+    const overlayRef = useRef<HTMLDivElement | null>(null);
+    const [shareOverLay, setShareOverlay] = useState(false);
     const { user } = useAuth();
     let userDetails = user;
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                overlayRef.current &&
+                !overlayRef.current.contains(event.target as Node)
+            ) {
+                setShareOverlay(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     const handleClose = () => {
         setSelectedArtId(null);
-        setTokenCount(1);
+        setTokenCount(0);
         const url = new URL(window.location.href);
         url.searchParams.delete('artId');
         window.history.pushState({}, '', url.toString());
@@ -108,6 +133,19 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
         setTimeout(() => setInsufficientBal(false), 3000);
     }
 
+    const chanceCalculator = () => {
+        const totalCollects: number = overlayArt.raffleTickets as number || 0;
+        const myCollects: number = myTickets || 0; 
+        const newBuyCollect: number = tokenCount !== null ? tokenCount : 0; 
+
+        const totalMyCollects = myCollects + newBuyCollect;
+        const updatedTotalCollects = totalCollects + newBuyCollect;
+
+        const chanceOfWinning = updatedTotalCollects > 0 ? (totalMyCollects / updatedTotalCollects) * 100 : 0;
+
+        return chanceOfWinning.toFixed(2);
+    }
+
     return (
         <div className="upcoming-popup-holder fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
             <div className="upcoming-popup lg:w-[43.5rem] md:w-[40.5rem] w-full h-auto max-h-[97vh] overflow-scroll lg:p-10 md:p-8  p-4 rounded-2xl bg-black">
@@ -138,12 +176,13 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                             <div className="relative img-holder lg:w-[15rem] lg:h-[15rem] md:w-[14rem] md:h-[14rem] w-[14rem] h-[14rem] rounded-xl">
                                 <img src={overlayArt.colouredArt} alt={overlayArt.arttitle} className='w-full h-full rounded-xl' />
 
-                                <div className={`absolute bottom-0 w-full flex items-center ${false ? "justify-between" : "justify-end"} px-3 pb-2`}>
+                                <div className={`absolute bottom-0 w-full flex items-center ${!shareOverLay ? "justify-between" : "justify-end"} px-3 pb-2`}>
                                     {/* adminEmail === userMail */}
-                                    {false && <div className="hide w-[2.5rem] h-[2.5rem] bg-white flex justify-center items-center rounded-full">
+                                    {!shareOverLay && <div className="share w-[2.5rem] h-[2.5rem] bg-white flex justify-center items-center rounded-full cursor-pointer" onClick={() => setShareOverlay(true)}>
                                         <InlineSVG
-                                            src="/icons/hide.svg"
-                                            className="w-8 h-8 spartan-medium"
+                                            src="/icons/share-icon.svg"
+                                            color="#000000"
+                                            className="fill-current w-5 h-5 spartan-bold"
                                         />
                                     </div>}
                                     <div className="like w-[2.5rem] h-[2.5rem] bg-white flex justify-center items-center rounded-full">
@@ -153,6 +192,15 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                                         />
                                     </div>
                                 </div>
+                                {shareOverLay && <div className="art-share-overlay absolute bottom-0 w-full h-full flex justify-center items-center">
+                                    <div ref={overlayRef} className="social-shares flex items-center justify-center gap-0">
+                                        {socials.map((social, index) => (
+                                            <a key={index} href={`${social.link + BASE_URL + "?artId=" + overlayArt._id}`} className="social-share md:mx-0 mx-[-0.1rem] md:w-[3.6rem] md:h-[3.6rem] w-[3rem] h-[3rem] flex justify-center items-center rounded-full cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                                <img src={social.icon} alt={social.label} className="w-full h-full object-cover" />
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>}
                             </div>
                             <div className="art-info w-full flex justify-between items-center py-2 px-4">
                                 <div className="art-owner md:w-[10rem] w-[10rem]">
@@ -165,19 +213,10 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                         </div>
                     </div>
                     <div className="art-info md:w-[50%] w-full">
-                        <div className="upvotes relative w-auto flex items-center md:justify-start justify-center gap-2 py-1 pt-3">
-                            <h2 className='spartan-semibold md:text-lg text-xl raffle-text'>Raffle Tickets</h2>
-                            <InlineSVG
-                                src='/icons/info.svg'
-                                color='#00FF00'
-                                className='fill-current point-c w-4 h-4 cursor-pointer'
-                                onClick={openAndCloseInfo}
-                            />
-                            {raffleInfo && <div className="raffle-info absolute w-auto bottom-[95%] right-0 px-4 py-2 rounded-xl bg-red-500">
-                                <h2 className='md:text-sm text-xs font-normal leading-tight'>Increase your chance to win<br />a rare NFT by collecting<br />the Raffle Tickets!</h2>
-                            </div>}
-                        </div>
-                        <div className="upload-date flex items-center md:justify-start justify-center md:gap-3 gap-6 md:py-2 py-1">
+                        <h2 className='spartan-medium md:flex hidden md:text-lg text-md py-2 text-green md:text-left text-center des'>Description</h2>
+                        {/* <h6 className='saprtan-medium description-text md:text-md text-sm pb-1 md:pt-1 pt-2 md:text-left text-center leading-tight'>{overlayArt.arttitle}</h6> */}
+                        <h6 className='saprtan-medium description-text md:text-md text-sm pb-1 md:pt-1 pt-2 md:text-left text-center leading-tight'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6>
+                        <div className="upload-date md:flex hidden items-center md:justify-start justify-center md:gap-3 gap-6 md:py-2 py-1">
                             <div className="date flex items-center gap-2">
                                 <InlineSVG
                                     src='/icons/calender.svg'
@@ -190,12 +229,25 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                                 <h2 className='spartan-semibold text-md'>{formatDate(overlayArt.uploadedTime instanceof Date ? overlayArt.uploadedTime.toISOString() : overlayArt.uploadedTime)}</h2>
                             </div>
                         </div>
-                        <h2 className='spartan-medium md:text-lg text-md py-2 text-green md:text-left text-center des'>Description</h2>
-                        <h6 className='saprtan-medium description-text md:text-md text-sm py-1 md:text-left text-center leading-tight'>{overlayArt.arttitle}</h6>
-                        {/* <h6 className='saprtan-medium description-text md:text-md text-sm py-1 md:text-left text-center leading-tight'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6> */}
+                        <div className="upvotes relative w-auto flex items-center md:justify-start justify-center gap-2 py-1 pt-3">
+                            <h2 className='spartan-semibold md:text-lg text-xl raffle-text'>Raffle Tickets</h2>
+                            <InlineSVG
+                                src='/icons/info.svg'
+                                color='#00FF00'
+                                className='fill-current point-c w-4 h-4 cursor-pointer'
+                                onClick={openAndCloseInfo}
+                            />
+                            {raffleInfo && <div className="raffle-info absolute w-auto bottom-[95%] right-0 px-4 py-2 rounded-xl bg-red-500">
+                                <h2 className='md:text-sm text-xs font-normal leading-tight'>Increase your chance to win<br />a rare NFT by collecting<br />the Raffle Tickets!</h2>
+                            </div>}
+                        </div>
                         <div className="tickets flex items-center md:justify-start justify-center gap-2 py-2">
                             <h5 className='text-white text-md'>Owned Tickets</h5>
-                            <span className='text-green text-lg'>{myTickets as number > 0 ? myTickets : 'N/A'}</span>
+                            <span className='text-green text-lg'>{myTickets as number > 0 ? myTickets : '0'}</span>
+                        </div>
+                        <div className="tickets flex items-center md:justify-start justify-center gap-2 md:pb-0 pb-2">
+                            <h5 className='text-white text-md'>Chance to win the NFT</h5>
+                            <span className='text-green text-lg'>{chanceCalculator() + "%"}</span>
                         </div>
                     </div>
                 </div>
