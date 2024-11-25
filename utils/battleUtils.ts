@@ -48,18 +48,25 @@ export async function deleteAll(): Promise<void> {
   await Battle.deleteMany({});
 }
 
-export const findTodaysBattle = async (campaignId:string): Promise<any> => {
+export const findTodaysBattle = async (campaignId: string): Promise<any> => {
   await connectToDatabase();
   const now = new Date();
   const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+  const midOfDay = new Date(startOfDay.getTime() + 12 * 60 * 60 * 1000);
+  const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
+
+  const currentBattleTime =
+    now >= startOfDay && now < midOfDay
+      ? { startTime: { $gte: startOfDay, $lt: midOfDay } }
+      : { startTime: { $gte: midOfDay, $lt: endOfDay } };
 
   return Battle.findOne({
-    campaignId:campaignId,
-    startTime: { $lte: endOfDay },
-    endTime: { $gte: startOfDay }
+    campaignId: campaignId,
+    isBattleEnded:false,
+    isNftMinted:false 
   });
 };
+
 
 export const findPreviousBattles = async (page: number, limit: number,campaignId:string): Promise<any> => {
   await connectToDatabase();
