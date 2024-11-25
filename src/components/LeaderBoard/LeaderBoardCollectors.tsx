@@ -208,7 +208,7 @@ const fetchInitialData = async () => {
       </div>
 
        {/* Right Section - Top Rankings Cards */}
-       <div className="w-full mt-1 md:mt-10 lg:mt-[50px]">
+       <div className=" hidden lg:block w-full mt-1 md:mt-10 lg:mt-[50px]">
   <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-start lg:text-left">
     Top Rankings
   </h2>
@@ -234,11 +234,11 @@ const fetchInitialData = async () => {
       
       {/* User Information */}
       <div className="flex-1 text-center sm:text-left">
-        <h3 className="text-white font-semibold flex items-center gap-2">
-             
-        {user.firstName+" "+user.lastName}
-        <span className="text-yellow-400"></span>
-        <span>{user.rareNftCount+user.participationCount} Collections</span>
+        <h3 className="text-white font-semibold flex flex-wrap items-center gap-2">
+          <span className="whitespace-normal">{user.firstName} {user.lastName}</span>
+          <span className="flex items-center gap-1">
+            {user.rareNftCount + user.participationCount} <span>Collections</span>
+          </span>
         </h3>
       </div>
     </div>

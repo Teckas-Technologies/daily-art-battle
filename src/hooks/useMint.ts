@@ -17,6 +17,12 @@ const useMintImage = () => {
   const [error, setError] = useState<string | null>(null);
   const { wallet, signedAccountId } = useContext(NearContext);
 
+
+/**
+ * This function is used for minting
+ * @param data 
+ * @returns 
+ */
   const mintImage = async (
     data:mintObj
   ) => {
@@ -45,6 +51,11 @@ const useMintImage = () => {
     }
   };
 
+  /**
+   * This function is used for burning nft using token id
+   * @param tokenId - used for burning nft
+   * @returns 
+   */
   const burnNft = async (
     tokenId:any
   ) => {
@@ -55,12 +66,15 @@ const useMintImage = () => {
     try {
       const res = await wallet.callMethod({
         contractId: NEXT_PUBLIC_PROXY_ADDRESS,
-        method: 'nft_batch_burn',  // Assuming 'burn' is the method in your contract to burn the NFT
+        method: 'nft_batch_burn',                  
         args: {
-          nft_contract_id: ART_BATTLE_CONTRACT,
-          token_id: tokenId,  // Token ID to burn
+          token_ids: [tokenId],                       
         },
+        gas: '300000000000000',                   
+        deposit: "1"                              
       });
+        
+      
       console.log("Ress 1 >>> ", res);
       return res;
     } catch (error) {

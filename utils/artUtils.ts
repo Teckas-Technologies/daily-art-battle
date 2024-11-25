@@ -4,6 +4,7 @@ import UpVoting from "../model/UpVoting";
 import uploadArweaveUrl from "./uploadArweaveUrl";
 import User from "../model/User";
 import Battle from "../model/Battle";
+import { createBattle } from "./battleSelection";
 
 export async function scheduleArt(data: any): Promise<any> {
   await connectToDatabase();
@@ -28,7 +29,8 @@ export async function scheduleArt(data: any): Promise<any> {
     ...data,
     uploadedTime: startDate,
   });
-  return newArt.save();
+  await createBattle();
+  return await newArt.save();
 }
 
 export const findAllArts = async (campaignId:string,page: number, limit: number): Promise<any> => {
@@ -177,12 +179,14 @@ export const findComingArts = async (
     isStartedBattle: boolean;
     isCompleted: boolean;
     campaignId: string;
+    isHided:false;
     arttitle?: { $regex: string; $options: string };
     email?: { $in: string[] };
   } = {
     isStartedBattle: false,
     isCompleted: false,
     campaignId: campaignId,
+    isHided:false,
   };
 
   // Search for artists that match the search term in firstName or lastName
