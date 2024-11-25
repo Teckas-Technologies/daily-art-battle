@@ -12,6 +12,7 @@ interface Props {
 export const NoBattle: React.FC<Props> = ({ toggleUploadModal }) => {
     const [signToast, setSignToast] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [infoMsg, setInfoMsg] = useState("");
     const { user } = useAuth();
     let userDetails = user;
 
@@ -73,7 +74,7 @@ export const NoBattle: React.FC<Props> = ({ toggleUploadModal }) => {
                     </div>
                 </div> */}
             </div>
-            {signToast && <SignInPopup text={errMsg} onClose={() => setSignToast(false)} />}
+            {signToast && <SignInPopup text={errMsg} infoMsg={infoMsg} onClose={() => setSignToast(false)} />}
         </div>
     )
 }

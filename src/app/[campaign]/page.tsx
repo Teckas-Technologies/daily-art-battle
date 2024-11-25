@@ -286,6 +286,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           <CampaignTime
             campaign={campaign}
             campaignId={campaign?._id as string}
+            editCampaign={editCampaign}
             setEditCampaign={setEditCampaign}
           />
 
@@ -337,19 +338,27 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             setSignToast={setSignToast}
             setErrMsg={setErrMsg}
           />
-          <div className="camapign-path-container">
-            <button className="camapign-path-button">GFXvs</button>
-            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
-            <h3
-              style={{ color: "#ffffff", cursor: "pointer" }}
-              onClick={handleNavigation}
-            >
-              Campaigns
-            </h3>
-            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
-            <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
-              Completed Campaign
-            </h3>
+          <div className="camapign-path-container flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-center">
+              <button className="camapign-path-button">GFXvs</button>
+              <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+              <h3
+                style={{ color: "#ffffff", cursor: "pointer" }}
+                onClick={handleNavigation}
+              >
+                Campaigns
+              </h3>
+              <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+              <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
+                Completed Campaign
+              </h3>
+            </div>
+            <div className="campaign-status flex items-center gap-2">
+              <span className="hidden md:flex">Campaign:</span>
+              <div className="publicStatus text-xs">
+                {campaign?.publiclyVisible ? "Public" : "Private"}
+              </div>
+            </div>
           </div>
           <CampaignHeader
             campaign={campaign}

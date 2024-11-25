@@ -9,12 +9,14 @@ import { useAuth } from "@/contexts/AuthContext";
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
   campaignId: string;
+  editCampaign: boolean;
   setEditCampaign: (value: boolean) => void;
 }
 
 const CampaignTime: React.FC<CampaignTimeProps> = ({
   campaign,
   campaignId,
+  editCampaign,
   setEditCampaign,
 }) => {
   const [timeRemaining, setTimeRemaining] = useState({
@@ -104,6 +106,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
           onClose={() => setShowEditModal(false)}
           campaign={campaign}
           setEditCampaign={setEditCampaign}
+          editCampaign={editCampaign}
         />
       )}
       {showUploadModal && (

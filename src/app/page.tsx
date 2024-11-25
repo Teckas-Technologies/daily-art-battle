@@ -21,6 +21,7 @@ const Home: NextPage = () => {
   const [openNav, setOpenNav] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [infoMsg, setInfoMsg] = useState("");
   const [toast, setToast] = useState(false);
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -122,7 +123,7 @@ const Home: NextPage = () => {
         setErrMsg={setErrMsg}
       />
       {signToast && (
-        <SignInPopup text={errMsg} onClose={() => setSignToast(false)} />
+        <SignInPopup text={errMsg} infoMsg={infoMsg} onClose={() => setSignToast(false)} />
       )}
       {toast && toastMessage && (
         <div

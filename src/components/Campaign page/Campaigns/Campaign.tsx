@@ -22,8 +22,16 @@ interface Campaign {
   campaignUrl: string;
   email: string;
 }
-
-const CampaignBanner = () => {
+interface CampaignBannerProps {
+  setSignToast: (e: boolean) => void;
+  setErrMsg: (e: string) => void;
+  setInfoMsg: (e: string) => void;
+}
+const CampaignBanner: React.FC<CampaignBannerProps> = ({
+  setSignToast,
+  setErrMsg,
+  setInfoMsg,
+}) => {
   const router = useRouter();
   const { wallet, signedAccountId } = useContext(NearContext);
   const [activeTab, setActiveTab] = useState("Current Campaigns");
@@ -122,15 +130,19 @@ const CampaignBanner = () => {
     )} ${date.getUTCFullYear()}`;
   };
 
-  const handleCreateCampaign = () => {
-    router.push("/campaign/create");
-  };
-
   const handleNavigation = () => {
     window.location.href = "/campaign";
   };
+  const handleCreateCampaign = () => {
+    if (!userDetails) {
+      setSignToast(true);
+      setInfoMsg("Join us to launch your campaign today!");
+      setErrMsg("Please sign in to create a campaign.");
+      return;
+    }
+    router.push("/campaign/create");
+  };
 
-  
   return (
     <div className="campaign-container">
       {/* <InlineSVG src="/icons/blur-effect.svg" className="effect"></InlineSVG> */}

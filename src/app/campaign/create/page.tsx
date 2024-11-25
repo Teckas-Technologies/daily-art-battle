@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { setAuthToken } from "../../../../utils/authToken";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
+import { useAuth } from "@/contexts/AuthContext";
+import { usePathname, useRouter } from "next/navigation";
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -36,7 +38,21 @@ const page = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [signToast, setSignToast] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errMsg, setErrMsg] = useState("");
+  const router = useRouter();
+  const { user } = useAuth();
+  const userDetails = user ?? null;
+  console.log("details", userDetails);
+
+  const pathName = usePathname();
+  console.log("pathname", pathName);
+  useEffect(() => {
+    if (pathName === "/campaign/create" && userDetails === null) {
+      // Redirect only if userDetails is confirmed to be null (not loading)
+      router.push("/campaign");
+    }
+  }, [pathName, userDetails, router]);
 
   return (
     <div style={{ backgroundColor: "#000000" }}>
@@ -47,7 +63,7 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
-        setSignToast={setSignToast} 
+        setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
       <CreateCampaign
@@ -62,7 +78,7 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
-        setSignToast={setSignToast} 
+        setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
       <MobileNav
@@ -72,7 +88,7 @@ const page = () => {
         campaignId={GFX_CAMPAIGNID}
         toggleUploadModal={toggleUploadModal}
         uploadSuccess={uploadSuccess}
-        setSignToast={setSignToast} 
+        setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
     </div>
