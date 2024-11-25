@@ -85,7 +85,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
         }
         setConfirmPopup({ info: "Mint NFT", text: "Mint this NFT to get Participation NFT", isMint: true });
     }
-
+ 
     const handleBurn = async () => {
         if (!signedAccountId) {
             await wallet?.signIn();

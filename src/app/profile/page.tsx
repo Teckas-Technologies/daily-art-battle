@@ -45,7 +45,9 @@ const page = () => {
   const { getHash, saveHash } = useMintImage();
   const { updateRaffleMint } = useArtsRaffleCount();
 
-  const isMint = getFromLocalStorage("isMint");
+  // const isMint = getFromLocalStorage("isMint");
+  const isMint = searchParams?.get('isMint');
+  console.log("IS MINT:", isMint);
   const isBurn = getFromLocalStorage("isBurn");
   const mintArtId = getFromLocalStorage("mintArtId");
   const mintQueryType = getFromLocalStorage("mintQueryType");
@@ -92,7 +94,8 @@ const page = () => {
           try {
             if (txnHash) {
               const notExist = await getHash(txnHash);
-              if (!notExist) {
+              console.log("RES:", notExist)
+              if (notExist) {
                 const senderId = accountId;
                 const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
                 const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
@@ -122,42 +125,42 @@ const page = () => {
             setToast(true);
           }
         } else if(isBuyCoin === "true") {
-          console.log("IS MINT3:", isMint)
-          try {
-            if (txnHash) {
-              const existingTxn = await getNearTransfer(txnHash);
-              if (existingTxn) {
-                console.log("Transaction hash already exists in the database.");
-              } else {
-                const senderId = accountId;
-                const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
-                const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
-                console.log("Transaction Status:", txnStatus);
+          // console.log("IS MINT3:", isMint)
+          // try {
+          //   if (txnHash) {
+          //     const existingTxn = await getNearTransfer(txnHash);
+          //     if (existingTxn) {
+          //       console.log("Transaction hash already exists in the database.");
+          //     } else {
+          //       const senderId = accountId;
+          //       const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
+          //       const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
+          //       console.log("Transaction Status:", txnStatus);
 
-                if (txnStatus === "success") {
-                  console.log("Storing ID and transaction hash...");
-                  console.log("Active Account ID:", accountId);
-                  console.log("Transaction Hash:", txnHash);
-                  await postNearTransfer(accountId, txnHash);
-                  saveToLocalStorage("isBuyCoin", "false");
+          //       if (txnStatus === "success") {
+          //         console.log("Storing ID and transaction hash...");
+          //         console.log("Active Account ID:", accountId);
+          //         console.log("Transaction Hash:", txnHash);
+          //         await postNearTransfer(accountId, txnHash);
+          //         saveToLocalStorage("isBuyCoin", "false");
 
-                  setToastMessage(`Transaction Successful!`);
-                  setSuccessToast("yes");
-                  setToast(true);
-                } else {
-                  saveToLocalStorage("isBuyCoin", "false");
-                  setToastMessage(`Transaction Failed!`);
-                  setSuccessToast("no");
-                  setToast(true);
-                }
-              }
-            }
-          } catch (error) {
-            console.error("Error in fetchTransaction:", error);
-            setToastMessage(`Transaction Failed!`);
-            setSuccessToast("no");
-            setToast(true);
-          }
+          //         setToastMessage(`Transaction Successful!`);
+          //         setSuccessToast("yes");
+          //         setToast(true);
+          //       } else {
+          //         saveToLocalStorage("isBuyCoin", "false");
+          //         setToastMessage(`Transaction Failed!`);
+          //         setSuccessToast("no");
+          //         setToast(true);
+          //       }
+          //     }
+          //   }
+          // } catch (error) {
+          //   console.error("Error in fetchTransaction:", error);
+          //   setToastMessage(`Transaction Failed!`);
+          //   setSuccessToast("no");
+          //   setToast(true);
+          // }
         }
       } else {
         console.log("IS MINT4:", isMint)
@@ -165,14 +168,17 @@ const page = () => {
       }
     };
 
-    fetchTransaction();
+    if(signedAccountId) {
+      fetchTransaction();
+    }
   }, [signedAccountId]);
+
   useEffect(() => {
     const buycoin = searchParams?.get("buyCoin");
-    console.log("BuyCoin Query Parameter:", buycoin);
+    // console.log("BuyCoin Query Parameter:", buycoin);
     if (buycoin) {
       setIsCoinOpen(true);
-      console.log("isCoinOpen set to true");
+      // console.log("isCoinOpen set to true");
     }
   }, [searchParams, pathName, userDetails]);
 

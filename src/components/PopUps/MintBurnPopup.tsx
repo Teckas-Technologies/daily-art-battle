@@ -52,7 +52,7 @@ export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, ar
         }
 
     }
-
+ 
     return (
         <div className="sign-in-popup fixed top-0 bottom-0 left-0 right-0 z-50 h-full flex items-center justify-center px-3">
             <div className="signin-card w-[25rem] h-auto lg:p-8 md:p-6 p-4 rounded-2xl bg-black">

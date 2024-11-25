@@ -28,7 +28,7 @@ const useMintImage = () => {
       const metadata = { media:data.mediaUrl,reference: data.referenceUrl,title: data.title,copies:data.count };
       const res = await wallet.callMethod({
         contractId: NEXT_PUBLIC_PROXY_ADDRESS,
-        callbackUrl: window.location.origin + "/profile",
+        callbackUrl: window.location.origin + "/profile?isMint=true",
         method: 'mint',
         args: {
           metadata: JSON.stringify(metadata),   
