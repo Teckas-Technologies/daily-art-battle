@@ -182,7 +182,7 @@ export const ParticipationNftGrid: React.FC<Props> = ({ rendered }) => {
         <div className="uploads-grid w-full h-full">
 
             {/* Filters top section */}
-            <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-5 pt-10 mt-10">
+            <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-5 pt-10">
                 <div className="filters-left flex items-center md:justify-center justify-between md:gap-2 gap-1 md:px-5 px-3 py-1 rounded-[7rem]">
                     <div className="flex items-center gap-1">
                         <div className="img md:h-11 md:w-11 h-9 w-9">

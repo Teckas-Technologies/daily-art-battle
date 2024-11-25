@@ -6,6 +6,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { BASE_URL } from "@/config/constants";
 import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
 import { NearContext } from "@/wallet/WalletSelector";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface UploadsCardProps {
     art: ArtData | NftToken | RaffleArt;
@@ -22,6 +23,7 @@ const socials = [
 
 export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, isSpinner }) => {
     const { wallet, signedAccountId } = useContext(NearContext);
+    const { user } = useAuth();
     const [artOverlay, setArtOverlay] = useState(false);
     const overlayRef = useRef<HTMLDivElement | null>(null);
     const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
@@ -77,7 +79,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
     const artId = isArtData(art) && art?._id;
 
     const handleMint = async () => {
-        if(!signedAccountId) {
+        if (!signedAccountId) {
             await wallet?.signIn();
             return;
         }
@@ -85,11 +87,18 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
     }
 
     const handleBurn = async () => {
-        if(!signedAccountId) {
+        if (!signedAccountId) {
             await wallet?.signIn();
             return;
         }
         setConfirmPopup({ info: "Earn GFXvs Points", text: "Burn this rare NFT for<br />1000 GFXvs Coins", isMint: false });
+    }
+
+    const handleOffchainBurn = async () => {
+        if (!user) {
+            return;
+        }
+        console.log("Raffle Art Burn Clicked!");
     }
 
     const closeMintBurnPopup = () => {
@@ -100,13 +109,18 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
         <div className="uploads-card w-auto gap-0 md:rounded-[1.25rem] rounded-[1rem] md:mt-5 mt-0 shadow-md p-[0.5rem] flex flex-col items-center">
             <div className="relative art-img-holder xxl:w-[17.5rem] xxl:h-[17.5rem] xl:w-[14rem] xl:h-[14rem] lg:w-[15rem] lg:h-[15rem] md:w-[15rem] md:h-[15rem] w-[10rem] h-[10rem] rounded-lg" >
                 <img src={isArtData(art) ? art?.colouredArt : isNFTData(art) ? art?.media as string : art?.colouredArt} alt={isArtData(art) ? art?.artistName : isNFTData(art) ? art?.media as string : art?.participantId} className="w-full h-full object-cover rounded-lg" />
-                <div className={`overlay-holder absolute bottom-0 w-full h-full flex ${isUploaded ? "justify-end" : "justify-center"} items-end`}>
+                <div className={`overlay-holder absolute bottom-0 w-full h-full flex gap-0 ${isUploaded ? "flex-row justify-end" : "flex-col items-center justify-end"} items-end`}>
                     {isNFT && <div className="burn-btn md:px-6 md:py-3 px-4 py-2 md:mb-5 mb-3 md:rounded-lg rounded-md cursor-pointer" onClick={handleBurn}>
                         <h2 className="text-green font-medium md:text-md text-sm">Burn NFT</h2>
                     </div>}
-                    {!isNFT && !isUploaded && <div className="mint-btn md:px-6 md:py-3 px-4 py-2 md:mb-5 mb-3 md:rounded-lg rounded-md cursor-pointer" onClick={handleMint}>
-                        <h2 className="text-green font-medium md:text-md text-sm">Mint NFT</h2>
-                    </div>}
+                    {!isNFT && !isUploaded && <>
+                        <div className="burn-btn md:px-6 md:py-3 px-4 py-2 mb-1 md:rounded-lg rounded-md cursor-pointer" onClick={handleOffchainBurn}>
+                            <h2 className="text-green font-medium md:text-md text-sm">Burn NFT</h2>
+                        </div>
+                        <div className="mint-btn md:px-6 md:py-3 px-4 py-2 md:mb-5 mb-3 md:rounded-lg rounded-md cursor-pointer" onClick={handleMint}>
+                            <h2 className="text-green font-medium md:text-md text-sm">Mint NFT</h2>
+                        </div>
+                    </>}
                     {isUploaded && <div className="art-share px-3 py-[0.15rem] flex items-center gap-1 rounded-[2.5rem] mr-3 mb-3 cursor-pointer" onClick={handleOverlay}>
                         <h4 className="text-xs cursor-pointer font-semibold">Share</h4>
                         <InlineSVG
@@ -119,9 +133,9 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                 {isUploaded && artOverlay && <div className="art-share-overlay absolute bottom-0 w-full h-full flex justify-center items-center">
                     <div ref={overlayRef} className="social-shares flex items-center justify-center">
                         {socials.map((social, index) => (
-                            <a key={index} href={`${social.link + BASE_URL + "?artId=" + artId}`} className="social-share md:w-[3.6rem] md:h-[3.6rem] w-[2.8rem] h-[2.8rem] flex justify-center items-center rounded-full cursor-pointer" target="_blank" rel="noopener noreferrer">
+                            <a key={index} href={`${social.link + BASE_URL + "?artId=" + artId}`} className="social-share md:mx-0 mx-[-0.1rem] md:w-[3.6rem] md:h-[3.6rem] w-[3rem] h-[3rem] flex justify-center items-center rounded-full cursor-pointer" target="_blank" rel="noopener noreferrer">
                                 {/* <div className="share-icon-holder md:w-[1.8rem] md:h-[1.8rem] w-[1.5rem] h-[1.5rem]"> */}
-                                    <img src={social.icon} alt={social.label} className="w-full h-full object-cover" />
+                                <img src={social.icon} alt={social.label} className="w-full h-full object-cover" />
                                 {/* </div> */}
                             </a>
                         ))}
