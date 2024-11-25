@@ -16,6 +16,7 @@ interface Props {
     fontColor: string;
     setSignToast: (e: boolean) => void;
     setErrMsg: (e: string) => void;
+    setWalletMismatchPopup: (e: boolean) => void;
 }
 
 const navs = [
@@ -31,7 +32,7 @@ const subNavs = [
     { id: "upcomingbattles", label: "Upcoming Battles", path: "#upcoming", icon: "/images/Battle_New.png" },
 ]
 
-export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
+export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg, setWalletMismatchPopup }) => {
     const pathName = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -129,8 +130,21 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
         }
     }, [pathName, searchParams]);
 
+    useEffect(() => {
+        if(signedAccountId && userDetails?.user?.nearAddress) {
+            if (signedAccountId !== userDetails?.user?.nearAddress) {
+                // console.log("WALLET IS INVALID!")
+                setWalletMismatchPopup(true);
+            }
+        }
+    }, [signedAccountId, userDetails]);
+
     const handleSignIn = async () => {
         await wallet?.signIn();
+    }
+
+    const handleSignOut = async () => {
+        await wallet?.signOut();
     }
 
     return (
@@ -235,13 +249,13 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                 {userDetails && <InlineSVG
                     src={walletIcon}
                     className="md:h-11 md:w-11 h-8 w-8 cursor-pointer"
-                    onClick={() => { signedAccountId ? router.push("/profile") : handleSignIn() }}
+                    onClick={() => { signedAccountId ? handleSignOut() : handleSignIn() }} // router.push("/profile")
                 />}
                 {!userDetails && <div className="header-actions flex items-center gap-3">
                     {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}
-                    <div className="outside rounded-3xl" onClick={signInUser}>
-                        <div className="layer2 rounded-3xl">
-                            <div className="register-btn px-10 py-2 rounded-3xl cursor-pointer">
+                    <div className="outside rounded-lg" onClick={signInUser}>
+                        <div className="layer2 rounded-lg">
+                            <div className="register-btn px-10 py-2 rounded-lg cursor-pointer">
                                 <h2 className='font-bold spartan-semibold'>Login</h2>
                             </div>
                         </div>

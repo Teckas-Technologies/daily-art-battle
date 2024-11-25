@@ -118,20 +118,55 @@
     cursor: pointer;
 }
 
+.collect-btn.dissabled {
+    background: #c4c4c4;
+    cursor: not-allowed;
+}
+
 .collect-btn .collect-text {
     font-size: 1.5rem;
 }
 
 @media (max-width: 768px) {
-    /* .img-outer {
-        background: none;
-    } */
+    .hide:hover+.like {
+        z-index: -1;
+        transform: translateX(-200%);
+    }
 }
 
-.hide:hover+.like {
-    z-index: -1;
-    transform: translateX(-400%);
+@media (max-width: 1023px) {
+    .hide:hover+.like {
+        z-index: -1;
+        transform: translateX(-330%);
+    }
 }
+
+
+@media (max-width: 1280px) {
+    .hide:hover+.like {
+        z-index: -1;
+        transform: translateX(-350%);
+    }
+}
+
+@media (max-width: 1440px) {
+    .hide:hover+.like {
+        z-index: -1;
+        transform: translateX(-360%);
+    }
+}
+
+@media (max-width: 2000px) {
+    .hide:hover+.like {
+        z-index: -1;
+        transform: translateX(-400%);
+    }
+}
+
+/* .hide:hover+.like {
+    z-index: -1;
+    transform: translateX(-330%);
+} */
 
 @media (max-width: 380px) {
     .img-holder {

@@ -76,6 +76,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
             return;
         }
         if (!userDetails) {
+            setSelectedArtId(null);
             setSignToast(true);
             return;
         }
@@ -271,7 +272,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                             {insufficientBal && <div className="raffle-info absolute w-auto bottom-[100%] left-[-1rem] px-4 py-2 rounded-xl bg-red-500">
                                 <h2 className='md:text-sm text-xs font-normal leading-tight'>Insufficient GFXvs Coins!</h2>
                             </div>}
-                            <div className="collect-btn flex items-center gap-2 justify-center py-[0.5rem] px-[3rem] rounded-[0.8rem]" onClick={() => onVote(overlayArt._id)}>
+                            <div className={`collect-btn ${tokenCount as number < 1 && "dissabled"} flex items-center gap-2 justify-center py-[0.5rem] px-[3rem] rounded-[0.8rem]`} onClick={() => onVote(overlayArt._id)}>
                                 <InlineSVG
                                     src='/icons/gfx-point.svg'
                                     className='fill-current point-c w-8 h-8'

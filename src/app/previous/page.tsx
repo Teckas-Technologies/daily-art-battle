@@ -19,6 +19,7 @@ const page = ({ params }: { params: { campaign: string } }) => {
   const [successToast, setSuccessToast] = useState("");
   const [editCampaign, setEditCampaign] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
   const {
     fetchCampaignByTitle,
     campaignStatus,
@@ -44,6 +45,7 @@ const page = ({ params }: { params: { campaign: string } }) => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <PreviousArtHeader />
       <PreviousGrid

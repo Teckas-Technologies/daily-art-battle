@@ -19,9 +19,10 @@ interface CardHolderProps {
     setSelectedArt: (e: any) => void;
     totalPage: number;
     removeArtById: (id: string) => void;
+    setHideFailed: (e: boolean) => void;
 }
 
-const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail, setRefresh, setSelectedArt, totalPage, removeArtById }) => {
+const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail, setRefresh, setSelectedArt, totalPage, removeArtById, setHideFailed }) => {
     const { wallet, signedAccountId } = useContext(NearContext);
     const { fetchArtUserRaffleCount } = useArtsRaffleCount();
     const [success, setSuccess] = useState(false);
@@ -128,7 +129,7 @@ const CardHolder: React.FC<CardHolderProps> = ({ artData, campaignId, adminEmail
             <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-[1.5rem] lg:gap-[1.5rem] md:gap-[1rem] gap-[0.5rem]" id="upcoming-grid">
                 {artData.map((art, index) => (
                     <div key={index}>
-                        <Card art={art} myTicketsNew={myTicketsNew[art._id] || 0} onImageClick={handleImageClick} removeArtById={removeArtById} campaignId={campaignId} success={success} overlayArt={overlayArt} adminEmail={adminEmail} />
+                        <Card art={art} myTicketsNew={myTicketsNew[art._id] || 0} onImageClick={handleImageClick} removeArtById={removeArtById} setHideFailed={setHideFailed} campaignId={campaignId} success={success} overlayArt={overlayArt} adminEmail={adminEmail} />
                     </div>
                 ))}
             </div>

@@ -37,6 +37,7 @@ const page = () => {
   const [openNav, setOpenNav] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
@@ -194,6 +195,7 @@ const page = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <ProfilePath />
       <ProfileHeader

@@ -24,6 +24,7 @@ const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
     const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   const handleTabClick = (tab:any)=>{
     setActiveTab(tab);
@@ -51,6 +52,7 @@ const fetchInitialData = async () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast} 
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       {/* <InlineSVG src="/icons/blur-effect.svg" className="effect" /> */}
 <div

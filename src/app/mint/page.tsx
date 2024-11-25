@@ -12,6 +12,7 @@ export default function LoginPage() {
     const[call,setCall]=useState(false);
     const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
     // const { data: session, status } = useSession();
     const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
 const {mintImage,burnNft}= useMintImage();
@@ -48,6 +49,7 @@ const burn = async()=>{
     uploadSuccess={uploadSuccess}
     setSignToast={setSignToast} 
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
   />
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
  

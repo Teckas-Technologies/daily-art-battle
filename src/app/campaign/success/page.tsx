@@ -14,6 +14,7 @@ const page = () => {
   const [openNav, setOpenNav] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   return (
     <div>
@@ -26,6 +27,7 @@ const page = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast} 
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <CampaignSuccess />
       <FooterMenu
