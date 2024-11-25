@@ -46,6 +46,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [toast, setToast] = useState(false);
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   useEffect(() => {
     if (toast) {
@@ -161,6 +162,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             uploadSuccess={uploadSuccess}
             setSignToast={setSignToast}
             setErrMsg={setErrMsg}
+            setWalletMismatchPopup={setWalletMismatchPopup}
           />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
@@ -259,6 +261,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             uploadSuccess={uploadSuccess}
             setSignToast={setSignToast}
             setErrMsg={setErrMsg}
+            setWalletMismatchPopup={setWalletMismatchPopup}
           />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>
@@ -336,6 +339,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             uploadSuccess={uploadSuccess}
             setSignToast={setSignToast}
             setErrMsg={setErrMsg}
+            setWalletMismatchPopup={setWalletMismatchPopup}
           />
           <div className="camapign-path-container">
             <button className="camapign-path-button">GFXvs</button>

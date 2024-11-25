@@ -14,9 +14,10 @@ interface CardProps {
     overlayArt: ArtData | null;
     adminEmail: string;
     removeArtById: (id: string) => void;
+    setHideFailed: (e: boolean) => void;
 }
 
-const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtById, campaignId, success, overlayArt, adminEmail }) => {
+const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtById, setHideFailed, campaignId, success, overlayArt, adminEmail }) => {
     const [artNew, setArtNew] = useState<ArtData>();
     const { fetchArtById } = useFetchArtById();
     const { user } = useAuth();
@@ -39,8 +40,12 @@ const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtB
 
     const hideArtByAdmin = async () => {
         if (art) {
-            await hideArt(art._id);
-            removeArtById(art._id);
+            const res = await hideArt(art._id);
+            if(res.message === "successfully hided art") {
+                removeArtById(art._id);
+            } else {
+                setHideFailed(true);
+            }
         }
     }
 
@@ -50,7 +55,7 @@ const Card: React.FC<CardProps> = ({ art, myTicketsNew, onImageClick, removeArtB
                 <img src={art?.colouredArt} alt={art?.arttitle} className="w-full h-full object-cover md:rounded-[1.25rem] rounded-[0.8rem]" />
                 <div className="absolute bottom-0 w-full flex items-center justify-between md:px-3 md:pb-2 px-2 pb-1">
                     <div className={`relative w-full flex items-center ${adminEmail === userMail ? "justify-between" : "justify-end"}`}>
-                        {adminEmail === userMail && <div className="hide md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] bg-white flex justify-center items-center rounded-full cursor-pointer hover:move-like" onClick={hideArtByAdmin}>
+                        {adminEmail === userMail && <div className="hide md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] z-40 bg-white flex justify-center items-center rounded-full cursor-pointer hover:move-like" onClick={hideArtByAdmin}>
                             <InlineSVG
                                 src="/icons/hide.svg"
                                 className="md:w-8 md:h-8 w-5 h-5 spartan-medium"

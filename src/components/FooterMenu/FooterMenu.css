@@ -1,7 +1,6 @@
 .footer-menu {
     border: 0.86px solid #5F5F5F;
-
-
+    z-index: 49;
 }
 
 .menu {

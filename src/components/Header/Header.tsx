@@ -16,6 +16,7 @@ interface Props {
     fontColor: string;
     setSignToast: (e: boolean) => void;
     setErrMsg: (e: string) => void;
+    setWalletMismatchPopup: (e: boolean) => void;
 }
 
 const navs = [
@@ -25,7 +26,13 @@ const navs = [
     { id: "create", label: "Create", path: "/", icon: "/images/Create_New.png" },
 ];
 
-export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg }) => {
+const subNavs = [
+    { id: "currentbattles", label: "Current Battles", path: "/", icon: "/images/Battle_New.png" },
+    { id: "previousbattles", label: "Previous Battles", path: "/previous", icon: "/images/Battle_New.png" },
+    { id: "upcomingbattles", label: "Upcoming Battles", path: "#upcoming", icon: "/images/Battle_New.png" },
+]
+
+export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal, uploadSuccess, campaignId, fontColor, setSignToast, setErrMsg, setWalletMismatchPopup }) => {
     const pathName = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -35,7 +42,9 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
     const { user, signInUser, signOutUser } = useAuth();
     let userDetails = user;
     const profileMenuRef = useRef<HTMLDivElement | null>(null);
+    const subMenuRef = useRef<HTMLDivElement | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [subNav, setSubNav] = useState(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -90,6 +99,22 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
     }, []);
 
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                subMenuRef.current &&
+                !subMenuRef.current.contains(event.target as Node)
+            ) {
+                setSubNav(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
         if (signedAccountId) {
             setWalletIcon("/icons/wallet.svg");
         }
@@ -105,8 +130,21 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
         }
     }, [pathName, searchParams]);
 
+    useEffect(() => {
+        if(signedAccountId && userDetails?.user?.nearAddress) {
+            if (signedAccountId !== userDetails?.user?.nearAddress) {
+                // console.log("WALLET IS INVALID!")
+                setWalletMismatchPopup(true);
+            }
+        }
+    }, [signedAccountId, userDetails]);
+
     const handleSignIn = async () => {
         await wallet?.signIn();
+    }
+
+    const handleSignOut = async () => {
+        await wallet?.signOut();
     }
 
     return (
@@ -150,7 +188,50 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                         {nav?.label}
                                     </h3>
                                 </>
-                            ) : (
+                            ) : nav.id === "battles" ? <>
+                                <h3 key={index} className={`relative flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm ${pathName === nav.path ? 'active text-underline' : ''}`} onClick={() => setSubNav(true)}>
+                                    <div className={`md:hidden lg:block w-[1.3rem] h-[1.3rem]`}>
+                                        <img src={nav.icon} alt="footer-icon" className="w-full h-full bg-black object-cover" />
+                                    </div>
+                                    {nav?.label}
+
+                                    {subNav && (
+                                        <div ref={subMenuRef} className="sub-navs absolute top-[200%] flex flex-col gap-3 left-[-10px] w-[250%] p-3 rounded-[0.75rem]">
+                                            {subNavs.map((nav, index) => {
+                                                const isActive =
+                                                    (nav.id === "upcomingbattles" && window.location.hash === "#upcoming") ||
+                                                    (pathName === nav.path && window.location.hash !== "#upcoming");
+
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={`sub-nav flex justify-start items-center gap-2 ${isActive ? "active" : ""}`}
+                                                        onClick={() => {
+                                                            // setSubNav(false);
+                                                            // router.push(nav.path);
+                                                            if (nav.id === "upcomingbattles") {
+                                                                setSubNav(false);
+                                                                router.push("/#upcoming");
+                                                            } else {
+                                                                setSubNav(false);
+                                                                router.push(nav.path);
+                                                                window.history.replaceState(null, "", window.location.pathname);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <InlineSVG
+                                                            src="/icons/right-arrow.svg"
+                                                            color="#ffffff"
+                                                            className="w-3 h-3 cursor-pointer"
+                                                        />
+                                                        <h2 className={`text-md font-semibold text-white ${isActive ? "active" : ""}`}>{nav.label}</h2>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </h3>
+                            </> : (
                                 <Link href={nav?.path}>
                                     <h3 key={index} className={`flex items-center gap-1 text-white cursor-pointer font-medium spartan-medium text-sm ${pathName === nav.path ? 'active' : ''}`}> {/* add "active" class for active menu */}
                                         <div className={`md:hidden lg:block ${nav.id === "battles" || nav?.id === "campaigns" ? "w-[1.3rem] h-[1.3rem]" : "w-[1.3rem] h-[1.3rem]"}`}>
@@ -168,13 +249,13 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                 {userDetails && <InlineSVG
                     src={walletIcon}
                     className="md:h-11 md:w-11 h-8 w-8 cursor-pointer"
-                    onClick={() => { signedAccountId ? router.push("/profile") : handleSignIn() }}
+                    onClick={() => { signedAccountId ? handleSignOut() : handleSignIn() }} // router.push("/profile")
                 />}
                 {!userDetails && <div className="header-actions flex items-center gap-3">
                     {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}
-                    <div className="outside rounded-3xl" onClick={signInUser}>
-                        <div className="layer2 rounded-3xl">
-                            <div className="register-btn px-10 py-2 rounded-3xl cursor-pointer">
+                    <div className="outside rounded-lg" onClick={signInUser}>
+                        <div className="layer2 rounded-lg">
+                            <div className="register-btn px-10 py-2 rounded-lg cursor-pointer">
                                 <h2 className='font-bold spartan-semibold'>Login</h2>
                             </div>
                         </div>
@@ -191,9 +272,12 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                         className="fill-current md:h-4 md:w-4 h-3 w-3 text-white"
                                     />
                                 </div>
-                                <div className="name-id hidden lg:block md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[12rem]">
+                                <div className="name-id hidden xl:block lg:hidden md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[12rem]">
                                     <h2 className='spartan-bold font-bold text-md text-center truncate'>{userDetails?.user?.firstName + " " + userDetails?.user?.lastName}</h2>
                                     <h4 className='spartan-light text-sm text-center email truncate'>{userDetails?.user?.email}</h4>
+                                </div>
+                                <div className="name-id hidden xl:hidden lg:block md:hidden hidden">
+                                    <h2 className='spartan-bold font-bold text-lg text-center'>{userDetails?.user?.firstName.charAt(0) + userDetails?.user?.lastName.charAt(0)}</h2>
                                 </div>
                                 <div className="gfx-points flex lg:flex-col gap-1">
                                     <div className="point-name flex items-center gap-1">
@@ -209,7 +293,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
                                 </div>
                             </div>
                         </div>
-                        {openProfileMenu && <div ref={profileMenuRef} className="profile-dd absolute top-[100%] right-0 md:w-full w-[125%] h-auto rounded-[0.75rem] md:p-6 p-4">
+                        {openProfileMenu && <div ref={profileMenuRef} className="profile-dd absolute top-[100%] right-0 xl:w-full w-[125%] h-auto rounded-[0.75rem] md:p-6 p-4">
                             <div className="profile-menus flex flex-col gap-5">
                                 <Link href={"/profile"}>
                                     <div className="goto-profile flex items-center justify-start gap-2 cursor-pointer">

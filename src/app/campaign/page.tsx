@@ -19,6 +19,7 @@ const page = () => {
   const [openNav, setOpenNav] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
   // useEffect(() => {
   //   if (status === 'unauthenticated') {
   //     // Redirect to login if not authenticated
@@ -40,6 +41,7 @@ const page = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <CampaignBanner />
       <FooterMenu

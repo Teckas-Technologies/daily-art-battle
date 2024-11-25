@@ -37,6 +37,7 @@ const page = () => {
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
 
   return (
     <div style={{ backgroundColor: "#000000" }}>
@@ -49,6 +50,7 @@ const page = () => {
         uploadSuccess={uploadSuccess}
         setSignToast={setSignToast} 
         setErrMsg={setErrMsg}
+        setWalletMismatchPopup={setWalletMismatchPopup}
       />
       <CreateCampaign
         toggleCampaignModal={toggleCampaignModal}

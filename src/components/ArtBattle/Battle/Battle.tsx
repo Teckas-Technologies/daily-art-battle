@@ -11,7 +11,11 @@ import Toast from "../../Toast";
 import "./Battle.css";
 import { Split } from "./Split/Split";
 import Loader from "../Loader/Loader";
-import { useFetchArtById } from "@/hooks/artHooks";
+import { ArtData, useFetchArtById } from "@/hooks/artHooks";
+import { usePathname } from "next/navigation";
+import { BuyRafflePopup } from "../RafflePopup/BuyRafflePopup";
+import { SignInPopup } from "@/components/PopUps/SignInPopup";
+import { useArtsRaffleCount } from "@/hooks/useRaffleTickets";
 
 export interface Artwork {
   id: string;
@@ -80,6 +84,79 @@ export const Battle: React.FC<Props> = ({
   const [artBRaffleTickets, setArtBRaffleTickets] = useState(0);
   const [openArtA, setOpenArtA] = useState(false);
   const [openArtB, setOpenArtB] = useState(false);
+  const pathName = usePathname();
+
+  const { fetchArtUserRaffleCount } = useArtsRaffleCount();
+  const [selectedArtId, setSelectedArtId] = useState<string | null>(null);
+  const [overlayArt, setoverlayArt] = useState<ArtData | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [artAMyTickets, setArtAMyTickets] = useState<number>(0);
+  const [artBMyTickets, setArtBMyTickets] = useState<number>(0);
+  const [err, setErr] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [signToast, setSignToast] = useState(false);
+
+  useEffect(() => {
+    if (err) {
+      setTimeout(() => setErr(false), 3000);
+    }
+  }, [err])
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => setSuccess(false), 3000);
+    }
+  }, [success])
+
+  useEffect(() => {
+    if (artA && campaignId) {
+      const fetchArtAUsertickets = async () => {
+        const tickets = await fetchArtUserRaffleCount(artA?.id as string, campaignId);
+        if (tickets !== undefined && tickets !== null) {
+          setArtAMyTickets(tickets);
+        }
+      };
+      fetchArtAUsertickets();
+    }
+
+    if (artB && campaignId) {
+      const fetchArtBUsertickets = async () => {
+        const tickets = await fetchArtUserRaffleCount(artB?.id as string, campaignId);
+        if (tickets !== undefined && tickets !== null) {
+          setArtBMyTickets(tickets);
+        }
+      };
+      fetchArtBUsertickets();
+    }
+
+  }, [artA, artB, overlayArt, selectedArtId, success])
+
+  const handleImageClick = async (id: any) => {
+    setSelectedArtId(id);
+    setSuccess(false);
+    console.log(id)
+    const overlay = await fetchArtById(id);
+    setoverlayArt(overlay);
+    const url = new URL(window.location.href);
+    url.searchParams.set('artId', id);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  useEffect(() => {
+    if (openArtA) {
+      handleImageClick(artA?.id);
+    }
+
+    if (openArtB) {
+      handleImageClick(artB?.id);
+    }
+
+    if (!selectedArtId) {
+      setOpenArtA(false);
+      setOpenArtB(false);
+    }
+
+  }, [openArtA, openArtB, selectedArtId])
 
 
   // useEffect(() => {
@@ -139,7 +216,7 @@ export const Battle: React.FC<Props> = ({
   useEffect(() => {
     if (artA && campaignId) {
       const fetchArtAtickets = async () => {
-        if(!artA.id) return;
+        if (!artA.id) return;
         const art = await fetchArtById(artA.id);
         setArtARaffleTickets(art?.raffleTickets);
       };
@@ -148,7 +225,7 @@ export const Battle: React.FC<Props> = ({
 
     if (artB && campaignId) {
       const fetchArtBtickets = async () => {
-        if(!artA.id) return;
+        if (!artA.id) return;
         const art = await fetchArtById(artB.id);
         setArtBRaffleTickets(art?.raffleTickets);
       };
@@ -174,9 +251,21 @@ export const Battle: React.FC<Props> = ({
     );
   };
 
+  const isMobile = window.innerWidth <= 768; // Mobile screen width threshold
+
+  useEffect(() => {
+    if (isMobile) {
+      setViewTools((prevTools) =>
+        prevTools.map((tool) =>
+          tool.id === "slide" ? { ...tool, active: true } : { ...tool, active: false }
+        )
+      );
+    }
+  }, []);
+
   return (
     <>
-      <div className="hero-section mt-[7rem] pt-[0.6rem] w-full h-auto pb-[0.5rem] flex flex-col items-center justify-center bg-black">
+      <div className={`hero-section ${pathName === "/" ? "mt-[6rem]" : "mt-0"} pt-[0.6rem] w-full h-auto pb-[0.5rem] flex flex-col items-center justify-center bg-black`}>
         <div className="bottom-hero w-full h-auto">
           <div className="top-hero md:mt-5 mt-0 flex flex-col md:flex-row w-full items-center justify-between pb-[0.6rem] xl:px-[15.5rem] lg:px-[10rem] md:px-[5rem] px-3 py-[0.5rem]">
             {timeRemaining !== null ? (
@@ -217,7 +306,7 @@ export const Battle: React.FC<Props> = ({
             {!todayBattle && !loading && <NoBattle toggleUploadModal={toggleUploadModal} />}
             {loading && <Loader md="22" sm="15" />}
             {todayBattle && viewTools[0].active && (
-              <Split artA={artA} artB={artB} openArtA={openArtA} openArtB={openArtB} setOpenArtA={setOpenArtA} setOpenArtB={setOpenArtB} campaignId={campaignId} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} setRefresh={setRefresh} />
+              <Split artA={artA} artB={artB} artATickets={artARaffleTickets} artBTickets={artBRaffleTickets} artAMyTickets={artAMyTickets} artBMyTickets={artBMyTickets} handleImageClick={handleImageClick} />
             )}
             {todayBattle && viewTools[1].active && (
               <Slider artA={artA} artB={artB} />
@@ -230,26 +319,50 @@ export const Battle: React.FC<Props> = ({
           {todayBattle && (
             <div className={`battle-vote-btns md:flex ${viewTools[0].active ? "hidden" : "flex"} w-full flex items-center h-auto mt-8 pb-5 px-3`}>
               <div className={`vote-btn w-[50%] flex justify-center md:justify-end ${viewTools[1].active || viewTools[2].active ? "xl:pr-[9rem] md:pr-[8rem]" : "md:pr-[8.5rem]"}`}>
-                <div className="total-collects md:flex hidden w-auto h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem] cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
-                  <h2 className="font-semibold text-lg">Total Collects <span className="text-green font-semibold text-lg">{artARaffleTickets}</span></h2>
-                </div>
-                <div className="outside md:hidden flex w-auto h-auto rounded-3xl cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
-                  <div className="second-layer w-auto h-auto rounded-3xl">
-                    <button className={` battle-vote-btn px-6 py-3 rounded-3xl cursor-pointer`} >
-                      <h2 className="md:spartan-bold spartan-semibold font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji1} Collects <span className='text-green'>{artARaffleTickets}</span></h2>
+                {/* <div className={`total-collects md:flex  justify-center gap-2 hidden w-auto ${!viewTools[0].active ? "min-w-[12rem]" : "min-w-[10rem]"} h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem] cursor-pointer`}>
+                  {!viewTools[0].active && <div className="like w-[1.7rem] h-[1.7rem] pt-1 bg-white flex justify-center items-center rounded-full" onClick={() => handleImageClick(artA?.id)}>
+                    <InlineSVG
+                      src={`/icons/${artAMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
+                      className="w-5 h-5 spartan-medium"
+                    />
+                  </div>}
+                  <h2 className="font-semibold text-lg text-center">Art A <span className="text-green font-semibold text-lg text-center">{artARaffleTickets}</span></h2>
+                </div> */}
+                <div className="outside flex w-auto h-auto rounded-[3.5rem] cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
+                  <div className="second-layer w-auto h-auto rounded-[3.5rem]">
+                    <button className={` battle-vote-btn flex justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`} >
+                      {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artAMyTickets > 0 ?  "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artA?.id)}>
+                        <InlineSVG
+                          src={`/icons/${artAMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
+                          className="w-5 h-5 spartan-medium"
+                        />
+                      </div>}
+                      <h2 className="md:spartan-bold spartan-semibold font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji1} Art A {viewTools[2].active && isMobile && <br />} <span className='ml-1 text-green'>{artARaffleTickets}</span></h2>
                     </button>
                   </div>
                 </div>
               </div>
 
               <div className={`vote-btn w-[50%] flex justify-center md:justify-start ${viewTools[1].active || viewTools[2].active ? "xl:pl-[9rem] md:pl-[8rem]" : "md:pl-[8.5rem]"} `}>
-                <div className="total-collects md:flex hidden w-auto h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem] cursor-pointer"> {/** onClick={() => setOpenArtB(true)} */}
-                  <h2 className="font-semibold text-lg">Total Collects <span className="text-green font-semibold text-lg">{artBRaffleTickets}</span></h2>
-                </div>
-                <div className="outside md:hidden flex w-auto h-auto rounded-3xl">
-                  <div className="second-layer w-auto h-auto rounded-3xl">
-                    <button className={` battle-vote-btn px-6 py-3 rounded-3xl cursor-pointer`}> {/** onClick={() => setOpenArtB(true)} */}
-                      <h2 className="md:spartan-bold spartan-semibold font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji2} Collects <span className='text-green'>{artBRaffleTickets}</span>
+                {/* <div className={`total-collects md:flex justify-center gap-2 hidden w-auto ${!viewTools[0].active ? "min-w-[12rem]" : "min-w-[10rem]"} h-auto rounded-[3.5rem] px-[2rem] py-[0.8rem] cursor-pointer`}>
+                  {!viewTools[0].active && <div className="like w-[1.7rem] h-[1.7rem] pt-1 bg-white flex justify-center items-center rounded-full" onClick={() => handleImageClick(artA?.id)}>
+                    <InlineSVG
+                      src={`/icons/${artAMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
+                      className="w-5 h-5 spartan-medium"
+                    />
+                  </div>}
+                  <h2 className="font-semibold text-lg">Art B <span className="text-green font-semibold text-lg">{artBRaffleTickets}</span></h2>
+                </div> */}
+                <div className="outside flex w-auto h-auto rounded-[3.5rem]">
+                  <div className="second-layer w-auto h-auto rounded-[3.5rem]">
+                    <button className={` battle-vote-btn flex justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile ? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`}>
+                      {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artBMyTickets > 0 ?  "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artB?.id)}>
+                        <InlineSVG
+                          src={`/icons/${artBMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
+                          className="w-5 h-5 spartan-medium"
+                        />
+                      </div>}
+                      <h2 className="md:spartan-bold spartan-semibold text-center font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji2} Art B {viewTools[2].active && isMobile && <br />} <span className='ml-1 text-green'>{artBRaffleTickets}</span>
                       </h2>
                     </button>
                   </div>
@@ -259,6 +372,13 @@ export const Battle: React.FC<Props> = ({
           )}
         </div>
       </div>
+      {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={overlayArt?._id === artA?.id ? artAMyTickets : artBMyTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
+      {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => { setSignToast(false); setSelectedArtId(overlayArt?._id || "") }} />}
+      {success && <Toast
+        success={true}
+        message={"Raffle Tickets Collected!"}
+        onClose={() => setSuccess(false)}
+      />}
       {toastMessage && (
         <Toast
           success={true}
