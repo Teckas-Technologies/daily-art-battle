@@ -92,8 +92,8 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                   />
                   <span className="md:text-[12px] text-[10px]">
                     {transaction.transactionType === "spent"
-                      ? "Paid to Art Battles"
-                      : "Rewards from NFT"}
+                      ? "Paid to Gfx"
+                      : "Rewards from Gfx"}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2 md:text-[12px] text-[10px]">

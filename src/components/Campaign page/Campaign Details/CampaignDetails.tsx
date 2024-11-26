@@ -89,7 +89,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   campaignId,
   campaign,
   campaignAnalytics,
-  participantsList
+  participantsList,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(6);
@@ -141,8 +141,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return;
     setCurrentPage(newPage);
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "auto" });
+    const element = document.getElementById("move-top");
+    if (element) {
+      element.scrollIntoView({ behavior: "auto", block: "start" });
     }
   };
 
@@ -259,7 +260,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                           style={{ marginBottom: "10px" }}
                         >
                           <img
-                            src="images/no-profile.png"
+                            src="/images/User_New.png"
                             alt={art.arttitle}
                             className="profile-image"
                           />
@@ -325,7 +326,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                         style={{ marginBottom: "10px" }}
                       >
                         <img
-                          src="images/no-profile.png"
+                          src="/images/User_New.png"
                           alt="Profile"
                           className="profile-image"
                         />
@@ -382,7 +383,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                       <h3>Winner: Day {index + 1}</h3>
                       <div className="profile-section">
                         <img
-                          src="images/no-profile.png"
+                          src="/images/User_New.png"
                           alt="Profile"
                           className="profile-image"
                         />
@@ -423,11 +424,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                   Distribute special rewards before 7 days of campaign ending
                   date
                 </p>
-                <div
-                  className="distribute-btn-Wrapper "
-                  ref={scrollRef}
-                  id="top"
-                >
+                <div className="distribute-btn-Wrapper ">
                   <button
                     className="distribute-btn "
                     onClick={() => setShowRewardModal(true)}
@@ -443,7 +440,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
                   <div className="distribute-btn-Border" />
 
-                  <div className="distribute-btn-Overlay" />
+                  <div className="distribute-btn-Overlay" id="move-top"/>
                 </div>
               </>
             )}
@@ -464,7 +461,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                   >
                     <div className="flex flex-row items-center justify-center">
                       <span className="participant-number">{index + 1}</span>
-                      <span className="participant-name">{participantsList}</span>
+                      <span className="participant-name">
+                        {participantsList}
+                      </span>
                     </div>
                   </div>
                 ))}

@@ -255,7 +255,7 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({
             ))}
         </div>
       ) : (
-        <p className="no-campaign flex items-center justify-center gap-2 text-white font-semibold text-lg">
+        <p className="no-campaign flex items-center justify-center gap-2 text-white font-semibold text-lg py-[150px]">
           <InlineSVG
             src="/icons/info.svg"
             className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"

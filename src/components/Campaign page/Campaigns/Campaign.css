@@ -445,7 +445,6 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(1,18,9,1) 96%, rgba(0,
 }
 .no-campaign {
   text-align: center;
-  padding: 60px;
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   .campaign-container {
