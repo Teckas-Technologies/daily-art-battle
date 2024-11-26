@@ -17,32 +17,32 @@ const useFetchBuyCoin = (queryFilter: "usdc" | "near") => {
         `/api/buyCoin?queryType=list&queryFilter=${queryFilter}`
       );
 
-      console.log("Response status:", response.status);
+      // console.log("Response status:", response.status);
 
       if (!response.ok) {
         throw new Error("Failed to fetch buy coin data.");
       }
 
       const result = await response.json();
-      console.log("Fetched result:", result);
+      // console.log("Fetched result:", result);
 
       setData(result);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
-        console.error("Error occurred:", err.message);
+        // console.error("Error occurred:", err.message);
       } else {
         setError("An unknown error occurred.");
-        console.error("Unknown error occurred.");
+        // console.error("Unknown error occurred.");
       }
     } finally {
       setLoading(false);
-      console.log("Finished fetching data.");
+      // console.log("Finished fetching data.");
     }
   };
 
   useEffect(() => {
-    console.log("useEffect triggered for queryFilter:", queryFilter);
+    // console.log("useEffect triggered for queryFilter:", queryFilter);
     fetchBuyCoinData();
   }, [queryFilter, userDetails]);
 

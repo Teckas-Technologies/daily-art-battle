@@ -12,7 +12,7 @@ import { GFX_CAMPAIGNID, NEXT_PUBLIC_NETWORK } from "@/config/constants";
 import React, { useContext, useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
-import { getFromLocalStorage, MintBurnPopup, saveToLocalStorage } from "@/components/PopUps/MintBurnPopup";
+import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
 import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
@@ -41,6 +41,7 @@ const page = () => {
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const pathName = usePathname();
 
   const { user } = useAuth();
@@ -52,12 +53,6 @@ const page = () => {
 
   const { getHash, saveHash } = useMintImage();
   const { updateRaffleMint } = useArtsRaffleCount();
-
-  const isMint = getFromLocalStorage("isMint");
-  const isBurn = getFromLocalStorage("isBurn");
-  const mintArtId = getFromLocalStorage("mintArtId");
-  const mintQueryType = getFromLocalStorage("mintQueryType");
-  const isBuyCoin = getFromLocalStorage("isBuyCoin");
 
   useEffect(() => {
     if (toast) {
@@ -87,49 +82,48 @@ const page = () => {
     const fetchTransaction = async () => {
       const searchParams = new URLSearchParams(window.location.search);
 
-      const accountId = searchParams.get("account_id") || "";
-      const txnHash = searchParams.get("transactionHashes") || "";
-
-      console.log("Wallet Address (Account ID):", accountId);
-      console.log("Transaction Hash:", txnHash);
+      const accountId = searchParams?.get("account_id") || "";
+      const txnHash = searchParams?.get("transactionHashes") || "";
+      const isMint = searchParams?.get('isMint') || "";
+      const isNeartransfer = searchParams?.get('isNeartransfer') || "";
+      const isUsdttransfer = searchParams?.get('isUsdttransfer') || "";
+      const artId = searchParams?.get('artId') || "";
+      const queryType = searchParams?.get('queryType') || "";
 
       if (signedAccountId) {
-        console.log("IS MINT1:", isMint)
-        if (isMint === "true") {
-          console.log("IS MINT2:", isMint)
+        if (isMint) {
           try {
             if (txnHash) {
               const notExist = await getHash(txnHash);
-              if (!notExist) {
+              console.log("NOT Exist:", notExist)
+              if (notExist) {
                 const senderId = accountId;
                 const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
                 const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
-                console.log("Transaction Status:", txnStatus);
 
                 if (txnStatus === "success") {
-                  saveToLocalStorage("isMint", "false");
                   setToastMessage(`Minting Successful!`);
                   setSuccessToast("yes");
                   setToast(true);
-                  await updateRaffleMint(mintArtId as string, mintQueryType as string);
+                  await updateRaffleMint(artId, queryType);
                   await saveHash(txnHash);
+                  window.history.replaceState(null, '', "/profile");
                 } else {
-                  saveToLocalStorage("isMint", "false");
                   setToastMessage(`Minting Failed!`);
                   setSuccessToast("no");
                   setToast(true);
+                  window.history.replaceState(null, '', "/profile");
                 }
               } else {
                 console.log("Transaction hash already exists in the database.");
               }
             }
           } catch (error) {
-            saveToLocalStorage("isMint", "false");
             setToastMessage(`Minting Failed!`);
             setSuccessToast("no");
             setToast(true);
           }
-        } else if(isBuyCoin === "true") {
+        } else if (isNeartransfer) {
           console.log("IS MINT3:", isMint)
           try {
             if (txnHash) {
@@ -147,16 +141,16 @@ const page = () => {
                   console.log("Active Account ID:", accountId);
                   console.log("Transaction Hash:", txnHash);
                   await postNearTransfer(accountId, txnHash);
-                  saveToLocalStorage("isBuyCoin", "false");
 
                   setToastMessage(`Transaction Successful!`);
                   setSuccessToast("yes");
                   setToast(true);
+                  window.history.replaceState(null, '', "/profile");
                 } else {
-                  saveToLocalStorage("isBuyCoin", "false");
                   setToastMessage(`Transaction Failed!`);
                   setSuccessToast("no");
                   setToast(true);
+                  window.history.replaceState(null, '', "/profile");
                 }
               }
             }
@@ -173,14 +167,17 @@ const page = () => {
       }
     };
 
-    fetchTransaction();
-  }, [signedAccountId]);
+    if (signedAccountId) {
+      fetchTransaction();
+    }
+  }, [signedAccountId, userDetails, searchParams]);
+
   useEffect(() => {
     const buycoin = searchParams?.get("buyCoin");
-    console.log("BuyCoin Query Parameter:", buycoin);
+    // console.log("BuyCoin Query Parameter:", buycoin);
     if (buycoin) {
       setIsCoinOpen(true);
-      console.log("isCoinOpen set to true");
+      // console.log("isCoinOpen set to true");
     }
   }, [searchParams, pathName, userDetails]);
   useEffect(() => {

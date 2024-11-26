@@ -16,8 +16,8 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [page, setPage] = useState<number>(1);
     // const [sort, setSort] = useState<string>("dateDsc");
     // const [sortLabel, setSortLabel] = useState("Latest First");
-    const [sort, setSort] = useState<string>("spinner");
-    const [sortLabel, setSortLabel] = useState("Rare Nft Arts");
+    const [sort, setSort] = useState<string>("raffles");
+    const [sortLabel, setSortLabel] = useState("Participation Arts");
     const [isSpinner, setIsSpinner] = useState(false);
     const { arts, loading, totalPage, fetchUserRaffleArts } = useFetchRaffleArts();
     const { searchLoading, searchedArts, totalSearchPage, searchRaffleArts } = useSearchRaffleArts();
@@ -53,12 +53,15 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             const timeoutId = setTimeout(initializeData, 100);
             return () => clearTimeout(timeoutId);
         }
+    }, [sort, page, searchQuery, userDetails]);
+
+    useEffect(() => {
         if (sort === "spinner") {
             setIsSpinner(true);
         } else {
             setIsSpinner(false);
         }
-    }, [sort, page, searchQuery, userDetails]);
+    }, [sort])
 
     const [hasnext, setHasNext] = useState(false);
 
@@ -189,7 +192,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
         <div className="uploads-grid w-full h-full">
 
             {/* Filters top section */}
-            <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-5 pt-10 mt-10">
+            <div className="filters w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-5 pt-10">
                 <div className="filters-left flex items-center md:justify-center justify-between md:gap-2 gap-1 md:px-5 px-3 py-1 rounded-[7rem]">
                     <div className="flex items-center gap-1">
                         <div className="img md:h-11 md:w-11 h-9 w-9">
@@ -213,7 +216,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
                     </div>
                 </div>
 
-                <div className={`filters-center relative md:w-auto ${sort === "raffles" ? "w-[15rem]": "w-[10rem]"} flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black`} ref={dropdownRef} onClick={handleToggle}>
+                <div className={`filters-center relative md:w-auto ${sort === "raffles" ? "w-[15rem]" : "w-[10rem]"} flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black`} ref={dropdownRef} onClick={handleToggle}>
                     <h2 className="spartan-light text-white md:text-md text-sm">{sortLabel}</h2>
                     <div className="down-icon md:h-[3rem] h-[2rem] flex justify-center items-center">
                         <InlineSVG
@@ -223,11 +226,11 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
                     </div>
                     {isOpen && (
                         <div className="options absolute top-[100%] left-0 w-[125%] pt-4 rounded-3xl bg-black">
-                            <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'spinner', label: "Rare Nft Arts" })}>
-                                <h2 className="spartan-light text-sm text-white">Rare Nft Arts</h2>
+                            <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'raffles', label: "Participation Arts" })}>
+                                <h2 className="spartan-light text-sm text-white">Participation Arts</h2>
                             </div>
-                            <div className="option px-5 pt-3 pb-7 oldest-first bg-black rounded-bl-3xl rounded-br-3xl" onClick={() => handleSort({ value: 'raffles', label: "Participation Nft Arts" })}>
-                                <h2 className="spartan-light text-sm">Participation Nft Arts</h2>
+                            <div className="option px-5 pt-3 pb-7 oldest-first bg-black rounded-bl-3xl rounded-br-3xl" onClick={() => handleSort({ value: 'spinner', label: "Special Arts" })}>
+                                <h2 className="spartan-light text-sm">Special Arts</h2>
                             </div>
                             {/* <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Voted" })}>
                                 <h2 className="spartan-light text-sm text-white">Top Voted Arts</h2>

@@ -67,7 +67,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
     const result = await dailyCheckin();
 
     if (result) {
-      console.log("Check-in successful:", result);
+      // console.log("Check-in successful:", result);
       setIsClaimed(true);
       setToastMessage(`Claimed reward for Day ${index + 1}!`);
       setSuccessToast("yes");
@@ -79,6 +79,29 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
   };
 
   useEffect(() => {
+    const fetchStreakData = async () => {
+      const data = await fetchDailyCheckin();
+      // console.log("data .......", data);
+
+      if (data) {
+        const streakDays = data.data.streakDays || 0;
+        // console.log("days", streakDays);
+
+        const updatedStreak = Array(7).fill(false);
+
+        for (let i = 0; i < streakDays; i++) {
+          updatedStreak[i] = true;
+        }
+
+        setStreak(updatedStreak);
+        if (streakDays === 7) {
+          setCurrentIndex(6);
+        } else {
+          setCurrentIndex(streakDays - 1);
+        }
+      }
+    };
+
     fetchStreakData();
   }, [userDetails]);
 
@@ -92,7 +115,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
   const handleWeeklyClaim = async () => {
     if (streakDays === 7 && isClaimed) {
       const result = await weeklyCheckin();
-      console.log("Weekly Check-in Result:", result);
+      // console.log("Weekly Check-in Result:", result);
       if (result) {
         setIsClaimed(true);
         setToast(true);
