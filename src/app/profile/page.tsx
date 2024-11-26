@@ -279,7 +279,7 @@ const page = () => {
         coin={coin ?? 0}
       />
       <DailyCheckin coin={coin ?? 0} />
-      <ProfileBody setBurnArtSuccess={setBurnArtSuccess} setBurnArtFailed={setBurnArtFailed} />
+      <ProfileBody burnArtSuccess={burnArtSuccess} setBurnArtSuccess={setBurnArtSuccess} setBurnArtFailed={setBurnArtFailed} />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}

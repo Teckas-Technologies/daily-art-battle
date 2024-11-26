@@ -8,6 +8,7 @@ import { NftToken, RaffleArt } from "@/types/types";
 import { ART_BATTLE_CONTRACT, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import { useOffChainBurn } from "@/hooks/burnHook";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
     info: string;
@@ -19,12 +20,13 @@ interface Props {
     setBurnArtSuccess: (e: boolean) => void;
     setBurnArtFailed: (e: boolean) => void;
 }
-
+ 
 export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art, isSpinner, setBurnArtFailed, setBurnArtSuccess }) => {
     const { mintImage } = useMintImage();
     const { offchainBurn } = useOffChainBurn();
     const [burningArt, setBurningArt] = useState(false);
     const [minting, setmMinting] = useState(false);
+    const { userTrigger, setUserTrigger } = useAuth();
 
 
     const isRaffleArt = (data: ArtData | NftToken | RaffleArt): data is RaffleArt => "raffleCount" in data;
@@ -48,6 +50,7 @@ export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, ar
                 // console.log("RES NEW:", res);
                 setBurningArt(false);
                 if (res?.message === "Updated successfully") {
+                    setUserTrigger(!userTrigger);
                     setBurnArtSuccess(true);
                 } else {
                     setBurnArtFailed?.(true);
