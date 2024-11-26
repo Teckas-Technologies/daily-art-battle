@@ -36,7 +36,7 @@ const UserTableSchema = new mongoose.Schema({
   profileImg: { type: String, required: false,default:null },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  nearAddress: { type: String, required: false },
+  nearAddress: { type: String, required: false,unique:true },
   email: { 
     type: String, 
     required: true, 
