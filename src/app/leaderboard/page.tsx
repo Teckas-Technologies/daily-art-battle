@@ -85,6 +85,9 @@ const fetchInitialData = async () => {
     <h1 className="spartan-semibold  ml-10 bg-clip-text text-left text-transparent font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
       GFXvs Leaderboard
     </h1>
+    <p className="text-left text-[16px] font-medium leading-[18.16px] tracking-[-0.06em] bg-[#9b9b9b] bg-clip-text text-transparent mt-[10px] md:w-[480px]">
+    Explore the top performers and their rankings in the art battle! Stay updated with live results as participants compete for the spotlight.
+      </p>
   </div>
 </div>
       
