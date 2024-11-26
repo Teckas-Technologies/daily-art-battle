@@ -200,7 +200,7 @@ export default async function handler(
           });
         }
         const participants = await ArtTable.aggregate([
-          { $match: { campaignId: campaign._id } },
+          { $match: { campaignId: campaign._id.toString() } },
           { $group: { _id: "$email" } },
           { $count: "uniqueParticipants" }
         ]);
