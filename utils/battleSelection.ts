@@ -29,7 +29,7 @@ export const findTopTwoArts = async (campaignId:string): Promise<any[]> => {
   await connectToDatabase();
   console.log(campaignId);
   const art = await ArtTable.aggregate([
-    { $match: { isCompleted: false ,campaignId:campaignId} },  
+    { $match: { isCompleted: false ,isHided:false,campaignId:campaignId} },  
     { $sort: { raffleTickets: -1 } }, 
     {
       $group: {
