@@ -40,6 +40,8 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showDollarTooltip, setShowDollarTooltip] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
   let userDetails = user;
@@ -63,6 +65,18 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     noOfWinners: Number(noOfWinners) || 0,
     specialWinnerCount: Number(specialWinner) || 0,
   };
+  const handleIconClick = () => {
+    setShowTooltip(!showTooltip);
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 3000);
+  };
+  const handleDollarClick = () => {
+    setShowDollarTooltip(!showDollarTooltip);
+    setTimeout(() => {
+      setShowDollarTooltip(false);
+    }, 3000);
+  };
   const resetFormFields = () => {
     setCampaignName("");
     setCampaignWelcomeText("");
@@ -70,7 +84,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     setEndDate(null);
     setSpecialRewards("");
     setPoints(0);
-    setButtonText("Coins to Create");
+    setButtonText("0");
     setIsPubliclyVisible(false);
     setNoOfWinners("");
   };
@@ -190,7 +204,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
       setButtonText(`${calculatedPoints}`);
     } else {
       setPoints(0);
-      setButtonText("Coins to Create");
+      setButtonText("0");
     }
   }, [startDate, endDate, specialRewards]);
 
@@ -253,11 +267,6 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           style={{ marginTop: "40px", marginBottom: "15px" }}
         >
           <h1 className="create-campaign-title">Create Campaign</h1>
-
-          <button className="create-campaign-coinsButton flex items-center gap-2">
-            <InlineSVG src="/icons/coin.svg" className="coin-btn-icon" />
-            {buttonText}
-          </button>
         </div>
 
         <form className="create-campaign-form" onSubmit={openPopup}>
@@ -402,12 +411,19 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   value={specialWinner}
                   onChange={(e) => setSpecialWinner(Number(e.target.value))}
                 />
-                {/* <div className="relative">
+                <div className="relative">
                   <InlineSVG
-                    src="/icons/dollar.svg"
+                    src="/icons/profile-green.svg"
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
+                    onClick={handleIconClick}
                   />
-                </div> */}
+                  {showTooltip && (
+                    <div className="absolute bottom-8 right-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
+                      Set the Special Winner count and reward them after the
+                      campaign ends!
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="create-campaign-input">
                 <label
@@ -427,7 +443,14 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   <InlineSVG
                     src="/icons/dollar.svg"
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
+                    onClick={handleDollarClick}
                   />
+                  {showDollarTooltip && (
+                    <div className="absolute bottom-8 right-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
+                      The entered amount will be equally distributed among the
+                      special winners!
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -451,19 +474,32 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
             </div>
           </div>
 
-          {isFormValid ? (
-            <div className="submit-btn-Wrapper">
-              <button className="submit-btn" type="submit">
+          <div className="flex flex-col items-center justify-center mt-[40px]">
+            <h4 className="flex flex-row justify-center items-center gap-2 text-xs">
+              <span className="text-[#00FF00] text-2xl font-bold">
+                {buttonText}
+              </span>{" "}
+              GFXvs Coins
+            </h4>
+
+            {isFormValid ? (
+              <div className="submit-btn-Wrapper">
+                <button className="submit-btn" type="submit">
+                  Create Campaign
+                </button>
+                <div className="submit-btn-Border" />
+                <div className="submit-btn-Overlay" />
+              </div>
+            ) : (
+              <button
+                className="submitButton"
+                onClick={toggleCampaignModal}
+                style={{ cursor: "not-allowed" }}
+              >
                 Create Campaign
               </button>
-              <div className="submit-btn-Border" />
-              <div className="submit-btn-Overlay" />
-            </div>
-          ) : (
-            <button className="submitButton" onClick={toggleCampaignModal}>
-              Create Campaign
-            </button>
-          )}
+            )}
+          </div>
         </form>
         <CampaignPopup
           isOpen={isPopupOpen}

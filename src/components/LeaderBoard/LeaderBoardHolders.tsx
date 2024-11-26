@@ -205,7 +205,7 @@ const fetchInitialData = async () => {
 
   
     {/* Top Rankings Section */}
-    <div className="w-full mt-1 md:mt-10 lg:mt-[50px]">
+    <div className=" hidden lg:block w-full mt-1 md:mt-10 lg:mt-[50px]">
   <h2 className="bg-clip-text text-transparent bg-gradient-to-b from-[#00ff00] to-[#009900] text-lg md:text-xl lg:text-2xl font-bold mb-5 text-left lg:text-left">
     Top Rankings
   </h2>
@@ -231,12 +231,13 @@ const fetchInitialData = async () => {
       
       {/* User Information */}
       <div className="flex-1 text-center sm:text-left">
-        <h3 className="text-white font-semibold flex items-center gap-2">
-          {user.firstName} {user.lastName}
-          <InlineSVG src="/icons/gfx-point.svg" className="h-6 w-6 text-yellow-400" />
-          <span>{user.gfxvsCoins}</span>
-        </h3>
-      </div>
+      <h3 className="text-white font-semibold flex flex-wrap items-center gap-2">
+        <span className="whitespace-nowrap">{user.firstName} {user.lastName}</span>
+        <InlineSVG src="/icons/gfx-point.svg" className="h-6 w-6 text-yellow-400" />
+        <span>{user.gfxvsCoins}</span>
+      </h3>
+    </div>  
+
     </div>
   ))}
 </div>

@@ -62,9 +62,11 @@ const useCampaigns = () => {
   const [campaignData, setCampaignData] = useState<any>(null);
   const [campaignStatus, setCampaignStatus] = useState<string | null>(null);
   const [art, setArt] = useState<any[]>([]);
+  const [artInfinite, setArtInfite] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
   const [totalDocuments, setTotalDocuments] = useState<number>(0);
+  const [documents, setDocuments] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
@@ -192,12 +194,9 @@ const useCampaigns = () => {
       const data = await response.json();
       console.log("API Response:", data);
       console.log("Arts Data:", data.arts);
-
+      console.log("Total Documents:", data.totalDocuments);
       setArt(data.arts);
-      setTotalDocuments(data.totalDocuments);
-      console.log("Total Arts", totalDocuments);
-      setTotalPages(data.totalPages);
-      console.log("Total pages", totalPages);
+      setDocuments(data.totalDocuments);
       setCurrentPage(page);
 
       return data;
@@ -461,6 +460,7 @@ const useCampaigns = () => {
     battles,
     distributeArt,
     participants,
+    documents,
   };
 };
 

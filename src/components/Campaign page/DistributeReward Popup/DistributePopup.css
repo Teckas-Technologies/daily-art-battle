@@ -157,8 +157,8 @@
   position: relative;
   z-index: 2;
   color: #ffffff;
-  font-size: 14.9px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   line-height: 19.25px;
   letter-spacing: -6%;
   text-align: center;
@@ -193,7 +193,17 @@
   background: linear-gradient(to left, rgba(0, 255, 0, 0.737), transparent 60%);
   z-index: 1;
 }
-
+.disable-distribute {
+  background: #aaaaaa;
+  padding: 14.41px 22.69px;
+  border-radius: 55.1px;
+  color: #ffffff;
+  font-size: 14.9px;
+  font-weight: 600;
+  line-height: 19.25px;
+  letter-spacing: -6%;
+  text-align: center;
+}
 @media screen and (max-width: 768px) {
   .distribute-popup {
     width: 90%;
@@ -236,12 +246,13 @@
   }
 
   .cancel-btn,
-  .distribute-popup-btn {
-    width: 150px;
+  .distributepopup-btn {
     font-size: 13px;
-    padding: 10px;
+    padding: 12px;
   }
-
+  .disable-distribute {
+    padding: 12px;
+  }
   .actions {
     flex-direction: column;
     gap: 15px;

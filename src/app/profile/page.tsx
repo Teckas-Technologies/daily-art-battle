@@ -30,7 +30,7 @@ const page = () => {
   const [isCoinOpen, setIsCoinOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [coin, setCoin] = useState("");
+  const [coin, setCoin] = useState<number | undefined>(undefined);
   const [buyCoin, setBuyCoin] = useState("");
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +43,14 @@ const page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
+
+  const { user } = useAuth();
+  let userDetails = user;
+  useEffect(() => {
+    setCoin(userDetails?.user?.gfxCoin);
+    console.log("coin >>>>>>>>>>>>>>>>>", coin);
+  }, [coin, userDetails]);
+
   const { getHash, saveHash } = useMintImage();
   const { updateRaffleMint } = useArtsRaffleCount();
 
@@ -53,7 +61,8 @@ const page = () => {
     if (toastMessage) {
       setTimeout(() => setToastMessage(""), 3000);
     }
-  }, [toast, toastMessage])
+
+  }, [toast, toastMessage]);
 
   const handleEditClick = () => {
     setIsEditOpen(true);
@@ -68,8 +77,7 @@ const page = () => {
   const closeCoinModal = () => {
     setIsCoinOpen(false);
   };
-  const { user } = useAuth();
-  let userDetails = user;
+
   useEffect(() => {
     const fetchTransaction = async () => {
       const searchParams = new URLSearchParams(window.location.search);
@@ -172,7 +180,17 @@ const page = () => {
       // console.log("isCoinOpen set to true");
     }
   }, [searchParams, pathName, userDetails]);
+  useEffect(() => {
+    if (toast) {
+      const timeout = setTimeout(() => {
+        setToast(false);
+        setToastMessage("");
+        setSuccessToast("");
+      }, 3000);
 
+      return () => clearTimeout(timeout);
+    }
+  }, [toast]);
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -198,8 +216,9 @@ const page = () => {
       <ProfileHeader
         onEditClick={handleEditClick}
         handleCoinClick={handleCoinClick}
+        coin={coin ?? 0}
       />
-      <DailyCheckin />
+      <DailyCheckin coin={coin ?? 0} />
       <ProfileBody />
       <FooterMenu
         fontColor={""}

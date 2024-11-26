@@ -8,6 +8,7 @@ import { graphQLService } from "@/data/graphqlService";
 import { TOTAL_REWARDS } from "@/data/queries/totalrewards.graphql";
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import { validateUser } from "../../utils/validateClient";
+import Battle from "../../model/Battle";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
   // This api to fetch leaderboard list 
@@ -22,7 +23,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             const skip = limit * (page === 1 ? 0 : page - 1);
             const totalDocuments = await User.countDocuments({}, { firstName: 1, lastName: 1, gfxCoin: 1 });
             const totalPages = Math.ceil(totalDocuments / limit);
-            const users = await User.find({}, { firstName: 1, lastName: 1, gfxCoin: 1,email:1 }).sort({ gfxCoin: -1 }).skip(skip).limit(limit);
+            const users = await User.find({}, { firstName: 1, lastName: 1, gfxCoin: 1,email:1, profileImg:1, }).sort({ gfxCoin: -1 }).skip(skip).limit(limit);
             const leaders = users.map((user, index) => ({
                 firstName: user.firstName,
                 lastName: user.lastName,
@@ -35,61 +36,78 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             const skip = limit * (page === 1 ? 0 : page - 1);
             const totalDocumentsResult = await RaffleTicket.aggregate([
               { $group: { _id: "$email" } },
-              { $count: "total" }
+              { $count: "total" } 
           ]);
           const totalDocuments = totalDocumentsResult[0]?.total || 0;
           const totalPages = Math.ceil(totalDocuments / limit);
-            const leaderboard = await RaffleTicket.aggregate([
-                {
-                  $group: {
-                    _id: "$email",                // Group by email to count tickets per user
-                    raffleTicketCount: { $sum: 1 } // Count raffle tickets for each user
-                  }
+          const results = await Battle.aggregate([
+            // Combine all voters into a single array
+            {
+              $project: {
+                voters: { $concatArrays: ["$artAvoters", "$artBvoters"] },
+                specialWinner: "$specialWinner",
+              },
+            },
+        
+            // Unwind voters array to count participation
+            { $unwind: "$voters" },
+        
+            // Group by voter email to calculate participation and special wins
+            {
+              $group: {
+                _id: "$voters", // Group by voter (email or unique identifier)
+                participationCount: { $sum: 1 },
+                rareNftCount: {
+                  $sum: {
+                    $cond: [{ $eq: ["$specialWinner", "$voters"] }, 1, 0],
+                  },
                 },
-                {
-                  $lookup: {
-                    from: "usertables",           // The UserTable collection name in MongoDB
-                    localField: "_id",            // Email field from RaffleTicket
-                    foreignField: "email",        // Email field in UserTable
-                    as: "userDetails"
-                  }
+              },
+            },
+        
+            // Sort by participation and special wins in descending order
+            {
+              $sort: { participationCount: -1, rareNftCount: -1 },
+            },
+
+            // Join with the UserTableSchema to get user details
+            {
+              $lookup: {
+                from: "usertables", // Replace with your actual UserTable collection name
+                localField: "_id",
+                foreignField: "email", // Adjust based on your user schema
+                as: "userDetails",
+              },
+            },
+        
+            // Unwind the user details array
+            { $unwind: "$userDetails" },
+
+            {
+              $setWindowFields: {
+                partitionBy: null, // Use `null` for no partitioning
+                sortBy: { participationCount: -1,},
+                output: {
+                  rank: { $documentNumber: {} }, // Assign rank based on sorting
                 },
-                {
-                  $unwind: "$userDetails"         // Deconstruct userDetails array
-                },
-                {
-                  $project: {
-                    email: "$_id",
-                    firstName: "$userDetails.firstName",
-                    lastName: "$userDetails.lastName",
-                    gfxCoin: "$userDetails.gfxCoin",
-                    nearAddress: "$userDetails.nearAddress",
-                    raffleTicketCount: 1
-                  }
-                },
-                {
-                  $sort: { raffleTicketCount: -1 } 
-                },
-                {
-                    $setWindowFields: {
-                      partitionBy: null, // Apply to all documents as a single partition
-                      sortBy: { uploadedArtCount: -1 },
-                      output: {
-                        rank: { $documentNumber: {} } // Assign unique ranks sequentially
-                      }
-                    }
-                }
-              ]).skip(skip).limit(limit);
-              const leaderboardWithRewards = await Promise.all(
-                leaderboard.map(async (user) => {
-                  const {participationCount,rareNftCount} = await getUserRewards(user.nearAddress);
-                  return {
-                    ...user,
-                    participationCount,rareNftCount,
-                  };
-                })
-              );
-              res.status(200).json({data:leaderboardWithRewards,totalDocuments,totalPages});
+              },  
+            },
+          
+        
+            // Project the required fields
+            {
+              $project: {
+                firstName: "$userDetails.firstName",
+                lastName: "$userDetails.lastName",
+                profileImg: "$userDetails.profileImg",
+                participationCount: 1,
+                rareNftCount: 1,
+                rank:1,
+              },
+            },
+          ]).skip(skip).limit(limit);
+              res.status(200).json({data:results,totalDocuments,totalPages});
+
             }else if (queryType == "creators") {
               const skip = limit * (page === 1 ? 0 : page - 1);
           
@@ -150,6 +168,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                           email: "$_id",
                           firstName: "$userDetails.firstName",
                           lastName: "$userDetails.lastName",
+                          profileImg: "$userDetails.profileImg",
                           uploadedArtCount: 1,
                           battleArtCount: 1
                       }
@@ -198,5 +217,5 @@ async function getUserRewards(owner: string) {
         },
         network: NEXT_PUBLIC_NETWORK as "testnet" | "mainnet",
       });
-      return {participationCount : participationCount.data.mb_views_nft_tokens_aggregate.aggregate.count,rareNftCount: rareNftCount.data.mb_views_nft_tokens_aggregate.aggregate.count};
+      return {participationCount : participationCount,rareNftCount: rareNftCount};
   }

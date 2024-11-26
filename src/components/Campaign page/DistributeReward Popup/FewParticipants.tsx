@@ -38,10 +38,7 @@ const FewParticipantsPopup: React.FC<FewParticipantsPopupProps> = ({
             Cancel
           </button>
           <div className="few-distributepopup-btn-Wrapper">
-            <button
-              className="few-distributepopup-btn "
-              onClick={onDistribute}
-            >
+            <button className="few-distributepopup-btn " onClick={onDistribute}>
               {isLoading ? "Distributing Rewards..." : "Distribute Rewards"}
             </button>
 
