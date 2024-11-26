@@ -61,12 +61,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 hash:transactionHash
                             })
                             await newHash.save();
-                            const newTransaction = new Transactions({
-                                email: email,
-                                gfxCoin: coins,
-                                transactionType: "received"
-                            });
-                            await newTransaction.save();
                        
                     } else {
                         res.status(500).json({ error: "transaction is not success" });
@@ -184,12 +178,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         hash:transactionHash
                     })
                     await newHash.save();
-                    const newTransaction = new Transactions({
-                        email: email,
-                        gfxCoin: coins,
-                        transactionType: "received"
-                    });
-                    await newTransaction.save();
                 }
             }
             else if(query ==='nearTransfer'){
@@ -218,12 +206,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             hash:transactionHash
                         })
                         await newHash.save();
-                        const newTransaction = new Transactions({
-                            email: email,
-                            gfxCoin: coins,
-                            transactionType: "received"
-                        });
-                        await newTransaction.save();
                     } else {
                         res.status(500).json({ error: "transaction is not success" });
                     }
