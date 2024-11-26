@@ -35,7 +35,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
     const [loading, setLoading] = useState(false);
     const overlayRef = useRef<HTMLDivElement | null>(null);
     const [shareOverLay, setShareOverlay] = useState(false);
-    const { user } = useAuth();
+    const { user, userTrigger, setUserTrigger } = useAuth();
     let userDetails = user;
 
     useEffect(() => {
@@ -93,6 +93,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
 
         if (success) {
             setSuccess(true);
+            setUserTrigger(!userTrigger);
             handleClose();
             const art = await fetchArtById(id);
             console.log(art);
@@ -100,6 +101,7 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
             setRefresh((prev) => !prev);
             // setSuccess(false);
         } else {
+            setUserTrigger(!userTrigger);
             setSuccess(false);
             setLoading(false);
             alert("Failed to submit vote. Maybe you already voted!");

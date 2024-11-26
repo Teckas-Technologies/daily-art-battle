@@ -5,6 +5,8 @@ import { useSendWalletData } from "@/hooks/saveUserHook";
 import { UserDetails } from '@/types/types';
 import { setAuthToken } from '../../utils/authToken';
 import { NearContext } from '@/wallet/WalletSelector';
+import useUpdateUserWalletAddress from '@/hooks/updateUserWalletAddress';
+import { usePathname } from 'next/navigation';
 
 interface AuthContextType {
     user: UserDetails | null;
@@ -12,6 +14,8 @@ interface AuthContextType {
     signInUser: () => void;
     signOutUser: () => void;
     connected: boolean;
+    setUserTrigger: (e: boolean) => void;
+    userTrigger: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,6 +27,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: session, status } = useSession();
     const { sendWalletData } = useSendWalletData();
     const { wallet, signedAccountId } = useContext(NearContext);
+    const { updateUserWalletAddress } = useUpdateUserWalletAddress();
+    const [userTrigger, setUserTrigger] = useState(false);
+    const pathName = usePathname();
 
     useEffect(() => {
         // if (status === 'unauthenticated') {
@@ -34,6 +41,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.log(idToken)
         }
     }, [status, session]);
+
+    useEffect(() => {
+        const updateWalletAddress = async () => {
+            await updateUserWalletAddress({ nearAddress: signedAccountId })
+        }
+        if (signedAccountId && user && !user?.user?.nearAddress) {
+            updateWalletAddress();
+        }
+    }, [signedAccountId, user])
 
     useEffect(() => {
         const handleWalletData = async () => {
@@ -51,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
 
         handleWalletData();
-    }, [session, signedAccountId]);
+    }, [session, status, signedAccountId, userTrigger, pathName]);
 
     const signInUser = () => {
         signIn('azure-ad-b2c', { callbackUrl: '/' });
@@ -62,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, idToken, signInUser, signOutUser, connected }}>
+        <AuthContext.Provider value={{ user, idToken, signInUser, signOutUser, connected, setUserTrigger, userTrigger }}>
             {children}
         </AuthContext.Provider>
     );
