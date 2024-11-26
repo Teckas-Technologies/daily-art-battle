@@ -37,7 +37,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             const skip = limit * (page === 1 ? 0 : page - 1);
             const totalDocumentsResult = await RaffleTicket.aggregate([
               { $group: { _id: "$email" } },
-              { $count: "total" } 
+              { $count: "total" }  
           ]);
           const totalDocuments = totalDocumentsResult[0]?.total || 0;
           const totalPages = Math.ceil(totalDocuments / limit);
