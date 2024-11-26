@@ -28,7 +28,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
     streakDays,
     claimDate,
   } = useDailyCheckin();
-  const { user } = useAuth();
+  const { user, userTrigger, setUserTrigger } = useAuth();
   console.log("is claimed", isClaimed);
 
   let userDetails = user;
@@ -75,7 +75,8 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
       setToast(true);
 
       await fetchStreakData();
-      window.location.reload();
+      setUserTrigger(!userTrigger);
+      // window.location.reload();
     }
   };
 
@@ -124,7 +125,8 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
         setSuccessToast("yes");
 
         await fetchStreakData();
-        window.location.reload();
+        setUserTrigger(!userTrigger);
+        // window.location.reload();
       }
     }
   };

@@ -306,7 +306,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                     <CardHolder artData={upcomingArts} campaignId={campaignId} adminEmail={adminEmail} setRefresh={setRefresh} setSelectedArt={setSelectedArt} totalPage={totalPage} removeArtById={removeArtById} setHideFailed={setHideFailed} />
                 </div>
 
-                {empty && upcomingArts.length === 0 && <div className={`empty w-full ${page === 1 || page === 0 || page === null && "min-h-[25rem]"} md:h-[10rem] h-[5rem] flex items-center justify-center gap-2 pb-20`}>
+                {empty && upcomingArts.length === 0 && <div className={`empty w-full ${page === 1 || page === 0 || page === null && "min-h-[25rem]"} min-h-[25rem] flex items-center justify-center gap-2 pb-20`}>
                     <InlineSVG
                         src='/icons/info.svg'
                         className='fill-current text-white font-bold point-c w-4 h-4 cursor-pointer'
@@ -315,7 +315,7 @@ export const UpcomingGrid: React.FC<Props> = ({ toggleUploadModal, uploadSuccess
                 </div>
                 }
 
-                {loading && <div className={`upcoming-loader ${page === 1 || page === 0 || page === null && "min-h-[25rem]"} md:h-[10rem] h-[5rem] md:mb-0 mb-8 w-full justify-center`}> {/* md:h-[10rem] h-[5rem] */}
+                {loading && <div className={`upcoming-loader ${page === 1 || page === 0 || page === null && "min-h-[25rem]"} min-h-[25rem] md:mb-0 mb-8 w-full justify-center`}> {/* md:h-[10rem] h-[5rem] */}
                     <Loader md="10" sm="8" />
                 </div>}
 

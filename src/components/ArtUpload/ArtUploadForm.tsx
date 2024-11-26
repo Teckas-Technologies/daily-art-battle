@@ -55,7 +55,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
   const [imageError, setImageError] = useState(false);
   const [isAiGenerated, setIsAiGenerated] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, userTrigger, setUserTrigger } = useAuth();
   let userDetails = user;
 
   const handleFileChange =
@@ -158,10 +158,12 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
       };
       setIsAiGenerated(true);
       setArtworks(newArtworks);
+      setUserTrigger(!userTrigger);
       setPrompt(false);
       setImageCreating(false);
     } else {
       console.error("error");
+      setUserTrigger(!userTrigger);
       setImageError(true);
       setImageCreating(false);
     }
@@ -266,6 +268,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
       artData.campaignId = campaignId;
       console.log("ART DATA : ", artData)
       await saveData(artData);
+      setUserTrigger(!userTrigger);
       setToastMessage("Art uploaded successfully");
       setToast(true);
       setSuccessToast("yes");
@@ -274,6 +277,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
         onClose();
       }, 200);
     } catch (error) {
+      setUserTrigger(!userTrigger);
       console.error("Error uploading files:", error);
       setToastMessage("Failed to upload your art!");
       setToast(true);

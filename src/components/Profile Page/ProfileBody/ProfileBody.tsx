@@ -12,8 +12,9 @@ const tabs = [
 interface Props {
   setBurnArtSuccess: (e: boolean) => void;
   setBurnArtFailed: (e: boolean) => void;
+  burnArtSuccess: boolean;
 }
-export const ProfileBody: React.FC<Props> = ({ setBurnArtSuccess, setBurnArtFailed }) => {
+export const ProfileBody: React.FC<Props> = ({ burnArtSuccess, setBurnArtSuccess, setBurnArtFailed }) => {
   const [activeTab, setActiveTab] = useState("uploads");
   const [rendered, setRendered] = useState(false);
   const searchParams = useSearchParams();
@@ -68,7 +69,7 @@ export const ProfileBody: React.FC<Props> = ({ setBurnArtSuccess, setBurnArtFail
           ))}
         </div>
         {activeTab === "uploads" && <UploadedArtsGrid rendered={rendered} />}
-        {activeTab === "collects" && <Collections setBurnArtFailed={setBurnArtFailed} setBurnArtSuccess={setBurnArtSuccess} />}
+        {activeTab === "collects" && <Collections burnArtSuccess={burnArtSuccess} setBurnArtFailed={setBurnArtFailed} setBurnArtSuccess={setBurnArtSuccess} />}
         {activeTab === "wallet" && <WalletHistory rendered={rendered} />}
       </div>
     </>
