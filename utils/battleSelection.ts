@@ -13,7 +13,7 @@ export async function getNextAvailableDate(campaignId: string): Promise<Date> {
   // If there’s no latest battle, return today's date at 12:00 PM (noon) as the default start time
   if (!latestBattle) {
     const today = new Date();
-    today.setHours(12, 0, 0, 0);
+    today.setUTCHours(12, 0, 0, 0);
     return today;
   }
 
@@ -61,10 +61,11 @@ export const createBattle = async (): Promise<any> => {
       if (battles.length === 0 && artA && artB) {
         const startDate = await getNextAvailableDate(campaign._id.toString());
         const endDate = new Date(startDate);
-        endDate.setHours(startDate.getHours() + 11);
-        endDate.setMinutes(startDate.getMinutes() + 59);
-        endDate.setSeconds(59);
-        endDate.setMilliseconds(999);
+        endDate.setUTCHours(startDate.getUTCHours() + 11);
+        endDate.setUTCMinutes(startDate.getUTCMinutes() + 59);
+        endDate.setUTCSeconds(59);
+        endDate.setUTCMilliseconds(999);
+        console.log(startDate);
         console.log(endDate);
         const ress = await spinner(artA.colouredArt,artB.colouredArt);
         console.log("Uploading arweave")

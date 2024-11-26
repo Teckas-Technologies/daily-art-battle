@@ -71,23 +71,28 @@ const fetchInitialData = async () => {
   </h3>
 </div>
 
-<div className="flex flex-col gap-1 mr-20 w-full px-4 md:px-[100px] lg:px-[100px] text-center">
+<div className="flex flex-col gap-1 mr-20 w-full px-4 md:px-[100px] lg:px-[100px] text-left">
   <div
-    className="w-full h-[230px] flex mt-5 py-[20px] items-center justify-center rounded-[11.2px] border-[0.75px] border-[#939393] text-white"
+    className="w-full h-[230px] flex mt-5 py-[20px] items-center justify-left rounded-[11.2px] border-[0.75px] border-[#939393] text-white bg-cover md:bg-contain lg:bg-contain"
     style={{
       background:
         "linear-gradient(90deg, #000000 55%, rgba(0, 0, 0, 0) 100%), url('/images/campaignbg.png') no-repeat right center",
-      backgroundSize: "contain",
+      // backgroundSize: "contain",
+      objectFit: "cover",
+      aspectRatio:"1/1"
     }}
   >
-    <h1 className="spartan-semibold bg-clip-text text-center text-transparent font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
+    <h1 className="spartan-semibold  ml-10 bg-clip-text text-left text-transparent font-bold text-4xl sm:text-5xl lg:text-6xl bg-gradient-to-b from-[#00ff00] to-[#009900]">
       GFXvs Leaderboard
     </h1>
+    <p className="text-left text-[16px] font-medium leading-[18.16px] tracking-[-0.06em] bg-[#9b9b9b] bg-clip-text text-transparent mt-[10px] md:w-[480px]">
+    Explore the top performers and their rankings in the art battle! Stay updated with live results as participants compete for the spotlight.
+      </p>
   </div>
 </div>
       
       <div className="w-full px-3 sm:px-6 lg:px-20">
-  {/* Tabs Section */}
+  {/* Tabs Section */}  
   <div className="w-full max-w-[800px] flex flex-wrap justify-center mt-10 sm:mt-20 gap-2 md:gap-4">
     {[
       "GFXvs Point Holders",
