@@ -10,3 +10,8 @@
 .redirect {
     background: #00FF00;
 }
+
+.marquee-burn {
+    border-top: 1.6px solid #00FF00;
+    border-bottom: 1.6px solid #00FF00;
+}

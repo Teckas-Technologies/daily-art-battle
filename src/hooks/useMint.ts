@@ -10,6 +10,8 @@ type mintObj = {
   referenceUrl:string;
   count:number;
   contractId:string;
+  artId: string;
+  queryType: string;
 };
  
 const useMintImage = () => {
@@ -34,7 +36,7 @@ const useMintImage = () => {
       const metadata = { media:data.mediaUrl,reference: data.referenceUrl,title: data.title,copies:data.count };
       const res = await wallet.callMethod({
         contractId: NEXT_PUBLIC_PROXY_ADDRESS,
-        callbackUrl: window.location.origin + "/profile",
+        callbackUrl: window.location.origin + `/profile?isMint=true&artId=${data.artId}&queryType=${data.queryType}`,
         method: 'mint',
         args: {
           metadata: JSON.stringify(metadata),   
@@ -107,15 +109,27 @@ const useMintImage = () => {
   }
 
   const getHash = async(transactionHash:string)=>{
+    console.log("STEP 1")
     setLoading(true);
     setError(null);
     try {
+      console.log("STEP 2")
       const res = await fetchWithAuth(`/api/gfxCoin?transactionHash=${transactionHash}`);
+      console.log("STEP 3")
+      const data = await res.json();
+      console.log("RES from API:", data)
       if(res.ok){
-        return true;
-      }  
+        if(data.message === "Hash not used"){
+          return true;
+        }
+        if(data.message === "Hash already used") {
+          return false;
+        }
+        
+      }
     } catch (error:any) {
       console.log(error.message);
+      console.log("STEP 4")
       setError(error.message);
       return false;
     }finally{
