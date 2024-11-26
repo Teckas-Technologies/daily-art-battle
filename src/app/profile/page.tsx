@@ -21,6 +21,7 @@ import Toast from "@/components/Toast";
 import { useAuth } from "@/contexts/AuthContext";
 import useMintImage from "@/hooks/useMint";
 import { useArtsRaffleCount } from "@/hooks/useRaffleTickets";
+import useUSDTTransfer from "@/hooks/USDTTransferHook";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -38,6 +39,7 @@ const page = () => {
   const [errMsg, setErrMsg] = useState("");
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
+  const { postUSDTTransfer } = useUSDTTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -148,6 +150,42 @@ const page = () => {
                   console.log("Active Account ID:", accountId);
                   console.log("Transaction Hash:", txnHash);
                   await postNearTransfer(accountId, txnHash);
+
+                  setToastMessage(`Transaction Successful!`);
+                  setSuccessToast("yes");
+                  setToast(true);
+                  window.history.replaceState(null, '', "/profile");
+                } else {
+                  setToastMessage(`Transaction Failed!`);
+                  setSuccessToast("no");
+                  setToast(true);
+                  window.history.replaceState(null, '', "/profile");
+                }
+              }
+            }
+          } catch (error) {
+            console.error("Error in fetchTransaction:", error);
+            setToastMessage(`Transaction Failed!`);
+            setSuccessToast("no");
+            setToast(true);
+          }
+        } else if (isUsdttransfer) {
+          try {
+            if (txnHash) {
+              const existingTxn = await getNearTransfer(txnHash);
+              if (existingTxn) {
+                console.log("Transaction hash already exists in the database.");
+              } else {
+                const senderId = accountId;
+                const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
+                const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
+                console.log("Transaction Status:", txnStatus);
+
+                if (txnStatus === "success") {
+                  console.log("Storing ID and transaction hash...");
+                  console.log("Active Account ID:", accountId);
+                  console.log("Transaction Hash:", txnHash);
+                  await postUSDTTransfer(accountId, txnHash);
 
                   setToastMessage(`Transaction Successful!`);
                   setSuccessToast("yes");
