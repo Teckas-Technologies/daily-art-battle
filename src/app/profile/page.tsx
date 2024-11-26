@@ -12,7 +12,6 @@ import { GFX_CAMPAIGNID, NEXT_PUBLIC_NETWORK } from "@/config/constants";
 import React, { useContext, useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
-import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
 import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
@@ -43,6 +42,8 @@ const page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
+  const [burnArtSuccess, setBurnArtSuccess] = useState(false);
+  const [burnArtFailed, setBurnArtFailed] = useState(false);
 
   const { user } = useAuth();
   let userDetails = user;
@@ -62,7 +63,14 @@ const page = () => {
       setTimeout(() => setToastMessage(""), 3000);
     }
 
-  }, [toast, toastMessage]);
+    if (burnArtSuccess) {
+      setTimeout(() => setBurnArtSuccess(false), 3000);
+    }
+    if (burnArtFailed) {
+      setTimeout(() => setBurnArtFailed(false), 3000);
+    }
+
+  }, [toast, toastMessage, burnArtSuccess, burnArtFailed]);
 
   const handleEditClick = () => {
     setIsEditOpen(true);
@@ -80,7 +88,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchTransaction = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
+      // const searchParams = new URLSearchParams(window.location.search);
 
       const accountId = searchParams?.get("account_id") || "";
       const txnHash = searchParams?.get("transactionHashes") || "";
@@ -124,7 +132,6 @@ const page = () => {
             setToast(true);
           }
         } else if (isNeartransfer) {
-          console.log("IS MINT3:", isMint)
           try {
             if (txnHash) {
               const existingTxn = await getNearTransfer(txnHash);
@@ -162,7 +169,6 @@ const page = () => {
           }
         }
       } else {
-        console.log("IS MINT4:", isMint)
         console.log("No transaction hash found in the URL.");
       }
     };
@@ -170,7 +176,21 @@ const page = () => {
     if (signedAccountId) {
       fetchTransaction();
     }
-  }, [signedAccountId, userDetails, searchParams]);
+  }, [signedAccountId, userDetails, searchParams, pathName]);
+
+  useEffect(() => {
+    if (userDetails) {
+      if (burnArtSuccess) {
+        setToastMessage(`Burn Successful!`);
+        setSuccessToast("yes");
+        setToast(true);
+      } else if (burnArtFailed) {
+        setToastMessage(`Burn Failed!`);
+        setSuccessToast("no");
+        setToast(true);
+      }
+    }
+  }, [burnArtFailed, burnArtSuccess])
 
   useEffect(() => {
     const buycoin = searchParams?.get("buyCoin");
@@ -180,6 +200,7 @@ const page = () => {
       // console.log("isCoinOpen set to true");
     }
   }, [searchParams, pathName, userDetails]);
+
   useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => {
@@ -191,6 +212,7 @@ const page = () => {
       return () => clearTimeout(timeout);
     }
   }, [toast]);
+
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -219,7 +241,7 @@ const page = () => {
         coin={coin ?? 0}
       />
       <DailyCheckin coin={coin ?? 0} />
-      <ProfileBody />
+      <ProfileBody setBurnArtSuccess={setBurnArtSuccess} setBurnArtFailed={setBurnArtFailed} />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}

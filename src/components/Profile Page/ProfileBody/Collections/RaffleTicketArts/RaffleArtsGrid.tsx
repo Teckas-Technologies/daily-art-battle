@@ -7,12 +7,15 @@ import { useAuth } from "@/contexts/AuthContext";
 import { UploadsHolder } from "../../Uploads/UploadsHolder";
 import { useFetchRaffleArts, useSearchRaffleArts } from "@/hooks/raffleArtsHook";
 import { RaffleArt } from "@/types/types";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
     rendered: boolean;
+    setBurnArtSuccess?: (e: boolean) => void;
+    setBurnArtFailed?: (e: boolean) => void;
 }
 
-export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
+export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setBurnArtFailed, setBurnArtSuccess }) => {
     const [page, setPage] = useState<number>(1);
     // const [sort, setSort] = useState<string>("dateDsc");
     // const [sortLabel, setSortLabel] = useState("Latest First");
@@ -28,8 +31,11 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [empty, setEmpty] = useState("");
     const [total, setTotal] = useState(totalPage);
     const [isLoading, setIsLoading] = useState(false);
+    const searchParams = useSearchParams();
     const { user } = useAuth();
     let userDetails = user;
+
+    const isArtBurn = searchParams?.get("isArtBurn") || "";
 
     useEffect(() => {
         if (loading || searchLoading) {
@@ -53,7 +59,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             const timeoutId = setTimeout(initializeData, 100);
             return () => clearTimeout(timeoutId);
         }
-    }, [sort, page, searchQuery, userDetails]);
+    }, [sort, page, searchQuery, userDetails, isArtBurn]);
 
     useEffect(() => {
         if (sort === "spinner") {
@@ -250,7 +256,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             </div>
 
             <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[25rem]" id="uploads">
-                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} isSpinner={isSpinner} />
+                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} isSpinner={isSpinner} setBurnArtFailed={setBurnArtFailed} setBurnArtSuccess={setBurnArtSuccess} />
 
                 {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
                     <InlineSVG

@@ -51,7 +51,7 @@ export const Header: React.FC<Props> = ({ openNav, setOpenNav, toggleUploadModal
             try {
                 setIsLoading(true);
                 // Simulate fetching user details
-                await new Promise((resolve) => setTimeout(resolve, 5000));
+                await new Promise((resolve) => setTimeout(resolve, 10000));
                 // Example: Replace the above with actual logic to fetch user details.
             } catch (error) {
                 console.error("Error fetching user details", error);
