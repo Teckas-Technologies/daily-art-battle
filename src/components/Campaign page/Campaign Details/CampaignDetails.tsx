@@ -16,6 +16,8 @@ interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
   campaignId: string;
   campaign?: CampaignPageData | null;
+  campaignAnalytics: CampaignAnalytics | null;
+  participantsList: string[];
 }
 
 interface ArtData {
@@ -86,14 +88,13 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   toggleDistributeModal,
   campaignId,
   campaign,
+  campaignAnalytics,
+  participantsList
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(6);
   const [arts, setArts] = useState<ArtData[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [campaignAnalytics, setCampaignAnalytics] =
-    useState<CampaignAnalytics | null>(null);
-  const [participants, setParticipants] = useState<string[]>([]);
   const [dayWinners, setDayWinners] = useState([]);
   const [showRewardModal, setShowRewardModal] = useState(false);
   const [isRewardDistributed, setIsRewardDistributed] = useState(
@@ -148,32 +149,8 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const SpecialWinnerCount = campaign?.specialWinnerCount ?? "";
 
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        const analyticsData = await fetchCampaignAnalytics(campaignId);
-        if (analyticsData) {
-          setCampaignAnalytics(analyticsData);
-
-          const participantNames = analyticsData.uniqueWallets.map(
-            (wallet: { firstName: string; lastName: string }) =>
-              `${wallet.firstName} ${wallet.lastName}`
-          );
-
-          setParticipants(participantNames);
-        } else {
-          console.warn("No analytics data returned");
-        }
-      } catch (error) {
-        console.error("Error fetching campaign analytics:", error);
-      }
-    };
-
-    fetchAnalytics();
-  }, [campaignId]);
-
-  useEffect(() => {
-    console.log("Updated participants:", participants);
-  }, [participants]);
+    console.log("Updated participants:", participantsList);
+  }, [participantsList]);
   const { battles, fetchBattles } = useCampaigns();
   useEffect(() => {
     if (campaignId) {
@@ -197,7 +174,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
-
+  const handlePopupClose = () => {
+    setSelectedArt([]);
+    setShowRewardModal(false);
+  };
   const { distributeArt } = useCampaigns();
 
   const handleDistribute = async () => {
@@ -213,6 +193,8 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       setToast(true);
     } else {
       console.error("Failed to distribute art");
+      setShowAllParticipantsPopup(false);
+      setShowFewParticipantsPopup(false);
       setToastMessage("Failed to distribute reward");
       setSuccessToast("no");
       setToast(true);
@@ -472,9 +454,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         <div className="summary mt-6">
           <div className="participants">
             <h2>Participants</h2>
-            {participants && participants.length > 0 ? (
+            {participantsList && participantsList.length > 0 ? (
               <div className="participants-grid">
-                {participants.map((participant, index) => (
+                {participantsList.map((participantsList, index) => (
                   <div
                     key={index}
                     className="participant"
@@ -482,7 +464,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                   >
                     <div className="flex flex-row items-center justify-center">
                       <span className="participant-number">{index + 1}</span>
-                      <span className="participant-name">{participant}</span>
+                      <span className="participant-name">{participantsList}</span>
                     </div>
                   </div>
                 ))}
@@ -582,7 +564,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         {showRewardModal && (
           <DistributeRewardPopup
             campaignId={campaignId}
-            onClose={() => setShowRewardModal(false)}
+            onClose={handlePopupClose}
             art={art}
             idToken={idToken}
             selectedArt={selectedArt}

@@ -11,7 +11,7 @@
   align-items: center;
   width: 100%;
   height: 281.25px;
-  background: linear-gradient(90deg, #000000 52.23%, rgba(0, 0, 0, 0) 77.42%),
+  background: linear-gradient(90deg, #000000 62%, rgba(0, 0, 0, 0) 100%),
     url("/images/PreviousHeader.png");
   background-repeat: no-repeat;
   background-position: right center;
@@ -73,7 +73,7 @@
   }
   .previous-arts {
     background: linear-gradient(90deg, #000000 45.22%, rgba(0, 0, 0, 0) 77.42%),
-      url("/images/image.png");
+      url("/images/PreviousHeader.png");
     background-position: right center;
     background-repeat: no-repeat;
     background-size: cover;

@@ -10,43 +10,61 @@ import { setAuthToken } from "../../../../utils/authToken";
 import Toast from "@/components/Toast";
 interface EditCampaignPopupProps {
   onClose: () => void;
-  campaign?: CampaignPageData | null;
-  setEditCampaign:(value:boolean)=>void ;
+  campaign: CampaignPageData | null | undefined;
+  setEditCampaign: (value: boolean) => void;
   editCampaign: boolean;
+  welcomeText: string;
+  setWelcomeText: (value: string) => void;
+  campaignName: string;
+  setCampaignName: (value: string) => void;
+  startDate: Date | null;
+  setStartDate: (value: Date | null) => void;
+  setStartDatePickerOpen: (value: boolean) => void;
+  handleDateChange: (
+    date: Date | null,
+    setter: (value: Date | null) => void
+  ) => void;
+  endDate: Date | null;
+  setEndDate: (value: Date | null) => void;
+  setEndDatePickerOpen: (value: boolean) => void;
+  specialRewards: string;
+  setSpecialRewards: (value: string) => void;
+  isPubliclyVisible: boolean;
+  setIsPubliclyVisible: (value: boolean) => void;
+  handleSaveChanges: ()=>void;
+  isEndDatePickerOpen: boolean;
+  isStartDatePickerOpen: boolean;
 }
 
 const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   onClose,
   campaign,
   setEditCampaign,
-  editCampaign
+  editCampaign,
+  welcomeText,
+  setWelcomeText,
+  campaignName,
+  setCampaignName,
+  startDate,
+  setStartDate,
+  setStartDatePickerOpen,
+  setEndDatePickerOpen,
+  endDate,
+  specialRewards,
+  isPubliclyVisible,
+  setIsPubliclyVisible,
+  setSpecialRewards,
+  handleDateChange,
+  handleSaveChanges,
+  isEndDatePickerOpen,
+  isStartDatePickerOpen,
+  setEndDate,
 }) => {
-  const [toast, setToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [successToast, setSuccessToast] = useState("");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [isStartDatePickerOpen, setStartDatePickerOpen] = useState(false);
-  const [isEndDatePickerOpen, setEndDatePickerOpen] = useState(false);
-  const [campaignName, setCampaignName] = useState("");
-  const [welcomeText, setWelcomeText] = useState("");
-  const [specialRewards, setSpecialRewards] = useState("");
-  const [isPubliclyVisible, setIsPubliclyVisible] = useState(false);
   const { data: session, status } = useSession();
   const idToken = session?.idToken || "";
 
   const { updateCampaign, isLoading, isError } = useCampaigns();
 
-  useEffect(() => {
-    if (campaign) {
-      setStartDate(campaign.startDate ? new Date(campaign.startDate) : null);
-      setEndDate(campaign.endDate ? new Date(campaign.endDate) : null);
-      setCampaignName(campaign.campaignName || "");
-      setWelcomeText(campaign.campaignWelcomeText || "");
-      setSpecialRewards(campaign.specialRewards.toString() || "");
-      setIsPubliclyVisible(campaign.publiclyVisible || false);
-    }
-  }, [campaign]);
   // useEffect(() => {
   //   if (status === "unauthenticated") {
   //     // Redirect to login if not authenticated
@@ -57,55 +75,10 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
   //     console.log("Token set for API requests", session);
   //   }
   // }, [status, session]);
-  const handleDateChange = (
-    date: Date | null,
-    setter: React.Dispatch<React.SetStateAction<Date | null>>
-  ) => {
-    setter(date);
-    if (setter === setStartDate) setStartDatePickerOpen(false);
-    else setEndDatePickerOpen(false);
+  const handleSave = () => {
+    handleSaveChanges();
+    onClose();
   };
-
-  const handleSaveChanges = async (event: React.MouseEvent) => {
-    event.preventDefault();
-    console.log("Current input field values:");
-    console.log("Welcome Text:", welcomeText);
-    console.log("Campaign Name:", campaignName);
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
-    console.log("Special Rewards:", specialRewards);
-    console.log("Publicly Visible:", isPubliclyVisible);
-
-    const updatedCampaignData: CampaignPageData = {
-      _id: campaign?._id || "",
-      campaignName,
-      campaignWelcomeText: welcomeText,
-      startDate: startDate ? startDate.toISOString() : "",
-      endDate: endDate ? endDate.toISOString() : "",
-      specialRewards: Number(specialRewards) || 0,
-      publiclyVisible: isPubliclyVisible,
-      participants: 0,
-      email: campaign?.email || "",
-    };
-
-    console.log("Updated Campaign Data:", updatedCampaignData);
-
-    const result = await updateCampaign(updatedCampaignData);
-
-    if (result) {
-      setEditCampaign(!editCampaign);
-      onClose();
-      setToastMessage("Campaign Edited Successfully");
-      setSuccessToast("yes");
-      setToast(true);
-    }else {
-      console.error("Failed to distribute art");
-      setToastMessage("Failed to edit campaign details");
-      setSuccessToast("no");
-      setToast(true);
-    }
-  };
-
   return (
     <div className="edit-popup-overlay">
       <div className="edit-popup-container">
@@ -145,7 +118,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
             <div className="create-campaign-input">
               <label htmlFor="startDate" className="flex items-center gap-2">
                 Start Date
-                <InlineSVG src="/icons/required-icon.svg" />
+                {/* <InlineSVG src="/icons/required-icon.svg" /> */}
               </label>
               <input
                 type="text"
@@ -178,7 +151,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
             <div className="create-campaign-input">
               <label htmlFor="endDate" className="flex items-center gap-2">
                 End Date
-                <InlineSVG src="/icons/required-icon.svg" />
+                {/* <InlineSVG src="/icons/required-icon.svg" /> */}
               </label>
               <input
                 type="text"
@@ -201,7 +174,7 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
                       onChange={(date) => handleDateChange(date, setEndDate)}
                       onClickOutside={() => setEndDatePickerOpen(false)}
                       inline
-                      minDate={startDate || undefined} 
+                      minDate={startDate || undefined}
                     />
                   </div>
                 )}
@@ -244,30 +217,12 @@ const EditCampaignPopup: React.FC<EditCampaignPopupProps> = ({
             <button className="discard-btn" onClick={onClose}>
               Discard Changes
             </button>
-            <button className="save-btn" onClick={handleSaveChanges}>
+            <button className="save-btn" onClick={handleSave}>
               Save Changes
             </button>
           </div>
         </form>
       </div>
-      {toast && toastMessage && (
-        <div
-          className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"
-          style={{ zIndex: 55 }}
-        >
-          <div className="relative w-full h-full">
-            <Toast
-              success={successToast === "yes" ? true : false}
-              message={toastMessage}
-              onClose={() => {
-                setToast(false);
-                setToastMessage("");
-                setSuccessToast("");
-              }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

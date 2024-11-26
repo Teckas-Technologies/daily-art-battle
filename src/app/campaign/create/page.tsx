@@ -11,6 +11,7 @@ import { GFX_CAMPAIGNID } from "@/config/constants";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
+import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -48,8 +49,7 @@ const page = () => {
   const pathName = usePathname();
   console.log("pathname", pathName);
   useEffect(() => {
-    if (pathName === "/campaign/create" && userDetails === null) {
-      // Redirect only if userDetails is confirmed to be null (not loading)
+    if (pathName === "/campaign/create" && !userDetails) {
       router.push("/campaign");
     }
   }, [pathName, userDetails, router]);
@@ -93,6 +93,9 @@ const page = () => {
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
+       {walltMisMatchPopup && (
+        <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
+      )}
     </div>
   );
 };

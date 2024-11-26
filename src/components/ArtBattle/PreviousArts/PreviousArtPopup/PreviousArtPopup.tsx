@@ -1,10 +1,17 @@
 import React from "react";
 import "./PreviousArtPopup.css";
 import InlineSVG from "react-inlinesvg";
+import { BattleData } from "@/hooks/battleHooks";
 interface EditProfilePopupProps {
+  artData: BattleData | null;
   onClose: () => void;
 }
-const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
+const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
+  artData,
+  onClose,
+}) => {
+  console.log("Data ............................", artData);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000] bg-opacity-50">
       <div
@@ -20,9 +27,9 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
         </h2>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-[70px]">
-        <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <img
-              src="/images/uploadart1.png"
+              src={artData?.artAcolouredArt}
               alt="Artwork 1"
               className="md:w-[250px] w-[200px] h-[200px] md:h-[250px] object-cover rounded-xl"
               style={{ border: "1px solid #515151" }}
@@ -31,59 +38,105 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
             <div className="flex mt-5 md:w-[250px] justify-between w-[180px]">
               <p className="text-[#00FF00] flex items-center gap-2">
                 <InlineSVG src="/icons/profile-green.svg" className="w-4 h-4" />
-                <span className="text-[10px] md:text-sm">Raghuvaran</span>
+                <span className="text-[10px] md:text-sm" title={artData?.artAartistName}>
+                  {artData?.artAartistName && artData.artAartistName.length > 10
+                    ? `${artData.artAartistName.slice(0, 10)}...`
+                    : artData?.artAartistName}
+                </span>
               </p>
-              <p className="text-yellow-400 flex items-center gap-1 text-[10px] md:text-sm">
-                <InlineSVG src="/icons/cup.svg" className="w-5 h-5" /> Winner
-              </p>
+              {artData?.winningArt === "Art A" && (
+                <p className="text-yellow-400 flex items-center gap-1 text-[10px] md:text-sm">
+                  <InlineSVG src="/icons/cup.svg" className="w-5 h-5" /> Winner
+                </p>
+              )}
             </div>
 
             <div className="mt-4 text-left space-y-4">
               <p className="text-white flex">
-                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">Total votes:</span>
-                <span className="text-[#00FF00] text-[10px] md:text-sm">24</span>
-              </p>
-              <p className="text-white flex">
-                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">Total Upvotes:</span>
-                <span className="text-[#00FF00] text-[10px] md:text-sm">48</span>
-              </p>
-              <p className="text-white flex">
-                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">Date of Battle:</span>
+                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
+                  Total votes:
+                </span>
                 <span className="text-[#00FF00] text-[10px] md:text-sm">
-                  12 October 2024
+                  {artData ? Number(artData.artAVotes) : 0}
+                </span>
+              </p>
+              <p className="text-white flex">
+                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
+                  Total Upvotes:
+                </span>
+                <span className="text-[#00FF00] text-[10px] md:text-sm">
+                  48
+                </span>
+              </p>
+              <p className="text-white flex">
+                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
+                  Date of Battle:
+                </span>
+                <span className="text-[#00FF00] text-[10px] md:text-sm">
+                  {artData?.startTime
+                    ? new Date(artData.startTime).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "N/A"}
                 </span>
               </p>
             </div>
           </div>
-
+          {/* 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */}
           <div className="flex flex-col items-center">
             <img
-              src="/images/uploadart1.png"
-              alt="Artwork 1"
+              src={artData?.artBcolouredArt}
+              alt="Artwork 2"
               className="md:w-[250px] w-[200px] h-[200px] md:h-[250px] object-cover rounded-xl"
               style={{ border: "1px solid #515151" }}
             />
 
-            <div className="flex mt-5 md:w-[250px] w-[180px]">
-              <p className="text-[#00FF00] flex items-center gap-2">
+            <div className="flex mt-5 md:w-[250px] w-[180px] justify-between">
+              <p className="text-[#00FF00] flex items-center gap-2 text-[10px] md:text-sm" title={artData?.artBartistName}>
                 <InlineSVG src="/icons/profile-green.svg" className="w-4 h-4" />
-                <span className="text-[10px] md:text-sm">Raghuvaran</span>
+                {artData?.artBartistName && artData.artBartistName.length > 10
+                  ? `${artData.artBartistName.slice(0, 10)}...`
+                  : artData?.artBartistName}
               </p>
+              {artData?.winningArt === "Art B" && (
+                <p className="text-yellow-400 flex items-center gap-1 text-[10px] md:text-sm">
+                  <InlineSVG src="/icons/cup.svg" className="w-5 h-5" /> Winner
+                </p>
+              )}
             </div>
 
             <div className="mt-4 text-left space-y-4">
               <p className="text-white flex">
-                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">Total votes:</span>
-                <span className="text-[#00FF00] text-[10px] md:text-sm">24</span>
-              </p>
-              <p className="text-white flex">
-                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">Total Upvotes:</span>
-                <span className="text-[#00FF00] text-[10px] md:text-sm">48</span>
-              </p>
-              <p className="text-white flex">
-                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">Date of Battle:</span>
+                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
+                  Total votes:
+                </span>
                 <span className="text-[#00FF00] text-[10px] md:text-sm">
-                  12 October 2024
+                  {artData ? Number(artData.artBVotes) : 0}
+                </span>
+              </p>
+              <p className="text-white flex">
+                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
+                  Total Upvotes:
+                </span>
+                <span className="text-[#00FF00] text-[10px] md:text-sm">
+                  48
+                </span>
+              </p>
+              <p className="text-white flex">
+                <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
+                  Date of Battle:
+                </span>
+                <span className="text-[#00FF00] text-[10px] md:text-sm">
+                  {artData?.startTime
+                    ? new Date(artData.startTime).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "N/A"}
                 </span>
               </p>
             </div>
@@ -95,7 +148,14 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
             <button className="previous-btn text-[#FDEA60] font-light md:text-[15px] text-[10px] ">
               {" "}
               Unique Rare Winner:{" "}
-              <span className="text-[#00FF00]  font-light">Karthik</span>
+              <span
+                className="text-[#00FF00]  font-light"
+                title={artData?.specialWinner}
+              >
+                {artData?.specialWinner && artData.specialWinner.length > 15
+                  ? `${artData.specialWinner.slice(0, 15)}...`
+                  : artData?.specialWinner}
+              </span>
             </button>
 
             <div className="previous-btn-Border" />
