@@ -5,6 +5,7 @@ import "./DailyCheckin.css";
 import useDailyCheckin from "@/hooks/dailyCheckinHook";
 import { useAuth } from "@/contexts/AuthContext";
 import Toast from "@/components/Toast";
+import { DAILY_CHECKIN } from "@/config/points";
 interface DailyCheckinProps {
   coin: number;
   // setCoin: (value: number) => void;
@@ -214,7 +215,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                 )}
               </div>
               <div
-                className={`flex mt-2 px-[10px] py-[px] items-center justify-center rounded-sm text-[10px] md:hidden md:px-4 md:py-[3px] ${
+                className={`flex mt-2 px-[7px] py-[px] items-center justify-center rounded-sm text-[10px] md:hidden md:px-4 md:py-[3px] ${
                   claimed || isWeeklyClaimedToday()
                     ? "bg-[#00FF00] text-black"
                     : "bg-gray-400 text-white"
@@ -226,7 +227,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                     src="/icons/coin.svg"
                     className="w-4 h-4 md:w-4 h-4 lg:w-4 h-4 xl:w-5 h-5 xxl:w-6 h-6"
                   />{" "}
-                  1
+                  {DAILY_CHECKIN}
                 </span>
               </div>
               <span className="hidden md:flex lg:mt-2 text-[#ffffff] flex-row items-center gap-1 text-xs xl:text-sm xxl:text-lg">
@@ -235,7 +236,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                   alt="Coin Icon"
                   className="w-4 h-4 md:w-4 h-4 lg:w-4 h-4 xl:w-5 h-5 xxl:w-6 h-6"
                 />
-                1
+                {DAILY_CHECKIN}
               </span>
               <button
                 className={`hidden mt-2 py-[5px] rounded-md text-[10px] md:py-[3px] md:flex ${

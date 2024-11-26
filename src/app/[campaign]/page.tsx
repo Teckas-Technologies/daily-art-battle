@@ -407,6 +407,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             handleButtonClick={handleButtonClick}
             showEditModal={showEditModal}
             setShowEditModal={setShowEditModal}
+            showUploadModal={showUploadModal}
+            setShowUploadModal={setShowUploadModal}
           />
 
           {/* <PreviousGrid

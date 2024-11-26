@@ -16,7 +16,7 @@ export default function CampaignHeader({
 }: CampaignHeaderProps) {
   const baseLink = BASE_URL;
   const fullLink = campaign?.campaignUrl
-    ? baseLink + campaign.campaignUrl.split("/").pop()
+    ? baseLink + campaign.campaignUrl
     : baseLink;
   const [buttonText, setButtonText] = useState("Copy link");
   const [showShareIcons, setShowShareIcons] = useState(false);

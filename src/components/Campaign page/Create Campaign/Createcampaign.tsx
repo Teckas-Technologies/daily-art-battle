@@ -301,7 +301,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
               <div className="create-campaign-input">
                 <label htmlFor="startDate" className="flex items-center gap-2">
                   Start Date
-                  <InlineSVG src="/icons/required-icon.svg" />
+                  {/* <InlineSVG src="/icons/required-icon.svg" /> */}
                 </label>
                 <input
                   type="text"
@@ -314,7 +314,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                 <div className="relative">
                   <InlineSVG
                     src="/icons/calender.svg"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon cursor-pointer"
                     onClick={() => setStartDatePickerOpen(true)}
                   />
                   {isStartDatePickerOpen && (
@@ -336,7 +336,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
               <div className="create-campaign-input">
                 <label htmlFor="endDate" className="flex items-center gap-2 ">
                   End Date
-                  <InlineSVG src="/icons/required-icon.svg" />
+                  {/* <InlineSVG src="/icons/required-icon.svg" /> */}
                 </label>
                 <input
                   type="text"
@@ -349,7 +349,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                 <div className="relative">
                   <InlineSVG
                     src="/icons/calender.svg"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon cursor-pointer"
                     onClick={() => setEndDatePickerOpen(true)}
                   />
                   {isEndDatePickerOpen && (
@@ -403,7 +403,20 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   className="flex items-center gap-2"
                 >
                   Special Winner
-                  {/* <InlineSVG src="/icons/required-icon.svg" /> */}
+                  <div className="relative">
+                    {" "}
+                    <InlineSVG
+                      src="/icons/required-icon.svg"
+                      className="cursor-pointer"
+                      onClick={handleIconClick}
+                    />
+                    {showTooltip && (
+                      <div className="absolute bottom-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
+                        Set the Special Winner count and reward them after the
+                        campaign ends!
+                      </div>
+                    )}
+                  </div>
                 </label>
                 <input
                   type="text"
@@ -415,14 +428,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   <InlineSVG
                     src="/icons/profile-green.svg"
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
-                    onClick={handleIconClick}
                   />
-                  {showTooltip && (
-                    <div className="absolute bottom-8 right-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
-                      Set the Special Winner count and reward them after the
-                      campaign ends!
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="create-campaign-input">
@@ -431,7 +437,20 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   className="flex items-center gap-2"
                 >
                   Special Rewards
-                  {/* <InlineSVG src="/icons/required-icon.svg" /> */}
+                  <div className="relative">
+                    {" "}
+                    <InlineSVG
+                      src="/icons/required-icon.svg"
+                      className="cursor-pointer"
+                      onClick={handleDollarClick}
+                    />
+                    {showDollarTooltip && (
+                      <div className="absolute bottom-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
+                        The entered amount will be equally distributed among the
+                        special winners!
+                      </div>
+                    )}
+                  </div>
                 </label>
                 <input
                   type="text"
@@ -443,14 +462,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                   <InlineSVG
                     src="/icons/dollar.svg"
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 input-icon"
-                    onClick={handleDollarClick}
                   />
-                  {showDollarTooltip && (
-                    <div className="absolute bottom-8 right-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
-                      The entered amount will be equally distributed among the
-                      special winners!
-                    </div>
-                  )}
                 </div>
               </div>
 

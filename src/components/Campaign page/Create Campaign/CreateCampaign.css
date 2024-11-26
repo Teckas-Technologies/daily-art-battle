@@ -322,9 +322,9 @@ input:checked + .slider:before {
   padding-right: 40px;
 }
 
-.input-icon {
+/* .input-icon {
   cursor: pointer;
-}
+} */
 
 @media (max-width: 768px) {
   .create-campaign-header {

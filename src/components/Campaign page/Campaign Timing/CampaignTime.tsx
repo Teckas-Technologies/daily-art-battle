@@ -23,6 +23,8 @@ interface CampaignTimeProps {
   handleButtonClick: () => void;
   showEditModal: boolean;
   setShowEditModal: (value: boolean) => void;
+  showUploadModal: boolean;
+  setShowUploadModal: (value: boolean) => void;
 }
 
 const CampaignTime: React.FC<CampaignTimeProps> = ({
@@ -36,9 +38,10 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
   handleButtonClick,
   showEditModal,
   setShowEditModal,
+  showUploadModal,
+  setShowUploadModal,
 }) => {
   const { wallet, signedAccountId } = useContext(NearContext);
-  const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -116,15 +119,27 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
       setShowUploadModal(false);
     }
   };
+  useEffect(() => {
+    if (toast) {
+      const timeout = setTimeout(() => {
+        setToast(false);
+        setToastMessage("");
+        setSuccessToast("");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [toast]);
   return (
     <div className="campaign-timings">
       <h3>Campaign Starts in</h3>
       <h1>
-        {timeRemaining.days} Days{" "}
+        {timeRemaining.days === 1 ? "1 Day" : `${timeRemaining.days} Days`}{" "}
         {timeRemaining.hours.toString().padStart(2, "0")}:
         {timeRemaining.minutes.toString().padStart(2, "0")}:
         {timeRemaining.seconds.toString().padStart(2, "0")}
       </h1>
+
       <div className="CampaignButtonWrapper">
         <button className="Campaignbtn" onClick={handleButtonClick}>
           {creatorEmail === activeEmail

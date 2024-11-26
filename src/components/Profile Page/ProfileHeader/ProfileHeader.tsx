@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { BASE_URL } from "@/config/constants";
 import useUpdateUserProfile from "@/hooks/updateProfileHook";
 import Toast from "@/components/Toast";
+import { uploadFile } from "@mintbase-js/storage";
 
 interface ProfileHeaderProps {
   onEditClick: () => void;
@@ -27,7 +28,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   let userDetails = user;
   const { updateUserProfile, isLoading, error } = useUpdateUserProfile();
   const [profileImg, setProfileImg] = useState<string>(
-    user?.user?.profileImg || "/images/no-profile.png"
+    user?.user?.profileImg || "/images/User_New.png"
   );
   const referralLink = `${BASE_URL}/${userDetails?.user?.referralCode}`;
   const handleCopy = () => {
@@ -62,55 +63,67 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       setIsImageLoading(false);
     }
   }, [user?.user?.profileImg]);
-  const MAX_FILE_SIZE = 1048576; // 1MB in bytes
+
+  const MAX_FILE_SIZE_MB = 40;
+  const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      if (file.size > MAX_FILE_SIZE) {
+      if (file.size > MAX_FILE_SIZE_BYTES) {
         setToastMessage(
-          "File size exceeds the 1MB limit. Please upload a smaller file."
+          `File size exceeds ${MAX_FILE_SIZE_MB} MB. Please upload a smaller file.`
         );
         setSuccessToast("no");
         setToast(true);
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64String = reader.result as string;
-        try {
-          const updatedProfile = await updateUserProfile({
-            profileImg: base64String,
-            nearAddress: signedAccountId,
-          });
+      try {
+        const uploadResult = await uploadFile(file);
+        const arweaveUrl = `https://arweave.net/${uploadResult.id}`;
 
-          if (updatedProfile) {
-            setProfileImg(base64String);
-            setToastMessage("Profile image updated successfully!");
-            setSuccessToast("yes");
-            setToast(true);
-          }
-        } catch (error) {
-          console.error("Error updating profile:", error);
-          setToastMessage("Failed to update profile. Please try again.");
-          setSuccessToast("no");
+        const updatedProfile = await updateUserProfile({
+          profileImg: arweaveUrl,
+        });
+
+        if (updatedProfile) {
+          setProfileImg(arweaveUrl);
+          setToastMessage("Profile image updated successfully!");
+          setSuccessToast("yes");
           setToast(true);
         }
-      };
-
-      reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        setToastMessage("Failed to update profile. Please try again.");
+        setSuccessToast("no");
+        setToast(true);
+      }
     }
   };
+  useEffect(() => {
+    if (toast) {
+      const timeout = setTimeout(() => {
+        setToast(false);
+        setToastMessage("");
+        setSuccessToast("");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [toast]);
   return (
     <div className="profile-header">
       <div className="profile-bg flex items-center justify-center flex-col px-[20px] py-4 bg-[#000000] text-white h-[350px] rounded-xl md:flex-row md:justify-between md:h-[230px] lg:flex-row lg:justify-between lg:gap-[40px] lg:w-[100%] lg:h-[200px] lg:px-6 lg:py-10 xl:flex-row xl:justify-between xl:gap-[40px] xl:w-[100%] xl:px-7 xl:py-10 xxl:flex-row xxl:h-[250px]">
         <div className="flex mb-6 md:mb-0 lg: items-center gap-3 profile-img ">
           <div className="profile-img relative flex items-center gap-3">
-            <div className="relative w-[80px] h-[80px] rounded-lg" style={{border:"1px solid white"}}>
-              {/* Center loader if image is still loading */}
+            <div
+              className="relative w-[80px] h-[80px] rounded-lg"
+              style={{ border: "1px solid white" }}
+            >
               {isImageLoading || isLoading ? (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
                   <span className="loader"></span>
@@ -123,15 +136,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 />
               )}
             </div>
-            {/* Edit SVG Icon */}
-            <div className="absolute top-[-5px] right-[-5px] p-2 cursor-pointer">
+
+            <div className="absolute top-[5px] right-[5px] p-[2px] cursor-pointer bg-white border border-gray-500 rounded-full shadow-sm">
               <InlineSVG
                 src="/icons/edit.svg"
-                className="w-[15px] h-[15px]"
-                style={{ fill: "white" }}
+                className="w-[12px] h-[12px]"
+                style={{ fill: "gray" }}
                 onClick={() => document.getElementById("fileInput")?.click()}
               />
             </div>
+
             <input
               type="file"
               id="fileInput"

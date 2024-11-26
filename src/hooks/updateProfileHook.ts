@@ -7,7 +7,6 @@ const useUpdateUserProfile = () => {
 
   const updateUserProfile = async (profileData: {
     profileImg: string;
-    nearAddress?: string;
   }) => {
     setIsLoading(true);
     setError(null);
