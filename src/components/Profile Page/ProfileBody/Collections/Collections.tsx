@@ -19,7 +19,12 @@ const initialCollectionsMenu: Menu[] = [
     { id: "raffle", label: "Raffle Tickets", active: false }
 ]
 
-export const Collections: React.FC = () => {
+interface Props {
+    setBurnArtSuccess: (e: boolean) => void;
+    setBurnArtFailed: (e: boolean) => void;
+}
+
+export const Collections: React.FC<Props> = ({ setBurnArtSuccess, setBurnArtFailed}) => {
     const [collectionsMenu, setCollectionsMenu] = useState(initialCollectionsMenu);
     const { analytics, fetchArtsAnalytics } = useFetchArtsAnalytics();
     const [rendered, setRendered] = useState(false);
@@ -83,7 +88,7 @@ export const Collections: React.FC = () => {
 
             {collectionsMenu[0]?.active && <RareNftGrid rendered={rendered} />}
             {collectionsMenu[1]?.active && <ParticipationNftGrid rendered={rendered} />}
-            {collectionsMenu[2]?.active && <RaffleArtsGrid rendered={rendered} />}
+            {collectionsMenu[2]?.active && <RaffleArtsGrid setBurnArtSuccess={setBurnArtSuccess} setBurnArtFailed={setBurnArtFailed} rendered={rendered} />}
         </div>
     )
 }

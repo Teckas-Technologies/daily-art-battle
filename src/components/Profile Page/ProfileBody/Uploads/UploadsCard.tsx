@@ -13,6 +13,8 @@ interface UploadsCardProps {
     isNFT: boolean;
     isUploaded: boolean;
     isSpinner?: boolean;
+    setBurnArtSuccess?: (e: boolean) => void;
+    setBurnArtFailed?: (e: boolean) => void;
 }
 
 const socials = [
@@ -21,11 +23,12 @@ const socials = [
     { id: "telegram", label: "Telegram", icon: "/images/Telegram_New.png", link: "https://t.me/share/url?text=Collect%20and%20win!%0A&url=" }
 ]
 
-export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, isSpinner }) => {
+export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded, isSpinner, setBurnArtSuccess, setBurnArtFailed }) => {
     const { wallet, signedAccountId } = useContext(NearContext);
     const { user } = useAuth();
     const [artOverlay, setArtOverlay] = useState(false);
     const overlayRef = useRef<HTMLDivElement | null>(null);
+    const [dummy, setDummy] = useState(false);
     const [confirmPopup, setConfirmPopup] = useState<ConfirmPopupInfo>({
         info: "",
         text: "",
@@ -157,7 +160,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                 </div>}
             </div>
 
-            {confirmPopup.info !== "" && <MintBurnPopup info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} art={art} isSpinner={isSpinner} />}
+            {confirmPopup.info !== "" && <MintBurnPopup setBurnArtFailed={setBurnArtFailed || setDummy} setBurnArtSuccess={setBurnArtSuccess || setDummy} info={confirmPopup?.info} text={confirmPopup?.text} isMint={confirmPopup?.isMint} onClose={() => closeMintBurnPopup()} art={art} isSpinner={isSpinner} />}
         </div>
     )
 }

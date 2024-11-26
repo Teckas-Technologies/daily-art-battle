@@ -17,22 +17,11 @@ interface Props {
     onClose: () => void;
     art: ArtData | NftToken | RaffleArt;
     isSpinner?: boolean;
+    setBurnArtSuccess: (e: boolean) => void;
+    setBurnArtFailed: (e: boolean) => void;
 }
 
-export const saveToLocalStorage = (key: string, value: string) => {
-    if (typeof window !== 'undefined') {
-        localStorage.setItem(key, value);
-    }
-};
-
-export const getFromLocalStorage = (key: string) => {
-    if (typeof window !== 'undefined') {
-        return localStorage.getItem(key);
-    }
-    return null;
-};
-
-export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art, isSpinner }) => {
+export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art, isSpinner, setBurnArtFailed, setBurnArtSuccess }) => {
     const { mintImage } = useMintImage();
     const { offchainBurn } = useOffChainBurn();
     const [burningArt, setBurningArt] = useState(false);
@@ -58,11 +47,9 @@ export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, ar
                 console.log("RES NEW:", res);
                 setBurningArt(false);
                 if (res?.message === "Updated successfully") {
-                    saveToLocalStorage("isArtBurn", "success");
-                    // router.push("/profile?isArtBurn=success")
+                    setBurnArtSuccess(true);
                 } else {
-                    saveToLocalStorage("isArtBurn", "failed");
-                    // router.push("/profile?isArtBurn=failed");
+                    setBurnArtFailed?.(true);
                 }
                 onClose();
             }

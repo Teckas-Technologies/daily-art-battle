@@ -11,9 +11,11 @@ import { useSearchParams } from "next/navigation";
 
 interface Props {
     rendered: boolean;
+    setBurnArtSuccess?: (e: boolean) => void;
+    setBurnArtFailed?: (e: boolean) => void;
 }
 
-export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
+export const RaffleArtsGrid: React.FC<Props> = ({ rendered, setBurnArtFailed, setBurnArtSuccess }) => {
     const [page, setPage] = useState<number>(1);
     // const [sort, setSort] = useState<string>("dateDsc");
     // const [sortLabel, setSortLabel] = useState("Latest First");
@@ -254,7 +256,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             </div>
 
             <div className="upload-grid grid-view w-full flex flex-col justify-center items-center min-h-[25rem]" id="uploads">
-                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} isSpinner={isSpinner} />
+                <UploadsHolder artData={userArts} isNFT={false} isUploaded={false} isSpinner={isSpinner} setBurnArtFailed={setBurnArtFailed} setBurnArtSuccess={setBurnArtSuccess} />
 
                 {empty && !isLoading && <div className="empty w-full flex items-center justify-center gap-2 pb-20">
                     <InlineSVG
