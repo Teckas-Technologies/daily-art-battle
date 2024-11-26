@@ -7,6 +7,7 @@ import { BASE_URL } from "@/config/constants";
 import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
 import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import { PARTICIPATION_NFT_BURN, RARE_NFT_BURN } from "@/config/points";
 
 interface UploadsCardProps {
     art: ArtData | NftToken | RaffleArt;
@@ -102,7 +103,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
             return;
         }
         console.log("Raffle Art Offchain Burn Clicked!");
-        setConfirmPopup({ info: "Earn GFXvs Points", text: `Burn this ${isSpinner ? "Special" : "Participation"} Art for<br />1000 GFXvs Coins`, isMint: false });
+        setConfirmPopup({ info: "Earn GFXvs Points", text: `Burn this ${isSpinner ? "Special" : "Participation"} Art for<br />${isSpinner ? RARE_NFT_BURN : PARTICIPATION_NFT_BURN} GFXvs Coins`, isMint: false });
     }
 
     const closeMintBurnPopup = () => {
