@@ -13,6 +13,7 @@ import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useLeaderBoard } from "@/hooks/leaderboard";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
+import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 const LeaderBoardPage = ()=>{
 const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
     const [openNav, setOpenNav] = useState(false);
@@ -127,6 +128,7 @@ const fetchInitialData = async () => {
       </div>
       <FooterMenu fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
       <MobileNav openNav={openNav} setOpenNav={setOpenNav} fontColor={""} campaignId={GFX_CAMPAIGNID} toggleUploadModal={toggleUploadModal} uploadSuccess={uploadSuccess} setSignToast={setSignToast} setErrMsg={setErrMsg} />
+      {walltMisMatchPopup && (<WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />)}
     </div>    
     )
 }
