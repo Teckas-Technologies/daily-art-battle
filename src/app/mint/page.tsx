@@ -24,7 +24,7 @@ const mint = async()=>{
         count:4,
         contractId:ART_BATTLE_CONTRACT,
       };
-    await mintImage(mintObj);
+    // await mintImage(mintObj);
 }
 
 

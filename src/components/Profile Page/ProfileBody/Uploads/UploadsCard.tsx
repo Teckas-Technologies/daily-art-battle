@@ -83,7 +83,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
             await wallet?.signIn();
             return;
         }
-        setConfirmPopup({ info: "Mint NFT", text: "Mint this NFT to get Participation NFT", isMint: true });
+        setConfirmPopup({ info: "Mint NFT", text: `Mint this Art to get ${isSpinner ? "Rare NFT" : "Participation NFT"}`, isMint: true });
     }
  
     const handleBurn = async () => {
@@ -98,7 +98,8 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
         if (!user) {
             return;
         }
-        console.log("Raffle Art Burn Clicked!");
+        console.log("Raffle Art Offchain Burn Clicked!");
+        setConfirmPopup({ info: "Earn GFXvs Points", text: `Burn this ${isSpinner ? "Special" : "Participation"} Art for<br />1000 GFXvs Coins`, isMint: false });
     }
 
     const closeMintBurnPopup = () => {
@@ -142,17 +143,17 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
                     </div>
                 </div>}
             </div>
-            <div className={`uploads-bottom w-full flex justify-between gap-1 items-center pt-2 px-1 ${!isArtData(art) && "hidden"}`}>
+            <div className={`uploads-bottom w-full flex justify-between gap-1 items-center pt-2 px-1 `}> {/** ${!isArtData(art) && "hidden"} */}
                 <div className="date">
-                    <h2 className="uploads-text">{isArtData(art) && formatDate(art?.uploadedTime)}</h2>
+                    <h2 className="uploads-text">{isArtData(art) ? formatDate(art?.uploadedTime) : isNFTData(art) ? formatDate(art.minted_timestamp) : formatDate(art?.createdAt)}</h2>
                 </div>
-                {isArtData(art) && <div className="collects flex items-center gap-1">
+                {<div className="collects flex items-center gap-1">
                     <InlineSVG
                         src="/icons/red-heart.svg"
                         className="w-4 h-4 spartan-light"
                     />
-                    <h2 className="uploads-text">{isArtData(art) && art?.raffleTickets as number}</h2>
-                    <h2 className="uploads-text hidden md:flex">Collects</h2>
+                    <h2 className="uploads-text">{isArtData(art) ? art?.raffleTickets as number : isNFTData(art) ? art?.copies : art.raffleCount}</h2>
+                    <h2 className="uploads-text hidden md:flex">{isNFTData(art) ? "Copies" : isArtData(art) ? "Collects" : "Collects"}</h2>
                 </div>}
             </div>
 

@@ -7,7 +7,6 @@ import useNEARTransfer from "@/hooks/useTransfer";
 import { NearContext } from "@/wallet/WalletSelector";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { useAuth } from "@/contexts/AuthContext";
-import { saveToLocalStorage } from "@/components/PopUps/MintBurnPopup";
 interface CoinPurchasePopupProps {
   onClose: () => void;
 }
@@ -99,9 +98,8 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
       console.error("Invalid coin value.");
       return;
     }
-    saveToLocalStorage("isMint", "false");
-    saveToLocalStorage("isBuyCoin", "true");
     if (dropdownSelectedCoin === "USDT") {
+      window.history.replaceState(null, '', "/profile?isUsdttransfer=true");
       const result = await Usdttransfer(coinValue);
       if (result?.success) {
         console.log("USDT Transfer successful:", result);
@@ -109,6 +107,7 @@ const CoinPurchasePopup: React.FC<CoinPurchasePopupProps> = ({ onClose }) => {
         console.error("USDT Transfer failed:", result?.error);
       }
     } else {
+      window.history.replaceState(null, '', "/profile?isNeartransfer=true");
       const result = await transfer(coinValue);
       if (result?.success) {
         console.log("NEAR Transfer successful:", result);

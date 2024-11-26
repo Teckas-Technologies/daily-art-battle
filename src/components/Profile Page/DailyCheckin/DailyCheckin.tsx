@@ -33,10 +33,10 @@ const DailyCheckin = () => {
     setCurrentIndex(index);
 
     const result = await dailyCheckin();
-    console.log(">>>>>", result);
+    // console.log(">>>>>", result);
 
     if (result) {
-      console.log("Check-in successful:", result);
+      // console.log("Check-in successful:", result);
       setIsClaimed(true);
       setToastMessage(`Claimed reward for Day ${index + 1}!`);
       setSuccessToast("yes");
@@ -47,11 +47,11 @@ const DailyCheckin = () => {
   useEffect(() => {
     const fetchStreakData = async () => {
       const data = await fetchDailyCheckin();
-      console.log("data .......", data);
+      // console.log("data .......", data);
 
       if (data) {
         const streakDays = data.data.streakDays || 0;
-        console.log("days", streakDays);
+        // console.log("days", streakDays);
 
         const updatedStreak = Array(7).fill(false);
 
@@ -80,7 +80,7 @@ const DailyCheckin = () => {
   const handleWeeklyClaim = async () => {
     if (streakDays === 7 && !isClaimed) {
       const result = await weeklyCheckin();
-      console.log("Weekly Check-in Result:", result);
+      // console.log("Weekly Check-in Result:", result);
       if (result) {
         setIsClaimed(true);
         setToast(true);

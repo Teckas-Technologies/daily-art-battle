@@ -25,7 +25,7 @@ const useDailyCheckin = () => {
       }
 
       const data = await response.json();
-      console.log("Daily check-in response:", data);
+      // console.log("Daily check-in response:", data);
       return data;
     } catch (err) {
       if (err instanceof Error) {
@@ -57,7 +57,7 @@ const useDailyCheckin = () => {
       }
 
       const data = await response.json();
-      console.log("Weekly check-in response:", data);
+      // console.log("Weekly check-in response:", data);
       return data;
     } catch (err) {
       if (err instanceof Error) {
@@ -91,9 +91,9 @@ const useDailyCheckin = () => {
       setCheckinData(data);
       setStreakDays(data.data.streakDays);
       setClaimDate(data.data.lastClaimedDate);
-      console.log("Last claim date", claimDate);
+      // console.log("Last claim date", claimDate);
 
-      console.log("Fetched daily check-in data:", data);
+      // console.log("Fetched daily check-in data:", data);
       return data;
     } catch (err) {
       if (err instanceof Error) {

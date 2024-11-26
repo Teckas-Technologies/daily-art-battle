@@ -25,11 +25,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         setTimeout(() => setShowCopiedMessage(false), 2000);
       })
       .catch(() => {
-        console.log("Failed to copy!");
+        // console.log("Failed to copy!");
       });
   };
   const handleSignIn = async () => {
-    console.log("clicked login");
+    // console.log("clicked login");
     return wallet?.signIn();
   };
   return (

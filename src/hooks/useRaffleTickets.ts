@@ -83,7 +83,7 @@ export const useArtsRaffleCount = (): UseTicketReturn => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Response OKK!!!!!!!!!!!")
+        console.log("Response OKK!!!!!!!!!!!", data)
         return true;
       } else {
         throw new Error('Error' + data.message || 'Failed to update vote');

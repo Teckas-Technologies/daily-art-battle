@@ -53,12 +53,15 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             const timeoutId = setTimeout(initializeData, 100);
             return () => clearTimeout(timeoutId);
         }
+    }, [sort, page, searchQuery, userDetails]);
+
+    useEffect(() => {
         if (sort === "spinner") {
             setIsSpinner(true);
         } else {
             setIsSpinner(false);
         }
-    }, [sort, page, searchQuery, userDetails]);
+    }, [sort])
 
     const [hasnext, setHasNext] = useState(false);
 
@@ -213,7 +216,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
                     </div>
                 </div>
 
-                <div className={`filters-center relative md:w-auto ${sort === "raffles" ? "w-[15rem]": "w-[10rem]"} flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black`} ref={dropdownRef} onClick={handleToggle}>
+                <div className={`filters-center relative md:w-auto ${sort === "raffles" ? "w-[15rem]" : "w-[10rem]"} flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black`} ref={dropdownRef} onClick={handleToggle}>
                     <h2 className="spartan-light text-white md:text-md text-sm">{sortLabel}</h2>
                     <div className="down-icon md:h-[3rem] h-[2rem] flex justify-center items-center">
                         <InlineSVG
