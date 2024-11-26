@@ -29,6 +29,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 lastName: user.lastName,
                 gfxvsCoins: user.gfxCoin,
                 email:user.email,
+                profileImg:user.profileImg,
                 rank: skip + index + 1 
             }));
         res.status(200).json({data:leaders,totalDocuments,totalPages});
