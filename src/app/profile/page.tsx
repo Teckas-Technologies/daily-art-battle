@@ -12,7 +12,7 @@ import { GFX_CAMPAIGNID, NEXT_PUBLIC_NETWORK } from "@/config/constants";
 import React, { useContext, useEffect, useState } from "react";
 import InlineSVG from "react-inlinesvg";
 import DailyCheckin from "@/components/Profile Page/DailyCheckin/DailyCheckin";
-import { MintBurnPopup } from "@/components/PopUps/MintBurnPopup";
+import { getFromLocalStorage, MintBurnPopup, saveToLocalStorage } from "@/components/PopUps/MintBurnPopup";
 import { ConfirmPopupInfo } from "@/types/types";
 import useNearTransfer from "@/hooks/nearTransferHook";
 import { NearContext } from "@/wallet/WalletSelector";
@@ -43,6 +43,7 @@ const page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
+  const [burnSuccess, setBurnSuccess] = useState(false);
 
   const { user } = useAuth();
   let userDetails = user;
@@ -80,7 +81,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchTransaction = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
+      // const searchParams = new URLSearchParams(window.location.search);
 
       const accountId = searchParams?.get("account_id") || "";
       const txnHash = searchParams?.get("transactionHashes") || "";
@@ -170,7 +171,30 @@ const page = () => {
     if (signedAccountId) {
       fetchTransaction();
     }
-  }, [signedAccountId, userDetails, searchParams]);
+  }, [signedAccountId, userDetails, searchParams, pathName]);
+
+  const isArtBurn = getFromLocalStorage("isArtBurn")
+  useEffect(() => {
+    if (userDetails) {
+      // const searchParamsNew = new URLSearchParams(window.location.search);
+      // const isArtBurn = searchParams?.get("isArtBurn") || "";
+      if (isArtBurn !== "null") {
+        if (isArtBurn === "success") {
+          setToastMessage(`Burn Successful!`);
+          setSuccessToast("yes");
+          setToast(true);
+          saveToLocalStorage("isArtBurn", "null");
+          // window.history.replaceState(null, '', "/profile");
+        } else if (isArtBurn === "failed") {
+          setToastMessage(`Burn Failed!`);
+          setSuccessToast("no");
+          setToast(true);
+          saveToLocalStorage("isArtBurn", "null");
+          // window.history.replaceState(null, '', "/profile");
+        }
+      }
+    }
+  }, [searchParams, pathName, userDetails, isArtBurn])
 
   useEffect(() => {
     const buycoin = searchParams?.get("buyCoin");

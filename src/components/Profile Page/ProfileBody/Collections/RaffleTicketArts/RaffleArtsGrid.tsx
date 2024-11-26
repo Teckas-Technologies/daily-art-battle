@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { UploadsHolder } from "../../Uploads/UploadsHolder";
 import { useFetchRaffleArts, useSearchRaffleArts } from "@/hooks/raffleArtsHook";
 import { RaffleArt } from "@/types/types";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
     rendered: boolean;
@@ -28,8 +29,11 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
     const [empty, setEmpty] = useState("");
     const [total, setTotal] = useState(totalPage);
     const [isLoading, setIsLoading] = useState(false);
+    const searchParams = useSearchParams();
     const { user } = useAuth();
     let userDetails = user;
+
+    const isArtBurn = searchParams?.get("isArtBurn") || "";
 
     useEffect(() => {
         if (loading || searchLoading) {
@@ -53,7 +57,7 @@ export const RaffleArtsGrid: React.FC<Props> = ({ rendered }) => {
             const timeoutId = setTimeout(initializeData, 100);
             return () => clearTimeout(timeoutId);
         }
-    }, [sort, page, searchQuery, userDetails]);
+    }, [sort, page, searchQuery, userDetails, isArtBurn]);
 
     useEffect(() => {
         if (sort === "spinner") {
