@@ -178,6 +178,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         hash:transactionHash
                     })
                     await newHash.save();
+                }else {
+                    res.status(500).json({ error: "transaction is not success" });
                 }
             }
             else if(query ==='nearTransfer'){
