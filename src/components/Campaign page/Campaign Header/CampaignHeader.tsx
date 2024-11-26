@@ -52,8 +52,13 @@ export default function CampaignHeader({
         <div className="campaign-header-card">
           <div className="campaign-details">
             <div className="flex flex-row items-center justify-center gap-3">
-              <h1 className="flex flex-row gap-3 items-center justify-center">
-                {campaign?.campaignName}
+              <h1
+                className="flex flex-row gap-3 items-center justify-center"
+                title={campaign?.campaignName}
+              >
+                {campaign?.campaignName && campaign?.campaignName?.length > 12
+                  ? `${campaign?.campaignName.slice(0, 12)}...`
+                  : campaign?.campaignName}
                 <InlineSVG
                   src="/icons/share.svg"
                   className="w-5 h-5 mt-2"

@@ -13,6 +13,7 @@ import NoPage from "@/components/404 Page/NoPage";
 import { SignInPopup } from "@/components/PopUps/SignInPopup";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
+import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 const page = () => {
   const { data: session, status } = useSession();
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -79,6 +80,9 @@ const page = () => {
           infoMsg={infoMsg}
           onClose={() => setSignToast(false)}
         />
+      )}
+       {walltMisMatchPopup && (
+        <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
       )}
     </div>
     // <div style={{ width: "100%", minHeight: "100vh", background: "#000000" }}>

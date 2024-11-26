@@ -373,7 +373,7 @@ export const Battle: React.FC<Props> = ({
         </div>
       </div>
       {selectedArtId && overlayArt && <BuyRafflePopup overlayArt={overlayArt} setRefresh={setRefresh} campaignId={campaignId} setSuccess={setSuccess} myTickets={overlayArt?._id === artA?.id ? artAMyTickets : artBMyTickets} setSelectedArtId={setSelectedArtId} setErr={setErr} setErrMsg={setErrMsg} setSignToast={setSignToast} />}
-      {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => { setSignToast(false); setSelectedArtId(overlayArt?._id || "") }} />}
+      {signToast && <SignInPopup text="Sign In to Collect a Raffle Ticket!" onClose={() => { setSignToast(false); setSelectedArtId(overlayArt?._id || "") }} infoMsg=""/>}
       {success && <Toast
         success={true}
         message={"Raffle Tickets Collected!"}

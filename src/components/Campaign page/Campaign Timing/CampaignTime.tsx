@@ -1,16 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./CampaignTime.css";
-import { CampaignPageData } from "@/hooks/CampaignHook";
+import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
 import EditCampaignPopup from "../Edit Campaign Details/EditCampaign";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import Toast from "@/components/Toast";
 
 interface CampaignTimeProps {
   campaign?: CampaignPageData | null;
   campaignId: string;
   editCampaign: boolean;
   setEditCampaign: (value: boolean) => void;
+  timeRemaining: {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
+  creatorEmail: string | undefined;
+  activeEmail: string | undefined;
+  handleButtonClick: () => void;
+  showEditModal: boolean;
+  setShowEditModal: (value: boolean) => void;
 }
 
 const CampaignTime: React.FC<CampaignTimeProps> = ({
@@ -18,69 +30,90 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
   campaignId,
   editCampaign,
   setEditCampaign,
+  timeRemaining,
+  creatorEmail,
+  activeEmail,
+  handleButtonClick,
+  showEditModal,
+  setShowEditModal,
 }) => {
-  const [timeRemaining, setTimeRemaining] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
   const { wallet, signedAccountId } = useContext(NearContext);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [toast, setToast] = useState(false);
-  const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
-  const { user } = useAuth();
-  let userDetails = user;
+  const [successToast, setSuccessToast] = useState("");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [isStartDatePickerOpen, setStartDatePickerOpen] = useState(false);
+  const [isEndDatePickerOpen, setEndDatePickerOpen] = useState(false);
+  const [campaignName, setCampaignName] = useState("");
+  const [welcomeText, setWelcomeText] = useState("");
+  const [specialRewards, setSpecialRewards] = useState("");
+  const [isPubliclyVisible, setIsPubliclyVisible] = useState(false);
+  const { updateCampaign, isLoading, isError } = useCampaigns();
   useEffect(() => {
     if (toast) {
       setTimeout(() => setToast(false), 3000);
     }
   }, [toast]);
-
   useEffect(() => {
-    if (!campaign || !campaign.startDate) return;
+    if (campaign) {
+      setStartDate(campaign.startDate ? new Date(campaign.startDate) : null);
+      setEndDate(campaign.endDate ? new Date(campaign.endDate) : null);
+      setCampaignName(campaign.campaignName || "");
+      setWelcomeText(campaign.campaignWelcomeText || "");
+      setSpecialRewards(campaign.specialRewards.toString() || "");
+      setIsPubliclyVisible(campaign.publiclyVisible || false);
+    }
+  }, [campaign]);
+  const handleDateChange = (
+    date: Date | null,
+    setter: (value: Date | null) => void
+  ) => {
+    setter(date);
+    if (setter === setStartDate) setStartDatePickerOpen(false);
+    else setEndDatePickerOpen(false);
+  };
+  const handleSaveChanges = async () => {
+    console.log("Current input field values:");
+    console.log("Welcome Text:", welcomeText);
+    console.log("Campaign Name:", campaignName);
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
+    console.log("Special Rewards:", specialRewards);
+    console.log("Publicly Visible:", isPubliclyVisible);
 
-    const startDate = new Date(campaign.startDate).getTime();
-    const endDate = campaign.endDate
-      ? new Date(campaign.endDate).getTime()
-      : null;
-
-    const updateCountdown = () => {
-      const now = new Date().getTime();
-      const timeLeft = startDate - now;
-
-      if (timeLeft > 0) {
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-        setTimeRemaining({ days, hours, minutes, seconds });
-      } else {
-        clearInterval(timerId);
-        setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      }
+    const updatedCampaignData: CampaignPageData = {
+      _id: campaign?._id || "",
+      campaignName,
+      campaignWelcomeText: welcomeText,
+      startDate: startDate ? startDate.toISOString() : "",
+      endDate: endDate ? endDate.toISOString() : "",
+      specialRewards: Number(specialRewards) || 0,
+      publiclyVisible: isPubliclyVisible,
+      participants: 0,
+      email: campaign?.email || "",
     };
 
-    const timerId = setInterval(updateCountdown, 1000);
+    console.log("Updated Campaign Data:", updatedCampaignData);
 
-    return () => clearInterval(timerId);
-  }, [campaign]);
-  const creatorEmail = campaign?.email;
-  const activeEmail = userDetails?.user?.email;
+    const result = await updateCampaign(updatedCampaignData);
 
-  const handleButtonClick = () => {
-    if (creatorEmail === activeEmail) {
-      setShowEditModal(true);
+    if (result) {
+      setEditCampaign(!editCampaign);
+      setShowUploadModal(false);
+      setSuccessToast("yes");
+      setToast(true);
+      setToastMessage("Campaign Edited Successfully");
     } else {
-      setShowUploadModal(true);
+      console.error("Failed to distribute art");
+      setToast(true);
+      setToastMessage("Failed to edit campaign details");
+      setSuccessToast("no");
+      setShowUploadModal(false);
     }
   };
   return (
@@ -107,6 +140,24 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
           campaign={campaign}
           setEditCampaign={setEditCampaign}
           editCampaign={editCampaign}
+          welcomeText={welcomeText}
+          setWelcomeText={setWelcomeText}
+          campaignName={campaignName}
+          setCampaignName={setCampaignName}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          setStartDatePickerOpen={setStartDatePickerOpen}
+          handleDateChange={handleDateChange}
+          endDate={endDate}
+          setEndDatePickerOpen={setEndDatePickerOpen}
+          specialRewards={specialRewards}
+          setSpecialRewards={setSpecialRewards}
+          isPubliclyVisible={isPubliclyVisible}
+          setIsPubliclyVisible={setIsPubliclyVisible}
+          handleSaveChanges={handleSaveChanges}
+          isEndDatePickerOpen={isEndDatePickerOpen}
+          isStartDatePickerOpen={isStartDatePickerOpen}
+          setEndDate={setEndDate}
         />
       )}
       {showUploadModal && (
@@ -120,6 +171,24 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
           setSuccessToast={setSuccessToast}
           setToastMessage={setToastMessage}
         />
+      )}
+      {toast && toastMessage && (
+        <div
+          className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"
+          style={{ zIndex: 55 }}
+        >
+          <div className="relative w-full h-full">
+            <Toast
+              success={successToast === "yes"}
+              message={toastMessage}
+              onClose={() => {
+                setToast(false);
+                setToastMessage("");
+                setSuccessToast("");
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

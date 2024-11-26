@@ -20,7 +20,7 @@ export interface CampaignPageData {
   specialWinnerCount?: number;
   participants: number;
   distributedRewards?: boolean;
-  email: string;
+  email?: string;
 }
 interface Campaign {
   campaign: Campaign[];
@@ -217,8 +217,15 @@ const useCampaigns = () => {
     setIsError(null);
 
     try {
-      const response = await fetchWithAuth(
-        `/api/battle?queryType=battles&sort=${sort}&campaignId=${campaignId}`
+      const response = await fetch(
+        `/api/battle?queryType=battles&sort=${sort}&campaignId=${campaignId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -461,6 +468,7 @@ const useCampaigns = () => {
     distributeArt,
     participants,
     documents,
+    setIsLoading,
   };
 };
 
