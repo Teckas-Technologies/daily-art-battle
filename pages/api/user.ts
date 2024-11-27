@@ -60,6 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         gfxCoin: SIGNUP,  
         transactionType: TransactionType.RECEIVED_FROM_SIGNUP  
       });
+      await newTransaction.save();
 
       if (referrer) {
         referrer.referredUsers.push(newUser._id);

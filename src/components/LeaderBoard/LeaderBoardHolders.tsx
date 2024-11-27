@@ -165,8 +165,8 @@ const fetchInitialData = async () => {
             </span>
   
             {/* GFX Points with Icon */}
-            <div className="flex items-center justify-center gap-2 w-[80px] sm:w-[100px] md:w-[140px] lg:w-[200px] text-xs sm:text-sm md:text-base">
-              <InlineSVG src={`/icons/${getCoinColor(user.rank)}.svg`} className="h-6 w-6 text-yellow-400" />
+            <div className="flex items-center justify-between gap-2 w-[80px] sm:w-[100px] md:w-[140px] lg:w-[200px] text-xs sm:text-sm md:text-base">
+              <InlineSVG src={`/icons/${getCoinColor(user.rank)}.svg`} className="h-6 w-6 flex-shrink-0 text-yellow-400" />
               <span className="break-words">{user.gfxvsCoins}</span>
             </div>
           </div>
