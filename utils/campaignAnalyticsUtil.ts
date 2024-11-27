@@ -61,6 +61,30 @@ export  async function fetchUniqueWallets(campaignId:String){
     }
 }
 
+
+export  async function fetchUniqueWalletsWithPagination(campaignId:String,page: number, limit: number){
+    try {
+        const skip = limit * (page === 1 ? 0 : page - 1); 
+        const voters = await RaffleTicket.find({ campaignId }).select('email');
+        const uniqueEmails = Array.from(new Set(voters.map(voter => voter.email)));
+        const paginatedEmails = uniqueEmails.slice(skip, skip + limit);
+        const users = await User.find(
+            { email: { $in: paginatedEmails } },
+            { firstName: 1, lastName: 1, email: 1 } 
+        );
+        const totalDocuments = uniqueEmails.length;
+        const totalPages = Math.ceil(totalDocuments / limit);
+        return {
+            users,
+            totalDocuments,
+            totalPages,
+            currentPage: page,
+        };
+    } catch (error:any) {
+        throw new Error(error)
+    }
+}
+
 export  async function fetchTotalWallets(campaignId:String){
     try {
         const voters = await RaffleTicket.find({campaignId:campaignId})
@@ -83,5 +107,13 @@ export async function fetchMostVotedArt(campaignId:String){
 }
 
  
+export async function fetchAllUploadedArts(campaignId:String){
+    try {
+        const art = (await ArtTable.find({ campaignId })).length;
+        return art;
+        } catch (error:any) {
+            throw new Error(error)
+        }
+}
 
 

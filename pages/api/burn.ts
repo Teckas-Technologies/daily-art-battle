@@ -26,7 +26,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     { $inc: { gfxCoin: RARE_NFT_BURN } },
                     { new: true }
                 );
-            
                 const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: RARE_NFT_BURN, 
@@ -36,21 +35,23 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 res.status(200).json({message:"Updated successfully"})
             }else if(queryType=="raffles"){
 
-                await RaffleTicket.findOneAndUpdate(
+               const raffle=  await RaffleTicket.findOneAndUpdate(
                     { _id:raffleId },
                     { $set: { isMintedNft: true } },
                     { new: true }
                 );
-
+                if (!raffle) {
+                    throw new Error("Raffle not found");
+                }
+                const noOfcoll = raffle.raffleCount;
                 const response = await User.findOneAndUpdate(
                     { email:email },
-                    { $inc: { gfxCoin: PARTICIPATION_NFT_BURN } },
+                    { $inc: { gfxCoin:  noOfcoll * PARTICIPATION_NFT_BURN } },
                     { new: true }
                 );
-            
                 const newTransaction = new Transactions({
                     email: email,
-                    gfxCoin: PARTICIPATION_NFT_BURN, 
+                    gfxCoin: noOfcoll * PARTICIPATION_NFT_BURN, 
                     transactionType: "received"
                   });
                   await newTransaction.save();
