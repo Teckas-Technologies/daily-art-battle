@@ -6,6 +6,7 @@ import { PARTICIPATION_NFT_BURN, RARE_NFT_BURN } from "@/config/points";
 import Transactions from "../../model/Transactions";
 import Battle from "../../model/Battle";
 import RaffleTicket from "../../model/RaffleTicket";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
@@ -28,8 +29,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 );
                 const newTransaction = new Transactions({
                     email: email,
-                    gfxCoin: RARE_NFT_BURN, 
-                    transactionType: "received"
+                    gfxCoin: RARE_NFT_BURN,
+                    transactionType: TransactionType.RECEIVED_FROM_BURN
                   });
                   await newTransaction.save();
                 res.status(200).json({message:"Updated successfully"})
@@ -52,7 +53,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: noOfcoll * PARTICIPATION_NFT_BURN, 
-                    transactionType: "received"
+                    transactionType: TransactionType.RECEIVED_FROM_BURN
                   });
                   await newTransaction.save();
                   res.status(200).json({message:"Updated successfully"})

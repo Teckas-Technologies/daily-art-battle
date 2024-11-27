@@ -20,6 +20,7 @@ import User from "../../model/User";
 import Transactions from "../../model/Transactions";
 import { ART_UPLOAD } from "@/config/points";
 import { validateUser } from "../../utils/validateClient";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 export default async function handler(
   req: NextApiRequest,
@@ -53,7 +54,7 @@ export default async function handler(
         const newTransaction = new Transactions({
           email: email,
           gfxCoin: ART_UPLOAD,  
-          transactionType: "spent"  
+          transactionType: TransactionType.SPENT_FOR_ART_UPLOAD  
         });
         
         await newTransaction.save();

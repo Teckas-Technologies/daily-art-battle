@@ -7,6 +7,7 @@ import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import JwtPayload from "../../utils/verifyToken";
 import { AI_IMAGE } from "@/config/points";
 import Transactions from "../../model/Transactions";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 const openai = new OpenAI({
   apiKey: OPENAI,
@@ -66,7 +67,7 @@ export default async function handler(
         const newTransaction = new Transactions({
           email: email,
           gfxCoin: AI_IMAGE,  
-          transactionType: "spent"  
+          transactionType: TransactionType.SPENT_FOR_AI_IMAGE_GENERATION  
         });
         
         await newTransaction.save();

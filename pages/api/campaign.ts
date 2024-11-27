@@ -7,6 +7,7 @@ import { calculateCampaignCoins } from "../../utils/campaignUtils";
 import Transactions from "../../model/Transactions";
 import ArtTable from "../../model/ArtTable";
 import { validateUser } from "../../utils/validateClient";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 export const config = {
   api: {
@@ -66,7 +67,7 @@ export default async function handler(
             const newTransaction = new Transactions({
               email: email,
               gfxCoin: (calculatedCoins + data.specialRewards),  
-              transactionType: "spent"  
+              transactionType: TransactionType.SPENT_FOR_CAMPAIGN 
             });
             
             await newTransaction.save();
@@ -78,7 +79,7 @@ export default async function handler(
           const newTransaction = new Transactions({
             email: email,
             gfxCoin: calculatedCoins,  
-            transactionType: "spent"  
+            transactionType: TransactionType.SPENT_FOR_CAMPAIGN   
           });
           
           await newTransaction.save();

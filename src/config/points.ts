@@ -25,3 +25,4 @@ export const PARTICIPANT = 10
 export const RAFFLE_TICKET = 10;
 export const DAILY_CHECKIN = 10;
 export const WEEKLY_CLAIM = 25;
+export const SIGNUP = 1000;

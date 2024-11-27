@@ -1,5 +1,6 @@
 import ArtTable from "../model/ArtTable";
 import Campaign from "../model/campaign";
+import { TransactionType } from "../model/enum/TransactionType";
 import Transactions from "../model/Transactions";
 import User from "../model/User";
 
@@ -60,7 +61,7 @@ const distribute = async(artList: any[],rewardPerUser:any)=>{
             const newTransaction = new Transactions({
                 email: userEmail,
                 gfxCoin: rewardPerUser,
-                transactionType: "received"
+                transactionType: TransactionType.RECEIVED_FROM_SPECIAL_REWARD
             });
             await newTransaction.save();
         })

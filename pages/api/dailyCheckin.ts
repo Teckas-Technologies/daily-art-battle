@@ -5,6 +5,7 @@ import DailyCheckin from "../../model/DailyCheckin";
 import User from "../../model/User";
 import { DAILY_CHECKIN, WEEKLY_CLAIM } from "@/config/points";
 import Transactions from "../../model/Transactions";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
@@ -31,7 +32,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: DAILY_CHECKIN,  
-                    transactionType: 'received'  
+                    transactionType: TransactionType.RECEIVED_FROM_DAILY_CHECKIN  
                   });
                   
                   await newTransaction.save();
@@ -59,7 +60,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: DAILY_CHECKIN,  
-                    transactionType: 'received' 
+                    transactionType:  TransactionType.RECEIVED_FROM_DAILY_CHECKIN 
                   });
                   
                   await newTransaction.save();
@@ -95,7 +96,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: WEEKLY_CLAIM,  
-                    transactionType: 'received'  
+                    transactionType:  TransactionType.RECEIVED_FROM_WEEKLY_CLAIM 
                   });
                   
                   await newTransaction.save();

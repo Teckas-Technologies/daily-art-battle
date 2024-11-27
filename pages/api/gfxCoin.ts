@@ -11,6 +11,7 @@ import { BEFORE_MAY_2021, DEFAULT, EMAIL_VERIFY, GFXCOIN_PER_NEAR, GFXCOIN_PER_U
 import { error } from "console";
 import Transactions from "../../model/Transactions";
 import axios from "axios";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -55,6 +56,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             return res.status(500).json({error:"transaction is not valid"});
                         }
                             await updateUserCoins(email, coins);
+                            const newTransaction = new Transactions({
+                                email: email,
+                                gfxCoin: coins, 
+                                transactionType: TransactionType.RECEIVED_FROM_BURN
+                              });
+                              await newTransaction.save();
                             const newHash = new Hashes({
                                 email: email,
                                 walletAddress:walletAddress,
@@ -88,7 +95,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: coins,
-                    transactionType: "received"
+                    transactionType: TransactionType.RECEIVED_FROM_NEAR_AIRDROP
                 });
                 await newTransaction.save();
             } else if (query === 'telegramDrop') {
@@ -99,7 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const newTransaction = new Transactions({
                     email: email,
                     gfxCoin: coins,
-                    transactionType: "received"
+                    transactionType: TransactionType.RECEIVED_FROM_TELEGRAM_AIRDROP
                 });
                 await newTransaction.save();
                 await handleDrop(email, coins, isClaimedField);
@@ -172,6 +179,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     console.log(amount)
                     const coins = calculateUSDCGfxPoints(amount)
                     await updateUserCoins(email, coins);
+                    const newTransaction = new Transactions({
+                        email: email,
+                        gfxCoin: coins, 
+                        transactionType: TransactionType.RECEIVED_FROM_USDT_TRANSFER
+                      });
+                      await newTransaction.save();
                     const newHash = new Hashes({
                         email:email,
                         walletAddress:walletAddress,
@@ -202,6 +215,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         const amount = utils.format.formatNearAmount(transaction.transaction.actions[0].Transfer.deposit);
                         const coins = calculateGfxPoints(amount)
                         await updateUserCoins(email, coins);
+                        const newTransaction = new Transactions({
+                            email: email,
+                            gfxCoin: coins, 
+                            transactionType: TransactionType.RECEIVED_FROM_NEAR_TRANSFER
+                          });
+                          await newTransaction.save();
                         const newHash = new Hashes({
                             email:email,
                             walletAddress:walletAddress,
@@ -254,13 +273,6 @@ async function updateUserCoins(email: string, coins: number) {
         { $inc: { gfxCoin: coins } },
         { new: true }
     );
-
-    const newTransaction = new Transactions({
-        email: email,
-        gfxCoin: coins, 
-        transactionType: "received"
-      });
-      await newTransaction.save();
       console.log(response);
 }
 
