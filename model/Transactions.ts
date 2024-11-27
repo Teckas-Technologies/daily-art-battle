@@ -1,9 +1,10 @@
 import mongoose, { Document, Model } from 'mongoose';
+import { TransactionType } from './enum/TransactionType';
 
 interface Transactions extends Document {
   email:string;
   gfxCoin:number;
-  transactionType: 'received' | 'spent';
+  transactionType: TransactionType;
 }
 
 const TransactionsSchema = new mongoose.Schema({
@@ -11,7 +12,7 @@ const TransactionsSchema = new mongoose.Schema({
     gfxCoin: {type: Number,required: true},
     transactionType: {
       type: String,
-      enum: ['received', 'spent'],
+      enum: Object.values(TransactionType),
       required: true
     }
 }, { timestamps: true });

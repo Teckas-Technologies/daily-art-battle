@@ -11,6 +11,7 @@ import User from "../model/User";
 import Transactions from "../model/Transactions";
 import { PARTICIPANT, SPECIAL_WINNER } from "@/config/points";
 import RaffleTicket from "../model/RaffleTicket";
+import { TransactionType } from "../model/enum/TransactionType";
 
 interface Transfer {
   receiverId: string;
@@ -48,7 +49,7 @@ export const mintNfts = async (): Promise<void> => {
       const newTransaction = new Transactions({
         email: user.email,
         gfxCoin: SPECIAL_WINNER,  
-        transactionType: "received"  
+        transactionType: TransactionType.RECEIVED_FROM_SPECIAL_WINNER  
       });
       await newTransaction.save();
         battle.specialWinner = specialWinner; 

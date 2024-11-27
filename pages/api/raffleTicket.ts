@@ -8,6 +8,7 @@ import Transactions from "../../model/Transactions";
 import ArtTable from "../../model/ArtTable";
 import mongoose from "mongoose";
 import Battle from "../../model/Battle";
+import { TransactionType } from "../../model/enum/TransactionType";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
@@ -45,7 +46,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             const newTransaction = new Transactions({
               email: email,
               gfxCoin: requiredCoins,  
-              transactionType: "spent"  
+              transactionType:   TransactionType.SPENT_FOR_RAFFLE
             });
             await newTransaction.save();
             

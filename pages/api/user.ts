@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import User, { UserTable } from '../../model/User';
-import { REFFERED_USER, REFFERER } from '@/config/points';
+import { REFFERED_USER, REFFERER, SIGNUP } from '@/config/points';
 import { authenticateUser, verifyToken } from '../../utils/verifyToken';
 import JwtPayload from '../../utils/verifyToken';
 import Transactions from '../../model/Transactions';
@@ -11,6 +11,7 @@ import { graphQLService } from '@/data/graphqlService';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from '@/config/constants';
 import { error } from 'console';
 import RaffleTicket from '../../model/RaffleTicket';
+import { TransactionType } from '../../model/enum/TransactionType';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -51,6 +52,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         referralCode: referralCodeGenerated,
         referredBy: referrer ? referrer._id : null,
         createdAt: new Date(),
+        gfxCoin: SIGNUP
+      });
+
+      const newTransaction = new Transactions({
+        email: email,
+        gfxCoin: SIGNUP,  
+        transactionType: TransactionType.RECEIVED_FROM_SIGNUP  
       });
 
       if (referrer) {
@@ -60,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const newTransaction = new Transactions({
           email: referrer.email,
           gfxCoin: REFFERER,  
-          transactionType: "received"  
+          transactionType: TransactionType.RECEIVED_FROM_REFERRAL  
         });
         
         await newTransaction.save();
@@ -68,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const newTransactions = new Transactions({
           email: email,
           gfxCoin: REFFERED_USER,  
-          transactionType: "received"  
+          transactionType: TransactionType.RECEIVED_FROM_REFERRAL  
         });
         await newTransactions.save();
       }
