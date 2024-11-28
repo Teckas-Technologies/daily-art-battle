@@ -275,8 +275,10 @@ const useCampaigns = () => {
 
       setParticipants(data.participants);
       console.log("Fetched participants:", data.participants);
+      return !!data.campaign;
     } catch (err) {
       console.error("Error fetching campaign:", err);
+      return false; 
     } finally {
       setIsLoading(false);
     }
@@ -287,9 +289,13 @@ const useCampaigns = () => {
     setIsError(null);
 
     try {
-      const response = await fetchWithAuth(
-        `/api/campaignAnalytics?id=${campaignId}`
-      );
+      const response = await fetch(`/api/campaignAnalytics?id=${campaignId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(
@@ -298,9 +304,9 @@ const useCampaigns = () => {
       }
 
       const data = await response.json();
+      console.log(">>>>>>>>>>>>>>>>>>>>",data);
+      
       setAnalyticsData(data);
-      // console.log("Analytics data >>", analyticsData);
-
       return data;
     } catch (err) {
       const errorMessage =

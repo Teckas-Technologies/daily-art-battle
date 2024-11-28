@@ -90,13 +90,13 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                     src="/icons/transaction.svg"
                     className="md:w-6 md:h-6 w-4 h-4"
                   />
-                  <span className="md:text-[12px] text-[10px]">
+                  <span className="md:text-[12px] text-[10px] md:w-[150px] w-[98px]">
                     {transaction.transactionType === "spent"
                       ? "Paid to Gfx"
                       : "Rewards from Gfx"}
                   </span>
                 </div>
-                <div className="flex items-center space-x-2 md:text-[12px] text-[10px]">
+                <div className="flex items-center md:text-[12px] text-[10px] w-[95px] md:w-[150px]">
                   <span>
                     on{" "}
                     {new Date(transaction.createdAt).toLocaleDateString(
@@ -109,7 +109,7 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                     )}
                   </span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center md:space-x-[5px] space-x-[2px]">
                   {transaction.transactionType === "spent" ? (
                     <InlineSVG src="/icons/red-uparrow.svg" />
                   ) : (

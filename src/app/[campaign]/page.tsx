@@ -139,11 +139,11 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     return () => clearInterval(timerId);
   }, [campaign]);
   useEffect(() => {
+    if (campaignStatus !== "completed" || !campaign?._id) return;
+
     const fetchAnalytics = async () => {
       try {
-        const analyticsData = await fetchCampaignAnalytics(
-          campaign?._id as string
-        );
+        const analyticsData = await fetchCampaignAnalytics(campaign._id);
         if (analyticsData) {
           setCampaignAnalytics(analyticsData);
 
@@ -162,7 +162,8 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     };
 
     fetchAnalytics();
-  }, [campaign?._id]);
+  }, [campaign?._id, campaignStatus]);
+
   useEffect(() => {
     console.log("Fetching campaign with the following details:");
     console.log("Campaign:", params.campaign);
@@ -271,23 +272,31 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             setErrMsg={setErrMsg}
             setWalletMismatchPopup={setWalletMismatchPopup}
           />
-          <div className="camapign-path-container">
-            <button className="camapign-path-button">GFXvs</button>
-            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
-            <h3
-              style={{
-                color: "#ffffff",
+          <div className="camapign-path-container flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-center">
+              <button className="camapign-path-button">GFXvs</button>
+              <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+              <h3
+                style={{
+                  color: "#ffffff",
 
-                cursor: "pointer",
-              }}
-              onClick={handleNavigation}
-            >
-              Campaigns
-            </h3>
-            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
-            <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
-              Current Campaign
-            </h3>
+                  cursor: "pointer",
+                }}
+                onClick={handleNavigation}
+              >
+                Campaigns
+              </h3>
+              <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+              <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
+                Current Campaign
+              </h3>
+            </div>
+            <div className="campaign-status flex items-center gap-2">
+              <span className="hidden md:flex">Campaign:</span>
+              <div className="publicStatus text-xs">
+                {campaign?.publiclyVisible ? "Public" : "Private"}
+              </div>
+            </div>
           </div>
           <CampaignHeader
             campaign={campaign}
@@ -373,23 +382,32 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
             setErrMsg={setErrMsg}
             setWalletMismatchPopup={setWalletMismatchPopup}
           />
-          <div className="camapign-path-container">
-            <button className="camapign-path-button">GFXvs</button>
-            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
-            <h3
-              style={{
-                color: "#ffffff",
+          <div className="camapign-path-container flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-center">
+              <button className="camapign-path-button">GFXvs</button>
+              <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+              <h3
+                style={{
+                  color: "#ffffff",
 
-                cursor: "pointer",
-              }}
-              onClick={handleNavigation}
-            >
-              Campaigns
-            </h3>
-            <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
-            <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
-              Upcoming Campaign
-            </h3>
+                  cursor: "pointer",
+                }}
+                onClick={handleNavigation}
+              >
+                Campaigns
+              </h3>
+
+              <InlineSVG src="/icons/green-arrow.svg" className="arrow-icon" />
+              <h3 style={{ color: "#00ff00", textDecoration: "underline" }}>
+                Upcoming Campaign
+              </h3>
+            </div>
+            <div className="campaign-status flex items-center gap-2">
+              <span className="hidden md:flex">Campaign:</span>
+              <div className="publicStatus text-xs">
+                {campaign?.publiclyVisible ? "Public" : "Private"}
+              </div>
+            </div>
           </div>
           <CampaignHeader
             campaign={campaign}

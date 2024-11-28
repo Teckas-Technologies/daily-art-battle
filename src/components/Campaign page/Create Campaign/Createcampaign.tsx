@@ -11,6 +11,7 @@ import CampaignPopup from "../CreateCampaign Popup/CampaignPopup";
 import { CAMPAIGN_CREATION_COST } from "@/config/points";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { useAuth } from "@/contexts/AuthContext";
+import { BASE_URL } from "@/config/constants";
 interface CampaignCreationProps {
   toggleCampaignModal: () => void;
   idToken: string;
@@ -42,8 +43,11 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDollarTooltip, setShowDollarTooltip] = useState(false);
+  const [isUrlValid, setIsUrlValid] = useState<boolean | null>(null);
+  const [urlValidationLoading, setUrlValidationLoading] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
+  const { fetchCampaignByTitle } = useCampaigns();
   let userDetails = user;
   console.log("Sufficient Balance", userDetails?.user?.gfxCoin);
 
@@ -162,16 +166,45 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
     else setEndDatePickerOpen(false);
   };
 
+  const handleCampaignUrlChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const baseUrl = BASE_URL;
+    const newUrl = e.target.value;
+
+    if (newUrl.startsWith(baseUrl)) {
+      const lastPart = newUrl.slice(baseUrl.length);
+      setCampaignUrl(lastPart);
+      setDisplayCampaignUrl(newUrl);
+
+      if (lastPart.trim() === "") {
+        setIsUrlValid(false);
+        return;
+      }
+
+      try {
+        const urlExists = await fetchCampaignByTitle(lastPart);
+        setIsUrlValid(!urlExists);
+      } catch (error) {
+        console.error("Error checking campaign URL:", error);
+        setIsUrlValid(null);
+      }
+    }
+  };
   useEffect(() => {
     if (campaignName) {
-      const formattedUrl = `https://gfxvs.com/${campaignName
+      const formattedUrl = `${BASE_URL}${campaignName
         .replace(/\s+/g, "-")
         .toLowerCase()}`;
-      const lastPart = formattedUrl.split("/").pop() || "";
       setDisplayCampaignUrl(formattedUrl);
-      setCampaignUrl(lastPart);
+      setCampaignUrl(formattedUrl.split("/").pop() || "");
+
+      const lastPart = formattedUrl.split("/").pop() || "";
+      fetchCampaignByTitle(lastPart).then((urlExists) => {
+        setIsUrlValid(!urlExists);
+      });
     } else {
-      setDisplayCampaignUrl("");
+      setDisplayCampaignUrl(BASE_URL);
       setCampaignUrl("");
     }
   }, [campaignName]);
@@ -219,20 +252,29 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   };
 
   const validateForm = () => {
-    const numericSpecialRewards = Number(specialRewards);
     const isValid =
       campaignName.trim() !== "" &&
       campaignWelcomeText.trim() !== "" &&
       startDate !== null &&
-      endDate !== null;
-    // numericSpecialRewards > 0;
+      endDate !== null &&
+      isUrlValid === true &&
+      campaignUrl.trim() !== "";
 
     setIsFormValid(isValid);
   };
 
   useEffect(() => {
     validateForm();
-  }, [campaignName, startDate, endDate, specialRewards, campaignWelcomeText]);
+  }, [
+    campaignName,
+    startDate,
+    endDate,
+    specialRewards,
+    campaignWelcomeText,
+    isUrlValid,
+    campaignUrl,
+  ]);
+
   return (
     <>
       <div className="create-campaign">
@@ -386,17 +428,41 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
             </div>
 
             <div className="create-campaign-right w-full md:w-1/2">
-              <div className="create-campaign-input">
-                <label htmlFor="campaignUrl" style={{ color: "#5F5F5F" }}>
-                  Campaign URL
-                </label>
+              <div className="create-campaign-input relative">
+                <label htmlFor="campaignUrl">Campaign URL</label>
                 <input
                   type="text"
                   id="campaignUrl"
                   value={displayCampaignUrl}
-                  readOnly
+                  onChange={handleCampaignUrlChange}
+                  className={`${
+                    isUrlValid === false
+                      ? "wrong"
+                      : isUrlValid === true
+                      ? "correct"
+                      : ""
+                  }`}
                 />
+                {/* {isUrlValid === false && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Campaign URL already exists
+                  </p>
+                )} */}
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                  {isUrlValid === true ? (
+                    <InlineSVG
+                      src="/icons/green-tick.svg"
+                      className="w-5 h-5 text-green-500"
+                    />
+                  ) : isUrlValid === false ? (
+                    <InlineSVG
+                      src="/icons/wrong.svg"
+                      className="w-5 h-5 text-red-500"
+                    />
+                  ) : null}
+                </div>
               </div>
+
               <div className="create-campaign-input">
                 <label
                   htmlFor="specialWinner"
@@ -411,7 +477,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                       onClick={handleIconClick}
                     />
                     {showTooltip && (
-                      <div className="absolute bottom-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
+                      <div className="absolute bottom-6 bg-[#272727] text-white text-xs py-1 px-3 rounded-xl w-[200px] h-[60px]">
                         Set the Special Winner count and reward them after the
                         campaign ends!
                       </div>
@@ -445,7 +511,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                       onClick={handleDollarClick}
                     />
                     {showDollarTooltip && (
-                      <div className="absolute bottom-6 bg-[#272727] text-white text-xs py-1 px-3 rounded w-[200px] h-[60px]">
+                      <div className="absolute bottom-6 bg-[#272727] text-white text-xs py-1 px-3 rounded-xl w-[200px] h-[60px]">
                         The entered amount will be equally distributed among the
                         special winners!
                       </div>
@@ -486,9 +552,9 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center mt-[40px]">
-            <h4 className="flex flex-row justify-center items-center gap-2 text-xs">
-              <span className="text-[#00FF00] text-2xl font-bold">
+          <div className="flex flex-col items-center justify-center mt-[15px] md:mt-[40px]">
+            <h4 className="flex flex-row justify-center items-center gap-2 text-[10px] md:text-xs">
+              <span className="text-[#00FF00] text-lg font-bold md:text-2xl">
                 {buttonText}
               </span>{" "}
               GFXvs Coins
