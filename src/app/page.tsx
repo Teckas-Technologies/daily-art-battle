@@ -15,6 +15,9 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import PreviousPath from "@/components/ArtBattle/PreviousArts/PreviousPath/PreviousPath";
+import { signIn, useSession } from "next-auth/react";
+import usetelegramDrop from '@/hooks/telegramHook';
+import Script from "next/script";
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -30,6 +33,9 @@ const Home: NextPage = () => {
   const [toastMessage, setToastMessage] = useState("");
   const { todayBattle, loading, battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
+    const [userId,setUserId] = useState<Number>();
+    const { data: session, status } = useSession();
+    const {telegramDrop} = usetelegramDrop();
 
   useEffect(() => {
     if (toast) {
@@ -49,6 +55,22 @@ const Home: NextPage = () => {
     return () => clearTimeout(timeoutId);
   }, [GFX_CAMPAIGNID]);
 
+  useEffect(() => {
+    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      const user = Telegram.WebApp.initDataUnsafe?.user;
+      if (user) {
+        setUserId(user.id);
+        console.log(user.id);
+        telegram();
+      }
+    }
+  }, [session]);
+  
+  const telegram = async ()=>{
+    await telegramDrop(userId)
+  } 
+
   if (loading) {
     return (
       <div className="w-full h-[100vh] flex justify-center items-center bg-black">
@@ -67,6 +89,9 @@ const Home: NextPage = () => {
         overflowY: "auto",
       }}
     >
+       <Script
+        src="https://telegram.org/js/telegram-web-app.js"
+        strategy="beforeInteractive"/>
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}
