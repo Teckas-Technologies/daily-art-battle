@@ -217,10 +217,10 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
                     {isOpen && (
                         <div className="options absolute top-[100%] left-0 w-[150%] pt-4 rounded-3xl bg-black">
                             <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Voted" })}>
-                                <h2 className="spartan-light text-sm text-white">Top Voted Arts</h2>
+                                <h2 className="spartan-light text-sm text-white">Top Collected Arts</h2>
                             </div>
                             <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ value: 'voteAsc', label: "Least Voted" })}>
-                                <h2 className="spartan-light text-sm">Least Voted Arts</h2>
+                                <h2 className="spartan-light text-sm">Least Collected Arts</h2>
                             </div>
                             <div className="option px-5 py-3 latest-first bg-black" onClick={() => handleSort({ value: 'dateDsc', label: "Latest First" })}>
                                 <h2 className="spartan-light text-sm">Latest First</h2>

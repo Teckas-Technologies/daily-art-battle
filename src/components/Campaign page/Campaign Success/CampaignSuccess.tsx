@@ -3,12 +3,13 @@ import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import "./CampaignSuccess.css";
 import InlineSVG from "react-inlinesvg";
+import { BASE_URL } from "@/config/constants";
 const CampaignSuccess = () => {
   const searchParams = useSearchParams();
   const queryParams = searchParams ? searchParams.get("campaignUrl") : null;
   const fullLink = queryParams
-    ? `https://gfxvs.com/${queryParams}`
-    : "https://gfxvs.com/";
+    ? `${BASE_URL}/${queryParams}`
+    : "";
   const [buttonText, setButtonText] = useState("Copy link");
   const handleCopyLink = () => {
     if (fullLink) {

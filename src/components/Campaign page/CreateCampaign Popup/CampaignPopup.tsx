@@ -4,7 +4,7 @@ import InlineSVG from "react-inlinesvg";
 import { CAMPAIGN_CREATION_COST, SPECIAL_WINNER } from "@/config/points";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import useCampaigns from "@/hooks/CampaignHook";
-
+import { useRouter } from "next/navigation";
 interface CampaignCreationPopupProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,10 +15,10 @@ interface CampaignCreationPopupProps {
   idToken: string;
   connectionError: boolean;
   specialRewards: string;
-  resetFormFields:()=>void;
-  setConnectionError:(value:boolean)=>void;
-  inSufficientbalance:boolean;
-  setInSufficientbalance:(value:boolean)=>void;
+  resetFormFields: () => void;
+  setConnectionError: (value: boolean) => void;
+  inSufficientbalance: boolean;
+  setInSufficientbalance: (value: boolean) => void;
 }
 const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   onClose,
@@ -33,20 +33,19 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   resetFormFields,
   setConnectionError,
   inSufficientbalance,
-  setInSufficientbalance
+  setInSufficientbalance,
 }) => {
- 
   if (!isOpen) return null;
   const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
   const specialRewardCost = (specialWinner || 0) * SPECIAL_WINNER;
   const totalCost = creationCost + specialRewardCost;
-
-  const closeRetry =()=>{
+  const router = useRouter();
+  const closeRetry = () => {
     setConnectionError(false);
     setInSufficientbalance(true);
     onClose();
     resetFormFields();
-  }
+  };
   return (
     <div className="popup-overlay">
       <div className="popup-container">
@@ -97,7 +96,9 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
         <div className="popup-buttons">
           {connectionError ? (
             <div className="flex flex-col items-center">
-              <button className="retry-button" onClick={closeRetry}>Retry Creation</button>
+              <button className="retry-button" onClick={closeRetry}>
+                Retry Creation
+              </button>
             </div>
           ) : inSufficientbalance ? (
             <>
@@ -118,7 +119,15 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
               <button className="close" onClick={closeRetry}>
                 Close
               </button>
-              <p className="alert">Insufficient Balance</p>
+              <p className="alert">
+                Insufficient Balance?
+                <span
+                  className="text-[#00ff00] underline cursor-pointer"
+                  onClick={() => router?.push("/profile?buyCoin=true")}
+                >
+                  Purchase
+                </span>
+              </p>
             </div>
           )}
         </div>
@@ -128,4 +137,3 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
 };
 
 export default CampaignPopup;
-

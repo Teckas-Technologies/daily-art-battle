@@ -217,8 +217,8 @@ export const BuyRafflePopup: React.FC<Props> = ({ overlayArt, setRefresh, campai
                     </div>
                     <div className="art-info md:w-[50%] w-full">
                         <h2 className='spartan-medium md:flex hidden md:text-lg text-md py-2 text-green md:text-left text-center des'>Description</h2>
-                        {/* <h6 className='saprtan-medium description-text md:text-md text-sm pb-1 md:pt-1 pt-2 md:text-left text-center leading-tight'>{overlayArt.arttitle}</h6> */}
-                        <h6 className='saprtan-medium description-text md:text-md text-sm pb-1 md:pt-1 pt-2 md:text-left text-center leading-tight'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6>
+                        <h6 className='saprtan-medium description-text md:text-md text-sm pb-1 md:pt-1 pt-2 md:text-left text-center leading-tight'>{overlayArt.arttitle}</h6>
+                        {/* <h6 className='saprtan-medium description-text md:text-md text-sm pb-1 md:pt-1 pt-2 md:text-left text-center leading-tight'>A white skin tone and glassy skin which contains the Girl with purple hair in a ice background, looking at a top angle of the camera view.</h6> */}
                         <div className="upload-date md:flex hidden items-center md:justify-start justify-center md:gap-3 gap-6 md:py-2 py-1">
                             <div className="date flex items-center gap-2">
                                 <InlineSVG

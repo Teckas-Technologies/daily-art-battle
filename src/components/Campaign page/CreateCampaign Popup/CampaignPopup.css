@@ -207,6 +207,10 @@
   font-weight: 600;
   text-align: center;
   margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
 }
 .retry-button {
   background: transparent;

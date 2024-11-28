@@ -301,7 +301,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             <p>{campaignAnalytics?.totalRaffle}</p>
           </div>
           <div>
-            <h3>Total Participants</h3>
+            <h3>Total Uploaded Arts</h3>
             <p>{campaignAnalytics?.totalParticipants}</p>
           </div>
           <div>
