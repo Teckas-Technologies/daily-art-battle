@@ -62,12 +62,17 @@ const Home: NextPage = () => {
       if (user) {
         setUserId(user.id);
         console.log(user.id);
-        telegram();
+        alert(user.id);
+        
+        telegram(user.id);
       }
+      alert(user?.id);
     }
+
+    // telegram(56780);
   }, [session]);
-  
-  const telegram = async ()=>{
+
+  const telegram = async (userId:any)=>{
     await telegramDrop(userId)
   } 
 
@@ -89,9 +94,11 @@ const Home: NextPage = () => {
         overflowY: "auto",
       }}
     >
-       <Script
-        src="https://telegram.org/js/telegram-web-app.js"
-        strategy="beforeInteractive"/>
+     <Script
+  src="https://telegram.org/js/telegram-web-app.js"
+  strategy="beforeInteractive"
+
+/>
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}
