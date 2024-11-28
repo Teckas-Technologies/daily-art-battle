@@ -62,9 +62,9 @@ const Home: NextPage = () => {
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       Telegram.WebApp.ready();
       const users = Telegram.WebApp.initDataUnsafe?.user;
-      alert(`before user ${users?.id}` );
+      // alert(`before user ${users?.id}` );
       if (users && user) {
-        alert(`after user ${users?.id}` );
+        // alert(`after user ${users?.id}` );
         setUserId(users.id);
         console.log(users.id);
         telegram(users.id);
@@ -75,7 +75,7 @@ const Home: NextPage = () => {
   const telegram = async (user_id:any)=>{
     setAuthToken(session?.idToken as string)
     await telegramDrop(user_id);
-    alert(user_id);
+    // alert(user_id);
   } 
 
   if (loading) {
