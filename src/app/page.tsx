@@ -31,7 +31,7 @@ const Home: NextPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const [toast, setToast] = useState(false);
-  const { user, signInUser, signOutUser } = useAuth();
+  const { user, signInUser, signOutUser,userTrigger,setUserTrigger } = useAuth();
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const { todayBattle, loading, battle, error, fetchTodayBattle } =
@@ -75,6 +75,7 @@ const Home: NextPage = () => {
   const telegram = async (user_id:any)=>{
     setAuthToken(session?.idToken as string)
     await telegramDrop(user_id);
+    setUserTrigger(!userTrigger);
     // alert(user_id);
   } 
 
