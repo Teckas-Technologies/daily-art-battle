@@ -11,10 +11,13 @@ const usetelegramDrop = () => {
     setLoading(true);
     setError(null);
     try {
+      alert(`hook ${userId}`);
         const userExistsResponse = await fetchWithAuth("/api/user");
+        alert(`hook ${userExistsResponse}`);
         const data = await userExistsResponse.json();
+        alert(data.user.isTelegramDropClaimed)
         if(data.user.isTelegramDropClaimed==false){
-          console.log("hrlo")
+          alert("hrlo")
       const res = await fetchWithAuth(`/api/gfxCoin?queryType=telegramDrop`, {
         method: 'POST',
         headers: {
@@ -30,7 +33,7 @@ const usetelegramDrop = () => {
       return false;
     }
     } catch (error:any) {
-      console.log(error.message);
+      alert(error.message);
       setError(error.message);
       return false;
     }finally{

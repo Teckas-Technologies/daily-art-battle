@@ -18,6 +18,8 @@ import PreviousPath from "@/components/ArtBattle/PreviousArts/PreviousPath/Previ
 import { signIn, useSession } from "next-auth/react";
 import usetelegramDrop from '@/hooks/telegramHook';
 import Script from "next/script";
+import { setAuthToken } from "../../utils/authToken";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -29,6 +31,7 @@ const Home: NextPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const [toast, setToast] = useState(false);
+  const { user, signInUser, signOutUser } = useAuth();
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const { todayBattle, loading, battle, error, fetchTodayBattle } =
@@ -58,22 +61,21 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       Telegram.WebApp.ready();
-      const user = Telegram.WebApp.initDataUnsafe?.user;
-      if (user) {
-        setUserId(user.id);
-        console.log(user.id);
-        alert(user.id);
-        
-        telegram(user.id);
+      const users = Telegram.WebApp.initDataUnsafe?.user;
+      alert(`before user ${users?.id}` );
+      if (users && user) {
+        alert(`after user ${users?.id}` );
+        setUserId(users.id);
+        console.log(users.id);
+        telegram(users.id);
       }
-      alert(user?.id);
     }
+  }, [user]);
 
-    // telegram(56780);
-  }, [session]);
-
-  const telegram = async (userId:any)=>{
-    await telegramDrop(userId)
+  const telegram = async (user_id:any)=>{
+    setAuthToken(session?.idToken as string)
+    await telegramDrop(user_id);
+    alert(user_id);
   } 
 
   if (loading) {
@@ -96,9 +98,7 @@ const Home: NextPage = () => {
     >
      <Script
   src="https://telegram.org/js/telegram-web-app.js"
-  strategy="beforeInteractive"
-
-/>
+  strategy="beforeInteractive"/>
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}
