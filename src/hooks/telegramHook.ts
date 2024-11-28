@@ -15,7 +15,7 @@ const usetelegramDrop = () => {
         const userExistsResponse = await fetchWithAuth("/api/user");
         // alert(`hook ${userExistsResponse}`);
         const data = await userExistsResponse.json();
-        alert(data.user.isTelegramDropClaimed)
+        // alert(data.user.isTelegramDropClaimed)
         if(data.user.isTelegramDropClaimed==false){
           // alert("hrlo")
       const res = await fetchWithAuth(`/api/gfxCoin?queryType=telegramDrop`, {
