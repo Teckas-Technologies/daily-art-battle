@@ -498,7 +498,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
         <div className="summary mt-6">
           <div ref={popupRef} className="participants relative overflow-auto">
             <h2>Participants</h2>
-            {participants && participants.length > 0 ? (
+
+            {isLoadingState ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+              <span className="loader"></span>
+            </div>
+            ) : participants && participants.length > 0 ? (
               <div className="participants-grid">
                 {participants.map((participant, index) => (
                   <div key={index} className="participant">
@@ -512,6 +517,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                 ))}
               </div>
             ) : (
+              // Show message when no participants available
               <div className="flex flex-row items-center justify-center gap-2 font-semibold text-base">
                 <InlineSVG
                   src="/icons/info.svg"
@@ -521,21 +527,17 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
               </div>
             )}
 
-            {isLoadingState && (
-              <div className="flex justify-center my-4">
-                <Loader sm="10" md="15" />
-              </div>
-            )}
-
+            {/* Scroll-to-top button */}
             {showScrollToTop && (
-              <>
-                <button
-                  className="scroll-to-top"
-                  onClick={handleScrollToTop}
-                >
-                  <InlineSVG src="/icons/scroll-top.svg" className="w-[20px] h-[20px]"/>
-                </button>
-              </>
+              <button
+                className="scroll-to-top fixed bottom-4 right-4 bg-gray-700 text-white p-2 rounded-full shadow-lg hover:bg-gray-600"
+                onClick={handleScrollToTop}
+              >
+                <InlineSVG
+                  src="/icons/scroll-top.svg"
+                  className="w-[20px] h-[20px]"
+                />
+              </button>
             )}
           </div>
 
