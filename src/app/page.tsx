@@ -19,6 +19,13 @@ import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
 import usePostNearDrop from "@/hooks/NearDrop";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
+import Script from "next/script";
+import { signIn, useSession } from "next-auth/react";
+import usetelegramDrop from '@/hooks/telegramHook';
+// import Script from "next/script";
+import { setAuthToken } from "../../utils/authToken";
+// import { useAuth } from "@/contexts/AuthContext";
+
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -29,6 +36,7 @@ const Home: NextPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const [toast, setToast] = useState(false);
+  // const { user, signInUser, signOutUser,userTrigger,setUserTrigger } = useAuth();
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const { todayBattle, loading, battle, error, fetchTodayBattle } =
@@ -45,6 +53,10 @@ const Home: NextPage = () => {
   } = useAuth();
   let userDetails = user;
   const { postNearDrop, isLoading, response } = usePostNearDrop();
+    const [userId,setUserId] = useState<Number>();
+    const { data: session, status } = useSession();
+    const {telegramDrop} = usetelegramDrop();
+
   useEffect(() => {
     if (toast) {
       setTimeout(() => setToast(false), 3000);
@@ -79,6 +91,27 @@ const Home: NextPage = () => {
 
     triggerNearDrop();
   }, [signedAccountId, userDetails, userTrigger]);
+  useEffect(() => {
+    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      const users = Telegram.WebApp.initDataUnsafe?.user;
+      // alert(`before user ${users?.id}` );
+      if (users && user) {
+        // alert(`after user ${users?.id}` );
+        setUserId(users.id);
+        console.log(users.id);
+        telegram(users.id);
+      }
+    }
+  }, [user]);
+
+  const telegram = async (user_id:any)=>{
+    setAuthToken(session?.idToken as string)
+    await telegramDrop(user_id);
+    setUserTrigger(!userTrigger);
+    // alert(user_id);
+  } 
+
   if (loading) {
     return (
       <div className="w-full h-[100vh] flex justify-center items-center bg-black">
@@ -97,6 +130,9 @@ const Home: NextPage = () => {
         overflowY: "auto",
       }}
     >
+     <Script
+  src="https://telegram.org/js/telegram-web-app.js"
+  strategy="beforeInteractive"/>
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}

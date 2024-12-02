@@ -7,6 +7,7 @@ import "../styles.css";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WalletProvider } from "@/providers/WalletProvider";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,13 @@ export default function RootLayout({
       <WalletProvider >
         <AuthProvider>
           <html lang="en">
+            <head> 
+              
+              <Script
+  src="https://telegram.org/js/telegram-web-app.js"
+  strategy="beforeInteractive"/>
+
+            </head>
             <body className={inter.className}>
               <div className="flex flex-1 flex-col min-h-screen text-gray-500 gradient w-full h-full flex justify-center items-center bold text-white">
                 {children}
