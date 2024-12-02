@@ -255,10 +255,10 @@ const CampaignBanner: React.FC<CampaignBannerProps> = ({
             ))}
         </div>
       ) : (
-        <p className="no-campaign flex items-center justify-center gap-2 text-white font-semibold text-lg py-[150px]">
+        <p className="no-campaign flex items-center justify-center gap-2 text-white font-semibold md:text-lg md:py-[150px] text-sm py-[75px]">
           <InlineSVG
             src="/icons/info.svg"
-            className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+            className="fill-current text-white font-bold point-c w-4 h-4"
           />
           {activeTab === "Current Campaigns" &&
             "No current campaigns available."}

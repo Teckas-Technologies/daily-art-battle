@@ -14,7 +14,7 @@ interface CardHolderProps {
 }
 
 const CardHolder: React.FC<CardHolderProps> = ({ battles, campaignId, setRefresh, currentPage, totalPage,onCardClick }) => {
-
+    console.log("Battles in CardHolder:", battles);
     return (
         <>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 lg:gap-[5rem] md:gap-[3rem] gap-[2.5rem]" id="previous-grid">

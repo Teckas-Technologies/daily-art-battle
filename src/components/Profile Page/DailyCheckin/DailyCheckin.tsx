@@ -58,54 +58,25 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
   };
 
   const toggleDay = async (index: number) => {
-    if (isClaimed || isClaimedForToday()) return;
-
-    setStreak((prev) =>
-      prev.map((claimed, i) => (i === index ? !claimed : claimed))
-    );
-    setCurrentIndex(index);
+    if (isClaimed || index !== streak.filter(Boolean).length) return;
 
     const result = await dailyCheckin();
-
     if (result) {
-      // console.log("Check-in successful:", result);
       setIsClaimed(true);
       setToastMessage(`Claimed reward for Day ${index + 1}!`);
       setSuccessToast("yes");
       setToast(true);
-
       await fetchStreakData();
       setUserTrigger(!userTrigger);
-      // window.location.reload();
     }
   };
 
   useEffect(() => {
-    const fetchStreakData = async () => {
-      const data = await fetchDailyCheckin();
-      // console.log("data .......", data);
-
-      if (data) {
-        const streakDays = data.data.streakDays || 0;
-        // console.log("days", streakDays);
-
-        const updatedStreak = Array(7).fill(false);
-
-        for (let i = 0; i < streakDays; i++) {
-          updatedStreak[i] = true;
-        }
-
-        setStreak(updatedStreak);
-        if (streakDays === 7) {
-          setCurrentIndex(6);
-        } else {
-          setCurrentIndex(streakDays - 1);
-        }
-      }
-    };
-
     fetchStreakData();
   }, [userDetails]);
+  const isClickable = (index: number) => {
+    return index === streak.filter(Boolean).length && !isClaimedForToday();
+  };
 
   const isClaimedForToday = () => {
     const currentDate = new Date().toISOString().split("T")[0];
@@ -115,7 +86,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
     return currentDate === claimDateString;
   };
   const handleWeeklyClaim = async () => {
-    if (streakDays === 7 && isClaimed) {
+    if (streakDays === 7 && !isClaimed) {
       const result = await weeklyCheckin();
       // console.log("Weekly Check-in Result:", result);
       if (result) {
@@ -173,7 +144,8 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                 Current Streak
               </span>
               <p className="font-semibold text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
-                {streak.filter((day) => day).length} Days
+                {streak.filter((day) => day).length}{" "}
+                {streak.filter((day) => day).length === 1 ? "Day" : "Days"}
               </p>
             </>
           )}
@@ -195,12 +167,13 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                   claimed
                     ? "bg-[#000000] text-black"
                     : "bg-[#000000] text-green-500"
-                } cursor-pointer`}
+                } ${
+                  isClickable(index) ? "cursor-pointer" : "cursor-not-allowed"
+                }`}
                 style={{
                   borderColor: "#00FF00",
-                  cursor: isClaimedForToday() ? "not-allowed" : "pointer",
                 }}
-                onClick={() => toggleDay(index)}
+                onClick={() => isClickable(index) && toggleDay(index)}
               >
                 {(claimed || isWeeklyClaimedToday()) && (
                   <InlineSVG
@@ -222,7 +195,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                     ? "bg-[#00FF00] text-black"
                     : "bg-gray-400 text-white"
                 }`}
-                onClick={() => toggleDay(index)}
+                onClick={() => isClickable(index) && toggleDay(index)}
               >
                 <span className="flex text-[#ffffff] flex-row items-center gap-[2px] lg:text-xs md:text-xs xl:text-sm xxl:text-lg">
                   <InlineSVG
@@ -246,7 +219,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                     ? "bg-[#00FF00] text-black"
                     : "bg-gray-400 text-white"
                 } ${isWeeklyClaimedToday() ? "px-[6px]" : "px-6 md:px-4"}`}
-                onClick={() => toggleDay(index)}
+                onClick={() => isClickable(index) && toggleDay(index)}
                 disabled={isClaimedForToday()}
               >
                 {isWeeklyClaimedToday() ? "Claimed" : "Claim"}
@@ -260,26 +233,30 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
       </div>
 
       <div className="streak-box">
-        <div className="flex rounded-2xl flex-col w-[180px] h-[200px] items-center justify-center text-center bg-[#171717] p-4 gap-5 md:gap-5 md:w-[220px] md:h-[230px] lg:gap-6 lg:w-[190px] lg:h-[210px] xl:gap-6 xl:w-[190px] xl:h-[210px] xxl:gap-6 xxl:w-[220px] xxl:h-[250px]">
+        <div className="flex rounded-2xl flex-col w-[150px] h-[165px] items-center justify-center text-center bg-[#171717] p-4 gap-7 md:gap-5 md:w-[220px] md:h-[230px] lg:gap-6 lg:w-[190px] lg:h-[210px] xl:gap-6 xl:w-[190px] xl:h-[210px] xxl:gap-6 xxl:w-[220px] xxl:h-[250px]">
           <div className="flex lg: flex-row items-center justify-center gap-1">
             <img
               src="/icons/coin.svg"
               alt="Coin Icon"
-              className="w-[60px] h-[60px] md:w-[30px] md:h-[30px] lg:w-[50px] lg:h-[50px] xl:w-[55px] xl:h-[55px] xxl:w-[65px] xxl:h-[65px]"
+              className="w-[40px] h-[40px] md:w-[30px] md:h-[30px] lg:w-[50px] lg:h-[50px] xl:w-[55px] xl:h-[55px] xxl:w-[65px] xxl:h-[65px]"
             />
-            <p className="text-[#ffffff] text-4xl md:text-4xl lg:text-4xl xl:text-5xl xxl:text-5xl">
+            <p className="text-[#ffffff] text-3xl font-semibold md:text-4xl lg:text-4xl xl:text-5xl xxl:text-5xl">
               25
             </p>
           </div>
           <div>
-            <span className="text-[#D3D3D3] text-sm md:text-sm lg:mt-4 text-sm xl:text-sm">
+            <span className="text-[#D3D3D3] text-xs md:text-sm lg:mt-4 text-sm xl:text-sm">
               7 Day Voting Streak
             </span>
             <button
-              className={`text-[#ffffff] w-[100%] rounded-full mt-3 text-sm py-2 px-10 lg:px-10 lg:py-2  xl:px-10 xl:py-2  xxl:px-10 xxl:py-3 ${
-                streakDays === 7 && isClaimed ? "bg-[#00FF00]" : "bg-[#AAAAAA]"
+              className={`text-[#ffffff] w-[100%] rounded-full mt-2 text-[10px] md:text-[13px] py-[6px] px-10 md:px-10 md:py-3 lg:px-10 lg:py-2 xl:px-10 xl:py-2 xxl:px-10 xxl:py-3 ${
+                isWeeklyClaimedToday()
+                  ? "bg-[#00FF00] cursor-not-allowed"
+                  : streakDays === 7 && !isClaimed
+                  ? "bg-[#00FF00]"
+                  : "bg-[#AAAAAA]"
               }`}
-              onClick={handleWeeklyClaim}
+              onClick={isWeeklyClaimedToday() ? undefined : handleWeeklyClaim}
             >
               {isWeeklyClaimedToday()
                 ? "Claimed"
@@ -287,6 +264,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                 ? "Claim"
                 : "Claim"}
             </button>
+
             <div id="content-top"></div>
           </div>
         </div>

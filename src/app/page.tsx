@@ -1,7 +1,7 @@
 // pages/index.tsx
 "use client";
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ArtUploadForm from "@/components/ArtUpload/ArtUploadForm";
 import { GFX_CAMPAIGNID, ADMIN_GMAIL } from "@/config/constants";
 import { Header } from "@/components/Header/Header";
@@ -15,7 +15,10 @@ import { useFetchTodayBattle } from "@/hooks/battleHooks";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import PreviousPath from "@/components/ArtBattle/PreviousArts/PreviousPath/PreviousPath";
-
+import { NearContext } from "@/wallet/WalletSelector";
+import { useAuth } from "@/contexts/AuthContext";
+import usePostNearDrop from "@/hooks/NearDrop";
+import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -30,7 +33,18 @@ const Home: NextPage = () => {
   const [toastMessage, setToastMessage] = useState("");
   const { todayBattle, loading, battle, error, fetchTodayBattle } =
     useFetchTodayBattle();
-
+  const { wallet, signedAccountId } = useContext(NearContext);
+  const {
+    user,
+    userTrigger,
+    setUserTrigger,
+    newUser,
+    setNewUser,
+    nearDrop,
+    setNearDrop,
+  } = useAuth();
+  let userDetails = user;
+  const { postNearDrop, isLoading, response } = usePostNearDrop();
   useEffect(() => {
     if (toast) {
       setTimeout(() => setToast(false), 3000);
@@ -48,7 +62,23 @@ const Home: NextPage = () => {
 
     return () => clearTimeout(timeoutId);
   }, [GFX_CAMPAIGNID]);
+  useEffect(() => {
+    const triggerNearDrop = async () => {
+      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+        try {
+          const payload = { nearAddress: signedAccountId };
+          await postNearDrop(payload);
+          setUserTrigger(!userTrigger);
+          setNearDrop(true);
+          console.log("Near drop triggered successfully.");
+        } catch (error) {
+          console.error("Error triggering near drop:", error);
+        }
+      }
+    };
 
+    triggerNearDrop();
+  }, [signedAccountId, userDetails, userTrigger]);
   if (loading) {
     return (
       <div className="w-full h-[100vh] flex justify-center items-center bg-black">
@@ -56,7 +86,7 @@ const Home: NextPage = () => {
       </div>
     );
   }
-
+  console.log("New User >>>>>>>>>>>", newUser);
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]"
@@ -136,6 +166,18 @@ const Home: NextPage = () => {
       )}
       {walltMisMatchPopup && (
         <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
+      )}
+      {newUser && (
+        <ClaimPopup
+          msg="🎉 Welcome! You've been credited with 1000 GFX."
+          onClose={() => setNewUser(false)}
+        />
+      )}
+      {nearDrop && (
+        <ClaimPopup
+          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          onClose={() => setNearDrop(false)}
+        />
       )}
       {toast && toastMessage && (
         <div

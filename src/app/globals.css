@@ -286,3 +286,14 @@ body {
     height: 16px;
   }
 }
+
+.marquee-item {
+  white-space: nowrap;
+  padding-left: 2rem;
+  padding-right: 2rem; 
+}
+
+.spacer {
+  display: inline-block;
+  width: 3rem; 
+}

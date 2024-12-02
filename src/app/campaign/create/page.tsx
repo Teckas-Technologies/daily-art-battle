@@ -5,13 +5,16 @@ import Footer from "@/components/Footer/Footer";
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { Header } from "@/components/Header/Header";
 import { useSession, signIn } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { setAuthToken } from "../../../../utils/authToken";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
+import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
+import usePostNearDrop from "@/hooks/NearDrop";
+import { NearContext } from "@/wallet/WalletSelector";
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -42,7 +45,15 @@ const page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errMsg, setErrMsg] = useState("");
   const router = useRouter();
-  const { user } = useAuth();
+  const {
+    user,
+    userTrigger,
+    setUserTrigger,
+    newUser,
+    setNewUser,
+    nearDrop,
+    setNearDrop,
+  } = useAuth();
   const userDetails = user ?? null;
   console.log("details", userDetails);
 
@@ -54,7 +65,25 @@ const page = () => {
     }
   }, [pathName, userDetails, router]);
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
+  const { postNearDrop, response } = usePostNearDrop();
+  const { wallet, signedAccountId } = useContext(NearContext);
+  useEffect(() => {
+    const triggerNearDrop = async () => {
+      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+        try {
+          const payload = { nearAddress: signedAccountId };
+          await postNearDrop(payload);
+          setUserTrigger(!userTrigger);
+          setNearDrop(true);
+          console.log("Near drop triggered successfully.");
+        } catch (error) {
+          console.error("Error triggering near drop:", error);
+        }
+      }
+    };
 
+    triggerNearDrop();
+  }, [signedAccountId, userDetails, userTrigger]);
   return (
     <div style={{ backgroundColor: "#000000" }}>
       <Header
@@ -93,8 +122,14 @@ const page = () => {
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
-       {walltMisMatchPopup && (
+      {walltMisMatchPopup && (
         <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
+      )}
+      {nearDrop && (
+        <ClaimPopup
+          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          onClose={() => setNearDrop(false)}
+        />
       )}
     </div>
   );

@@ -6,6 +6,7 @@ import { ParticipationNftGrid } from "./ParticipationNft/ParticipationNftGrid";
 import { useFetchArtsAnalytics } from "@/hooks/profileAnalyticsHook";
 import { RaffleArtsGrid } from "./RaffleTicketArts/RaffleArtsGrid";
 import Marquee from "react-fast-marquee";
+import { PARTICIPATION_NFT_BURN, RARE_NFT_BURN } from "@/config/points";
 
 interface Menu {
     id: string;
@@ -83,7 +84,7 @@ export const Collections: React.FC<Props> = ({ burnArtSuccess, setBurnArtSuccess
 
             <div className="marquee-burn w-full flex items-center h-10 mt-5">
                 <Marquee speed={100}>
-                    Burn your &nbsp;<b>RARE NFTS</b>&nbsp; and get 1000 GFX points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Burn your &nbsp;<b>PARTICIPATION NFTS</b>&nbsp; and get 1000 GFX points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Burn your &nbsp;<b>RAFFLE ARTS</b>&nbsp; and get 1000 GFX points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Burn your &nbsp;<b>RARE NFTS</b>&nbsp; and get &nbsp;{RARE_NFT_BURN} GFX points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Burn your &nbsp;<b>PARTICIPATION NFTS</b>&nbsp; and get &nbsp;{PARTICIPATION_NFT_BURN} GFX points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Burn your &nbsp;<b>RAFFLE ARTS</b>&nbsp; and get &nbsp;{PARTICIPATION_NFT_BURN} GFX points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Marquee>
             </div>
 

@@ -118,11 +118,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   return (
     <div className="profile-header">
       <div className="profile-bg flex items-center justify-center flex-col px-[20px] py-4 bg-[#000000] text-white h-[350px] rounded-xl md:flex-row md:justify-between md:h-[230px] lg:flex-row lg:justify-between lg:gap-[40px] lg:w-[100%] lg:h-[200px] lg:px-6 lg:py-10 xl:flex-row xl:justify-between xl:gap-[40px] xl:w-[100%] xl:px-7 xl:py-10 xxl:flex-row xxl:h-[250px]">
-        <div className="flex mb-6 md:mb-0 lg: items-center gap-3 profile-img ">
+        <div className="flex mb-6 md:mb-0 lg:items-center gap-3 profile-img">
           <div className="profile-img relative flex items-center gap-3">
             <div
-              className="relative w-[80px] h-[80px] rounded-lg"
-              style={{ border: "1px solid white" }}
+              className="relative md:w-[90px] w-[110px] md:h-[90px] h-[110px] rounded-lg"
+              style={{ border: "1px solid #bbbbbb33" }}
             >
               {isImageLoading || isLoading ? (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
@@ -132,7 +132,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 <img
                   alt="Profile Picture"
                   src={profileImg}
-                  className="relative rounded-lg w-[80px] h-[80px]"
+                  className="relative rounded-lg w-full h-full object-cover"
                 />
               )}
             </div>
@@ -156,25 +156,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
 
           <div>
-            <h2 className="font-semibold text-sm lg:text-base xl:text-xl xxl:text-xl md:text-sm">
+            <h2 className="font-semibold text-[23px] lg:text-base xl:text-xl xxl:text-xl md:text-sm">
               {userDetails?.user?.firstName && userDetails?.user?.lastName
                 ? `${userDetails.user.firstName} ${userDetails.user.lastName}`
                 : "No Name"}
             </h2>
-            <p className="text-[#818181] text-xs font-light lg:text-xs font-light xl:text-xs font-light xxl:text-base font-light md:text-[13px]">
+            <p className="text-[#818181] text-sm font-light lg:text-xs font-light xl:text-xs font-light xxl:text-base font-light md:text-[13px]">
               {userDetails?.user?.email ? userDetails.user.email : "No Email"}
             </p>
 
             <div className="flex mt-3 gap-2">
               <button
-                className="rounded-full bg-transparent edit-profile-btn px-3 py-1 text-[10px] font-semibold md:text-[8px] md:px-[15px] md:py-[3px] lg:text-[8px] lg:py-[7px] lg:px-[10px] xl:text-[8px] xl:py-[7px] xl:px-[20px] xxl:text-[11px] xxl:py-[11px] xxl:px-[25px]"
+                className="rounded-full bg-transparent edit-profile-btn px-[20px] py-[10px] text-[10px] font-semibold md:text-[8px] md:px-[15px] md:py-[3px] lg:text-[8px] lg:py-[7px] lg:px-[10px] xl:text-[8px] xl:py-[7px] xl:px-[20px] xxl:text-[11px] xxl:py-[11px] xxl:px-[25px]"
                 style={{ border: "0.75px solid #00FF00" }}
                 onClick={onEditClick}
               >
                 Edit Profile
               </button>
               <button
-                className={`rounded-full buy-coin-btn px-3 py-1 text-[10px] font-light md:text-[8px] md:px-[15px] md:py-[1px] lg:text-[8px] lg:py-[7px] lg:px-[10px] xl:text-[8px] xl:py-[7px] xl:px-[20px] xxl:text-[11px] xxl:py-[11px] xxl:px-[25px] ${
+                className={`rounded-full buy-coin-btn px-[20px] py-[10px] text-[10px] font-light md:text-[8px] md:px-[15px] md:py-[1px] lg:text-[8px] lg:py-[7px] lg:px-[10px] xl:text-[8px] xl:py-[7px] xl:px-[20px] xxl:text-[11px] xxl:py-[11px] xxl:px-[25px] ${
                   signedAccountId
                     ? "buy-coin"
                     : "bg-[#7A7A7A] cursor-not-allowed"
@@ -189,7 +189,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="flex  md:hidden flex-row items-center justify-center gap-[20px]">
           <div className="flex flex-col items-center justify-center gap-5">
             <div className="gfx-div mobile">
-              <div className="flex items-center rounded-xl text-center justify-center bg-[#000000] px-[7px] py-2">
+              <div className="flex items-center rounded-xl text-center justify-center bg-[#000000] px-[20px] py-2">
                 <div className="flex flex-col items-center gap-[5px]">
                   {/* <div className="flex justify-center mb-2"></div> */}
                   <h3 className="flex items-center flex-row justify-center font-semibold gap-1 text-base">
@@ -213,7 +213,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     Wallet Address
                   </p>
                   <span
-                    className="text-[#FFFFFF] text-[8px] font-light px-[10px] py-[5px] rounded-full"
+                    className="text-[#FFFFFF] text-[8px] font-light px-[18px] py-[5px] rounded-full"
                     style={{ border: "1px solid #00FF00" }}
                   >
                     {signedAccountId
@@ -235,9 +235,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             </div>
           </div>
           <div className="flex flex-col link-div">
-            <p className="flex flex-row items-center gap-4 text-white text-xs font-semibold">
+            <p className="flex flex-row items-center justify-center gap-4 text-white text-[10px] font-semibold">
               Referral Link{" "}
-              <span className="gfx-text flex flex-row items-center justify-center gap-1 text-xs font-semibold">
+              <span className="gfx-text flex flex-row items-center justify-center gap-1 text-[10px] font-semibold">
                 100 GFXvs <InlineSVG src="/icons/coin.svg" />
               </span>
             </p>
@@ -264,8 +264,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </div>
             </div>
             <button
-              className="flex items-center bg-transparent justify-center text-xs font-light px-1 py-2 gap-2 rounded-full text-[#FFFFFF] mt-5 w-full"
+              className="flex items-center bg-transparent justify-center text-xs font-light px-1 py-3 gap-2 rounded-full text-[#FFFFFF] mt-5 w-full"
               style={{ border: "0.75px solid #00FF00", marginTop: "10px" }}
+              onClick={() => {
+                window.location.href =
+                  "https://t.me/GFXvs_Bot/GFXvs?startapp=command";
+              }}
             >
               <InlineSVG
                 src="/icons/tele-green.svg"
@@ -336,6 +340,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <button
               className="flex items-center bg-transparent justify-center text-xs font-light px-9 py-2 gap-2 rounded-full text-[#FFFFFF] w-[100%] mt-1 lg:px-9 lg:py-2 lg:mt-4 lg:text-xs lg:font-light"
               style={{ border: "0.75px solid #00FF00" }}
+              onClick={() => {
+                window.location.href =
+                  "https://t.me/GFXvs_Bot/GFXvs?startapp=command";
+              }}
             >
               <InlineSVG
                 src="/icons/tele-green.svg"

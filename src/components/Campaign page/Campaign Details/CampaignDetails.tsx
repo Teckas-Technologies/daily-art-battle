@@ -1,4 +1,5 @@
 "use client";
+import { debounce } from "lodash";
 import InlineSVG from "react-inlinesvg";
 import "./CampaignDetails.css";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -11,6 +12,8 @@ import AllParticipantpopup from "../DistributeReward Popup/AllParticipants";
 import { NearContext } from "@/wallet/WalletSelector";
 import Toast from "@/components/Toast";
 import { useAuth } from "@/contexts/AuthContext";
+import useInfiniteScrollForCampaign from "@/hooks/ParticipantsInfiniteScrollHook";
+import Loader from "@/components/ArtBattle/Loader/Loader";
 
 interface CampaignDetailsProps {
   toggleDistributeModal: () => void;
@@ -97,6 +100,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const [totalPages, setTotalPages] = useState(1);
   const [dayWinners, setDayWinners] = useState([]);
   const [showRewardModal, setShowRewardModal] = useState(false);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [isRewardDistributed, setIsRewardDistributed] = useState(
     campaign?.distributedRewards ?? false
   );
@@ -240,6 +244,49 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
       return () => clearTimeout(timeout);
     }
   }, [toast]);
+  const { participants, isLoadingState, hasMore, loadMore, isError } =
+    useInfiniteScrollForCampaign(campaignId);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScroll = () => {
+    if (popupRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = popupRef.current;
+      if (
+        scrollTop + clientHeight >= scrollHeight - 50 &&
+        hasMore &&
+        !isLoadingState
+      ) {
+        loadMore();
+        console.log("caled .........");
+      }
+    }
+  };
+
+  // Add the scroll event listener on mount and remove it on unmount
+  useEffect(() => {
+    const ref = popupRef.current;
+    if (ref) {
+      ref.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (ref) {
+        ref.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [hasMore, isLoadingState, loadMore]);
+  const handleScrollToTop = () => {
+    if (popupRef.current) {
+      popupRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    if (participants.length > 1) {
+      setShowScrollToTop(true);
+    } else {
+      setShowScrollToTop(false);
+    }
+  }, [participants]);
   return (
     <div className="campaign-details-container">
       <h1>Campaign Ended</h1>
@@ -440,7 +487,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
                   <div className="distribute-btn-Border" />
 
-                  <div className="distribute-btn-Overlay" id="move-top"/>
+                  <div className="distribute-btn-Overlay" id="move-top" />
                 </div>
               </>
             )}
@@ -449,20 +496,16 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
           ""
         )}
         <div className="summary mt-6">
-          <div className="participants">
+          <div ref={popupRef} className="participants relative overflow-auto">
             <h2>Participants</h2>
-            {participantsList && participantsList.length > 0 ? (
+            {participants && participants.length > 0 ? (
               <div className="participants-grid">
-                {participantsList.map((participantsList, index) => (
-                  <div
-                    key={index}
-                    className="participant"
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
+                {participants.map((participant, index) => (
+                  <div key={index} className="participant">
                     <div className="flex flex-row items-center justify-center">
                       <span className="participant-number">{index + 1}</span>
                       <span className="participant-name">
-                        {participantsList}
+                        {participant.firstName} {participant.lastName}
                       </span>
                     </div>
                   </div>
@@ -470,13 +513,29 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
               </div>
             ) : (
               <div className="flex flex-row items-center justify-center gap-2 font-semibold text-base">
-                {" "}
                 <InlineSVG
                   src="/icons/info.svg"
                   className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
                 />
                 <div>No participants available!</div>
               </div>
+            )}
+
+            {isLoadingState && (
+              <div className="flex justify-center my-4">
+                <Loader sm="10" md="15" />
+              </div>
+            )}
+
+            {showScrollToTop && (
+              <>
+                <button
+                  className="scroll-to-top"
+                  onClick={handleScrollToTop}
+                >
+                  <InlineSVG src="/icons/scroll-top.svg" className="w-[20px] h-[20px]"/>
+                </button>
+              </>
             )}
           </div>
 

@@ -310,21 +310,52 @@
 }
 /* Container styling */
 .participants {
-  width: 250px;
+  width: 300px;
   background: #171717bd;
   border-radius: 15px;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
   color: #ffffff;
   overflow-y: auto;
-  width: 300px;
   height: 580px;
   border: 0.34px solid #ffffff33;
 }
-
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #00ff00;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
 .participants h2 {
   font-size: 23px;
   font-weight: 600;
   margin-bottom: 15px;
+}
+.scroll-to-top {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background-color: #000000;
+  border: 1px solid #4a4a4a;
+  color: white;
+  padding: 1rem;
+  border-radius: 50%;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.scroll-to-top:hover {
+  transform: scale(1.1);
+}
+
+.scroll-to-top svg {
+  transition: transform 0.3s ease;
+}
+
+.scroll-to-top:hover svg {
+  transform: scale(1.2);
 }
 
 .participant {
@@ -572,8 +603,8 @@
 
   .participants {
     width: 100%;
-    height: auto;
-    max-height: 200px;
+    height: 200px;
+    width: 350px;
     padding: 10px;
   }
   .participants-grid {
@@ -727,10 +758,10 @@
     gap: 20px;
   }
 
-  .participants {
+  /* .participants {
     width: 300px;
     height: 500px;
-  }
+  } */
 
   .participant {
     font-size: 14px;

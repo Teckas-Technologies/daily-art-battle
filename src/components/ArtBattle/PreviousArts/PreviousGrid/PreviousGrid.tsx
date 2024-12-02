@@ -4,7 +4,11 @@ import InlineSVG from "react-inlinesvg";
 import "./PreviousGrid.css";
 import { useEffect, useState, useRef } from "react";
 import CardHolder from "./BattleCard/CarHolder";
-import { BattleData, useFetchBattles } from "@/hooks/battleHooks";
+import {
+  BattleData,
+  useFetchBattles,
+  useSearchPreviousArts,
+} from "@/hooks/battleHooks";
 import PreviousArtPopup from "../PreviousArtPopup/PreviousArtPopup";
 import Loader from "../../Loader/Loader";
 
@@ -35,7 +39,17 @@ export const PreviousGrid: React.FC<Props> = ({
   const [selectedArt, setSelectedArt] = useState<BattleData | null>(null); // State for selected art
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
+  const {
+    previousArts,
+    totalSearchPage,
+    loading: searchLoading,
+    error: searchError,
+    searchArts,
+  } = useSearchPreviousArts();
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
@@ -78,24 +92,35 @@ export const PreviousGrid: React.FC<Props> = ({
     fetchMoreBattles(campaignId, sortType, 1, limit);
   };
 
+  const scrollToPreviousSection = () => {
+    const previousSection = document.getElementById("previous");
+    if (previousSection) {
+      const sectionPosition =
+        previousSection.getBoundingClientRect().top + window.scrollY;
+      const isMobile = window.innerWidth < 768;
+      const rem = isMobile ? 1 : 2.5;
+      const offset = rem * 16;
+      window.scrollTo({
+        top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const handleNext = () => {
-    if (page < totalPage) {
+    const currentTotalPage = searchQuery ? totalSearchPage : totalPage;
+    if (page < currentTotalPage) {
       setPage((prevPage) => prevPage + 1);
       const limit = getLimitBasedOnScreenSize();
       setLimit(limit);
 
-      const previousSection = document.getElementById("previous");
-      if (previousSection) {
-        const sectionPosition =
-          previousSection.getBoundingClientRect().top + window.scrollY;
-        const isMobile = window.innerWidth < 768 ? true : false;
-        const rem = isMobile ? 1 : 2.5;
-        const offset = rem * 16;
-        window.scrollTo({
-          top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
-          behavior: "smooth",
-        });
+      if (searchQuery) {
+        searchArts(campaignId, searchQuery, page + 1, limit);
+      } else {
+        fetchMoreBattles(campaignId, sort, page + 1, limit);
       }
+
+      scrollToPreviousSection();
     }
   };
 
@@ -105,55 +130,44 @@ export const PreviousGrid: React.FC<Props> = ({
       const limit = getLimitBasedOnScreenSize();
       setLimit(limit);
 
-      const previousSection = document.getElementById("previous");
-      if (previousSection) {
-        const sectionPosition =
-          previousSection.getBoundingClientRect().top + window.scrollY;
-        const isMobile = window.innerWidth < 768 ? true : false;
-        const rem = isMobile ? 1 : 2.5;
-        const offset = rem * 16;
-        window.scrollTo({
-          top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
-          behavior: "smooth",
-        });
+      if (searchQuery) {
+        searchArts(campaignId, searchQuery, page - 1, limit);
+      } else {
+        fetchMoreBattles(campaignId, sort, page - 1, limit);
       }
+
+      scrollToPreviousSection();
     }
   };
 
   const handlePageClick = (pageNumber: number) => {
-    console.log(`${pageNumber}, ${page}`);
     if (pageNumber !== page) {
       setPage(pageNumber);
       const limit = getLimitBasedOnScreenSize();
-      // fetchMoreBattles(campaignId, sort, page, limit);
       setLimit(limit);
 
-      const previousSection = document.getElementById("previous");
-      if (previousSection) {
-        const sectionPosition =
-          previousSection.getBoundingClientRect().top + window.scrollY;
-        const isMobile = window.innerWidth < 768 ? true : false;
-        const rem = isMobile ? 1 : 2.5;
-        const offset = rem * 16;
-        window.scrollTo({
-          top: !isMobile ? sectionPosition + offset : sectionPosition - 20,
-          behavior: "smooth",
-        });
+      if (searchQuery) {
+        searchArts(campaignId, searchQuery, pageNumber, limit);
+      } else {
+        fetchMoreBattles(campaignId, sort, pageNumber, limit);
       }
+
+      scrollToPreviousSection();
     }
   };
 
   const renderPageNumbers = () => {
     const pagesToShow = 5;
+    const currentTotalPage = searchQuery ? totalSearchPage : totalPage; // Use correct total pages
     let startPage = Math.max(1, page - 2); // Center the current page
-    let endPage = Math.min(totalPage, page + 2); // Show up to 5 pages
+    let endPage = Math.min(currentTotalPage, page + 2); // Show up to 5 pages
 
     if (endPage - startPage + 1 < pagesToShow) {
       // Adjust start and end if less than 5 pages are displayed
       if (startPage === 1) {
-        endPage = Math.min(totalPage, pagesToShow);
-      } else if (endPage === totalPage) {
-        startPage = Math.max(1, totalPage - pagesToShow + 1);
+        endPage = Math.min(currentTotalPage, pagesToShow);
+      } else if (endPage === currentTotalPage) {
+        startPage = Math.max(1, currentTotalPage - pagesToShow + 1);
       }
     }
 
@@ -162,6 +176,19 @@ export const PreviousGrid: React.FC<Props> = ({
       (_, i) => startPage + i
     );
   };
+
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value.trim();
+    setSearchQuery(query);
+
+    if (query) {
+      const limit = getLimitBasedOnScreenSize();
+      await searchArts(campaignId, query, 1, limit);
+    }
+  };
+  useEffect(() => {
+    console.log("Previous arts:", previousArts);
+  }, [previousArts]);
 
   return (
     <>
@@ -184,6 +211,8 @@ export const PreviousGrid: React.FC<Props> = ({
                 <input
                   type="text"
                   placeholder="Search for arts, username"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                   className="w-full spartan-light text-white h-full px-2 text-md placeholder:text-sm border-0 outline-none bg-transparent search-input"
                 />
               </div>
@@ -256,11 +285,31 @@ export const PreviousGrid: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Previous battles grid view section */}
-        {loading ? (
-          <Loader sm="15" md="22" />
-        ) : (
-          <div className="relative grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
+        <div className="relative grid-view w-full flex justify-center md:px-[7rem] px-3 md:pt-5 md:pb-5 pb-5 bg-black">
+          {loading || searchLoading ? (
+            <div className="flex justify-center items-center w-full h-full py-10">
+              <Loader md="22" sm="15" />
+            </div>
+          ) : searchQuery ? (
+            previousArts && previousArts.length > 0 ? (
+              <CardHolder
+                battles={previousArts}
+                campaignId={campaignId}
+                setRefresh={setRefresh}
+                currentPage={page}
+                totalPage={totalSearchPage}
+                onCardClick={openPopup}
+              />
+            ) : (
+              <p className="flex items-center justify-center gap-2 py-[80px] text-white font-semibold text-lg">
+            <InlineSVG
+              src="/icons/info.svg"
+              className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+            />{" "}
+            No arts available!
+          </p>
+            )
+          ) : (
             <CardHolder
               battles={previousBattles}
               campaignId={campaignId}
@@ -269,21 +318,20 @@ export const PreviousGrid: React.FC<Props> = ({
               totalPage={totalPage}
               onCardClick={openPopup}
             />
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Pagination for previous arts */}
-        {previousBattles.length > 0 && (
+        {previousBattles.length > 0 && previousArts.length > 0 && (
           <div className="pagination-section relative w-full flex justify-center py-5">
             <div className="pagination rounded-[7rem]">
               <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">
                 <div
-                  className={`previous flex items-center gap-1 ${
-                    page === 1
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-pointer"
-                  }`}
+                  className="previous flex items-center gap-1"
                   onClick={page !== 1 ? handlePrevious : undefined}
+                  style={{
+                    opacity: page === 1 ? 0.5 : 1,
+                    cursor: page === 1 ? "not-allowed" : "pointer",
+                  }}
                 >
                   <InlineSVG
                     src="/icons/left-arrow.svg"
@@ -305,12 +353,20 @@ export const PreviousGrid: React.FC<Props> = ({
                   ))}
                 </div>
                 <div
-                  className={`next flex items-center gap-1 ${
-                    page === totalPage
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-pointer"
-                  }`}
-                  onClick={page !== totalPage ? handleNext : undefined}
+                  className="next flex items-center gap-1"
+                  onClick={
+                    page !== totalPage && page !== totalSearchPage
+                      ? handleNext
+                      : undefined
+                  }
+                  style={{
+                    opacity:
+                      page === totalPage || page === totalSearchPage ? 0.5 : 1,
+                    cursor:
+                      page === totalPage || page === totalSearchPage
+                        ? "not-allowed"
+                        : "pointer",
+                  }}
                 >
                   <h2 className="hidden md:block">Next</h2>
                   <InlineSVG

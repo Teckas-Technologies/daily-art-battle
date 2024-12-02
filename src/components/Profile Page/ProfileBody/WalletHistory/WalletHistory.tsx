@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import InlineSVG from "react-inlinesvg";
 import useFetchTransactions from "@/hooks/WalletHistoryHook";
 import Loader from "@/components/ArtBattle/Loader/Loader";
+import { TransactionType } from "../../../../../model/enum/TransactionType";
 
 interface WalletHistoryProps {
   rendered: boolean;
@@ -17,6 +18,31 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
     fetchTransactions,
   } = useFetchTransactions();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const transactionDescriptions: Record<TransactionType, string> = {
+    // Received Transactions
+    [TransactionType.RECEIVED_FROM_BURN]: "Received from Burn",
+    [TransactionType.RECEIVED_FROM_DAILY_CHECKIN]:
+      "Received Daily Check-In Reward",
+    [TransactionType.RECEIVED_FROM_NEAR_TRANSFER]: "Received NEAR Transfer",
+    [TransactionType.RECEIVED_FROM_USDT_TRANSFER]: "Received USDT Transfer",
+    [TransactionType.RECEIVED_FROM_NEAR_AIRDROP]: "Received NEAR Airdrop",
+    [TransactionType.RECEIVED_FROM_TELEGRAM_AIRDROP]:
+      "Received Telegram Airdrop Reward",
+    [TransactionType.RECEIVED_FROM_WEEKLY_CLAIM]:
+      "Received Weekly Claim Reward",
+    [TransactionType.RECEIVED_FROM_REFERRAL]: "Received Referral Reward",
+    [TransactionType.RECEIVED_FROM_SIGNUP]: "Received Signup Reward",
+    [TransactionType.RECEIVED_FROM_SPECIAL_WINNER]:
+      "Received Special Winner Reward",
+    [TransactionType.RECEIVED_FROM_SPECIAL_REWARD]: "Received Special Reward",
+
+    // Spent Transactions
+    [TransactionType.SPENT_FOR_ART_UPLOAD]: "Spent for Art Upload",
+    [TransactionType.SPENT_FOR_AI_IMAGE_GENERATION]:
+      "Spent for AI Image Generation",
+    [TransactionType.SPENT_FOR_RAFFLE]: "Spent for Raffle",
+    [TransactionType.SPENT_FOR_CAMPAIGN]: "Spent for Campaign Creation",
+  };
   useEffect(() => {
     fetchTransactions(currentPage, 20);
   }, [currentPage]);
@@ -90,10 +116,10 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                     src="/icons/transaction.svg"
                     className="md:w-6 md:h-6 w-4 h-4"
                   />
-                  <span className="md:text-[12px] text-[10px] md:w-[150px] w-[98px]">
-                    {transaction.transactionType === "spent"
-                      ? "Paid to Gfx"
-                      : "Rewards from Gfx"}
+                  <span className="md:text-[12px] text-[10px] md:w-[200px] w-[98px]">
+                    {transactionDescriptions[
+                      transaction.transactionType as TransactionType
+                    ] || "Unknown Transaction"}
                   </span>
                 </div>
                 <div className="flex items-center md:text-[12px] text-[10px] w-[95px] md:w-[150px]">
@@ -110,10 +136,10 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                   </span>
                 </div>
                 <div className="flex items-center md:space-x-[5px] space-x-[2px]">
-                  {transaction.transactionType === "spent" ? (
-                    <InlineSVG src="/icons/red-uparrow.svg" />
-                  ) : (
+                  {transaction.transactionType.startsWith("received") ? (
                     <InlineSVG src="/icons/green-downarrow.svg" />
+                  ) : (
+                    <InlineSVG src="/icons/red-uparrow.svg" />
                   )}
                   <img
                     src="/icons/coin.svg"
@@ -122,15 +148,15 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                   />
                   <span
                     className={`md:text-[12px] text-[10px] font-semibold w-[55px] md:w-[60px] ${
-                      transaction.transactionType === "spent"
-                        ? "text-red-500"
-                        : "text-green-500"
+                      transaction.transactionType.startsWith("received")
+                        ? "text-[#00FF00]"
+                        : "text-[#FF543E]"
                     }`}
                     style={{ textAlign: "left" }}
                   >
-                    {transaction.transactionType === "spent"
-                      ? `-${transaction.gfxCoin.toFixed(2)}`
-                      : `+${transaction.gfxCoin.toFixed(2)}`}
+                    {transaction.transactionType.startsWith("received")
+                      ? `+${transaction.gfxCoin.toFixed(2)}`
+                      : `-${transaction.gfxCoin.toFixed(2)}`}
                   </span>
                 </div>
               </div>

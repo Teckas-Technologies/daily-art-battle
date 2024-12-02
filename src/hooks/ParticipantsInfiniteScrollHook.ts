@@ -1,31 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-interface ArtItem {
+interface Participant {
   _id: string;
-  artistId: string;
-  colouredArt: string;
-  arttitle: string;
-  upVotes: number;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
-const useInfiniteScroll = (campaignId: string, limit: number = 8) => {
-  const [artItems, setArtItems] = useState<ArtItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+const useInfiniteScrollForCampaign = (campaignId: string, limit: number = 20) => {
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [isLoadingState, setIsLoadingState] = useState(false);
   const [isError, setIsError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [totalDocuments, setTotalDocuments] = useState(0);
 
-  const fetchCampaignFromArtAPI = async (page: number) => {
-    console.log("Fetching campaign data for page:", page);
-    setIsLoading(true);
+  const fetchParticipants = async (page: number) => {
+    console.log("Fetching participants for page:", page); 
+    setIsLoadingState(true);
     setIsError(null);
 
     try {
-      console.log("Sending API request...");
       await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log("Sending API request...");
       const response = await fetch(
-        `/api/art?queryType=campaign&page=${page}&limit=${limit}&id=${campaignId}`,
+        `/api/campaignAnalytics?queryType=participants&page=${page}&limit=${limit}&id=${campaignId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -39,52 +38,52 @@ const useInfiniteScroll = (campaignId: string, limit: number = 8) => {
       console.log("API response status:", response.status);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch campaign from art API");
+        throw new Error("Failed to fetch participants data");
       }
 
       const data = await response.json();
       console.log("API response data:", data);
 
-      setArtItems((prev) =>
-        page === 1 ? data.arts : [...prev, ...data.arts]
-      );
-      setTotalDocuments(data.totalDocuments);
-      setHasMore(data.arts.length > 0 && data.arts.length === limit);
+      const users = data.uniqueWallets.users;
+      console.log("Fetched users:", users);
 
-      console.log("Updated art items:", artItems);
+      setParticipants((prev) => (page === 1 ? users : [...prev, ...users]));
+      setTotalDocuments(data.uniqueWallets.totalDocuments);
+      setHasMore(users.length > 0 && users.length === limit);
+      console.log("Updated participants:", participants);
       console.log("Total documents:", totalDocuments);
       console.log("Has more:", hasMore);
     } catch (err) {
       if (err instanceof Error) {
-        console.error("Error fetching campaign data:", err.message);
+        console.error("Error fetching participants:", err.message);
         setIsError(err.message);
       } else {
         console.error("Unknown error occurred");
         setIsError("An unknown error occurred");
       }
     } finally {
-      setIsLoading(false);
-      console.log("Loading state:", isLoading);
+      setIsLoadingState(false);
+      console.log("Loading state:", isLoadingState);
     }
   };
 
   const loadMore = useCallback(() => {
     console.log("Load more triggered. Current page:", currentPage);
-    if (hasMore && !isLoading) {
-      console.log("Loading more art items...");
-      fetchCampaignFromArtAPI(currentPage + 1);
+    if (hasMore && !isLoadingState) {
+      console.log("Loading more participants...");
+      fetchParticipants(currentPage + 1);
       setCurrentPage((prev) => prev + 1);
     }
-  }, [currentPage, hasMore, isLoading]);
+  }, [currentPage, hasMore, isLoadingState]);
 
   useEffect(() => {
     console.log("Campaign ID changed:", campaignId);
-    fetchCampaignFromArtAPI(1); // Fetch the initial page
+    fetchParticipants(1);
   }, [campaignId]);
 
   return {
-    artItems,
-    isLoading,
+    participants,
+    isLoadingState,
     isError,
     hasMore,
     totalDocuments,
@@ -92,4 +91,4 @@ const useInfiniteScroll = (campaignId: string, limit: number = 8) => {
   };
 };
 
-export default useInfiniteScroll;
+export default useInfiniteScrollForCampaign;

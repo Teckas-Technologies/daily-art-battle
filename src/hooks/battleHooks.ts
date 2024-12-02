@@ -1,7 +1,11 @@
 // hooks/useFetchTodayBattle.ts
-import { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../utils/authToken';
-import { NEXT_PUBLIC_VALID_CLIENT_ID, NEXT_PUBLIC_VALID_CLIENT_SECRET } from '@/config/constants';
+import { useState, useEffect } from "react";
+import { fetchWithAuth } from "../../utils/authToken";
+import {
+  NEXT_PUBLIC_VALID_CLIENT_ID,
+  NEXT_PUBLIC_VALID_CLIENT_SECRET,
+} from "@/config/constants";
+import { ArtData } from "./artHooks";
 
 export interface BattleData {
   _id: string;
@@ -23,7 +27,7 @@ export interface BattleData {
   artAcolouredArtReference: string;
   artBcolouredArtReference: string;
   grayScaleReference?: string;
-  winningArt?: 'Art A' | 'Art B';
+  winningArt?: "Art A" | "Art B";
   specialWinner?: string;
   artAspecialWinner?: string;
   artBspecialWinner?: string;
@@ -53,14 +57,13 @@ interface UseFetchTodayBattleResult {
 interface BattlesResponse {
   pastBattles: BattleData[];
   totalDocuments: any;
-  totalPages: any
+  totalPages: any;
 }
-
 
 interface UseSaveDataResult {
   saveData: (data: any) => Promise<void>;
   loading: boolean;
-  error: string | null;  // Ensure that 'error' can be a string or null
+  error: string | null; // Ensure that 'error' can be a string or null
   success: boolean | null;
 }
 //useSaveData is used to create battle
@@ -75,22 +78,22 @@ export const useSaveData = (): UseSaveDataResult => {
     setSuccess(null);
 
     try {
-      const response = await fetchWithAuth('/api/battle', {
-        method: 'POST',
+      const response = await fetchWithAuth("/api/battle", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save data');
+        throw new Error("Failed to save data");
       }
 
       setSuccess(true);
     } catch (error) {
-      console.error('Error saving data:', error);
-      setError('Failed to save data');
+      console.error("Error saving data:", error);
+      setError("Failed to save data");
     } finally {
       setLoading(false);
     }
@@ -111,29 +114,31 @@ export const useFetchTodayBattle = (): UseFetchTodayBattleResult => {
 
     try {
       console.log(campaignId);
-      const response = await fetch(`/api/battle?queryType=Today&campaignId=${campaignId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
-          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+      const response = await fetch(
+        `/api/battle?queryType=Today&campaignId=${campaignId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
         }
-      });
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch today\'s battle data');
+        throw new Error("Failed to fetch today's battle data");
       }
       const data: BattleData = await response.json();
       if (data == null) {
-        setBattle(true)
+        setBattle(true);
       }
       setTodayBattle(data);
     } catch (error) {
-      console.error('Error fetching today\'s battle data:', error);
-      setError('Failed to fetch data');
+      console.error("Error fetching today's battle data:", error);
+      setError("Failed to fetch data");
     } finally {
       setLoading(false);
     }
   };
-
 
   return { todayBattle, battle, loading, error, fetchTodayBattle }; // Include fetchTodayBattle in the return object
 };
@@ -145,25 +150,32 @@ export const useFetchBattles = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-
-  const fetchBattles = async (campaignId: string, sort: string, page: number, limit: number = 6) => {
+  const fetchBattles = async (
+    campaignId: string,
+    sort: string,
+    page: number,
+    limit: number = 6
+  ) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/battle?queryType=battles&campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
-          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+      const response = await fetch(
+        `/api/battle?queryType=battles&campaignId=${campaignId}&sort=${sort}&page=${page}&limit=${limit}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
         }
-      });
-      if (!response.ok) throw new Error('Network response was not ok');
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
       const data: BattlesResponse = await response.json();
       setBattles(data);
       setTotalPage(data.totalPages);
       return data;
     } catch (err) {
-      console.error('Error fetching battles:', err);
+      console.error("Error fetching battles:", err);
       setError("Error fetching battles!");
     } finally {
       setLoading(false);
@@ -174,25 +186,76 @@ export const useFetchBattles = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/battle?queryType=battles&page=${page}&limit=${limit}`,{
-        headers: {
-          "Content-Type": "application/json",
-          "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
-          "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+      const response = await fetch(
+        `/api/battle?queryType=battles&page=${page}&limit=${limit}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
         }
-      });
-      if (!response.ok) throw new Error('Network response was not ok');
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
       const data: BattlesResponse = await response.json();
 
       setBattles(data);
     } catch (err) {
-      console.error('Error fetching battles:', err);
+      console.error("Error fetching battles:", err);
       setError("Error fetching battles!");
     } finally {
       setLoading(false);
     }
   };
 
+  return {
+    battles,
+    totalPage,
+    loading,
+    error,
+    fetchMoreBattles: fetchBattles,
+    fetchBattlesbyVotes: fetchBattlesByVotes,
+  };
+};
+export const useSearchPreviousArts = () => {
+  const [previousArts, setPreviousArts] = useState<BattleData[]>([]);
+  const [totalSearchPage, setTotalSearchPage] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  return { battles, totalPage, loading, error, fetchMoreBattles: fetchBattles, fetchBattlesbyVotes: fetchBattlesByVotes };
+  const searchArts = async (
+    campaignId: string,
+    name: string,
+    page: number,
+    limit: number = 1
+  ) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `/api/art?queryType=completed&campaignId=${campaignId}&name=${name}&page=${page}&limit=${limit}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-client-id": NEXT_PUBLIC_VALID_CLIENT_ID,
+            "x-client-secret": NEXT_PUBLIC_VALID_CLIENT_SECRET,
+          },
+        }
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      console.log("Searched Data >:", data);
+      setPreviousArts(data.completedBattles);
+      console.log(">>>>>>>>>>>>>>>>>>>",previousArts);
+      
+      setTotalSearchPage(data.totalPages);
+      return data?.arts;
+    } catch (err) {
+      setError("Error loading arts");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { previousArts, totalSearchPage, loading, error, searchArts };
 };

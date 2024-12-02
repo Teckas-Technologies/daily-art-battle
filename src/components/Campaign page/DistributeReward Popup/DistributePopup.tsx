@@ -42,10 +42,18 @@ const DistributeRewardPopup: React.FC<DistributeRewardPopupProps> = ({
     const container = popupRef.current;
 
     if (container) {
+      console.log("Reached bottom, loading more participants...");
+
       const scrollBottom =
         container.scrollHeight - container.scrollTop - container.clientHeight;
-
+      console.log("scroll bottom", scrollBottom);
+      console.log("scroll top ", container.scrollTop);
+      console.log("hasMore:", hasMore);
+      console.log("isLoadingState:", isLoading);
       if (scrollBottom <= 0 && hasMore && !isLoading) {
+        console.log("hasMore>>>>>>>>>>>>>>>:", hasMore);
+        console.log("isLoadingState>>>>>>>>>>>>>>>>>>:", isLoading);
+        console.log("loading called");
         loadMore();
       }
     }
@@ -121,7 +129,10 @@ const DistributeRewardPopup: React.FC<DistributeRewardPopupProps> = ({
           </button>
           {selectedArt.length > 0 ? (
             <div className="distributepopup-btn-Wrapper">
-              <button className="distributepopup-btn text-[13px] md:text-[14px]" onClick={handlePopups}>
+              <button
+                className="distributepopup-btn text-[13px] md:text-[14px]"
+                onClick={handlePopups}
+              >
                 Distribute Rewards
               </button>
               <div className="distributepopup-btn-Border" />

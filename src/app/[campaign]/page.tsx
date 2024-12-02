@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CampaignData } from "@/hooks/campaignHooks";
 import useCampaigns, { CampaignPageData } from "@/hooks/CampaignHook";
 import CampaignDetails from "@/components/Campaign page/Campaign Details/CampaignDetails";
@@ -29,6 +29,9 @@ import NoPage from "@/components/404 Page/NoPage";
 import { BattleData, useFetchTodayBattle } from "@/hooks/battleHooks";
 import { useAuth } from "@/contexts/AuthContext";
 import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
+import { NearContext } from "@/wallet/WalletSelector";
+import usePostNearDrop from "@/hooks/NearDrop";
+import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 interface ArtData {
   tokenId: number;
   artistId: string;
@@ -56,7 +59,6 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [editCampaign, setEditCampaign] = useState(false);
   const toggleUploadModal = () => setShowUploadModal(!showUploadModal);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
-  const { sendWalletData } = useSendWalletData();
   const [showAllParticipants, setShowAllParticipants] = useState<
     boolean | null
   >(null);
@@ -66,6 +68,9 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [toast, setToast] = useState(false);
+  const { wallet, signedAccountId } = useContext(NearContext);
+  const { postNearDrop, response } = usePostNearDrop();
+
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
@@ -105,7 +110,15 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
     setIsLoading,
     fetchCampaignAnalytics,
   } = useCampaigns();
-  const { user } = useAuth();
+  const {
+    user,
+    userTrigger,
+    setUserTrigger,
+    newUser,
+    setNewUser,
+    nearDrop,
+    setNearDrop,
+  } = useAuth();
   let userDetails = user;
   useEffect(() => {
     if (!campaign || !campaign.startDate) return;
@@ -192,6 +205,23 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
 
     return () => clearTimeout(timeoutId);
   }, [campaign?._id as string]);
+  useEffect(() => {
+    const triggerNearDrop = async () => {
+      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+        try {
+          const payload = { nearAddress: signedAccountId };
+          await postNearDrop(payload);
+          setUserTrigger(!userTrigger);
+          setNearDrop(true);
+          console.log("Near drop triggered successfully.");
+        } catch (error) {
+          console.error("Error triggering near drop:", error);
+        }
+      }
+    };
+
+    triggerNearDrop();
+  }, [signedAccountId, userDetails, userTrigger]);
   // useEffect(() => {
   //   const handleWalletData = async () => {
   //     if (session && session.user) {
@@ -463,6 +493,12 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           />
           {walltMisMatchPopup && (
             <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
+          )}
+          {nearDrop && (
+            <ClaimPopup
+              msg="Reward unlocked! You've earned 10 NearDrop points!"
+              onClose={() => setNearDrop(false)}
+            />
           )}
         </div>
       )}

@@ -22,6 +22,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import useMintImage from "@/hooks/useMint";
 import { useArtsRaffleCount } from "@/hooks/useRaffleTickets";
 import useUSDTTransfer from "@/hooks/USDTTransferHook";
+import Marquee from "react-fast-marquee";
+import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
+import usePostNearDrop from "@/hooks/NearDrop";
+import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
+import { TELEGRAM_DROP } from "@/config/points";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -46,9 +51,18 @@ const page = () => {
   const pathName = usePathname();
   const [burnArtSuccess, setBurnArtSuccess] = useState(false);
   const [burnArtFailed, setBurnArtFailed] = useState(false);
-
-  const { user } = useAuth();
+  const { postNearDrop, isLoading, response } = usePostNearDrop();
+  const {
+    user,
+    userTrigger,
+    setUserTrigger,
+    newUser,
+    setNewUser,
+    nearDrop,
+    setNearDrop,
+  } = useAuth();
   let userDetails = user;
+
   useEffect(() => {
     setCoin(userDetails?.user?.gfxCoin);
     console.log("coin >>>>>>>>>>>>>>>>>", coin);
@@ -71,7 +85,6 @@ const page = () => {
     if (burnArtFailed) {
       setTimeout(() => setBurnArtFailed(false), 3000);
     }
-
   }, [toast, toastMessage, burnArtSuccess, burnArtFailed]);
 
   const handleEditClick = () => {
@@ -94,18 +107,18 @@ const page = () => {
 
       const accountId = searchParams?.get("account_id") || "";
       const txnHash = searchParams?.get("transactionHashes") || "";
-      const isMint = searchParams?.get('isMint') || "";
-      const isNeartransfer = searchParams?.get('isNeartransfer') || "";
-      const isUsdttransfer = searchParams?.get('isUsdttransfer') || "";
-      const artId = searchParams?.get('artId') || "";
-      const queryType = searchParams?.get('queryType') || "";
+      const isMint = searchParams?.get("isMint") || "";
+      const isNeartransfer = searchParams?.get("isNeartransfer") || "";
+      const isUsdttransfer = searchParams?.get("isUsdttransfer") || "";
+      const artId = searchParams?.get("artId") || "";
+      const queryType = searchParams?.get("queryType") || "";
 
       if (signedAccountId) {
         if (isMint) {
           try {
             if (txnHash) {
               const notExist = await getHash(txnHash);
-              console.log("NOT Exist:", notExist)
+              console.log("NOT Exist:", notExist);
               if (notExist) {
                 const senderId = accountId;
                 const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
@@ -117,12 +130,12 @@ const page = () => {
                   setToast(true);
                   await updateRaffleMint(artId, queryType);
                   await saveHash(txnHash);
-                  window.history.replaceState(null, '', "/profile");
+                  window.history.replaceState(null, "", "/profile");
                 } else {
                   setToastMessage(`Minting Failed!`);
                   setSuccessToast("no");
                   setToast(true);
-                  window.history.replaceState(null, '', "/profile");
+                  window.history.replaceState(null, "", "/profile");
                 }
               } else {
                 console.log("Transaction hash already exists in the database.");
@@ -148,16 +161,16 @@ const page = () => {
                   console.log("Active Account ID:", accountId);
                   console.log("Transaction Hash:", txnHash);
                   await postNearTransfer(accountId, txnHash);
-
+                  setUserTrigger(!userTrigger);
                   setToastMessage(`Transaction Successful!`);
                   setSuccessToast("yes");
                   setToast(true);
-                  window.history.replaceState(null, '', "/profile");
+                  window.history.replaceState(null, "", "/profile");
                 } else {
                   setToastMessage(`Transaction Failed!`);
                   setSuccessToast("no");
                   setToast(true);
-                  window.history.replaceState(null, '', "/profile");
+                  window.history.replaceState(null, "", "/profile");
                 }
               } else {
                 console.log("Transaction hash already exists in the database.");
@@ -184,16 +197,16 @@ const page = () => {
                   console.log("Active Account ID:", accountId);
                   console.log("Transaction Hash:", txnHash);
                   await postUSDTTransfer(accountId, txnHash);
-
+                  setUserTrigger(!userTrigger);
                   setToastMessage(`Transaction Successful!`);
                   setSuccessToast("yes");
                   setToast(true);
-                  window.history.replaceState(null, '', "/profile");
+                  window.history.replaceState(null, "", "/profile");
                 } else {
                   setToastMessage(`Transaction Failed!`);
                   setSuccessToast("no");
                   setToast(true);
-                  window.history.replaceState(null, '', "/profile");
+                  window.history.replaceState(null, "", "/profile");
                 }
               } else {
                 console.log("Transaction hash already exists in the database.");
@@ -214,7 +227,7 @@ const page = () => {
     if (signedAccountId) {
       fetchTransaction();
     }
-  }, [signedAccountId, userDetails, searchParams, pathName]);
+  }, [signedAccountId, userDetails, searchParams, pathName, userTrigger]);
 
   useEffect(() => {
     if (userDetails) {
@@ -228,7 +241,7 @@ const page = () => {
         setToast(true);
       }
     }
-  }, [burnArtFailed, burnArtSuccess])
+  }, [burnArtFailed, burnArtSuccess]);
 
   useEffect(() => {
     const buycoin = searchParams?.get("buyCoin");
@@ -250,7 +263,23 @@ const page = () => {
       return () => clearTimeout(timeout);
     }
   }, [toast]);
+  useEffect(() => {
+    const triggerNearDrop = async () => {
+      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+        try {
+          const payload = { nearAddress: signedAccountId };
+          await postNearDrop(payload);
+          setUserTrigger(!userTrigger);
+          setNearDrop(true);
+          console.log("Near drop triggered successfully.");
+        } catch (error) {
+          console.error("Error triggering near drop:", error);
+        }
+      }
+    };
 
+    triggerNearDrop();
+  }, [signedAccountId, userDetails, userTrigger]);
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"
@@ -278,8 +307,25 @@ const page = () => {
         handleCoinClick={handleCoinClick}
         coin={coin ?? 0}
       />
+      <div className="marquee-burn w-full flex items-center h-10 mt-5">
+  <Marquee speed={100} className="flex items-center">
+    <span className="marquee-item">
+      Connect your &nbsp;<b>WALLET</b>&nbsp; and get 1000 GFX points
+    </span>
+    <span className="spacer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <span className="marquee-item">
+      Connect your &nbsp;<b>TELEGRAM</b>&nbsp; and get {TELEGRAM_DROP} GFX points
+    </span>
+    <span className="spacer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  </Marquee>
+</div>
+
       <DailyCheckin coin={coin ?? 0} />
-      <ProfileBody burnArtSuccess={burnArtSuccess} setBurnArtSuccess={setBurnArtSuccess} setBurnArtFailed={setBurnArtFailed} />
+      <ProfileBody
+        burnArtSuccess={burnArtSuccess}
+        setBurnArtSuccess={setBurnArtSuccess}
+        setBurnArtFailed={setBurnArtFailed}
+      />
       <FooterMenu
         fontColor={""}
         campaignId={GFX_CAMPAIGNID}
@@ -298,6 +344,15 @@ const page = () => {
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
+      {nearDrop && (
+        <ClaimPopup
+          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          onClose={() => setNearDrop(false)}
+        />
+      )}
+      {walltMisMatchPopup && (
+        <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
+      )}
       {isEditOpen && <EditProfilePopup onClose={closeEditModal} />}
       {isCoinOpen && <CoinPurchasePopup onClose={closeCoinModal} />}
       {toast && toastMessage && (

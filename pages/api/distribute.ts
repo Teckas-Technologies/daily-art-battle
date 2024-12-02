@@ -5,7 +5,7 @@ import campaign from "../../model/campaign";
 import { error } from "console";
 import User from "../../model/User";
 import Transactions from "../../model/Transactions";
-
+import { TransactionType } from "../../model/enum/TransactionType";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     await connectToDatabase();
@@ -31,7 +31,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
               const newTransaction = new Transactions({
                   email: userEmail,
                   gfxCoin: rewardPerUser,
-                  transactionType: "received"
+                  transactionType: TransactionType.RECEIVED_FROM_SPECIAL_REWARD
               });
               await newTransaction.save();
           })
