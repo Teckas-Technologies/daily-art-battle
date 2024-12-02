@@ -102,14 +102,17 @@ const Home: NextPage = () => {
         setUserId(users.id);
         console.log(users.id);
         telegram(users.id);
-        setTeleConnect(true);
       }
     }
   }, [user]);
 
   const telegram = async (user_id: any) => {
     setAuthToken(session?.idToken as string);
-    await telegramDrop(user_id);
+    const res = await telegramDrop(user_id);
+    if (res) {
+      setTeleConnect(true);
+    }
+
     setUserTrigger(!userTrigger);
     // alert(user_id);
   };
