@@ -21,7 +21,7 @@ import usePostNearDrop from "@/hooks/NearDrop";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 import Script from "next/script";
 import { signIn, useSession } from "next-auth/react";
-import usetelegramDrop from '@/hooks/telegramHook';
+import usetelegramDrop from "@/hooks/telegramHook";
 // import Script from "next/script";
 import { setAuthToken } from "../../utils/authToken";
 // import { useAuth } from "@/contexts/AuthContext";
@@ -36,6 +36,7 @@ const Home: NextPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const [toast, setToast] = useState(false);
+  const [teleConnect, setTeleConnect] = useState(false);
   // const { user, signInUser, signOutUser,userTrigger,setUserTrigger } = useAuth();
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -53,9 +54,9 @@ const Home: NextPage = () => {
   } = useAuth();
   let userDetails = user;
   const { postNearDrop, isLoading, response } = usePostNearDrop();
-    const [userId,setUserId] = useState<Number>();
-    const { data: session, status } = useSession();
-    const {telegramDrop} = usetelegramDrop();
+  const [userId, setUserId] = useState<Number>();
+  const { data: session, status } = useSession();
+  const { telegramDrop } = usetelegramDrop();
 
   useEffect(() => {
     if (toast) {
@@ -101,16 +102,17 @@ const Home: NextPage = () => {
         setUserId(users.id);
         console.log(users.id);
         telegram(users.id);
+        setTeleConnect(true);
       }
     }
   }, [user]);
 
-  const telegram = async (user_id:any)=>{
-    setAuthToken(session?.idToken as string)
+  const telegram = async (user_id: any) => {
+    setAuthToken(session?.idToken as string);
     await telegramDrop(user_id);
     setUserTrigger(!userTrigger);
     // alert(user_id);
-  } 
+  };
 
   if (loading) {
     return (
@@ -130,9 +132,10 @@ const Home: NextPage = () => {
         overflowY: "auto",
       }}
     >
-     <Script
-  src="https://telegram.org/js/telegram-web-app.js"
-  strategy="beforeInteractive"/>
+      <Script
+        src="https://telegram.org/js/telegram-web-app.js"
+        strategy="beforeInteractive"
+      />
       <Header
         openNav={openNav}
         setOpenNav={setOpenNav}
@@ -213,6 +216,12 @@ const Home: NextPage = () => {
         <ClaimPopup
           msg="Reward unlocked! You've earned 10 NearDrop points!"
           onClose={() => setNearDrop(false)}
+        />
+      )}
+      {teleConnect && (
+        <ClaimPopup
+          msg="Success! You've claimed your Telegram drop! 🎉"
+          onClose={() => setTeleConnect(false)}
         />
       )}
       {toast && toastMessage && (
