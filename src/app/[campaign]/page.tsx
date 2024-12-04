@@ -35,6 +35,7 @@ import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 interface ArtData {
   tokenId: number;
   artistId: string;
+  artistName:string;
   arttitle: string;
   colouredArt: string;
   grayScale: string;
@@ -45,6 +46,7 @@ interface ArtData {
 interface CampaignAnalytics {
   totalRaffle: number;
   totalParticipants: number;
+  totalUploadedarts: number;
   totalUpVotes: number;
   totalUniqueWallets: number;
   uniqueWallets: number[];
