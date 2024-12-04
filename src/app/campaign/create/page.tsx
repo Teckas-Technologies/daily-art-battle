@@ -65,25 +65,6 @@ const page = () => {
     }
   }, [pathName, userDetails, router]);
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
-  const { postNearDrop, response } = usePostNearDrop();
-  const { wallet, signedAccountId } = useContext(NearContext);
-  useEffect(() => {
-    const triggerNearDrop = async () => {
-      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
-        try {
-          const payload = { nearAddress: signedAccountId };
-          await postNearDrop(payload);
-          setUserTrigger(!userTrigger);
-          setNearDrop(true);
-          console.log("Near drop triggered successfully.");
-        } catch (error) {
-          console.error("Error triggering near drop:", error);
-        }
-      }
-    };
-
-    triggerNearDrop();
-  }, [signedAccountId, userDetails, userTrigger]);
   return (
     <div style={{ backgroundColor: "#000000" }}>
       <Header

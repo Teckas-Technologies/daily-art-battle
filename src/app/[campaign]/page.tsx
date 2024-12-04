@@ -71,7 +71,7 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
   const [errMsg, setErrMsg] = useState("");
   const [toast, setToast] = useState(false);
   const { wallet, signedAccountId } = useContext(NearContext);
-  const { postNearDrop, response } = usePostNearDrop();
+  // const { postNearDrop, response } = usePostNearDrop();
 
   const [successToast, setSuccessToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -207,23 +207,23 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
 
     return () => clearTimeout(timeoutId);
   }, [campaign?._id as string]);
-  useEffect(() => {
-    const triggerNearDrop = async () => {
-      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
-        try {
-          const payload = { nearAddress: signedAccountId };
-          await postNearDrop(payload);
-          setUserTrigger(!userTrigger);
-          setNearDrop(true);
-          console.log("Near drop triggered successfully.");
-        } catch (error) {
-          console.error("Error triggering near drop:", error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const triggerNearDrop = async () => {
+  //     if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+  //       try {
+  //         const payload = { nearAddress: signedAccountId };
+  //         await postNearDrop(payload);
+  //         setUserTrigger(!userTrigger);
+  //         setNearDrop(true);
+  //         console.log("Near drop triggered successfully.");
+  //       } catch (error) {
+  //         console.error("Error triggering near drop:", error);
+  //       }
+  //     }
+  //   };
 
-    triggerNearDrop();
-  }, [signedAccountId, userDetails, userTrigger]);
+  //   triggerNearDrop();
+  // }, [signedAccountId, userDetails, userTrigger]);
   // useEffect(() => {
   //   const handleWalletData = async () => {
   //     if (session && session.user) {

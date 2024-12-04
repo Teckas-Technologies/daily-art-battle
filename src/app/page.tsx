@@ -53,7 +53,6 @@ const Home: NextPage = () => {
     setNearDrop,
   } = useAuth();
   let userDetails = user;
-  const { postNearDrop, isLoading, response } = usePostNearDrop();
   const [userId, setUserId] = useState<Number>();
   const { data: session, status } = useSession();
   const { telegramDrop } = usetelegramDrop();
@@ -75,7 +74,23 @@ const Home: NextPage = () => {
 
     return () => clearTimeout(timeoutId);
   }, [GFX_CAMPAIGNID]);
+  // useEffect(() => {
+  //   const triggerNearDrop = async () => {
+  //     if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+  //       try {
+  //         const payload = { nearAddress: signedAccountId };
+  //         await postNearDrop(payload);
+  //         setUserTrigger(!userTrigger);
+  //         setNearDrop(true);
+  //         console.log("Near drop triggered successfully.");
+  //       } catch (error) {
+  //         console.error("Error triggering near drop:", error);
+  //       }
+  //     }
+  //   };
 
+  //   triggerNearDrop();
+  // }, [signedAccountId, userDetails, userTrigger]);
   useEffect(() => {
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       Telegram.WebApp.ready();
@@ -211,7 +226,7 @@ const Home: NextPage = () => {
           onClose={() => setTeleConnect(false)}
         />
       )}
-
+      
       {toast && toastMessage && (
         <div
           className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"

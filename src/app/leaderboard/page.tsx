@@ -30,7 +30,7 @@ const LeaderBoardPage = () => {
   const [signToast, setSignToast] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
-  const { postNearDrop, isLoading, response } = usePostNearDrop();
+  // const { postNearDrop, isLoading, response } = usePostNearDrop();
   const { wallet, signedAccountId } = useContext(NearContext);
   const {
     user,
@@ -55,23 +55,23 @@ const LeaderBoardPage = () => {
     await fetchLeaderBoard(1);
     setCall(false);
   };
-  useEffect(() => {
-    const triggerNearDrop = async () => {
-      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
-        try {
-          const payload = { nearAddress: signedAccountId };
-          await postNearDrop(payload);
-          setUserTrigger(!userTrigger);
-          setNearDrop(true);
-          console.log("Near drop triggered successfully.");
-        } catch (error) {
-          console.error("Error triggering near drop:", error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const triggerNearDrop = async () => {
+  //     if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+  //       try {
+  //         const payload = { nearAddress: signedAccountId };
+  //         await postNearDrop(payload);
+  //         setUserTrigger(!userTrigger);
+  //         setNearDrop(true);
+  //         console.log("Near drop triggered successfully.");
+  //       } catch (error) {
+  //         console.error("Error triggering near drop:", error);
+  //       }
+  //     }
+  //   };
 
-    triggerNearDrop();
-  }, [signedAccountId, userDetails, userTrigger]);
+  //   triggerNearDrop();
+  // }, [signedAccountId, userDetails, userTrigger]);
   return (
     <div
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]"

@@ -15,6 +15,7 @@ import useUpdateUserWalletAddress from "@/hooks/updateUserWalletAddress";
 import { usePathname } from "next/navigation";
 import { SignInPopup } from "@/components/PopUps/SignInPopup";
 import usePostNearDrop from "@/hooks/NearDrop";
+import useSendNearDrop from "@/hooks/NearDrop";
 
 interface AuthContextType {
   user: UserDetails | null;
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [newUser, setNewUser] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [nearDrop, setNearDrop] = useState(false);
-  const { postNearDrop, response } = usePostNearDrop();
+  const { sendNearDrop, response } = useSendNearDrop();
   useEffect(() => {
     // if (status === 'unauthenticated') {
     //     signIn('azure-ad-b2c', { callbackUrl: '/' });
@@ -90,11 +91,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [signedAccountId, user]);
   useEffect(() => {
     const triggerNearDrop = async () => {
-      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+      if (
+        signedAccountId &&
+        userDetails?.user &&
+        !userDetails.user.isNearDropClaimed
+      ) {
         try {
           const payload = { nearAddress: signedAccountId };
-          await postNearDrop(payload);
-          setUserTrigger(!userTrigger);
+          console.log("Payload sent:", payload);
+
+          await sendNearDrop(payload);
           setNearDrop(true);
           console.log("Near drop triggered successfully.");
         } catch (error) {
@@ -104,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     triggerNearDrop();
-  }, [signedAccountId, userDetails, userTrigger]);
+  }, [signedAccountId, userDetails]);
 
   useEffect(() => {
     const handleWalletData = async () => {

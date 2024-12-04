@@ -7,18 +7,18 @@ interface PostResponse {
  
 }
 
-const usePostNearDrop = () => {
+const useSendNearDrop = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<PostResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const postNearDrop = async (payload: object) => {
+  const sendNearDrop = async (payload: object) => {
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await fetchWithAuth(
-        "http://localhost:3000/api/gfxCoin?queryType=nearDrop",
+        "/api/gfxCoin?queryType=nearDrop",
         {
           method: "POST",
           headers: {
@@ -50,7 +50,7 @@ const usePostNearDrop = () => {
     }
   };
 
-  return { postNearDrop, isLoading, response, error };
+  return { sendNearDrop, isLoading, response, error };
 };
 
-export default usePostNearDrop;
+export default useSendNearDrop;
