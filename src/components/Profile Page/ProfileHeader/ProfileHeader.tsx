@@ -121,7 +121,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="flex mb-6 md:mb-0 lg:items-center gap-3 profile-img">
           <div className="profile-img relative flex items-center gap-3">
             <div
-              className="relative md:w-[90px] w-[110px] md:h-[90px] h-[110px] rounded-lg"
+              className="relative md:w-[90px] w-[105px] md:h-[90px] h-[105px] lg:w-[90px] lg:h-[90px] xl:h-[90px] xl:w-[90px] xxl:h-[120px] xxl:w-[120px] rounded-lg"
               style={{ border: "1px solid #bbbbbb33" }}
             >
               {isImageLoading || isLoading ? (
@@ -180,6 +180,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     : "bg-[#7A7A7A] cursor-not-allowed"
                 }`}
                 onClick={handleCoinClick}
+                disabled={!signedAccountId}
               >
                 Buy Coins
               </button>

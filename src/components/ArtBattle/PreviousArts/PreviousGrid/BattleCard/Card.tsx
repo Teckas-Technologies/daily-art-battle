@@ -153,7 +153,7 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
                 {Number(battle.artAVotes) + Number(battle.artBVotes)}
               </h2>
               <h2 className="lg:text-lg md:text-md text-xs lg:spartan-bold md:spartan-semibold spartan-medium md:text-sm text-xs">
-                Votes
+                Collects
               </h2>
             </div>
           </div>

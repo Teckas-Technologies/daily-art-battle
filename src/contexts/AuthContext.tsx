@@ -65,29 +65,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [status, session]);
 
   useEffect(() => {
-    // const updateWalletAddress = async () => {
-    //   await updateUserWalletAddress({ nearAddress: signedAccountId });
-    // };
-    // if (signedAccountId && user && !user?.user?.nearAddress) {
-    //   updateWalletAddress();
-    // }
     const updateWalletAddress = async () => {
-      try {
-        await updateUserWalletAddress({ nearAddress: signedAccountId });
-        console.log("User wallet address updated successfully.");
-        const wallet = { nearAddress: signedAccountId };
-        await postNearDrop(wallet);
-        setNearDrop(true);
-        console.log("Near drop triggered successfully.");
-      } catch (err) {
-        console.error("Error in updating wallet or posting near drop:", err);
-      }
+      await updateUserWalletAddress({ nearAddress: signedAccountId });
     };
-
     if (signedAccountId && user && !user?.user?.nearAddress) {
       updateWalletAddress();
     }
+    // const updateWalletAddress = async () => {
+    //   try {
+    //     await updateUserWalletAddress({ nearAddress: signedAccountId });
+    //     console.log("User wallet address updated successfully.");
+    //     const wallet = { nearAddress: signedAccountId };
+    //     await postNearDrop(wallet);
+    //     setNearDrop(true);
+    //     console.log("Near drop triggered successfully.");
+    //   } catch (err) {
+    //     console.error("Error in updating wallet or posting near drop:", err);
+    //   }
+    // };
+
+    // if (signedAccountId && user && !user?.user?.nearAddress) {
+    //   updateWalletAddress();
+    // }
   }, [signedAccountId, user]);
+  useEffect(() => {
+    const triggerNearDrop = async () => {
+      if (signedAccountId && userDetails?.user?.isNearDropClaimed === false) {
+        try {
+          const payload = { nearAddress: signedAccountId };
+          await postNearDrop(payload);
+          setUserTrigger(!userTrigger);
+          setNearDrop(true);
+          console.log("Near drop triggered successfully.");
+        } catch (error) {
+          console.error("Error triggering near drop:", error);
+        }
+      }
+    };
+
+    triggerNearDrop();
+  }, [signedAccountId, userDetails, userTrigger]);
 
   useEffect(() => {
     const handleWalletData = async () => {

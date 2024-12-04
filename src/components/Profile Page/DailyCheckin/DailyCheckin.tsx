@@ -71,9 +71,6 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
     }
   };
 
-  useEffect(() => {
-    fetchStreakData();
-  }, [userDetails]);
   const isClickable = (index: number) => {
     return index === streak.filter(Boolean).length && !isClaimedForToday();
   };
@@ -81,14 +78,12 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
   const isClaimedForToday = () => {
     const currentDate = new Date().toISOString().split("T")[0];
     const claimDateString = claimDate?.split("T")[0];
-    // console.log("claim Date", claimDateString);
 
     return currentDate === claimDateString;
   };
   const handleWeeklyClaim = async () => {
     if (streakDays === 7 && !isClaimed) {
       const result = await weeklyCheckin();
-      // console.log("Weekly Check-in Result:", result);
       if (result) {
         setIsClaimed(true);
         setToast(true);
@@ -96,11 +91,15 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
         setSuccessToast("yes");
 
         await fetchStreakData();
+        setIsClaimed(false);
         setUserTrigger(!userTrigger);
-        // window.location.reload();
       }
     }
   };
+  useEffect(() => {
+    fetchStreakData();
+  }, [userDetails, streakDays, claimDate, lastWeeklyClaimDate]);
+
   useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => {
@@ -252,17 +251,18 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
               className={`text-[#ffffff] w-[100%] rounded-full mt-2 text-[10px] md:text-[13px] py-[6px] px-10 md:px-10 md:py-3 lg:px-10 lg:py-2 xl:px-10 xl:py-2 xxl:px-10 xxl:py-3 ${
                 isWeeklyClaimedToday()
                   ? "bg-[#00FF00] cursor-not-allowed"
-                  : streakDays === 7 && !isClaimed
+                  : streakDays === 7
                   ? "bg-[#00FF00]"
                   : "bg-[#AAAAAA]"
               }`}
-              onClick={isWeeklyClaimedToday() ? undefined : handleWeeklyClaim}
+              onClick={
+                streakDays === 7 && !isWeeklyClaimedToday()
+                  ? handleWeeklyClaim
+                  : undefined
+              }
+              disabled={streakDays !== 7 || isWeeklyClaimedToday()}
             >
-              {isWeeklyClaimedToday()
-                ? "Claimed"
-                : streakDays === 7
-                ? "Claim"
-                : "Claim"}
+              {isWeeklyClaimedToday() ? "Claimed" : "Claim"}
             </button>
 
             <div id="content-top"></div>

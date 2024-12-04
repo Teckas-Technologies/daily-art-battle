@@ -149,7 +149,7 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
 
         <div className="mt-6 text-center">
           <div className="previous-btn-Wrapper">
-            <button className="previous-btn text-[#FDEA60] font-light md:text-[15px] text-[10px] ">
+            <div className="previous-btn text-[#FDEA60] font-light md:text-[15px] text-[10px] ">
               {" "}
               Unique Rare Winner:{" "}
               <span
@@ -160,7 +160,7 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
                   ? `${artData.specialWinner.slice(0, 15)}...`
                   : artData?.specialWinner}
               </span>
-            </button>
+            </div>
 
             <div className="previous-btn-Border" />
 

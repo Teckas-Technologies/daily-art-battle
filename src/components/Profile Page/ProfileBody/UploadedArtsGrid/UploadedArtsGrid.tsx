@@ -207,7 +207,7 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
                 </div>
 
                 <div className="filters-center relative md:w-auto w-[10rem] flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black" ref={dropdownRef} onClick={handleToggle}>
-                    <h2 className="spartan-light text-white md:text-md text-sm">{sortLabel}</h2>
+                <h2 className="spartan-light text-white md:text-md text-sm text-center md:text-left whitespace-nowrap overflow-hidden text-ellipsis">{sortLabel}</h2>
                     <div className="down-icon md:h-[3rem] h-[2rem] flex justify-center items-center">
                         <InlineSVG
                             src="/icons/down-arrow.svg"
@@ -216,10 +216,10 @@ export const UploadedArtsGrid: React.FC<Props> = ({ rendered }) => {
                     </div>
                     {isOpen && (
                         <div className="options absolute top-[100%] left-0 w-[150%] pt-4 rounded-3xl bg-black">
-                            <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Voted" })}>
+                            <div className="option px-5 py-3 top-voted bg-black" onClick={() => handleSort({ value: 'voteDsc', label: "Top Collected" })}>
                                 <h2 className="spartan-light text-sm text-white">Top Collected Arts</h2>
                             </div>
-                            <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ value: 'voteAsc', label: "Least Voted" })}>
+                            <div className="option px-5 py-3 least-voted bg-black" onClick={() => handleSort({ value: 'voteAsc', label: "Least Collected" })}>
                                 <h2 className="spartan-light text-sm">Least Collected Arts</h2>
                             </div>
                             <div className="option px-5 py-3 latest-first bg-black" onClick={() => handleSort({ value: 'dateDsc', label: "Latest First" })}>
