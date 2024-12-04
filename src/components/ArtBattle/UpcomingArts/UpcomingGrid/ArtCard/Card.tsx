@@ -76,19 +76,21 @@ const Card: React.FC<CardProps> = ({
       }`}
     >
       {adminEmail === userMail && (
-        <div
-          className="hide md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] z-40 bg-white flex justify-center items-center rounded-full cursor-pointer"
-          onClick={hideArtByAdmin}
-        >
-          <InlineSVG
-            src="/icons/hide.svg"
-            className="md:w-8 md:h-8 w-5 h-5 spartan-medium"
-          />
-        </div>
+        <>
+          <div
+            className="hide md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] z-40 bg-white flex justify-center items-center rounded-full cursor-pointer"
+            onClick={hideArtByAdmin}
+          >
+            <InlineSVG
+              src="/icons/hide.svg"
+              className="md:w-8 md:h-8 w-5 h-5 spartan-medium"
+            />
+          </div>
+          <div className="tooltip hidden md:flex">
+            You can hide and unhide the arts uploaded by the users
+          </div>
+        </>
       )}
-      <div className="tooltip hidden md:flex absolute w-[200px] h-[50px] text-xs bg-white text-black rounded-lg bottom-[70px] p-2">
-        You can hide and unhide the arts uploaded by the users
-      </div>
       <div
         className="md:w-[3rem] md:h-[3rem] w-[1.7rem] h-[1.7rem] bg-white flex justify-center items-center rounded-full z-10 ml-2 cursor-pointer icon-swap"
         onClick={() => {
@@ -105,6 +107,7 @@ const Card: React.FC<CardProps> = ({
     </div>
   </div>
 </div>
+
 
       <div className="art-info w-full flex justify-between items-center md:py-2 md:px-4 py-1 px-1">
         <div className="art-owner">

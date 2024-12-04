@@ -21,17 +21,16 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
     e.stopPropagation();
     setArtOverlay(!artOverlay);
   };
-  const shareRef = useRef<HTMLDivElement>(null); 
+  const shareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside); 
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   const handleClickOutside = (e: MouseEvent) => {
-  
     if (shareRef.current && !shareRef.current.contains(e.target as Node)) {
       setArtOverlay(false);
     }
@@ -90,6 +89,7 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
         <div
           className="art-share px-3 py-[0.15rem] flex items-center gap-1 rounded-[2.5rem] absolute bottom-2 right-2 cursor-pointer"
           onClick={toggleShareOverlay}
+          ref={shareRef}
         >
           <h4 className="text-xs cursor-pointer font-semibold">Share</h4>
           <InlineSVG
@@ -115,7 +115,7 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
               src="/icons/black-twitter.svg"
               className="bg-white rounded-full md:p-2 md:w-10 md:h-10 w-[25px] h-[25px] p-1 cursor-pointer pointer-events-auto"
               onClick={shareOnTwitter}
-              style={{fill:"black"}}
+              style={{ fill: "black" }}
             />
             <InlineSVG
               src="/icons/whatsapp.svg"
@@ -132,27 +132,43 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
           </h2>
         </div>
         <div className="bottom flex flex-col md:flex-row justify-between md:items-center gap-2 md:py-2 pt-1 pb-2">
-          <div className="rare-owner lg:w-[12rem] md:w-[10rem] w-[8rem] flex items-center md:gap-2 gap-1">
+          <div className="rare-owner flex items-center md:gap-1 gap-1">
             <InlineSVG
               src="/icons/trophy.svg"
               className="lg:w-6 lg:h-6 md:w-5 md:h-5 w-4 h-4"
             />
-            <h2 className="lg:text-lg md:text-md text-sm md:spartan-semibold spartan-medium lg:w-[12rem] md:w-[10rem] w-[7rem] truncate overflow-hidden whitespace-nowrap">
+            <h2 className="lg:text-base md:text-sm text-sm md:spartan-semibold spartan-medium truncate overflow-hidden whitespace-nowrap">
               {battle.winningArt === "Art A"
                 ? battle.artAartistName
                 : battle.artBartistName}
             </h2>
           </div>
-          <div className="upvotes w-auto flex items-center md:gap-2 gap-1">
+          <div className="upvotes w-auto flex items-center md:gap-1 gap-1">
             <InlineSVG
               src="/icons/green-heart.svg"
               className="lg:w-6 lg:h-6 md:w-5 md:h-5 w-4 h-4"
             />
             <div className="vote-count flex items-center gap-1">
-              <h2 className="lg:text-lg md:text-md text-xs lg:spartan-bold md:spartan-semibold spartan-medium md:text-sm text-xs">
+              <h2
+                className="lg:text-base text-xs lg:spartan-bold md:spartan-semibold spartan-medium md:text-sm text-xs truncate"
+                style={{
+                  maxWidth: "80px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {Number(battle.artAVotes) + Number(battle.artBVotes)}
               </h2>
-              <h2 className="lg:text-lg md:text-md text-xs lg:spartan-bold md:spartan-semibold spartan-medium md:text-sm text-xs">
+              <h2
+                className="lg:text-base md:text-sm text-xs lg:spartan-bold md:spartan-semibold spartan-medium truncate"
+                style={{
+                  maxWidth: "80px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 Collects
               </h2>
             </div>
