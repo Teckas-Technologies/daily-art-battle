@@ -1,11 +1,11 @@
 import { connectToDatabase } from "./mongoose";
-import Battle from '../model/Battle';
-import ArtTable from '../model/ArtTable';
+import Battle from "../model/Battle";
+import ArtTable from "../model/ArtTable";
 // import { serverMint } from "./serverMint";
 // import { participationMint,connectAccount } from "./participationMint";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
-import {  execute,  transfer,TransferArgs  } from "@mintbase-js/sdk"
+import { execute, transfer, TransferArgs } from "@mintbase-js/sdk";
 import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import User from "../model/User";
 import Transactions from "../model/Transactions";
@@ -15,57 +15,61 @@ import { TransactionType } from "../model/enum/TransactionType";
 
 interface Transfer {
   receiverId: string;
-  tokenId:string;
+  tokenId: string;
 }
 
 export const mintNfts = async (): Promise<void> => {
-    await connectToDatabase();
-    console.log("Minting nft");
-    const battles = await Battle.find({
-        isNftMinted: false,
-        isBattleEnded: true
-    }); 
-    for(const battle of battles){
+  await connectToDatabase();
+  console.log("Minting nft");
+  const battles = await Battle.find({
+    isNftMinted: false,
+    isBattleEnded: true,
+  });
+  for (const battle of battles) {
     console.log(battle);
-    console.log("Fetching completed battles",battle);
-    if(battle){
-      if(battle.isNftMinted==false){
-        const artAvoters = await RaffleTicket.find({artId:battle.artAId});
-        const artBvoters = await RaffleTicket.find({artId:battle.artBId});
+    console.log("Fetching completed battles", battle);
+    if (battle) {
+      if (battle.isNftMinted == false) {
+        const artAvoters = await RaffleTicket.find({ artId: battle.artAId });
+        const artBvoters = await RaffleTicket.find({ artId: battle.artBId });
         const combinedVoters = [...artAvoters, ...artBvoters];
-        if(combinedVoters.length>0){
-        const voters = combinedVoters.flatMap((voter) =>
-          Array(voter.raffleCount).fill(voter.email)
-      );  
-      const specialWinner = selectRandomWinner(voters);
-      console.log(specialWinner);
-      if(specialWinner){
-        const user = await User.findOne({email:specialWinner});
-        if(!user){
-         throw Error("User profile not found");
+        if (combinedVoters.length > 0) {
+          const voters = combinedVoters.flatMap((voter) =>
+            Array(voter.raffleCount).fill(voter.email)
+          );
+          const specialWinner = selectRandomWinner(voters);
+          console.log(specialWinner);
+          if (specialWinner) {
+            const user = await User.findOne({ email: specialWinner });
+            if (!user) {
+              throw Error("User profile not found");
+            }
+            await User.updateOne(
+              { email: specialWinner },
+              { $inc: { gfxCoin: SPECIAL_WINNER } }
+            );
+            console.log(user);
+            const newTransaction = new Transactions({
+              email: user.email,
+              gfxCoin: SPECIAL_WINNER,
+              transactionType: TransactionType.RECEIVED_FROM_SPECIAL_WINNER,
+            });
+            await newTransaction.save();
+            battle.specialWinner = specialWinner;
+            battle.specialWinnerName = user.firstName + " " + user.lastName;
+            battle.isNftMinted = true;
+            battle.profileImg = user.profileImg;
+            const res = await battle.save();
+            console.log("saved", res);
+          }
         }
-      await User.updateOne({ email:specialWinner }, { $inc: { gfxCoin: SPECIAL_WINNER } });
-      console.log(user);
-      const newTransaction = new Transactions({
-        email: user.email,
-        gfxCoin: SPECIAL_WINNER,  
-        transactionType: TransactionType.RECEIVED_FROM_SPECIAL_WINNER  
-      });
-      await newTransaction.save();
-        battle.specialWinner = specialWinner; 
-        battle.specialWinnerName = user.firstName+" "+user.lastName;
-        battle.isNftMinted = true;
-       const res =  await battle.save();
-       console.log("saved",res);
+      }
     }
   }
-        }
-    }
-  }
-}
+};
 
 const selectRandomWinner = (votes: any[]): any => {
-    if (votes.length === 0) return null;
-    const randomIndex = Math.floor(Math.random() * votes.length);
-    return votes[randomIndex];
+  if (votes.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * votes.length);
+  return votes[randomIndex];
 };

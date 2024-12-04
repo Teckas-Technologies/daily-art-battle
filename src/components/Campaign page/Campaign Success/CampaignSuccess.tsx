@@ -124,7 +124,7 @@ const CampaignSuccess = () => {
               >
                 <InlineSVG className="social-icon" src="/icons/tele-icon.svg" />
               </a>
-              <a
+              {/* <a
                 href={`https://www.instagram.com/?url=${encodeURIComponent(
                   fullLink
                 )}`}
@@ -135,7 +135,7 @@ const CampaignSuccess = () => {
                   className="social-icon"
                   src="/icons/insta-icon.svg"
                 />
-              </a>
+              </a> */}
               <a
                 href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
                   fullLink

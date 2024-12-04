@@ -3,6 +3,7 @@ import InlineSVG from "react-inlinesvg";
 import useFetchTransactions from "@/hooks/WalletHistoryHook";
 import Loader from "@/components/ArtBattle/Loader/Loader";
 import { TransactionType } from "../../../../../model/enum/TransactionType";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface WalletHistoryProps {
   rendered: boolean;
@@ -43,6 +44,16 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
     [TransactionType.SPENT_FOR_RAFFLE]: "Spent for Raffle",
     [TransactionType.SPENT_FOR_CAMPAIGN]: "Spent for Campaign Creation",
   };
+  const {
+    user,
+    userTrigger,
+    setUserTrigger,
+    newUser,
+    setNewUser,
+    nearDrop,
+    setNearDrop,
+  } = useAuth();
+  let userDetails = user;
   useEffect(() => {
     fetchTransactions(currentPage, 20);
   }, [currentPage]);
@@ -116,14 +127,31 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                     src="/icons/transaction.svg"
                     className="md:w-6 md:h-6 w-4 h-4"
                   />
-                  <span className="md:text-[12px] text-[10px] md:w-[200px] w-[98px]">
+                  <span className="md:text-[12px] text-[10px] md:w-[200px] md:block hidden">
                     {transactionDescriptions[
                       transaction.transactionType as TransactionType
-                    ] || "Unknown Transaction"}
+                    ]?.length > 25
+                      ? `${transactionDescriptions[
+                          transaction.transactionType as TransactionType
+                        ].substring(0, 25)}...`
+                      : transactionDescriptions[
+                          transaction.transactionType as TransactionType
+                        ] || "Unknown Transaction"}
+                  </span>
+                  <span className="md:hidden text-[10px] w-[100px]">
+                    {transactionDescriptions[
+                      transaction.transactionType as TransactionType
+                    ]?.length > 15
+                      ? `${transactionDescriptions[
+                          transaction.transactionType as TransactionType
+                        ].substring(0, 15)}...`
+                      : transactionDescriptions[
+                          transaction.transactionType as TransactionType
+                        ] || "Unknown Transaction"}
                   </span>
                 </div>
-                <div className="flex items-center md:text-[12px] text-[10px] w-[95px] md:w-[150px]">
-                  <span>
+                <div className="flex items-center justify-center md:text-[12px] text-[10px] w-[80px] md:w-[250px]">
+                  <span className="md:block hidden">
                     on{" "}
                     {new Date(transaction.createdAt).toLocaleDateString(
                       "en-GB",
@@ -131,6 +159,16 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
+                      }
+                    )}
+                  </span>
+                  <span className="md:hidden">
+                    {new Date(transaction.createdAt).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
                       }
                     )}
                   </span>

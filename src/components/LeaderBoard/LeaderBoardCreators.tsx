@@ -133,7 +133,7 @@ const LeaderBoardCreators = () => {
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll' ,position: 'relative',}}
       ref={leaderboardRef}
-      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
+      className="w-full lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-[#939393] p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
        <div className="flex justify-between mt-6 mb-6 pb-4 ml-3 sm:ml-5 gap-x-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-10">
   {/* Header */}
@@ -148,7 +148,7 @@ const LeaderBoardCreators = () => {
   {topThreeData.map((user: LeaderBoardCreatorsResponse) => (
     <div
       key={user.rank}
-      className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)}`}
+      className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] border-[#939393] rounded-xl ${getRowClass(user.rank)}`}
     >
       {/* Rank with Medal */}
       <div className="flex items-center ml-3 sm:ml-5 gap-2 w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px]">
@@ -179,7 +179,7 @@ const LeaderBoardCreators = () => {
         {leaderboardData.map((user: LeaderBoardCreatorsResponse) => (
             <div
             key={user.rank}
-            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-white"} rounded-xl ${getRowClass(user.rank)}`}
+            className={`flex items-center justify-between text-center p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-[#939393]"} rounded-xl ${getRowClass(user.rank)}`}
           >
             <div className="flex items-center ml-2 sm:ml-4 lg:ml-5 text-center gap-2 w-[60px] sm:w-[80px] md:w-[90px] lg:w-[100px]">
             <span>{user.rank}</span>

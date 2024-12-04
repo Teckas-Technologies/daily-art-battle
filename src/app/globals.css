@@ -297,3 +297,39 @@ body {
   display: inline-block;
   width: 3rem; 
 }
+
+
+.leaderboard-header {
+  background: linear-gradient(180deg, #000000 40.23%, rgba(0, 0, 0, 0.6) 100%),
+    url("/images/campaignbg.png") no-repeat center bottom;
+  background-size: cover;
+  flex-direction: column;
+  justify-content: center;
+  gap: 60px;
+  padding: 20px;
+  height: 250px;
+  border: 0.75px solid #939393;
+  border-radius: 11.2px;
+}
+
+.leaderboard-header h1 {
+  font-size: 28px;
+  text-align: center;
+  background: linear-gradient(180deg, #00ff00 45.93%, #009900 76.54%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.leaderboard-header p {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 5px;
+  background: #9b9b9b;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.leaderboard-content {
+  width: 100%;
+  max-width: 100%;
+}

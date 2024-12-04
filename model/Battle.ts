@@ -39,6 +39,7 @@ interface Battle extends Document {
   artAartistName:string;
   artBartistName:string;
   specialWinnerName:string;
+  profileImg:string;
 }
 
 
@@ -77,6 +78,9 @@ const BattleSchema = new mongoose.Schema({
   artAvoters: { type: [String], required: false },
   artBvoters: { type: [String], required: false },
   tokenId: { type: String, required: false },
+  profileImg: { type: String, required: false,default:null },
+  artistAprofile: { type: String, required: false, default: null }, 
+  artistBprofile: { type: String, required: false, default: null }
 });
 
 export default mongoose.models.Battle || model<Battle>('Battle', BattleSchema);

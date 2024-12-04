@@ -205,3 +205,74 @@
         padding: 0.2rem 0;
     }
 }
+
+/* Base styles for icons */
+.hide,
+.icon-swap {
+  position: relative;
+  transition: transform 0.5s ease-in-out; /* Smooth transition for position changes */
+}
+
+/* Tooltip base styles */
+.tooltip {
+    visibility: hidden; /* Initially hidden */
+    opacity: 0; /* Transparent */
+    transition: opacity 0.3s ease-in-out; /* Smooth visibility transition */
+    pointer-events: none; /* Prevent interaction when hidden */
+  }
+  
+  /* Show tooltip on hover */
+  .hide:hover + .tooltip,
+  .tooltip:hover {
+    visibility: visible; /* Keep tooltip visible */
+    opacity: 1; /* Fully opaque */
+    pointer-events: auto; /* Allow interaction when visible */
+  }
+  
+
+/* Hover effect for the hide icon */
+.hide:hover {
+  transform: translateX(9rem); /* Move hide icon to the right */
+}
+
+/* Show tooltip on hover */
+.hide:hover + .tooltip {
+  visibility: visible; /* Make tooltip visible */
+  opacity: 1; /* Fully opaque */
+}
+
+/* Adjust icon-swap on hide hover */
+.hide:hover ~ .icon-swap {
+  transform: translateX(-9rem); /* Move icon-swap to the left */
+}
+
+/* Reset when hover ends */
+.hide,
+.icon-swap {
+  transform: translateX(0); /* Reset to original positions */
+}
+
+/* Animation for hover-in effect */
+@keyframes hover-move-right {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hover-move-left {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-3rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

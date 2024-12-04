@@ -16,7 +16,7 @@ const useInfiniteScrollForCampaign = (campaignId: string, limit: number = 20) =>
   const [totalDocuments, setTotalDocuments] = useState(0);
 
   const fetchParticipants = async (page: number) => {
-    console.log("Fetching participants for page:", page); 
+    console.log("Fetching campaign data for page:", page);
     setIsLoadingState(true);
     setIsError(null);
 
@@ -38,24 +38,20 @@ const useInfiniteScrollForCampaign = (campaignId: string, limit: number = 20) =>
       console.log("API response status:", response.status);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch participants data");
+        throw new Error("Failed to fetch campaign from art API");
       }
 
       const data = await response.json();
       console.log("API response data:", data);
 
-      const users = data.uniqueWallets.users;
-      console.log("Fetched users:", users);
-
-      setParticipants((prev) => (page === 1 ? users : [...prev, ...users]));
-      setTotalDocuments(data.uniqueWallets.totalDocuments);
-      setHasMore(users.length > 0 && users.length === limit);
-      console.log("Updated participants:", participants);
-      console.log("Total documents:", totalDocuments);
-      console.log("Has more:", hasMore);
+      setParticipants((prev) =>
+        page === 1 ? data.uniqueWallets.users : [...prev, ...data.uniqueWallets.users]
+      );
+      setTotalDocuments(data.totalDocuments);
+      setHasMore(data.uniqueWallets.users > 0 && data.uniqueWallets.users.length === limit);
     } catch (err) {
       if (err instanceof Error) {
-        console.error("Error fetching participants:", err.message);
+        console.error("Error fetching campaign data:", err.message);
         setIsError(err.message);
       } else {
         console.error("Unknown error occurred");
@@ -70,7 +66,7 @@ const useInfiniteScrollForCampaign = (campaignId: string, limit: number = 20) =>
   const loadMore = useCallback(() => {
     console.log("Load more triggered. Current page:", currentPage);
     if (hasMore && !isLoadingState) {
-      console.log("Loading more participants...");
+      console.log("Loading more art items...");
       fetchParticipants(currentPage + 1);
       setCurrentPage((prev) => prev + 1);
     }
@@ -78,7 +74,7 @@ const useInfiniteScrollForCampaign = (campaignId: string, limit: number = 20) =>
 
   useEffect(() => {
     console.log("Campaign ID changed:", campaignId);
-    fetchParticipants(1);
+    fetchParticipants(1); 
   }, [campaignId]);
 
   return {

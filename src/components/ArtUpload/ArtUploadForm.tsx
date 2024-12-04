@@ -55,6 +55,8 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
   const [disable, setDisable] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isAiGenerated, setIsAiGenerated] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [progress, setProgress] = useState(0);
   const router = useRouter();
   const { user, userTrigger, setUserTrigger } = useAuth();
   let userDetails = user;
@@ -65,6 +67,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
       const newArtworks = [...artworks];
 
       if (file) {
+        setLoadingImage(true);
         const previewUrl = URL.createObjectURL(file);
         newArtworks[index] = {
           ...newArtworks[index],
@@ -73,6 +76,19 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
           previewUrl,
         };
         setIsAiGenerated(false);
+
+        // Simulate progress bar
+        let progressInterval = setInterval(() => {
+          setProgress((prevProgress) => {
+            if (prevProgress >= 100) {
+              clearInterval(progressInterval); 
+              setLoadingImage(false); 
+              setArtworks(newArtworks); 
+              return 100;
+            }
+            return prevProgress + 5;
+          });
+        }, 1000);
       } else {
         newArtworks[index] = {
           ...newArtworks[index],
@@ -80,6 +96,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
           fileName: "",
           previewUrl: null,
         };
+        setLoadingImage(false);
       }
       setArtworks(newArtworks);
     };
@@ -154,7 +171,11 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
     }
 
     setImageCreating(true);
-
+    setToast(true);
+    setSuccessToast("no");
+    setToastMessage("You have spent 1 GFX coin for generating AI art!");
+  
+    setImageCreating(true);
     const res = await fetchGeneratedImage(message);
     if (res) {
       const newArtworks = [...artworks];
@@ -300,7 +321,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
   };
   return (
     <div className="Art-popupContainer px-3">
-      <div className="Art-popup md:px-[3rem] md:py-[2rem] px-2 py-6 rounded-xl">
+      <div className="Art-popup md:px-[3rem] md:py-[2rem] px-6 py-6 rounded-xl">
         <form onSubmit={uploadArtWork}>
           <button
             className="closeBtn right-5 md:right-[3rem]"
@@ -318,19 +339,47 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                 <div className="fileInput relative md:w-[12rem] md:h-[12rem] w-[10rem] h-[10rem] rounded-xl">
                   {artwork.previewUrl && !isAiGenerated ? (
                     <>
-                      <img
-                        src={artwork.previewUrl}
-                        alt="Selected Preview"
-                        className="file-preview w-full h-full object-cover rounded-xl"
-                      />
-                      <div className="absolute bottom-0 w-full flex items-center justify-end px-2 pb-2">
-                        {/* <div className="new-upload w-[2rem] h-[2rem] p-2 bg-white rounded-full">
+                      {loadingImage ? (
+                        <div className="loading-container flex justify-center items-center flex-col">
+                          <p className="mt-2">Uploading {progress}%</p>
+                          {/* Progress Bar */}
+                          <div className="progress-bar-container">
+                            <div
+                              className="progress-bar"
+                              style={{
+                                width: `${progress}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="file-preview-container">
+                          {artwork.previewUrl && !isAiGenerated ? (
+                            <img
+                              src={artwork.previewUrl}
+                              alt="Selected Preview"
+                              className="file-preview w-full h-full object-cover rounded-xl"
+                            />
+                          ) : (
+                            <span>{artwork.fileName}</span>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="absolute bottom-0 w-full flex items-center justify-between px-2 pb-2">
+                        <div className="new-upload w-[2rem] h-[2rem] p-2 bg-white rounded-full">
                           <InlineSVG
-                            src='/icons/reload.svg'
-                            color='#000000'
-                            className='fill-current w-4 h-4'
+                            src="/icons/reload.svg"
+                            color="#000000"
+                            className="fill-current w-4 h-4"
+                            onClick={() =>
+                              document
+                                .getElementById(`fileInput-${index}`)
+                                ?.click()
+                            }
                           />
-                        </div> */}
+                        </div>
+
                         <div
                           className="remove-upload w-[2rem] h-[2rem] p-1 bg-white rounded-full cursor-pointer"
                           onClick={handleCloseImage}
@@ -430,7 +479,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                   type="text"
                   placeholder="Enter prompt here"
                   value={message}
-                  className={`ml-2 md:w-full w-full md:h-[3rem] h-[2rem] mr-3 ${
+                  className={`ml-2 md:w-full w-full md:h-[3rem] h-[2rem] mr-3 placeholder:text-xs md:placeholder:text-base ${
                     imageCreating ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                   onChange={handleMessageChange}
@@ -461,7 +510,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
               </div>
               {userDetails && userDetails?.user?.gfxCoin < AI_IMAGE && (
                 <div className="insuff w-full flex justify-end">
-                  <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold">
+                  <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold text-xs mt-1">
                     Insufficient Coins?{" "}
                     <span
                       className="text-[#00FF00] underline underline-offset-2 cursor-pointer"
@@ -512,7 +561,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
               )}
             </button>
           </div>
-          {userDetails && userDetails?.user?.gfxCoin < ART_UPLOAD && (
+          {/* {userDetails && userDetails?.user?.gfxCoin < ART_UPLOAD && (
             <div className="insuff w-full flex justify-center">
               <h2 className="text-[#FF543E] underline underline-offset-2 pr-4 text-sm font-semibold pt-4">
                 Insufficient Coins?{" "}
@@ -524,7 +573,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                 </span>
               </h2>
             </div>
-          )}
+          )} */}
         </form>
       </div>
     </div>

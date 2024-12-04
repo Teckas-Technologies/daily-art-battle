@@ -40,7 +40,7 @@ export const PreviousGrid: React.FC<Props> = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-
+  const [selectedSort, setSelectedSort] = useState<string>("dateDsc");
   const {
     previousArts,
     totalSearchPage,
@@ -87,6 +87,7 @@ export const PreviousGrid: React.FC<Props> = ({
   const handleSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const sortType = event.target.value;
     setSort(sortType);
+    setSelectedSort(sortType);
     setPage(1); // Reset to first page when sorting
     const limit = getLimitBasedOnScreenSize();
     fetchMoreBattles(campaignId, sortType, 1, limit);
@@ -223,12 +224,15 @@ export const PreviousGrid: React.FC<Props> = ({
           </div>
 
           <div
-            className="filters-center relative md:w-auto w-[8rem] flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2  rounded-[7rem] cursor-pointer bg-black"
+            className="filters-center relative md:w-auto w-[10rem] flex items-center justify-center md:gap-[4.5rem] gap-[2rem] md:px-8 px-3 md:py-1 py-2 rounded-[7rem] cursor-pointer bg-black"
             ref={dropdownRef}
             onClick={handleToggle}
           >
-            <h2 className="spartan-light text-white md:text-md text-sm">
-              Sort by
+            <h2 className="spartan-light text-white md:text-md text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+              {selectedSort === "dateDsc" && "Latest First"}
+              {selectedSort === "dateAsc" && "Oldest First"}
+              {selectedSort === "voteDsc" && "Top Collected Battles"}
+              {selectedSort === "voteAsc" && "Least Collected Battles"}
             </h2>
             <div className="down-icon md:h-[3rem] h-[2rem] flex justify-center items-center">
               <InlineSVG
@@ -247,7 +251,7 @@ export const PreviousGrid: React.FC<Props> = ({
                   }
                 >
                   <h2 className="spartan-light text-sm text-white">
-                    Top Voted Battles
+                    Top Collected Battles
                   </h2>
                 </div>
                 <div
@@ -258,7 +262,9 @@ export const PreviousGrid: React.FC<Props> = ({
                     } as React.ChangeEvent<HTMLSelectElement>)
                   }
                 >
-                  <h2 className="spartan-light text-sm">Least Voted Battles</h2>
+                  <h2 className="spartan-light text-sm">
+                    Least Collected Battles
+                  </h2>
                 </div>
                 <div
                   className="option px-5 py-3 latest-first bg-black"
@@ -302,12 +308,12 @@ export const PreviousGrid: React.FC<Props> = ({
               />
             ) : (
               <p className="flex items-center justify-center gap-2 py-[80px] text-white font-semibold text-lg">
-            <InlineSVG
-              src="/icons/info.svg"
-              className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
-            />{" "}
-            No arts available!
-          </p>
+                <InlineSVG
+                  src="/icons/info.svg"
+                  className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+                />{" "}
+                No arts available!
+              </p>
             )
           ) : (
             <CardHolder
@@ -321,7 +327,7 @@ export const PreviousGrid: React.FC<Props> = ({
           )}
         </div>
 
-        {previousBattles.length > 0 && previousArts.length > 0 && (
+        {(previousBattles.length > 0 || previousArts.length > 0) && (
           <div className="pagination-section relative w-full flex justify-center py-5">
             <div className="pagination rounded-[7rem]">
               <div className="w-auto flex items-center justify-center md:gap-[2rem] gap-[1rem] px-7 py-3 rounded-[7rem] bg-black">

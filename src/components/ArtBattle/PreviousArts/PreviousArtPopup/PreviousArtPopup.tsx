@@ -10,8 +10,6 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
   artData,
   onClose,
 }) => {
-  console.log("Data ............................", artData);
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000] bg-opacity-50">
       <div
@@ -31,14 +29,17 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
             <img
               src={artData?.artAcolouredArt}
               alt="Artwork 1"
-              className="md:w-[250px] w-[200px] h-[200px] md:h-[250px] object-cover rounded-xl"
+              className="md:w-[280px] w-[200px] h-[200px] md:h-[280px] object-cover rounded-xl"
               style={{ border: "1px solid #515151" }}
             />
 
             <div className="flex mt-5 md:w-[250px] justify-between w-[180px]">
               <p className="text-[#00FF00] flex items-center gap-2">
                 <InlineSVG src="/icons/profile-green.svg" className="w-4 h-4" />
-                <span className="text-[10px] md:text-sm" title={artData?.artAartistName}>
+                <span
+                  className="text-[10px] md:text-sm"
+                  title={artData?.artAartistName}
+                >
                   {artData?.artAartistName && artData.artAartistName.length > 10
                     ? `${artData.artAartistName.slice(0, 10)}...`
                     : artData?.artAartistName}
@@ -60,14 +61,14 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
                   {artData ? Number(artData.artAVotes) : 0}
                 </span>
               </p>
-              <p className="text-white flex">
+              {/* <p className="text-white flex">
                 <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
                   Total Upvotes:
                 </span>
                 <span className="text-[#00FF00] text-[10px] md:text-sm">
                   48
                 </span>
-              </p>
+              </p> */}
               <p className="text-white flex">
                 <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
                   Date of Battle:
@@ -90,12 +91,15 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
             <img
               src={artData?.artBcolouredArt}
               alt="Artwork 2"
-              className="md:w-[250px] w-[200px] h-[200px] md:h-[250px] object-cover rounded-xl"
+              className="md:w-[280px] w-[200px] h-[200px] md:h-[280px] object-cover rounded-xl"
               style={{ border: "1px solid #515151" }}
             />
 
             <div className="flex mt-5 md:w-[250px] w-[180px] justify-between">
-              <p className="text-[#00FF00] flex items-center gap-2 text-[10px] md:text-sm" title={artData?.artBartistName}>
+              <p
+                className="text-[#00FF00] flex items-center gap-2 text-[10px] md:text-sm"
+                title={artData?.artBartistName}
+              >
                 <InlineSVG src="/icons/profile-green.svg" className="w-4 h-4" />
                 {artData?.artBartistName && artData.artBartistName.length > 10
                   ? `${artData.artBartistName.slice(0, 10)}...`
@@ -117,14 +121,14 @@ const PreviousArtPopup: React.FC<EditProfilePopupProps> = ({
                   {artData ? Number(artData.artBVotes) : 0}
                 </span>
               </p>
-              <p className="text-white flex">
+              {/* <p className="text-white flex">
                 <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
                   Total Upvotes:
                 </span>
                 <span className="text-[#00FF00] text-[10px] md:text-sm">
                   48
                 </span>
-              </p>
+              </p> */}
               <p className="text-white flex">
                 <span className="text-[10px] md:text-sm md:w-[130px] w-[100px]">
                   Date of Battle:

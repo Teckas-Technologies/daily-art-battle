@@ -26,6 +26,7 @@ interface CampaignDetailsProps {
 interface ArtData {
   tokenId: number;
   artistId: string;
+  artistName:string;
   arttitle: string;
   colouredArt: string;
   grayScale: string;
@@ -36,6 +37,7 @@ interface ArtData {
 interface CampaignAnalytics {
   totalRaffle: number;
   totalParticipants: number;
+  totalUploadedarts: number;
   totalUpVotes: number;
   totalUniqueWallets: number;
   uniqueWallets: number[];
@@ -115,15 +117,15 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [successToast, setSuccessToast] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
   const { wallet, signedAccountId } = useContext(NearContext);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const idToken = session?.idToken || "";
-  const { fetchCampaignAnalytics, fetchCampaignFromArtAPI, art, documents } =
+  const { fetchCampaignAnalytics, fetchCampaignFromArtAPI, art, documents,isLoading } =
     useCampaigns();
-
+    const [isDistributing, setIsDistributing] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -186,23 +188,35 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const { distributeArt } = useCampaigns();
 
   const handleDistribute = async () => {
-    const artList = selectedArt.map((index) => art[index]);
-    const result = await distributeArt(campaignId, artList);
-    if (result) {
-      console.log("Success!");
-      setIsRewardDistributed(true);
-      setShowAllParticipantsPopup(false);
-      setShowFewParticipantsPopup(false);
-      setToastMessage("Reward distributed successfully");
-      setSuccessToast("yes");
-      setToast(true);
-    } else {
-      console.error("Failed to distribute art");
-      setShowAllParticipantsPopup(false);
-      setShowFewParticipantsPopup(false);
-      setToastMessage("Failed to distribute reward");
+    setIsDistributing(true);
+  
+    try {
+      const artList = selectedArt.map((index) => art[index]);
+      const result = await distributeArt(campaignId, artList);
+  
+      if (result) {
+        console.log("Success!");
+        setIsRewardDistributed(true);
+        setShowAllParticipantsPopup(false);
+        setShowFewParticipantsPopup(false);
+        setToastMessage("Reward distributed successfully");
+        setSuccessToast("yes");
+        setToast(true);
+      } else {
+        console.error("Failed to distribute art");
+        setShowAllParticipantsPopup(false);
+        setShowFewParticipantsPopup(false);
+        setToastMessage("Failed to distribute reward");
+        setSuccessToast("no");
+        setToast(true);
+      }
+    } catch (error) {
+      console.error("Error during distribution:", error);
+      setToastMessage("An error occurred during reward distribution");
       setSuccessToast("no");
       setToast(true);
+    } finally {
+      setIsDistributing(false); 
     }
   };
   const handlePopups = () => {
@@ -233,6 +247,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   const { user } = useAuth();
   let userDetails = user;
   const isCreator = campaign?.email === userDetails?.user?.email;
+  const profileImage = "/images/User_New.png";
+  console.log("profile", profileImage);
+
   useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => {
@@ -262,7 +279,6 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
     }
   };
 
-  // Add the scroll event listener on mount and remove it on unmount
   useEffect(() => {
     const ref = popupRef.current;
     if (ref) {
@@ -281,7 +297,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
   };
 
   useEffect(() => {
-    if (participants.length > 1) {
+    if (participants.length > 20) {
       setShowScrollToTop(true);
     } else {
       setShowScrollToTop(false);
@@ -307,14 +323,14 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                           style={{ marginBottom: "10px" }}
                         >
                           <img
-                            src="/images/User_New.png"
+                            src={profileImage}
                             alt={art.arttitle}
                             className="profile-image"
                           />
                           <h4 style={{ margin: 0 }}>
-                            {art.artistId && art.artistId.length > 10
-                              ? `${art.artistId.slice(0, 10)}...`
-                              : art.artistId || "Unknown Artist"}
+                            {art.artistName && art.artistName.length > 10
+                              ? `${art.artistName.slice(0, 10)}...`
+                              : art.artistName || "Unknown Artist"}
                           </h4>
                         </div>
 
@@ -344,12 +360,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
 
         <div className="art-details">
           <div>
-            <h3>Total Votes</h3>
+            <h3>Total Collects</h3>
             <p>{campaignAnalytics?.totalRaffle}</p>
           </div>
           <div>
             <h3>Total Uploaded Arts</h3>
-            <p>{campaignAnalytics?.totalParticipants}</p>
+            <p>{campaignAnalytics?.totalUploadedarts}</p>
           </div>
           <div>
             <h3>Unique Participants</h3>
@@ -373,12 +389,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                         style={{ marginBottom: "10px" }}
                       >
                         <img
-                          src="/images/User_New.png"
+                          src={profileImage}
                           alt="Profile"
                           className="profile-image"
                         />
                         <h4 style={{ margin: 0 }}>
-                          {special.artistId.length > 10
+                          {special.artistName.length > 10
                             ? `${special.artistId.substring(0, 10)}...`
                             : special.artistId}
                         </h4>
@@ -430,7 +446,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                       <h3>Winner: Day {index + 1}</h3>
                       <div className="profile-section">
                         <img
-                          src="/images/User_New.png"
+                          src={profileImage}
                           alt="Profile"
                           className="profile-image"
                         />
@@ -499,11 +515,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
           <div ref={popupRef} className="participants relative overflow-auto">
             <h2>Participants</h2>
 
-            {isLoadingState ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
-              <span className="loader"></span>
-            </div>
-            ) : participants && participants.length > 0 ? (
+            {participants && participants.length > 0 ? (
               <div className="participants-grid">
                 {participants.map((participant, index) => (
                   <div key={index} className="participant">
@@ -517,21 +529,33 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                 ))}
               </div>
             ) : (
-              // Show message when no participants available
-              <div className="flex flex-row items-center justify-center gap-2 font-semibold text-base">
-                <InlineSVG
-                  src="/icons/info.svg"
-                  className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
-                />
-                <div>No participants available!</div>
+              !isLoading && (
+                <div className="flex flex-row items-center justify-center gap-2 font-semibold text-base">
+                  <InlineSVG
+                    src="/icons/info.svg"
+                    className="fill-current text-white font-bold point-c w-4 h-4 cursor-pointer"
+                  />
+                  <div>No participants available!</div>
+                </div>
+              )
+            )}
+            {isLoading && (
+              <div className="flex items-center justify-center rounded-lg">
+                <span className="loader"></span>
               </div>
             )}
-
-            {/* Scroll-to-top button */}
             {showScrollToTop && (
               <button
-                className="scroll-to-top fixed bottom-4 right-4 bg-gray-700 text-white p-2 rounded-full shadow-lg hover:bg-gray-600"
+                className="scroll-to-top text-white p-2 rounded-full shadow-lg hover:bg-gray-600"
                 onClick={handleScrollToTop}
+                style={{
+                  position: "sticky",
+                  bottom: "1rem",
+                  marginLeft: "190px",
+                  marginRight: "0",
+                  right: "1rem",
+                  display: "block",
+                }}
               >
                 <InlineSVG
                   src="/icons/scroll-top.svg"
@@ -640,6 +664,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             onDistribute={handleDistribute}
             selectedArtLength={selectedArt.length}
             artLength={documents}
+            isLoading={isDistributing}
           />
         )}
         {showFewParticipantsPopup && (
@@ -648,7 +673,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
             onDistribute={handleDistribute}
             selectedArtLength={selectedArt.length}
             artLength={documents}
-            isLoading={isLoading}
+            isLoading={isDistributing}
           />
         )}
       </div>

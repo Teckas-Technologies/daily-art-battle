@@ -19,6 +19,7 @@ interface CampaignCreationPopupProps {
   setConnectionError: (value: boolean) => void;
   inSufficientbalance: boolean;
   setInSufficientbalance: (value: boolean) => void;
+  isLoading: boolean;
 }
 const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   onClose,
@@ -34,6 +35,7 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
   setConnectionError,
   inSufficientbalance,
   setInSufficientbalance,
+  isLoading,
 }) => {
   if (!isOpen) return null;
   const creationCost = (campaignDays || 0) * CAMPAIGN_CREATION_COST;
@@ -106,8 +108,18 @@ const CampaignPopup: React.FC<CampaignCreationPopupProps> = ({
                 Cancel Creation
               </button>
               <div className="campaignpopup-btn-Wrapper">
-                <button className="campaignpopup-btn" onClick={onConfirm}>
-                  Create Campaign
+                <button
+                  className="campaignpopup-btn"
+                  onClick={onConfirm}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <div>Creating...</div>
+                    </>
+                  ) : (
+                    "Create Campaign" // Default text
+                  )}
                 </button>
 
                 <div className="campaignpopup-btn-Border" />

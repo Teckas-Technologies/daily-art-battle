@@ -138,7 +138,7 @@ const fetchInitialData = async () => {
     <div
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'scroll', position: 'relative', }}
       ref={leaderboardRef}
-      className="w-full relative lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-white p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
+      className="w-full relative lg:min-w-[800px] rounded-[32px] bg-[#0f0f0f] lg:mr-10 border-[0.5px] border-[#939393] p-4 md:p-8 max-h-[70vh] lg:max-h-[80vh] overflow-y-auto mb-10"
     >
       {/* Leaderboard Header */}
       <div className="flex justify-between mt-6 mb-6 pb-4 gap-2 md:gap-4">
@@ -152,7 +152,7 @@ const fetchInitialData = async () => {
         {topThreeData.map((user: LeaderBoardResponse) => (
           <div
             key={user.rank}
-            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] border-white rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
+            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] border-[#939393] rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
           >
             {/* Rank with Icon */}
             <div className="flex items-center gap-2 w-[40px] sm:w-[50px]">
@@ -176,7 +176,7 @@ const fetchInitialData = async () => {
         {leaderboardData.map((user: LeaderBoardResponse) => (
           <div
             key={user.rank}
-            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-white"} rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
+            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-[#939393]"} rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
           >
             <div className="w-[40px] sm:w-[50px] text-xs sm:text-sm md:text-base">{user.rank}</div>
             <span className="w-[100px] sm:w-[120px] md:w-[200px] lg:w-[250px] text-center break-words text-xs sm:text-sm md:text-base">

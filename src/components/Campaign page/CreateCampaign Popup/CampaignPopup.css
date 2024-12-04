@@ -136,6 +136,7 @@
   padding-left: 1px;
   padding-top: 1px;
   padding-bottom: 1px;
+  width:200px;
   border: linear-gradient(99.76deg, #00ff00 8.86%, rgba(0, 153, 0, 0) 91.14%);
 }
 
@@ -222,6 +223,24 @@
   font-size: 14.9px;
   font-weight: 600;
 }
+.loader {
+  border: 4px solid #f3f3f3; /* Light gray */
+  border-top: 4px solid #00ff00; /* Blue */
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  margin-left: 8px; /* Space between text and loader */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 @media (max-width: 768px) {
   .popup-container {
@@ -295,6 +314,9 @@
     padding: 9.41px 20.69px;
     font-size: 10.9px;
     font-weight: 600;
+  }
+  .campaignpopup-btn-Wrapper{
+    width:150px;
   }
   .close-button {
     width: 20px;

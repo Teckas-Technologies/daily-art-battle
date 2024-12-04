@@ -5,6 +5,7 @@ interface AllParticipantsPopupProps {
   onDistribute: () => void;
   selectedArtLength: number;
   artLength: number;
+  isLoading:boolean;
 }
 
 const AllParticipantpopup: React.FC<AllParticipantsPopupProps> = ({
@@ -12,6 +13,7 @@ const AllParticipantpopup: React.FC<AllParticipantsPopupProps> = ({
   onDistribute,
   selectedArtLength,
   artLength,
+  isLoading
 }) => {
   return (
     <div className="Allparticipant-popup-overlay">

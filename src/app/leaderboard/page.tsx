@@ -107,7 +107,7 @@ const LeaderBoardPage = () => {
         </h3>
       </div>
 
-      <div className="flex flex-col gap-1 mr-20 w-full px-4 md:px-[100px] lg:px-[100px] text-left">
+      <div className="hidden md:flex flex-col gap-1 mr-20 w-full px-4 md:px-[100px] lg:px-[100px] text-left">
         <div
           className="w-full h-[230px] flex mt-5 py-[20px] items-center justify-left rounded-[11.2px] border-[0.75px] border-[#939393] text-white bg-cover md:bg-contain lg:bg-contain"
           style={{
@@ -131,30 +131,44 @@ const LeaderBoardPage = () => {
         </div>
       </div>
 
+      <div className="md:hidden px-[12px] mt-4">
+        <div className="leaderboard-header ">
+          <div className="leaderboard-content">
+            <h1 className="leaderboard-title">GFXvs Leaderboard</h1>
+            <p className="leaderboard-description md:w-[480px]">
+              Explore the top performers and their rankings in the art battle!
+              Stay updated with live results as participants compete for the
+              spotlight.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="w-full px-3 sm:px-6 lg:px-20">
         {/* Tabs Section */}
         <div className="w-full max-w-[800px] flex flex-wrap justify-center mt-10 sm:mt-20 gap-2 md:gap-4">
-          {["GFXvs Point Holders", "Collectors", "Creators"].map(
-            (tab, index) => (
-              <button
-                key={tab}
-                className={`spartan-semibold w-[150px] sm:w-[200px] lg:w-[250px] px-4 sm:px-6 lg:px-9 py-2 
-          rounded-tl-[15px] rounded-tr-[45px] rounded-bl-0 rounded-br-[45px] 
-          border-t-[0.75px] border-r-[0.75px] 
-          text-[12px] sm:text-[13.5px] font-medium leading-[15px] tracking-[-0.06em]
-          ${
-            activeTab === tab
-              ? "border-[#00FF00] text-[#00FF00]"
-              : "border-[#888888] text-[#FFFFFF]"
-          }
-          bg-transparent relative z-[1] 
-          ${index === 2 ? "self-center sm:ml-0 lg:mt-0 md:mt-0" : ""}`} // Align third button to the left
-                onClick={() => handleTabClick(tab)}
-              >
-                {tab}
-              </button>
-            )
-          )}
+          <div className="tabs w-full grid grid-cols-2 md:grid-cols-3 gap-4">
+            {["GFXvs Point Holders", "Collectors", "Creators"].map(
+              (tab, index) => (
+                <button
+                  key={tab}
+                  className={`spartan-semibold md:w-[150px]w-[200px] lg:w-[250px] md:px-4 px-6 lg:px-9 py-2 
+        rounded-tl-[15px] rounded-tr-[45px] rounded-bl-0 rounded-br-[45px] 
+        border-t-[0.75px] border-r-[0.75px] 
+        text-[12px] sm:text-[13.5px] font-medium leading-[15px] tracking-[-0.06em]
+        ${
+          activeTab === tab
+            ? "border-[#00FF00] text-[#00FF00]"
+            : "border-[#888888] text-[#FFFFFF]"
+        }
+        bg-transparent relative z-[1]`}
+                  onClick={() => handleTabClick(tab)}
+                >
+                  {tab}
+                </button>
+              )
+            )}
+          </div>
         </div>
 
         {/* Tab Content */}

@@ -42,6 +42,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   const [connectionError, setConnectionError] = useState(false);
   const [inSufficientbalance, setInSufficientbalance] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [campaignUrlValid,setCampaignUrlValid] = useState(false);
   const [showDollarTooltip, setShowDollarTooltip] = useState(false);
   const [isUrlValid, setIsUrlValid] = useState<boolean | null>(null);
   const [urlValidationLoading, setUrlValidationLoading] = useState(false);
@@ -51,7 +52,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   let userDetails = user;
   console.log("Sufficient Balance", userDetails?.user?.gfxCoin);
 
-  const { createCampaign } = useCampaigns();
+  const { createCampaign,isLoading } = useCampaigns();
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsPubliclyVisible(event.target.checked);
     console.log("Toggle Value:", event.target.checked);
@@ -171,26 +172,33 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
   ) => {
     const baseUrl = BASE_URL;
     const newUrl = e.target.value;
-
+  
     if (newUrl.startsWith(baseUrl)) {
       const lastPart = newUrl.slice(baseUrl.length);
       setCampaignUrl(lastPart);
       setDisplayCampaignUrl(newUrl);
-
+  
       if (lastPart.trim() === "") {
         setIsUrlValid(false);
         return;
       }
-
+  
       try {
         const urlExists = await fetchCampaignByTitle(lastPart);
-        setIsUrlValid(!urlExists);
+        if (urlExists) {
+          setCampaignUrlValid(true); // URL is not valid (already exists)
+          setIsUrlValid(false); // Optional: set the validity status as false for display
+        } else {
+          setCampaignUrlValid(false); // URL is valid (doesn't exist)
+          setIsUrlValid(true);
+        }
       } catch (error) {
         console.error("Error checking campaign URL:", error);
         setIsUrlValid(null);
       }
     }
   };
+  
   useEffect(() => {
     if (campaignName) {
       const formattedUrl = `${BASE_URL}${campaignName
@@ -198,16 +206,23 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
         .toLowerCase()}`;
       setDisplayCampaignUrl(formattedUrl);
       setCampaignUrl(formattedUrl.split("/").pop() || "");
-
+  
       const lastPart = formattedUrl.split("/").pop() || "";
       fetchCampaignByTitle(lastPart).then((urlExists) => {
-        setIsUrlValid(!urlExists);
+        if (urlExists) {
+          setCampaignUrlValid(true); // URL is not valid (already exists)
+          setIsUrlValid(false); // Optional: set the validity status as false for display
+        } else {
+          setCampaignUrlValid(false); // URL is valid (doesn't exist)
+          setIsUrlValid(true);
+        }
       });
     } else {
       setDisplayCampaignUrl(BASE_URL);
       setCampaignUrl("");
     }
   }, [campaignName]);
+  
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -429,7 +444,9 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
 
             <div className="create-campaign-right w-full md:w-1/2">
               <div className="create-campaign-input relative">
-                <label htmlFor="campaignUrl">Campaign URL</label>
+                <label htmlFor="campaignUrl" style={{ color: "#5F5F5F" }}>
+                  Campaign URL
+                </label>
                 <input
                   type="text"
                   id="campaignUrl"
@@ -455,12 +472,20 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                       className="w-5 h-5 text-green-500"
                     />
                   ) : isUrlValid === false ? (
-                    <InlineSVG
+                    <div className="relative">
+                      <InlineSVG
                       src="/icons/wrong.svg"
                       className="w-5 h-5 text-red-500"
                     />
+                    {campaignUrlValid && (
+                      <div className="absolute bottom-6 md:left-[-80px] right-[10px] bg-[#272727] text-white text-xs py-1 px-3 rounded-xl md:w-[200px] w-[120px] h-[50px] md:h-[30px]">
+                        Campaign URL slready exists
+                      </div>
+                    )}
+                    </div>
                   ) : null}
                 </div>
+                
               </div>
 
               <div className="create-campaign-input">
@@ -593,6 +618,7 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
           resetFormFields={resetFormFields}
           inSufficientbalance={inSufficientbalance}
           setInSufficientbalance={setInSufficientbalance}
+          isLoading={isLoading}
         />
       </div>
     </>

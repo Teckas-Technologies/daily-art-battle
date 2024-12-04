@@ -227,6 +227,7 @@ const Home: NextPage = () => {
           onClose={() => setTeleConnect(false)}
         />
       )}
+      
       {toast && toastMessage && (
         <div
           className="fixed top-10 mt-20 xl:right-[-72%] lg:right-[-67%] md:right-[-55%] right-[-9.3%] w-full h-full overflow-hidden"

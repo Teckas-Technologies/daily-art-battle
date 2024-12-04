@@ -110,7 +110,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
       setShowUploadModal(false);
       setSuccessToast("yes");
       setToast(true);
-      setToastMessage("Campaign Edited Successfully");
+      setToastMessage("Campaign Updated Successfully");
     } else {
       console.error("Failed to distribute art");
       setToast(true);

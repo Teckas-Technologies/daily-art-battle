@@ -330,14 +330,14 @@ export const Battle: React.FC<Props> = ({
                 </div> */}
                 <div className="outside flex w-auto h-auto rounded-[3.5rem] cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
                   <div className="second-layer w-auto h-auto rounded-[3.5rem]">
-                    <button className={` battle-vote-btn flex justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`} >
+                    <button className={` battle-vote-btn flex flex-row justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`} >
                       {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artAMyTickets > 0 ?  "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artA?.id)}>
                         <InlineSVG
                           src={`/icons/${artAMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
                           className="w-5 h-5 spartan-medium"
                         />
                       </div>}
-                      <h2 className="md:spartan-bold spartan-semibold font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji1} Art A {viewTools[2].active && isMobile && <br />} <span className='ml-1 text-green'>{artARaffleTickets}</span></h2>
+                      <h2 className="md:spartan-bold spartan-semibold flex flex-row gap-[5px] font-bold md:text-md text-xs">{viewTools[2]?.active && todayBattle?.emoji1} Art A {viewTools[2].active && isMobile && <br />} <span className='ml-1 text-green'>{artARaffleTickets}</span></h2>
                     </button>
                   </div>
                 </div>
@@ -362,7 +362,7 @@ export const Battle: React.FC<Props> = ({
                           className="w-5 h-5 spartan-medium"
                         />
                       </div>}
-                      <h2 className="md:spartan-bold spartan-semibold text-center font-bold text-md">{viewTools[2]?.active && todayBattle?.emoji2} Art B {viewTools[2].active && isMobile && <br />} <span className='ml-1 text-green'>{artBRaffleTickets}</span>
+                      <h2 className="md:spartan-bold flex flex-row gap-[5px] spartan-semibold text-center font-bold md:text-md text-xs">{viewTools[2]?.active && todayBattle?.emoji2} Art B {viewTools[2].active && isMobile && <br />} <span className='ml-1 text-green'>{artBRaffleTickets}</span>
                       </h2>
                     </button>
                   </div>
