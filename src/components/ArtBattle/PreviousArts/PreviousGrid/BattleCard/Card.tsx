@@ -100,26 +100,26 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
         </div>
 
         {artOverlay && (
-          <div className="share-overlay flex flex-row items-center justify-center gap-4 absolute top-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="share-overlay flex flex-row items-center justify-center md:gap-4 gap-1 absolute top-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2">
             <InlineSVG
               src="/icons/facebook-icon.svg"
-              className="bg-white rounded-full p-2 w-10 h-10 cursor-pointer pointer-events-auto"
+              className="bg-white rounded-full md:p-2 md:w-10 md:h-10 w-[25px] h-[25px] p-1 cursor-pointer pointer-events-auto"
               onClick={shareOnFacebook}
             />
             <InlineSVG
               src="/icons/tele-icon.svg"
-              className="bg-white rounded-full p-2 w-10 h-10 cursor-pointer pointer-events-auto"
+              className="bg-white rounded-full md:p-2 md:w-10 md:h-10 w-[25px] h-[25px] p-1 cursor-pointer pointer-events-auto"
               onClick={shareOnTelegram}
             />
             <InlineSVG
               src="/icons/black-twitter.svg"
-              className="bg-white rounded-full p-2 w-10 h-10 cursor-pointer pointer-events-auto"
+              className="bg-white rounded-full md:p-2 md:w-10 md:h-10 w-[25px] h-[25px] p-1 cursor-pointer pointer-events-auto"
               onClick={shareOnTwitter}
               style={{fill:"black"}}
             />
             <InlineSVG
               src="/icons/whatsapp.svg"
-              className="bg-white rounded-full p-2 w-10 h-10 cursor-pointer pointer-events-auto"
+              className="bg-white rounded-full md:p-2 md:w-10 md:h-10 w-[25px] h-[25px] p-1 cursor-pointer pointer-events-auto"
               onClick={shareOnWhatsapp}
             />
           </div>

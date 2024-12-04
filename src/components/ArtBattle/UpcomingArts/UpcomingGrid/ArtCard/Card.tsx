@@ -86,7 +86,7 @@ const Card: React.FC<CardProps> = ({
           />
         </div>
       )}
-      <div className="tooltip absolute w-[200px] h-[50px] text-xs bg-white text-black rounded-lg bottom-[70px] p-2">
+      <div className="tooltip hidden md:flex absolute w-[200px] h-[50px] text-xs bg-white text-black rounded-lg bottom-[70px] p-2">
         You can hide and unhide the arts uploaded by the users
       </div>
       <div
