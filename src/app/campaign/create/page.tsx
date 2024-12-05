@@ -15,6 +15,7 @@ import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 import usePostNearDrop from "@/hooks/NearDrop";
 import { NearContext } from "@/wallet/WalletSelector";
+import { NEAR_DROP, SIGNUP } from "@/config/points";
 interface Props {
   toggleUploadModal: () => void;
   campaignId: string;
@@ -106,9 +107,15 @@ const page = () => {
       {walltMisMatchPopup && (
         <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
       )}
+      {newUser && (
+        <ClaimPopup
+          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
+          onClose={() => setNewUser(false)}
+        />
+      )}
       {nearDrop && (
         <ClaimPopup
-          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
           onClose={() => setNearDrop(false)}
         />
       )}

@@ -24,6 +24,7 @@ import { signIn, useSession } from "next-auth/react";
 import usetelegramDrop from "@/hooks/telegramHook";
 // import Script from "next/script";
 import { setAuthToken } from "../../utils/authToken";
+import { NEAR_DROP, SIGNUP } from "@/config/points";
 // import { useAuth } from "@/contexts/AuthContext";
 
 const Home: NextPage = () => {
@@ -210,13 +211,13 @@ const Home: NextPage = () => {
       )}
       {newUser && (
         <ClaimPopup
-          msg="🎉 Welcome! You've been credited with 1000 GFX."
+          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
           onClose={() => setNewUser(false)}
         />
       )}
       {nearDrop && (
         <ClaimPopup
-          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
           onClose={() => setNearDrop(false)}
         />
       )}

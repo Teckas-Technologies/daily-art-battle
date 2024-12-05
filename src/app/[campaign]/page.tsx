@@ -32,10 +32,11 @@ import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import { NearContext } from "@/wallet/WalletSelector";
 import usePostNearDrop from "@/hooks/NearDrop";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
+import { NEAR_DROP, SIGNUP } from "@/config/points";
 interface ArtData {
   tokenId: number;
   artistId: string;
-  artistName:string;
+  artistName: string;
   arttitle: string;
   colouredArt: string;
   grayScale: string;
@@ -496,9 +497,15 @@ const Campaign = ({ params }: { params: { campaign: string } }) => {
           {walltMisMatchPopup && (
             <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
           )}
+          {newUser && (
+            <ClaimPopup
+              msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
+              onClose={() => setNewUser(false)}
+            />
+          )}
           {nearDrop && (
             <ClaimPopup
-              msg="Reward unlocked! You've earned 10 NearDrop points!"
+              msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
               onClose={() => setNearDrop(false)}
             />
           )}

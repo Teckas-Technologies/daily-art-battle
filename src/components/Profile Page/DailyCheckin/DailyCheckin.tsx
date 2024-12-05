@@ -5,7 +5,7 @@ import "./DailyCheckin.css";
 import useDailyCheckin from "@/hooks/dailyCheckinHook";
 import { useAuth } from "@/contexts/AuthContext";
 import Toast from "@/components/Toast";
-import { DAILY_CHECKIN } from "@/config/points";
+import { DAILY_CHECKIN, WEEKLY_CLAIM } from "@/config/points";
 interface DailyCheckinProps {
   coin: number;
   // setCoin: (value: number) => void;
@@ -240,7 +240,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
               className="w-[40px] h-[40px] md:w-[30px] md:h-[30px] lg:w-[50px] lg:h-[50px] xl:w-[55px] xl:h-[55px] xxl:w-[65px] xxl:h-[65px]"
             />
             <p className="text-[#ffffff] text-3xl font-semibold md:text-4xl lg:text-4xl xl:text-5xl xxl:text-5xl">
-              25
+            {WEEKLY_CLAIM}
             </p>
           </div>
           <div>

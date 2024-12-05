@@ -4,7 +4,11 @@ import { PreviousGrid } from "@/components/ArtBattle/PreviousArts/PreviousGrid/P
 import { FooterMenu } from "@/components/FooterMenu/FooterMenu";
 import { Header } from "@/components/Header/Header";
 import { MobileNav } from "@/components/MobileNav/MobileNav";
+import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
+import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import { GFX_CAMPAIGNID } from "@/config/constants";
+import { NEAR_DROP, SIGNUP } from "@/config/points";
+import { useAuth } from "@/contexts/AuthContext";
 import useCampaigns from "@/hooks/CampaignHook";
 import React, { useEffect, useState } from "react";
 
@@ -34,6 +38,15 @@ const page = ({ params }: { params: { campaign: string } }) => {
 
     fetchCampaignByTitle(params.campaign);
   }, [params.campaign, editCampaign]);
+  const {
+    user,
+    userTrigger,
+    setUserTrigger,
+    newUser,
+    setNewUser,
+    nearDrop,
+    setNearDrop,
+  } = useAuth();
   return (
     <div className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh]">
       <Header
@@ -71,6 +84,21 @@ const page = ({ params }: { params: { campaign: string } }) => {
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
+      {walltMisMatchPopup && (
+        <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
+      )}
+      {newUser && (
+        <ClaimPopup
+          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
+          onClose={() => setNewUser(false)}
+        />
+      )}
+      {nearDrop && (
+        <ClaimPopup
+          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
+          onClose={() => setNearDrop(false)}
+        />
+      )}
     </div>
   );
 };

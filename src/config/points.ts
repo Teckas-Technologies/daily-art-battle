@@ -26,3 +26,4 @@ export const RAFFLE_TICKET = 10;
 export const DAILY_CHECKIN = 10;
 export const WEEKLY_CLAIM = 25;
 export const SIGNUP = 1000;
+export const NEAR_DROP = 10;

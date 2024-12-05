@@ -26,7 +26,7 @@ import Marquee from "react-fast-marquee";
 import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import usePostNearDrop from "@/hooks/NearDrop";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
-import { TELEGRAM_DROP } from "@/config/points";
+import { NEAR_DROP, SIGNUP, TELEGRAM_DROP } from "@/config/points";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -310,7 +310,7 @@ const page = () => {
       <div className="marquee-burn w-full flex items-center h-10 mt-5">
   <Marquee speed={100} className="flex items-center">
     <span className="marquee-item">
-      Connect your &nbsp;<b>WALLET</b>&nbsp; and get 1000 GFX points
+      Connect your &nbsp;<b>WALLET</b>&nbsp; and get {NEAR_DROP} GFX points
     </span>
     <span className="spacer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     <span className="marquee-item">
@@ -344,9 +344,15 @@ const page = () => {
         setSignToast={setSignToast}
         setErrMsg={setErrMsg}
       />
+      {newUser && (
+        <ClaimPopup
+          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
+          onClose={() => setNewUser(false)}
+        />
+      )}
       {nearDrop && (
         <ClaimPopup
-          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
           onClose={() => setNearDrop(false)}
         />
       )}

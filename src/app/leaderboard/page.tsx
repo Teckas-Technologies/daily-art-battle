@@ -18,6 +18,7 @@ import usePostNearDrop from "@/hooks/NearDrop";
 import { NearContext } from "@/wallet/WalletSelector";
 import { useAuth } from "@/contexts/AuthContext";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
+import { NEAR_DROP, SIGNUP } from "@/config/points";
 const LeaderBoardPage = () => {
   const [activeTab, setActiveTab] = useState("GFXvs Point Holders");
   const [openNav, setOpenNav] = useState(false);
@@ -207,9 +208,15 @@ const LeaderBoardPage = () => {
       {walltMisMatchPopup && (
         <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
       )}
+      {newUser && (
+        <ClaimPopup
+          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
+          onClose={() => setNewUser(false)}
+        />
+      )}
       {nearDrop && (
         <ClaimPopup
-          msg="Reward unlocked! You've earned 10 NearDrop points!"
+          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
           onClose={() => setNearDrop(false)}
         />
       )}
