@@ -394,7 +394,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                           className="profile-image"
                         />
                         <h4 style={{ margin: 0 }}>
-                          {special.artistName.length > 10
+                          {special.artistId.length > 10
                             ? `${special.artistId.substring(0, 10)}...`
                             : special.artistId}
                         </h4>

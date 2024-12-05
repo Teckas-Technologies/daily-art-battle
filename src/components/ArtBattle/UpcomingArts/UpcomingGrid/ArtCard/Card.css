@@ -294,4 +294,17 @@
       transform: translateX(-13rem);
     }
   }
- 
+  @media (max-width: 768px) {
+    .hide:hover,
+    .hide:hover ~ .icon-swap {
+      transform: none;
+      transition: none;
+    }
+  
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+  
