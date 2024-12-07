@@ -1,14 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useFetchArts, ArtData,useFetchArtById } from "../hooks/artHooks";
+import { useFetchArts, ArtData,useFetchArtById, useHideArtById } from "../hooks/artHooks";
 import { useMbWallet } from "@mintbase-js/react";
 import Image from "next/image";
 import Overlay from "./Overlay";
 import { useVoting, Vote } from "../hooks/useArtVoting";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp,faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from 'next/navigation';
+import { ADMIN_ADDRESS } from "@/config/constants";
 const UpcomingArtTable: React.FC<{
   toggleUploadModal: () => void;
   uploadSuccess: boolean;campaignId: string;fontColor:string
@@ -166,6 +167,7 @@ const BattleTable: React.FC<{
   const [upvotes, setVotes] = useState<Vote[]>([]);
   const router = useRouter();
   const{fetchArtById}=useFetchArtById();
+  const{hideArtById}=useHideArtById();
   const [selectedArtId, setSelectedArtId] = useState(null);
   const[overlayArt,setoverlayArt] = useState<ArtData>();
 
@@ -219,6 +221,25 @@ const BattleTable: React.FC<{
   const handleArt = (id:any)=>{
     router.push(`/art/${id}`);
   }
+
+  const onHide = async (id: string) => {
+    if (!isConnected || !activeAccountId) {
+      await connect();
+      return;
+    }
+    if (!id) {
+      alert("art  not loaded!");
+      return;
+    }
+    const success = await hideArtById(id);
+    console.log(success);
+    if (success) {
+      setSuccess(true);
+      setRefresh((prev) => !prev);
+    } else {
+      alert("Failed to hide art");
+    }
+  };
 
   const onVote = async (id: string) => {
     if (!isConnected || !activeAccountId) {
@@ -282,6 +303,22 @@ const BattleTable: React.FC<{
                     backgroundSize: "cover",
                   }}
                 />
+                {ADMIN_ADDRESS===activeAccountId&&(
+                 <button
+                  onClick={() => onHide(art._id)}
+                  className={`
+    absolute bottom-0 left-3 text-white text-md sm:text-xl md:text-2xl h-6 bg-yellow-700 hover:bg-yellow-400"
+    text-white rounded-md px-2 py-1 text-xs sm:px-3 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base sm:h-12 md:h-15
+  `}>
+                  <div className="flex items-center">
+                    <FontAwesomeIcon
+                      icon={faEyeSlash}
+                      className="text-white mr-1 flex-shrink-0"
+                    />
+                  </div>
+                </button>
+                 )}
+
                 <button
                   onClick={() => onVote(art._id)}
                   className={`

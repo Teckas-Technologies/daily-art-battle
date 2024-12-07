@@ -163,3 +163,27 @@ export const useSaveData = (): UseSaveDataResult => {
           return { fetchArtById};
             }
      
+export const useHideArtById = () => {
+const [loading, setLoading] = useState<boolean>(false);
+const [error, setError] = useState<string | null>(null);
+    const hideArtById = async (id:any) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`/api/hideart?id=${id}`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Error fetching art:', err);
+            setError("Error fetching art!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    
+    
+
+return { hideArtById};
+  }
