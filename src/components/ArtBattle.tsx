@@ -253,6 +253,7 @@ const ArtBattle: React.FC<{ toggleUploadModal: () => void,campaignId: string,fon
         ):(
           <p>
           {welcomeText}
+          <a href="https://t.me/bettearbot" target="_blank">https://t.me/bettearbot</a>
           </p>
         )}
            </div>
