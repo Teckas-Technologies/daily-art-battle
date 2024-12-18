@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ArtData } from "./artHooks";
-import { fetchWithAuth } from "../../utils/authToken";
 import { NftToken } from "@/types/types";
 
 export const useFetchUserRareNfts = () => {
@@ -13,7 +12,7 @@ export const useFetchUserRareNfts = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchWithAuth(`/api/userNfts?queryType=spinners&sort=${sort}&offset=${page - 1}&limit=${limit}`);
+            const response = await fetch(`/api/userNfts?queryType=spinners&sort=${sort}&offset=${page - 1}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             setArts(data.result.data.mb_views_nft_tokens);
@@ -42,7 +41,7 @@ export const useFetchParticipantsNfts = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchWithAuth(`/api/userNfts?sort=${sort}&offset=${page - 1}&limit=${limit}`);
+            const response = await fetch(`/api/userNfts?sort=${sort}&offset=${page - 1}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log("DATA:::", data)

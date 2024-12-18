@@ -8,6 +8,7 @@ import JwtPayload from "../../utils/verifyToken";
 import { AI_IMAGE } from "@/config/points";
 import Transactions from "../../model/Transactions";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const openai = new OpenAI({
   apiKey: OPENAI,
@@ -18,7 +19,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try{
-    const email = await authenticateUser(req);
+  const session = await getSession(req, res);
+  if (!session || !session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  const email = session.user.email;
     //This api to generate ai arts
   if (req.method == "POST") {
     const { prompt } = req.body;

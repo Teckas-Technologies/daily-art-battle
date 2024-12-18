@@ -9,11 +9,16 @@ import ArtTable from "../../model/ArtTable";
 import mongoose from "mongoose";
 import Battle from "../../model/Battle";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         await connectToDatabase();
-        const email = await authenticateUser(req);
+         const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
         const user = await User.findOne({email});
         //Here will create raffle tickets for specific arts
         if(req.method=='POST'){

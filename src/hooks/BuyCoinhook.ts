@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
-import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { useAuth } from "@/contexts/AuthContext";
-
 const useFetchBuyCoin = (queryFilter: "usdc" | "near") => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
-  let userDetails = user;
+   const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const fetchBuyCoinData = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetchWithAuth(
+      const response = await fetch(
         `/api/buyCoin?queryType=list&queryFilter=${queryFilter}`
       );
 
@@ -44,7 +50,7 @@ const useFetchBuyCoin = (queryFilter: "usdc" | "near") => {
   useEffect(() => {
     // console.log("useEffect triggered for queryFilter:", queryFilter);
     fetchBuyCoinData();
-  }, [queryFilter, userDetails]);
+  }, [queryFilter, user]);
 
   return { data, loading, error };
 };

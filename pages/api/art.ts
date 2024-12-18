@@ -15,13 +15,13 @@ import {
   findCompletedArts,
   findComingArts,
 } from "../../utils/artUtils";
-import { authenticateUser, verifyToken } from "../../utils/verifyToken";
+import { authenticateUser } from "../../utils/verifyToken";
 import User from "../../model/User";
 import Transactions from "../../model/Transactions";
 import { ART_UPLOAD } from "@/config/points";
 import { validateUser } from "../../utils/validateClient";
 import { TransactionType } from "../../model/enum/TransactionType";
-
+import { getSession } from "@auth0/nextjs-auth0";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -31,7 +31,11 @@ export default async function handler(
     switch (req.method) {
       //POST method is used to create art.
       case "POST":
-        const email = await authenticateUser(req);
+          const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
         const art = req.body;
         const user = await User.findOne({ email: email });
         if (!user) {
@@ -46,7 +50,6 @@ export default async function handler(
         }
         console.log("Art >> ", art);
         art.email = email;
-        const saveart = await scheduleArt(art);
         await User.updateOne(
           { email: email },
           { $inc: { gfxCoin: -ART_UPLOAD } }
@@ -58,6 +61,8 @@ export default async function handler(
         });
         
         await newTransaction.save();
+        const saveart = await scheduleArt(art);
+        console.log(newTransaction);
         return res.status(201).json(saveart);
 
       //GET method is used to fetch arts with pagination.
@@ -150,7 +155,10 @@ export default async function handler(
 
       //PUT method is used to update art by id.
       case "PUT":
-        await authenticateUser(req);
+        const sessions = await getSession(req, res);
+        if (!sessions || !sessions.user) {
+          return res.status(401).json({ message: 'Unauthorized' });
+        }
         const { id } = req.body;
         if (!id) {
           return res.status(400).json({ error: "ID is required for updating" });

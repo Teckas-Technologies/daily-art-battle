@@ -6,13 +6,18 @@ import { graphQLService } from "@/data/graphqlService";
 import { TOTAL_REWARDS } from "@/data/queries/totalrewards.graphql";
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import RaffleTicket from "../../model/RaffleTicket";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
   
   //Here we will return users nft and arts counts
     try {
         await connectToDatabase();
-        const email = await authenticateUser(req);
+       const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+        const email = session.user.email;
         if(req.method=="GET"){
             try {
               const user = await User.findOne({email});

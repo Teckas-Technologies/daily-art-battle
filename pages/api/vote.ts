@@ -7,11 +7,16 @@ import { verifyToken } from '../../utils/verifyToken';
 import User from '../../model/User';
 import { ART_VOTE } from '@/config/points';
 import Transactions from '../../model/Transactions';
+import { getSession } from '@auth0/nextjs-auth0';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase();
   try{
-    const email = await authenticateUser(req);
+     const session = await getSession(req, res);
+      if (!session || !session.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      const email = session.user.email;
   if (req.method === 'POST') {
     try {
     const { participantId, battleId, votedFor,campaignId, fcId } = req.body;
@@ -23,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const query: any = { battleId, campaignId };
     if (participantId) {
       query.participantId = participantId;
-    } else {
+    } else {  
       query.fcId = fcId;
     }
 

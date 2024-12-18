@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
 import { RaffleArt, SpinnerItem } from "@/types/types";
 
 export const useFetchRaffleArts = () => {
@@ -13,7 +12,7 @@ export const useFetchRaffleArts = () => {
         setError(null);
         console.log("Sort:", sort)
         try {
-            const response = await fetchWithAuth(`/api/raffleTicket?queryType=${sort}&sort=voteAsc&page=${page}&limit=${limit}`);
+            const response = await fetch(`/api/raffleTicket?queryType=${sort}&sort=voteAsc&page=${page}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log("data:", data);
@@ -64,7 +63,7 @@ export const useSearchRaffleArts = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchWithAuth(`/api/raffleTicket?queryType=search&queryFilter=artName&arttitle=${searchText}&page=${page}&limit=${limit}`);
+            const response = await fetch(`/api/raffleTicket?queryType=search&queryFilter=artName&arttitle=${searchText}&page=${page}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log(" search data:", data)

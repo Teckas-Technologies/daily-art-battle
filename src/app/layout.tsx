@@ -8,6 +8,7 @@ import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WalletProvider } from "@/providers/WalletProvider";
 import Script from "next/script";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,6 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <UserProvider>
     <SessionProvider>
       <WalletProvider >
         <AuthProvider>
@@ -56,5 +58,6 @@ export default function RootLayout({
         </AuthProvider>
       </WalletProvider>
     </SessionProvider>
+    </UserProvider>
   );
 }

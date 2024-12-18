@@ -81,6 +81,7 @@ export const Header: React.FC<Props> = ({
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
   const { user, signInUser, signOutUser } = useAuth();
   let userDetails = user;
+  console.log("headersa",userDetails);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
   const subMenuRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);

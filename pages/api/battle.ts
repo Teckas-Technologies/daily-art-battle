@@ -15,6 +15,7 @@ import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import Battle from "../../model/Battle";
 import { connectToDatabase } from "../../utils/mongoose";
 import { validateUser } from "../../utils/validateClient";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,7 +27,11 @@ export default async function handler(
     switch (req.method) {
       //POST method is used for creating battle
       case "POST":
-        const email = await authenticateUser(req);
+          const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+        const email = session.user.email;
         const battle = req.body;
         const scheduledBattle = await scheduleBattle(battle);
         return res.status(201).json(scheduledBattle);
@@ -88,7 +93,10 @@ export default async function handler(
         }
       //PUT method is used to update battle by id
       case "PUT":
-        await authenticateUser(req);
+        const sessions = await getSession(req, res);
+        if (!sessions || !sessions.user) {
+          return res.status(401).json({ message: 'Unauthorized' });
+        }
         const { battleId, campaignId } = req.query;
         if (!battleId) {
           return res.status(400).json({ error: "Battle ID is required" });

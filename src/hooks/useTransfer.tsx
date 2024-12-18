@@ -2,12 +2,22 @@ import { useContext, useState } from "react";
 import "@near-wallet-selector/modal-ui/styles.css";
 import * as nearAPI from "near-api-js";
 import { NearContext } from "@/wallet/WalletSelector";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 const useNEARTransfer = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { wallet, signedAccountId } = useContext(NearContext);
+    const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
     const receiverId = process.env.RECEIVER_ID || "neo_voice.testnet";
     const transfer = async (selectedCoin: string ) => {
         if (!signedAccountId) {
@@ -49,7 +59,7 @@ const useNEARTransfer = () => {
                     depositAmount = action.Transfer.deposit;
                 }
             });
-
+            setUserTrigger(true);
             return {
                 success: true,
                 signerId,
@@ -123,6 +133,7 @@ const useNEARTransfer = () => {
                     depositAmount = action.Transfer.deposit;
                 }
             });
+            setUserTrigger(true);
     
             return {
                 success: true,

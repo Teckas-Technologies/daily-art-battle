@@ -170,13 +170,19 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
       return;
     }
 
-    setImageCreating(true);
-    setToast(true);
-    setSuccessToast("no");
-    setToastMessage("You have spent 1 GFX coin for generating AI art!");
-  
+    const newArtworks = [...artworks];
+    newArtworks[0] = {
+      ...newArtworks[0],
+      file: null,
+      fileName: "",
+      previewUrl: "",
+    };
+    setArtworks(newArtworks);
     setImageCreating(true);
     const res = await fetchGeneratedImage(message);
+    setToast(true);
+    setSuccessToast("yes");
+    setToastMessage("You have spent 1 GFX coin for generating AI art!");
     if (res) {
       const newArtworks = [...artworks];
       newArtworks[0] = {
@@ -414,6 +420,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                       disabled={disable}
                       type="file"
                       id={`fileInput-${index}`}
+                      accept="image/*"
                       onChange={handleFileChange(index)}
                     />
                   </div>

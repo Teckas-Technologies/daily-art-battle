@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { getAuthToken } from "../../utils/authToken";
-import { useAuth } from "@/contexts/AuthContext";
-
 interface Transaction {
     _id: string;
     email: string;
@@ -18,16 +15,6 @@ const useFetchTransactions = () => {
   const [totalDocuments, setTotalDocuments] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const {
-    user,
-    userTrigger,
-    setUserTrigger,
-    newUser,
-    setNewUser,
-    nearDrop,
-    setNearDrop,
-  } = useAuth();
-  let userDetails = user;
   const fetchTransactions = async (page: number = 1, limit: number = 20) => {
     setLoading(true);
     setError(null);
@@ -36,9 +23,6 @@ const useFetchTransactions = () => {
       console.log(`Fetching transactions for page: ${page}, limit: ${limit}`);
       const response = await fetch(`/api/transactions?page=${page}&limit=${limit}`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
       });
 
       if (!response.ok) {
@@ -48,7 +32,6 @@ const useFetchTransactions = () => {
       const data = await response.json();
       console.log("API Response:", data);
       console.log("Transactions Data:", data.transaction);
-      setUserTrigger(!userTrigger)
       setTransactions(data.transaction);
       setTotalDocuments(data.totalDocuments);
       console.log("Total Transactions:", data.totalDocuments);

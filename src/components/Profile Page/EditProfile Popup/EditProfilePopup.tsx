@@ -1,4 +1,6 @@
-import React from "react";
+"use client"
+import useUpdateUserProfile from "@/hooks/updateProfileHook";
+import React, { useState } from "react";
 import InlineSVG from "react-inlinesvg";
 
 interface EditProfilePopupProps {
@@ -6,6 +8,31 @@ interface EditProfilePopupProps {
 }
 
 const EditProfilePopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
+  const [formData, setFormData] = useState({ firstName: "", lastName: "" });
+  const { updateProfile } = useUpdateUserProfile();
+  const [loading, setLoading] = useState(false); 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+  const handleSubmit = async(e: React.FormEvent) => {
+    e.preventDefault();
+    const { firstName, lastName } = formData;
+    if (!firstName || !lastName) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    setLoading(true); 
+    try {
+      await updateProfile(firstName, lastName);
+      onClose();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setLoading(false); 
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div
@@ -20,47 +47,19 @@ const EditProfilePopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
           Edit Profile Details
         </h2>
 
-        <form className="space-y-3 md:space-y-4">
-          <div className="flex flex-col md:flex-row items-start md:items-center md:space-y-0 space-y-1">
-            <label
-              htmlFor="username"
-              className="text-sm font-semibold w-full md:w-[230px] text-left"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              className="w-full px-4 py-2 rounded-full border bg-transparent text-white focus:outline-none"
-              style={{ border: "0.61px solid #B5B5B5" }}
-            />
-          </div>
-
-          <div className="flex flex-col md:flex-row items-start md:items-center md:space-y-0 space-y-1">
-            <label
-              htmlFor="mailid"
-              className="text-sm font-semibold w-full md:w-[230px] text-left"
-            >
-              Mail id
-            </label>
-            <input
-              type="text"
-              id="mailid"
-              className="w-full px-4 py-2 rounded-full bg-transparent text-white focus:outline-none"
-              style={{ border: "0.61px solid #B5B5B5" }}
-            />
-          </div>
-
+        <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row items-start md:items-center md:space-y-0 space-y-1">
             <label
               htmlFor="twitter"
               className="text-sm font-semibold w-full md:w-[230px] text-left"
             >
-              Twitter
+              First Name
             </label>
             <input
               type="text"
-              id="twitter"
+              id="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
               className="w-full px-4 py-2 rounded-full bg-transparent text-white focus:outline-none"
               style={{ border: "0.61px solid #B5B5B5" }}
             />
@@ -71,46 +70,17 @@ const EditProfilePopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
               htmlFor="instagram"
               className="text-sm font-semibold w-full md:w-[230px] text-left"
             >
-              Instagram
+              Last Name
             </label>
             <input
               type="text"
-              id="instagram"
+              id="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
               className="w-full px-4 py-2 rounded-full bg-transparent text-white focus:outline-none"
               style={{ border: "0.61px solid #B5B5B5" }}
             />
           </div>
-
-          <div className="flex flex-col md:flex-row items-start md:items-center md:space-y-0 space-y-1">
-            <label
-              htmlFor="telegram"
-              className="text-sm font-semibold w-full md:w-[230px] text-left"
-            >
-              Telegram
-            </label>
-            <input
-              type="text"
-              id="telegram"
-              className="w-full px-4 py-2 rounded-full bg-transparent text-white focus:outline-none"
-              style={{ border: "0.61px solid #B5B5B5" }}
-            />
-          </div>
-
-          <div className="flex flex-col md:flex-row items-start md:items-center md:space-y-0 space-y-1">
-            <label
-              htmlFor="facebook"
-              className="text-sm font-semibold w-full md:w-[230px] text-left"
-            >
-              Facebook
-            </label>
-            <input
-              type="text"
-              id="facebook"
-              className="w-full px-4 py-2 rounded-full bg-transparent text-white focus:outline-none"
-              style={{ border: "0.61px solid #B5B5B5" }}
-            />
-          </div>
-
           <div className="flex flex-row items-center justify-center gap-5 mt-4 md:mt-0 ">
             <button
               type="button"
@@ -121,10 +91,11 @@ const EditProfilePopup: React.FC<EditProfilePopupProps> = ({ onClose }) => {
               Discard Changes
             </button>
             <button
-              type="button"
-              className="w-full md:w-auto px-4 md:px-8 py-3 md:py-3 rounded-full font-semibold bg-[#AAAAAA] text-[#FFFFFF] text-xs md:text-base"
+              type="submit"
+              className="w-full md:w-auto px-4 md:px-8 py-3 md:py-3 rounded-full font-semibold bg-[#AAAAAA] text-[#FFFFFF] text-xs md:text-base transition duration-300 ease-in-out hover:bg-[#888888] hover:text-[#00FF00]"
+              style={{ border: "0.61px solid #00FF00" }}
             >
-              Save Changes
+             {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

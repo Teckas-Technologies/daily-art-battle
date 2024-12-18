@@ -1,7 +1,15 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
-
 const useNearTransfer = () => {
+     const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -14,13 +22,12 @@ const useNearTransfer = () => {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(
+      const response = await fetch(
         `/api/gfxCoin?queryType=nearTransfer&walletAddress=${walletAddress}&transactionHash=${transactionHash}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${getAuthToken()}`,
           },
         }
       );
@@ -34,6 +41,7 @@ const useNearTransfer = () => {
       const result = await response.json();
       console.log("Parsed response >>:", result);
       setData(result);
+      setUserTrigger(true);
       return result;
     } catch (err: any) {
       console.error("Error occurred:", err);
@@ -49,13 +57,12 @@ const useNearTransfer = () => {
 
     try {
       console.log("Fetching with auth...");
-      const response = await fetchWithAuth(
+      const response = await fetch(
         `/api/gfxCoin?transactionHash=${transactionHash}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${getAuthToken()}`,
           },
         }
       );
@@ -69,7 +76,7 @@ const useNearTransfer = () => {
         });
         return false;
       }
-
+      setUserTrigger(true);
       const result = await response.json();
       console.log("Parsed response >>>:", result);
 

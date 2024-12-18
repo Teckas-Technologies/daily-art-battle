@@ -1,31 +1,35 @@
-import { NextApiRequest, NextApiResponse} from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../utils/mongoose';
 import ArtTable from '../../model/ArtTable';
 import { authenticateUser } from '../../utils/verifyToken';
+import { getSession } from '@auth0/nextjs-auth0';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  
+
   //This api to hide arts only admin can able to hide this art
   if (req.method === 'PUT') {
     await connectToDatabase();
-    const email = await authenticateUser(req);
+    const session = await getSession(req, res);
+    if (!session || !session.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    } 
     try {
-      const {artId} = req.body;  
+      const { artId } = req.body;
       if (!artId) {
         return res.status(400).json({ message: "artId is required" });
-    }
-    const art = await ArtTable.findOne(
+      }
+      const art = await ArtTable.findOne(
         { _id: artId },
-    );
+      );
 
-    if (!art) {
+      if (!art) {
         return res.status(404).json({ message: "Art not found" });
-    }
+      }
 
-    art.isHided = true;
-    await art.save();
-      res.status(200).json({message:"successfully hided art" });
-    } catch (error:any) {
-      res.status(500).json({ success: false, error:error.message });
+      art.isHided = true;
+      await art.save();
+      res.status(200).json({ message: "successfully hided art" });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
     }
   } else {
     res.status(405).json({ success: false, message: 'Method Not Allowed' });

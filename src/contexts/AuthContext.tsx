@@ -6,7 +6,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { useSendWalletData } from "@/hooks/saveUserHook";
 import { UserDetails } from "@/types/types";
 import { setAuthToken } from "../../utils/authToken";
@@ -28,6 +28,8 @@ interface AuthContextType {
   setNewUser: (value: boolean) => void;
   newUser: boolean;
   nearDrop: boolean;
+  walletError: boolean;
+  setWalletError: (value: boolean) => void;
   setNearDrop: (value: boolean) => void;
 }
 
@@ -37,7 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDetails | null>(null);
   const [idToken, setIdToken] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
-  const { data: session, status } = useSession();
+  const [walletError, setWalletError] = useState(false);
+  const { user: auth0User, isLoading: authLoading } = useUser();
   const {
     isLoading,
     error,
@@ -47,117 +50,115 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sufficientBalance,
   } = useSendWalletData();
   const { wallet, signedAccountId } = useContext(NearContext);
-  const { updateUserWalletAddress } = useUpdateUserWalletAddress();
+  const { updateUserWalletAddress,checkWalletAddress} = useUpdateUserWalletAddress();
   const [userTrigger, setUserTrigger] = useState(false);
   const pathName = usePathname();
   const [newUser, setNewUser] = useState(false);
   const [signToast, setSignToast] = useState(false);
   const [nearDrop, setNearDrop] = useState(false);
   const { sendNearDrop, response } = useSendNearDrop();
-  useEffect(() => {
-    // if (status === 'unauthenticated') {
-    //     signIn('azure-ad-b2c', { callbackUrl: '/' });
-    // } else
-    if (status === "authenticated" && session) {
-      setIdToken(session?.idToken || "");
-      setAuthToken(session?.idToken || "");
-      console.log(idToken);
+
+  // Function to fetch and handle user data
+  const fetchAndSetUser = async () => {
+    if (!auth0User) return;
+
+    try {
+      console.log("Auth0 User details:", auth0User);
+      if (!auth0User.email_verified) {
+        console.warn("Email not verified. Prompt user to verify.");
+        // You can trigger a modal or popup to inform the user.
+        return;
+      }
+      const fetchedUser = await getUserDetails();
+      console.log("fetched user",fetchedUser)
+      if (fetchedUser) {
+        console.log("User already exists:", fetchedUser);
+        setUser(fetchedUser);
+        setConnected(true);
+        setNewUser(false);
+      } else {
+        console.log("No user found in DB. Creating new user...");
+        const newUser = await createUser();
+        if (newUser) {
+          console.log("New user created:", newUser);
+          setUser(newUser);
+          setConnected(true);
+          setNewUser(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching or creating user details:", error);
     }
-  }, [status, session]);
+  };
+
+  // Effect to set Auth0 token and trigger user fetch
+  useEffect(() => {
+    if (auth0User) {
+      const token = auth0User?.sub || "";
+      setIdToken(token);
+      setAuthToken(token);
+      fetchAndSetUser();
+    }
+  }, [auth0User]);
 
   useEffect(() => {
+    console.log(userTrigger);
+      fetchAndSetUser();  
+  }, [userTrigger]);
+
+  // Effect to update wallet address if needed
+  useEffect(() => {
     const updateWalletAddress = async () => {
-      await updateUserWalletAddress({ nearAddress: signedAccountId });
+      try {
+        const existing = await checkWalletAddress(signedAccountId);
+        console.log(existing);
+        if(existing.isExist){
+          setWalletError(true);
+        }else{
+          await updateUserWalletAddress({ nearAddress: signedAccountId });
+          await triggerNearDrop();
+        }
+      } catch (error) {
+        console.error("Error updating wallet address:", error);
+      }
     };
+
     if (signedAccountId && user && !user?.user?.nearAddress) {
       updateWalletAddress();
     }
-    // const updateWalletAddress = async () => {
-    //   try {
-    //     await updateUserWalletAddress({ nearAddress: signedAccountId });
-    //     console.log("User wallet address updated successfully.");
-    //     const wallet = { nearAddress: signedAccountId };
-    //     await postNearDrop(wallet);
-    //     setNearDrop(true);
-    //     console.log("Near drop triggered successfully.");
-    //   } catch (err) {
-    //     console.error("Error in updating wallet or posting near drop:", err);
-    //   }
-    // };
-
-    // if (signedAccountId && user && !user?.user?.nearAddress) {
-    //   updateWalletAddress();
-    // }
   }, [signedAccountId, user]);
-  useEffect(() => {
-    const triggerNearDrop = async () => {
-      if (
-        signedAccountId &&
-        userDetails?.user &&
-        !userDetails.user.isNearDropClaimed
-      ) {
-        try {
-          const payload = { nearAddress: signedAccountId };
-          console.log("Payload sent:", payload);
 
-          await sendNearDrop(payload);
-          setNearDrop(true);
-          console.log("Near drop triggered successfully.");
-        } catch (error) {
-          console.error("Error triggering near drop:", error);
-        }
+  // Effect to trigger NearDrop if conditions are met
+  const triggerNearDrop = async () => {
+    if (
+      signedAccountId &&
+      userDetails?.user &&
+      !userDetails.user.isNearDropClaimed
+    ) {
+      try {
+        const payload = { nearAddress: signedAccountId };
+        console.log("Payload sent:", payload);
+        await sendNearDrop(payload);
+        setNearDrop(true);
+        console.log("Near drop triggered successfully.");
+      } catch (error) {
+        console.error("Error triggering near drop:", error);
       }
-    };
-
-    triggerNearDrop();
-  }, [signedAccountId, userDetails]);
-
-  useEffect(() => {
-    const handleWalletData = async () => {
-      if (session && session.user) {
-        try {
-          console.log("Session details:", session);
-
-          const fetchedUser = await getUserDetails();
-          console.log("Fetched user:", fetchedUser);
-
-          if (fetchedUser) {
-            console.log("User already exists");
-            setUser(fetchedUser);
-            setConnected(true);
-            setNewUser(false);
-          } else {
-            console.log("No user found in DB. Creating new user...");
-            const newUser = await createUser();
-
-            if (newUser) {
-              console.log("New user created:", newUser);
-              setUser(newUser);
-              setConnected(true);
-              setNewUser(true);
-              // setSignToast(true);
-            }
-          }
-        } catch (err) {
-          console.error("Error while handling wallet data:", err);
-        }
-      }
-    };
-
-    handleWalletData();
-  }, [session, status, signedAccountId, userTrigger, pathName]);
+    }
+  };
 
   const signInUser = () => {
-    signIn("azure-ad-b2c", { callbackUrl: "/" });
+    window.location.href = "/api/auth/login"; // Redirects to Auth0 login page
   };
 
   const signOutUser = () => {
-    signOut();
+    window.location.href = "/api/auth/logout"; // Redirects to Auth0 logout page
   };
 
   return (
     <AuthContext.Provider
       value={{
+        setWalletError,
         user,
         idToken,
         signInUser,
@@ -169,6 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         newUser,
         nearDrop,
         setNearDrop,
+        walletError
       }}
     >
       {children}

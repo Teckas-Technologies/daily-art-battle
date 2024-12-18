@@ -5,9 +5,13 @@ import Hashes from "../../model/Hashes";
 import { providers, utils } from 'near-api-js';
 import { NEXT_PUBLIC_NETWORK } from "@/config/constants";
 import RaffleTicket from "../../model/RaffleTicket";
+import { getSession } from "@auth0/nextjs-auth0";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
-        const email = await authenticateUser(req);
+         const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
         await connectToDatabase();
         //To validate whether is minted or not
         if(req.method=="POST"){

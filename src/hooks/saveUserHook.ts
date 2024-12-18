@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
 import { UserDetails } from "@/types/types";
 
 interface UseSendWalletDataResult {
@@ -22,10 +21,11 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
     setError(null);
 
     try {
-      const response = await fetchWithAuth("/api/user");
+      const response = await fetch("/api/user");
 
       if (response.ok) {
         const userData = await response.json();
+        console.log("hook",userData)
         setUserDetails(userData);
         setSufficientBalance(userData.user?.gfxCoin ?? 0);
         return userData;
@@ -48,7 +48,7 @@ export const useSendWalletData = (): UseSendWalletDataResult => {
     setError(null);
 
     try {
-      const response = await fetchWithAuth("/api/user", {
+      const response = await fetch("/api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

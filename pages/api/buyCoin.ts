@@ -2,11 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/mongoose";
 import { authenticateUser } from "../../utils/verifyToken";
 import { GFXCOIN_PER_NEAR ,GFXCOIN_PER_USDC} from "@/config/points";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse) {
     try {
         await connectToDatabase();
-        await authenticateUser(req);
+          const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
         if(req.method=='GET'){
             try {
                 const queryType = req.query.queryType;

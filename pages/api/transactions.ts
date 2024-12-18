@@ -2,11 +2,16 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/mongoose";
 import { authenticateUser } from "../../utils/verifyToken";
 import Transactions from "../../model/Transactions";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse) {
     try{
         await connectToDatabase();
-        const email = await authenticateUser(req);
+          const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
         //Here we will return thre transaction details of the user
         if(req.method=='GET'){
             try{

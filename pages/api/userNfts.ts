@@ -6,9 +6,14 @@ import { authenticateUser } from "../../utils/verifyToken";
 import User from "../../model/User";
 import { connectToDatabase } from "../../utils/mongoose";
 import { TOTAL_REWARDS } from "@/data/queries/totalrewards.graphql";
+import { getSession } from "@auth0/nextjs-auth0";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
-    const email = await authenticateUser(req);
+     const session = await getSession(req, res);
+      if (!session || !session.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      const email = session.user.email;
     await connectToDatabase();
     // To fetch users nft both spinners and participation nft
     if(req.method=='GET'){

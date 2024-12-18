@@ -1,6 +1,6 @@
 //useArtVoting.ts is used for calling artVoting api.
+import { useAuth } from '@/contexts/AuthContext';
 import { useState, useCallback } from 'react';
-import { fetchWithAuth } from '../../utils/authToken';
 export interface Vote {
   ticketCount: number;
   artId: string;
@@ -18,6 +18,15 @@ interface UseTicketReturn {
 }
 
 export const useArtsRaffleCount = (): UseTicketReturn => {
+   const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const [raffleCount, setRaffleCount] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -26,7 +35,7 @@ export const useArtsRaffleCount = (): UseTicketReturn => {
   const fetchArtUserRaffleCount = useCallback(async (artId: string, campaignId: string): Promise<number> => {
     setLoading(true);
     try {
-      const response = await fetchWithAuth(`/api/raffleTicket?artId=${artId}&campaignId=${campaignId}`);
+      const response = await fetch(`/api/raffleTicket?artId=${artId}&campaignId=${campaignId}`);
       const data = await response.json();
       if (response.ok) {
         setError(null);
@@ -51,7 +60,7 @@ export const useArtsRaffleCount = (): UseTicketReturn => {
   const submitVote = useCallback(async (voteData: Vote): Promise<boolean> => {
     setLoading(true);
     try {
-      const response = await fetchWithAuth('/api/raffleTicket', {
+      const response = await fetch('/api/raffleTicket', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,6 +70,7 @@ export const useArtsRaffleCount = (): UseTicketReturn => {
       const data = await response.json();
 
       if (response.ok) {
+        setUserTrigger(true);
         return true;
       } else {
         throw new Error("error" + data.message || 'Failed to submit vote');
@@ -77,7 +87,7 @@ export const useArtsRaffleCount = (): UseTicketReturn => {
     setLoading(true);
     try {
       console.log("TEST 1")
-      const response = await fetchWithAuth(`/api/raffleTicket?raffleId=${raffleId}&queryType=${queryType}`, {
+      const response = await fetch(`/api/raffleTicket?raffleId=${raffleId}&queryType=${queryType}`, {
         method: 'PUT', 
       });
       const data = await response.json();

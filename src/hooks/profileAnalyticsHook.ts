@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
-
 interface AnalyticsData {
     participationCount: number;
     rareNftCount: number;
@@ -16,7 +14,7 @@ export const useFetchArtsAnalytics = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchWithAuth(`/api/profileAnalytics`);
+            const response = await fetch(`/api/profileAnalytics`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             const participationCount = data.participationCount?.data?.mb_views_nft_tokens_aggregate?.aggregate?.count || 0;

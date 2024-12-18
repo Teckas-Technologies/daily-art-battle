@@ -12,12 +12,17 @@ import { error } from "console";
 import Transactions from "../../model/Transactions";
 import axios from "axios";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         await connectToDatabase()
         try{
-        const email = await authenticateUser(req);
+        const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+        const email = session.user.email;
         const user = await User.findOne({email:email});
         if(!user){
             res.status(400).json({error:"User profile not found"});

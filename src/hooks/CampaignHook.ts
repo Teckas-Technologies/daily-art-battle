@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
 import {
   NEXT_PUBLIC_VALID_CLIENT_ID,
   NEXT_PUBLIC_VALID_CLIENT_SECRET,
 } from "@/config/constants";
+import { useAuth } from "@/contexts/AuthContext";
 export interface CampaignPageData {
   _id: string;
   campaignUrl?: string;
@@ -58,6 +58,15 @@ interface ArtData {
 }
 
 const useCampaigns = () => {
+   const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const [campaign, setCampaign] = useState<CampaignPageData | null>(null);
   const [campaignData, setCampaignData] = useState<any>(null);
   const [campaignStatus, setCampaignStatus] = useState<string | null>(null);
@@ -73,7 +82,6 @@ const useCampaigns = () => {
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [battles, setBattles] = useState<any[]>([]);
   const [participants, setParticipants] = useState<any>(null);
-  const idToken = getAuthToken();
   // console.log("token", idToken);
   const fetchCampaigns = async (
     queryType: "current" | "upcoming" | "completed",
@@ -136,7 +144,7 @@ const useCampaigns = () => {
     setIsError(null);
 
     try {
-      const response = await fetchWithAuth(
+      const response = await fetch(
         `/api/campaign?queryType=${queryType}&page=${page}&limit=${limit}`
       );
 
@@ -162,10 +170,8 @@ const useCampaigns = () => {
   };
 
   useEffect(() => {
-    if (idToken) {
       fetchCurrentCampaign();
-    }
-  }, [idToken]);
+  }, []);
   const fetchCampaignFromArtAPI = async (
     campaignId: string,
     page: number = 1,
@@ -336,11 +342,10 @@ const useCampaigns = () => {
     setIsError(null);
 
     try {
-      const response = await fetchWithAuth("/api/campaign", {
+      const response = await fetch("/api/campaign", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(campaignData),
       });
@@ -348,7 +353,7 @@ const useCampaigns = () => {
       if (!response.ok) {
         throw new Error("Failed to create campaign");
       }
-
+      setUserTrigger(true);
       const data = await response.json();
       console.log("New campaign created:", data);
       return data;
@@ -368,11 +373,10 @@ const useCampaigns = () => {
     setIsError(null);
 
     try {
-      const response = await fetchWithAuth("/api/campaign", {
+      const response = await fetch("/api/campaign", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(updatedCampaignData),
       });
@@ -417,11 +421,10 @@ const useCampaigns = () => {
     // console.log("Sending data to API:", body, idToken); // Log request details
 
     try {
-      const response = await fetchWithAuth("/api/distribute", {
+      const response = await fetch("/api/distribute", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(body),
       });

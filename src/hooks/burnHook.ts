@@ -1,10 +1,18 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
-
 export const useOffChainBurn = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean | null>(null);
+     const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
 
     const offchainBurn = async (raffleId: string, queryType: string) => {
         setLoading(true);
@@ -12,7 +20,7 @@ export const useOffChainBurn = () => {
         setSuccess(null);
 
         try {
-            const response = await fetchWithAuth(`/api/burn?queryType=${queryType}`, {
+            const response = await fetch(`/api/burn?queryType=${queryType}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
