@@ -6,12 +6,17 @@ import { graphQLService } from "@/data/graphqlService";
 import { SEARCH_ARTNAME } from "@/data/queries/searchByArtName.graph";
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import { SEARCH_TOTAL } from "@/data/queries/searchByArtNameCount";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
         await connectToDatabase();
-        const email = await authenticateUser(req);
-        //To search nft based on near address
+        const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }   
+          const email = session.user.email;
+          //To search nft based on near address
             if(req.method=='GET'){
               try {
                 const queryType = req.query.queryType;

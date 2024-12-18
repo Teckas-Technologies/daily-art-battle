@@ -1,15 +1,22 @@
+import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import { fetchWithAuth } from '../../utils/authToken';
-
 export const useFetchGeneratedImage = () => {
   const [imageUrl, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+   const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const fetchGeneratedImage = async (prompt: string) => {
     try {
       setError(null);
-      const response = await fetchWithAuth('/api/generateImage', {
+      const response = await fetch('/api/generateImage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,6 +40,7 @@ export const useFetchGeneratedImage = () => {
            fetchedFile = new File([blob], 'GeneratedImage.png', { type: 'image/png' });
           setFile(fetchedFile); 
         }
+        setUserTrigger(true);
       return { imageUrl: data.imageUrl, file: fetchedFile};
     } catch (err) {
       console.error('Error fetching image:', err);

@@ -6,10 +6,15 @@ import { error } from "console";
 import User from "../../model/User";
 import Transactions from "../../model/Transactions";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     await connectToDatabase();
-    const email = await authenticateUser(req);
+      const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+      const email = session.user.email;
     //This api to distribute special rewards of campaign
     if(req.method=='POST'){
         const {artList,campaignId} = req.body;

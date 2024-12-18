@@ -1,6 +1,5 @@
 
 import { useContext, useState } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
 
 const usetelegramDrop = () => {
   const [loading, setLoading] = useState(false);
@@ -12,13 +11,13 @@ const usetelegramDrop = () => {
     setError(null);
     try {
       // alert(`hook ${userId}`);
-        const userExistsResponse = await fetchWithAuth("/api/user");
+        const userExistsResponse = await fetch("/api/user");
         // alert(`hook ${userExistsResponse}`);
         const data = await userExistsResponse.json();
         // alert(data.user.isTelegramDropClaimed)
         if(data.user.isTelegramDropClaimed==false){
           // alert("hrlo")
-      const res = await fetchWithAuth(`/api/gfxCoin?queryType=telegramDrop`, {
+      const res = await fetch(`/api/gfxCoin?queryType=telegramDrop`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

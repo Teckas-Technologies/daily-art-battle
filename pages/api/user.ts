@@ -12,78 +12,28 @@ import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } fro
 import { error } from 'console';
 import RaffleTicket from '../../model/RaffleTicket';
 import { TransactionType } from '../../model/enum/TransactionType';
+import { getSession } from '@auth0/nextjs-auth0';
+import { getManagementApiToken, getUserDetails } from '../../utils/userDetails';
+import { createAuth0user, createGoogleuser } from '../../utils/userUtils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     //Here user will be created 
     try {
       await connectToDatabase();
-      const token = req.headers['authorization']?.split(' ')[1];
-      if (!token) {
-        return res.status(401).json({ error: 'Authorization token is required' });
-      }
-      
-      const { valid, decoded } = await verifyToken(token);
-      if (!valid) {
-        return res.status(401).json({ error: 'Invalid token' });
-      }
+    const session = await getSession(req, res);
 
-      const payload = decoded as JwtPayload; // Cast the decoded token
-      const email = payload.emails[0]; // Extract email from the decoded token
-
-      const existingUser = await User.findOne({ email: email });
-      if (existingUser) {
-        return res.status(400).json({ error: 'User already exists' });
-      }
-
-      const referralCodeGenerated: string = Math.random().toString(36).substring(7);
-      let referrer: UserTable | null = null;
-      if (payload.extension_referralCode) {
-        referrer = await User.findOne({ referralCode: payload.extension_referralCode });
-        if (!referrer) {
-          return res.status(400).json({ error: 'Invalid referral code' });
-        }
-      }
-
-      const newUser = new User({
-        firstName: payload.given_name,
-        lastName: payload.family_name,
-        email: email,
-        referralCode: referralCodeGenerated,
-        referredBy: referrer ? referrer._id : null,
-        createdAt: new Date(),
-        gfxCoin: SIGNUP
-      });
-
-      const newTransaction = new Transactions({
-        email: email,
-        gfxCoin: SIGNUP,  
-        transactionType: TransactionType.RECEIVED_FROM_SIGNUP  
-      });
-      await newTransaction.save();
-
-      if (referrer) {
-        referrer.referredUsers.push(newUser._id);
-        referrer.gfxCoin += REFFERER;
-        await referrer.save();
-        const newTransaction = new Transactions({
-          email: referrer.email,
-          gfxCoin: REFFERER,  
-          transactionType: TransactionType.RECEIVED_FROM_REFERRAL  
-        });
-        
-        await newTransaction.save();
-        newUser.gfxCoin += REFFERED_USER;
-        const newTransactions = new Transactions({
-          email: email,
-          gfxCoin: REFFERED_USER,  
-          transactionType: TransactionType.RECEIVED_FROM_REFERRAL  
-        });
-        await newTransactions.save();
-      }
-    
-      const response = await newUser.save();
+    if (!session || !session.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const provider = session.user.sub.split('|')[0];
+    if(provider == 'google-oauth2'){
+      const response = await createGoogleuser(session)
       res.status(201).json({ user: response });
+    }else{
+      const response = await createAuth0user(session)
+      res.status(201).json({ user: response });
+    }
     } catch (error:any) {
       res.status(500).json({ error:error.message });
     }
@@ -93,7 +43,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   else if (req.method === 'GET') {
     try {
       await connectToDatabase();
-      const email = await authenticateUser(req);
+      const session = await getSession(req, res);
+      if (!session || !session.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+    const email = session.user.email;
       console.log(email);
       const user = await User.findOne({ email: email });
       if(!user){
@@ -119,18 +73,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if(req.method=='PUT'){
     try{
       await connectToDatabase();
-      const token = req.headers['authorization']?.split(' ')[1];
-      if (!token) {
-        return res.status(401).json({ error: 'Authorization token is required' });
+      const session = await getSession(req, res);
+  
+      if (!session || !session.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
       }
-      
-      const { valid, decoded } = await verifyToken(token);
-      if (!valid) {
-        return res.status(401).json({ error: 'Invalid token' });
-      }
-
-      const payload = decoded as JwtPayload;
-      const email = payload.emails[0];
+      const accessToken = await getManagementApiToken();
+      const userDetails = await getUserDetails(session.user.sub, accessToken);
+      const email = userDetails.email;
       const existingUser = await User.findOne({ email: email });
       if (!existingUser) {  
         res.status(400).json({message:"User profile not found"});
@@ -143,10 +93,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           updateData,
           { new: true }
         );
+        console.log(updatedProfile);
         res.status(200).json({ profile: updatedProfile });
       }
-      const profile = await User.findOneAndUpdate({ email }, {firstName:payload.given_name,lastName:payload.family_name}, { new: true }); 
-      res.status(200).json({profile});
+      // const profile = await User.findOneAndUpdate({ email }, {firstName:payload.given_name,lastName:payload.family_name}, { new: true }); 
+      // res.status(200).json({profile});
     }catch(error:any){
       return res.status(400).json({error:error.message});
     }

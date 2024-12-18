@@ -25,7 +25,11 @@ import usetelegramDrop from "@/hooks/telegramHook";
 // import Script from "next/script";
 import { setAuthToken } from "../../utils/authToken";
 import { NEAR_DROP, SIGNUP } from "@/config/points";
-// import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { GetServerSideProps } from 'next';
+import { getSession } from '@auth0/nextjs-auth0';
+import VerifyEmailModal from "@/components/VerifyEmail";
+import { WalletExistPopup } from "@/components/PopUps/WalletExistPopup";
 
 const Home: NextPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -45,20 +49,28 @@ const Home: NextPage = () => {
     useFetchTodayBattle();
   const { wallet, signedAccountId } = useContext(NearContext);
   const {
-    user,
+    setWalletError,
     userTrigger,
     setUserTrigger,
     newUser,
+    walletError,
     setNewUser,
     nearDrop,
     setNearDrop,
   } = useAuth();
-  let userDetails = user;
+  const { user, isLoading } = useUser();
+  const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState<Number>();
   const { data: session, status } = useSession();
   const { telegramDrop } = usetelegramDrop();
 
   useEffect(() => {
+    if (user && !user.email_verified) {
+      setShowModal(true);
+    }
+  }, [user]);
+
+    useEffect(() => {
     if (toast) {
       setTimeout(() => setToast(false), 3000);
     }
@@ -67,6 +79,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     const fetchBattle = async () => {
       await fetchTodayBattle(GFX_CAMPAIGNID);
+
     };
 
     const timeoutId = setTimeout(() => {
@@ -135,6 +148,9 @@ const Home: NextPage = () => {
         overflowY: "auto",
       }}
     >
+      {showModal && (
+        <VerifyEmailModal show={showModal} onClose={() => setShowModal(false)} />
+      )}
       <Script
         src="https://telegram.org/js/telegram-web-app.js"
         strategy="beforeInteractive"
@@ -214,6 +230,10 @@ const Home: NextPage = () => {
           msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
           onClose={() => setNewUser(false)}
         />
+      )}
+
+      {walletError&&(
+        <WalletExistPopup onClose={()=>setWalletError(false)}/>
       )}
       {nearDrop && (
         <ClaimPopup

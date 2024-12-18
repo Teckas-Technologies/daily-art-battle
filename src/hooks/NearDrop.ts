@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { fetchWithAuth, getAuthToken } from "../../utils/authToken";
-
 interface PostResponse {
   
   message: string;
@@ -17,13 +15,12 @@ const useSendNearDrop = () => {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(
+      const response = await fetch(
         "/api/gfxCoin?queryType=nearDrop",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${getAuthToken()}`,
           },
           body: JSON.stringify(payload),
         }
@@ -35,7 +32,6 @@ const useSendNearDrop = () => {
           `Request failed with status ${response.status}: ${errorText}`
         );
       }
-
       const responseData = await response.json();
       console.log("Near drop >>>>>>>>",responseData);
       

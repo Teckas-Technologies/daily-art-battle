@@ -330,8 +330,12 @@ export const Battle: React.FC<Props> = ({
                 </div> */}
                 <div className="outside flex w-auto h-auto rounded-[3.5rem] cursor-pointer"> {/** onClick={() => setOpenArtA(true)} */}
                   <div className="second-layer w-auto h-auto rounded-[3.5rem]">
-                    <button className={` battle-vote-btn flex flex-row justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`} >
-                      {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artAMyTickets > 0 ?  "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artA?.id)}>
+                    <button className={` battle-vote-btn flex flex-row justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile ? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`} onClick={
+                      !viewTools[0].active
+                        ? () => handleImageClick(artB?.id)
+                        : undefined
+                    }>
+                      {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artAMyTickets > 0 ? "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artA?.id)}>
                         <InlineSVG
                           src={`/icons/${artAMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
                           className="w-5 h-5 spartan-medium"
@@ -355,8 +359,12 @@ export const Battle: React.FC<Props> = ({
                 </div> */}
                 <div className="outside flex w-auto h-auto rounded-[3.5rem]">
                   <div className="second-layer w-auto h-auto rounded-[3.5rem]">
-                    <button className={` battle-vote-btn flex justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile ? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`}>
-                      {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artBMyTickets > 0 ?  "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artB?.id)}>
+                    <button className={` battle-vote-btn flex justify-center items-center md:gap-2 gap-1 ${viewTools[0].active && "py-3"} ${viewTools[2].active && isMobile ? "px-5 py-2" : "px-6 py-3"} ${isMobile ? "min-w-[10rem]" : "min-w-[12rem]"} rounded-[3.5rem] cursor-pointer`} onClick={
+                      !viewTools[0].active
+                        ? () => handleImageClick(artB?.id)
+                        : undefined
+                    }>
+                      {!viewTools[0].active && <div className={`like w-[1.7rem] h-[1.7rem] ${artBMyTickets > 0 ? "pt-0" : "pt-1"} bg-white flex justify-center items-center rounded-full`} onClick={() => handleImageClick(artB?.id)}>
                         <InlineSVG
                           src={`/icons/${artBMyTickets > 0 ? "uparrow.svg" : "heart.svg"}`}
                           className="w-5 h-5 spartan-medium"

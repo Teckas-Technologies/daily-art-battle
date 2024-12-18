@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
-
 const estFetchAmount = (queryFilter: string, coins: number) => {
   const [amount, setAmount] = useState<{
     totalUsdc?: number;
@@ -14,7 +12,7 @@ const estFetchAmount = (queryFilter: string, coins: number) => {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(
+      const response = await fetch(
         `/api/buyCoin?queryType=coins&queryFilter=${queryFilter}&coins=${coins}`
       );
 

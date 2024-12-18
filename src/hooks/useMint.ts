@@ -2,7 +2,7 @@ import { uploadReference } from "@mintbase-js/storage";
 import { useContext, useState } from "react";
 import { NearContext, Wallet } from "@/wallet/WalletSelector";
 import { ART_BATTLE_CONTRACT, ART_BATTLE_PROXY_CONTRACT, NEXT_PUBLIC_PROXY_ADDRESS } from "@/config/constants";
-import { fetchWithAuth } from "../../utils/authToken";
+import { useAuth } from "@/contexts/AuthContext";
 
 type mintObj = {
   title: string;
@@ -18,7 +18,15 @@ const useMintImage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { wallet, signedAccountId } = useContext(NearContext);
-
+  const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
 
 /**
  * This function is used for minting
@@ -90,7 +98,7 @@ const useMintImage = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetchWithAuth(`/api/gfxCoin?queryType=mint&transactionHash=${transactionHash}`, {
+      const res = await fetch(`/api/gfxCoin?queryType=mint&transactionHash=${transactionHash}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +122,7 @@ const useMintImage = () => {
     setError(null);
     try {
       console.log("STEP 2")
-      const res = await fetchWithAuth(`/api/gfxCoin?transactionHash=${transactionHash}`);
+      const res = await fetch(`/api/gfxCoin?transactionHash=${transactionHash}`);
       console.log("STEP 3")
       const data = await res.json();
       console.log("RES from API:", data)

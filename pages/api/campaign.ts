@@ -8,6 +8,7 @@ import Transactions from "../../model/Transactions";
 import ArtTable from "../../model/ArtTable";
 import { validateUser } from "../../utils/validateClient";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export const config = {
   api: {
@@ -26,7 +27,11 @@ export default async function handler(
        //To Create campaign
     if (req.method == "POST") {
       try {
-        const email = await authenticateUser(req);
+         const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
         await connectToDatabase();
         const data = req.body;
         // Find the user by email
@@ -105,7 +110,11 @@ export default async function handler(
            //To fetch campaigns based on some filters
         const queryType = req.query.queryType;
         if (queryType == "myCampaigns") {
-          const email = await authenticateUser(req);
+          const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
           const page = parseInt(req.query.page as string) || 1;
           const limit = parseInt(req.query.limit as string) || 10;
           const skip = (page - 1) * limit;
@@ -229,7 +238,10 @@ export default async function handler(
 
     if (req.method == "PUT") {
       try {
-        const email = await authenticateUser(req);
+        const session = await getSession(req, res);
+        if (!session || !session.user) {
+          return res.status(401).json({ message: 'Unauthorized' });
+        }
         await connectToDatabase();
           //Update campaign based on campaign id
         const data = req.body;
@@ -250,7 +262,10 @@ export default async function handler(
    //Delete campaign based on campaign id
     if (req.method == "DELETE") {
       try {
-        const email = await authenticateUser(req);
+        const session = await getSession(req, res);
+        if (!session || !session.user) {
+          return res.status(401).json({ message: 'Unauthorized' });
+        }
         await connectToDatabase();
         const id = req.query.id;
         const campaign = await Campaign.deleteOne({ _id: id });

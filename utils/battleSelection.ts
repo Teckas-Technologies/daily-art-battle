@@ -11,16 +11,21 @@ export async function getNextAvailableDate(campaignId: string): Promise<Date> {
   const latestBattle = await Battle.findOne({ campaignId }).sort({ endTime: -1 });
 
   // If there’s no latest battle, return today's date at 12:00 PM (noon) as the default start time
-  if (!latestBattle) {
+  // if (!latestBattle) {
     const today = new Date();
-    today.setUTCHours(12, 0, 0, 0);
+    if(today.getUTCHours()<=12){
+      today.setUTCHours(0, 0, 0, 0);
+    }else{
+      today.setUTCHours(12, 0, 0, 0);
+    }
+    
     return today;
-  }
+  // }
 
-  // Set the next available slot to immediately after the latest battle's end time
-  const nextSlot = new Date(latestBattle.endTime.getTime() + 1);
+  // // Set the next available slot to immediately after the latest battle's end time
+  // const nextSlot = new Date(latestBattle.endTime.getTime() + 1);
 
-  return nextSlot;
+  // return nextSlot;
 }
 
 

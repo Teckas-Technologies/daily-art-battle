@@ -1,7 +1,15 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { getAuthToken } from "../../utils/authToken";
-
 const useDailyCheckin = () => {
+     const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [streakDays, setStreakDays] = useState<number | null>(null);
@@ -19,14 +27,13 @@ const useDailyCheckin = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
       if (!response.ok) {
         throw new Error("Failed to complete daily check-in");
       }
-
+      setUserTrigger(true);
       const postData = await response.json();
       console.log("Daily check-in response:", postData);
       return postData;
@@ -52,7 +59,6 @@ const useDailyCheckin = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
@@ -82,9 +88,6 @@ const useDailyCheckin = () => {
     try {
       const response = await fetch("/api/dailyCheckin", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
       });
 
       if (!response.ok) {

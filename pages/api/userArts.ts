@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/mongoose";
 import ArtTable from "../../model/ArtTable";
 import { authenticateUser } from "../../utils/verifyToken";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,7 +10,11 @@ export default async function handler(
 ) {
   try {
     await connectToDatabase();
-    const email = await authenticateUser(req);
+   const session = await getSession(req, res);
+    if (!session || !session.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }  
+    const email = session.user.email;  
     // TO fetch users uploaded arts
     if (req.method == "GET") {
       try {

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { ArtData } from "./artHooks";
-import { fetchWithAuth } from "../../utils/authToken";
-
 export const useFetchUserArts = () => {
     const [arts, setArts] = useState<ArtData[]>([]);
     const [totalPage, setTotalPage] = useState<any>();
@@ -12,7 +10,7 @@ export const useFetchUserArts = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchWithAuth(`/api/userArts?queryType=uploadedArts&sort=${sort}&page=${page}&limit=${limit}`);
+            const response = await fetch(`/api/userArts?queryType=uploadedArts&sort=${sort}&page=${page}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log("data:", data)
@@ -39,7 +37,7 @@ export const useSearchUserArts = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchWithAuth(`/api/userArts?queryType=search&queryFilter=artName&name=${searchText}&page=${page}&limit=${limit}`);
+            const response = await fetch(`/api/userArts?queryType=search&queryFilter=artName&name=${searchText}&page=${page}&limit=${limit}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log("data:", data)

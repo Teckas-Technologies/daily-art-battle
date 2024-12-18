@@ -1,6 +1,5 @@
 // hooks/useFetchTodayBattle.ts
 import { useState, useEffect } from "react";
-import { fetchWithAuth } from "../../utils/authToken";
 import {
   NEXT_PUBLIC_VALID_CLIENT_ID,
   NEXT_PUBLIC_VALID_CLIENT_SECRET,
@@ -78,7 +77,7 @@ export const useSaveData = (): UseSaveDataResult => {
     setSuccess(null);
 
     try {
-      const response = await fetchWithAuth("/api/battle", {
+      const response = await fetch("/api/battle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

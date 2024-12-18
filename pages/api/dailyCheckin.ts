@@ -6,10 +6,15 @@ import User from "../../model/User";
 import { DAILY_CHECKIN, WEEKLY_CLAIM } from "@/config/points";
 import Transactions from "../../model/Transactions";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
-        const email = await authenticateUser(req);
+          const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
         await connectToDatabase();
         //To claim daily reward 
         if(req.method=="POST"){

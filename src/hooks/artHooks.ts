@@ -1,7 +1,7 @@
 //artHooks.ts is used for calling the art api.
 import { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../utils/authToken';
 import { NEXT_PUBLIC_VALID_CLIENT_ID, NEXT_PUBLIC_VALID_CLIENT_SECRET } from '@/config/constants';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface ArtData {
   _id: string;
@@ -38,6 +38,15 @@ interface UseSaveDataResult {
   success: boolean | null;
 }
 export const useSaveData = (): UseSaveDataResult => {
+   const {
+      user,
+      userTrigger,
+      setUserTrigger,
+      newUser,
+      setNewUser,
+      nearDrop,
+      setNearDrop,
+    } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
@@ -48,7 +57,7 @@ export const useSaveData = (): UseSaveDataResult => {
     setSuccess(null);
 
     try {
-      const response = await fetchWithAuth('/api/art', {
+      const response = await fetch('/api/art', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +212,7 @@ export const useHideArt = () => {
     setSuccess(null);
 
     try {
-      const response = await fetchWithAuth('/api/hideArt', {
+      const response = await fetch('/api/hideArt', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

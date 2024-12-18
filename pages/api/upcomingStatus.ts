@@ -2,10 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { authenticateUser } from "../../utils/verifyToken";
 import { connectToDatabase } from "../../utils/mongoose";
 import ArtTable from "../../model/ArtTable";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
-        const email = await authenticateUser(req);
+         const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+        const email = session.user.email;
         await connectToDatabase();
         //Here we will return the status of the upcoming arts section
         if(req.method=='GET'){

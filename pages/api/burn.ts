@@ -7,11 +7,16 @@ import Transactions from "../../model/Transactions";
 import Battle from "../../model/Battle";
 import RaffleTicket from "../../model/RaffleTicket";
 import { TransactionType } from "../../model/enum/TransactionType";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
         await connectToDatabase();
-        const email = await authenticateUser(req);
+         const session = await getSession(req, res);
+          if (!session || !session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+          }
+          const email = session.user.email;
         if(req.method=="PUT"){
             const queryType = req.query.queryType;
             const {raffleId} =  req.body;
@@ -62,6 +67,5 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         }
     } catch (error:any) {
         res.status(500).json({error:error.message});
-        
     }
 }
