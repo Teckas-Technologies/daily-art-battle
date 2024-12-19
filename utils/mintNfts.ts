@@ -59,10 +59,10 @@ export const mintNfts = async (): Promise<void> => {
             battle.specialWinnerName = user.firstName + " " + user.lastName;
             battle.profileImg = user.profileImg;
           }
-            battle.isNftMinted = true;
-            const res = await battle.save();
-            console.log("saved", res);
           }
+          battle.isNftMinted = true;
+          const res = await battle.save();
+          console.log("saved", res);
       }
     }
   }

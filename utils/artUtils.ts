@@ -4,7 +4,7 @@ import UpVoting from "../model/UpVoting";
 import uploadArweaveUrl from "./uploadArweaveUrl";
 import User from "../model/User";
 import Battle from "../model/Battle";
-import { createBattle } from "./battleSelection";
+import { createBattle, createGfxvsBattleauto } from "./battleSelection";
 
 export async function scheduleArt(data: any): Promise<any> {
   await connectToDatabase();
@@ -29,7 +29,7 @@ export async function scheduleArt(data: any): Promise<any> {
     ...data,
     uploadedTime: startDate,
   });
-  await createBattle();
+  await createGfxvsBattleauto(data.campaignId);
   return await newArt.save();
 }
 

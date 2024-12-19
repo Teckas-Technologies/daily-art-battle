@@ -207,3 +207,87 @@ export const createGfxvsBattle = async (): Promise<any> => {
     console.log("Not enough arts");
   }
 }
+
+  export const createGfxvsBattleauto = async (campaignId:any): Promise<any> => {
+    console.log(campaignId);
+    const battles = await Battle.find({isBattleEnded:false,campaignId:campaignId});
+    const [artA, artB] = await findTopTwoArts(campaignId);
+    if(battles.length<=0 && (artA && artB)){
+      const startDate = await getNextAvailableDate(campaignId);
+      const endDate = new Date(startDate);
+      endDate.setHours(startDate.getHours() + 11);
+      endDate.setMinutes(startDate.getMinutes() + 59);
+      endDate.setSeconds(59);
+      endDate.setMilliseconds(999);
+      console.log(endDate);
+      const ress = await spinner(artA.colouredArt,artB.colouredArt);
+      console.log("Uploading arweave")
+      const response = await uploadArweave(ress.gif);
+      const videoResponse = await uploadArweave(ress.video);
+      const battleData = {
+        campaignId : campaignId,
+        artAId: artA._id.toString(),
+        artBId: artB._id.toString(),
+        artAartistName:artA.artistName,
+        artBartistName:artB.artistName,
+        emoji1:ress.emoji1,
+        emoji2:ress.emoji2,
+        videoSpinner: videoResponse.url,
+        videoSpinnerReference : videoResponse.referenceUrl,
+        artAartistEmail: artA.email,
+        artBartistEmail: artB.email,
+        artAtitle: artA.arttitle,
+        artBtitle: artB.arttitle,
+        artAcolouredArt: artA.colouredArt,
+        artBcolouredArt: artB.colouredArt,
+        artAcolouredArtReference: artA.colouredArtReference,
+        artBcolouredArtReference: artB.colouredArtReference,
+        startTime: startDate,
+        endTime: endDate,
+        isBattleEnded: false,
+        isNftMinted: false,
+        artAVotes: 0,
+        artBVotes: 0,
+        grayScale : response.url,
+        grayScaleReference : response.referenceUrl,
+      };
+      console.log(battleData);
+      const newBattle = new Battle(battleData);
+      const res = await newBattle.save();
+  
+     try {
+      // Updating artA
+      const updateArtA = await ArtTable.findOneAndUpdate(
+        { _id: artA._id }, 
+        { $set: { isStartedBattle: true } }, 
+        { new: true }
+      );
+    
+      if (!updateArtA) {
+        console.error(`Failed to update artA with ID: ${artA._id}`);
+      } else {
+        console.log(`Successfully updated artA: ${updateArtA}`);
+      }
+    
+      // Updating artB
+      const updateArtB = await ArtTable.findOneAndUpdate(
+        { _id: artB._id }, 
+        { $set: { isStartedBattle: true } }, 
+        { new: true }
+      );
+    
+      if (!updateArtB) {
+        console.error(`Failed to update artB with ID: ${artB._id}`);
+      } else {
+        console.log(`Successfully updated artB: ${updateArtB}`);
+      }
+    } catch (error) {
+      console.error("Error updating art records:", error);
+    }
+    
+     console.log(res);
+      return newBattle;
+    } else{
+      console.log("Not enough arts");
+    }
+}
