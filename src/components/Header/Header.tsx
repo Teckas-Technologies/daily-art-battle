@@ -350,7 +350,7 @@ export const Header: React.FC<Props> = ({
       </div>
       <div className="header-right flex items-center md:gap-3 gap-2">
         <InlineSVG
-          src={walletIcon}
+          src={signedAccountId?`/icons/wallet.svg`:`/icons/wallet-red.svg`}
           className="md:h-11 md:w-11 h-8 w-8 cursor-pointer"
           onClick={() => {
             signedAccountId ? handleSignOut() : handleSignIn();
