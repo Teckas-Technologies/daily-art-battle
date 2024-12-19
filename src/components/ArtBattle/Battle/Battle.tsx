@@ -291,10 +291,10 @@ export const Battle: React.FC<Props> = ({
           <div className="welcome-note md:mt-5 w-full md:px-[11.5rem] px-3">
             {campaignId == GFX_CAMPAIGNID ? (
               <h2 className="text-white text-center md:text-xl text-sm font-small spartan-light welcome-text">
-                Welcome to Graphics Versus! Vote daily to collect NFTs and shape
+                Welcome to GFXvs! Vote daily to collect NFTs and shape
                 our favorite $20 winner, awarded every Wednesday. Each vote
                 gives you a shot at the day's exclusive 1:1 rare spinner.
-                Connect your NEAR wallet and dive into the action!
+                Connect your NEAR wallet and dive   into the action!
               </h2>
             ) : (
               <h2 className="text-white md:text-center text-justify md:text-xl text-sm font-small spartan-light welcome-text">

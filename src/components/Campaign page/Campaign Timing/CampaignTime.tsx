@@ -119,6 +119,12 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
       setShowUploadModal(false);
     }
   };
+  const handleCloseArtPrompt = ()=>{
+    setShowUploadModal(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("openupload");
+    window.history.replaceState(null, "", url.toString());
+  }
   useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => {
@@ -178,7 +184,7 @@ const CampaignTime: React.FC<CampaignTimeProps> = ({
       {showUploadModal && (
         <ArtUploadForm
           campaignId={campaignId}
-          onClose={() => setShowUploadModal(false)}
+          onClose={handleCloseArtPrompt}
           onSuccessUpload={() => setUploadSuccess(true)}
           setSignToast={setSignToast}
           setErrMsg={setErrMsg}

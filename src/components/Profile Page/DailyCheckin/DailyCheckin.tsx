@@ -142,7 +142,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
               <span className="font-medium text-xs md:text-xs lg:text-xs xl:font-sm xxl:text-lg">
                 Current Streak
               </span>
-              <p className="font-semibold mb-3 text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
+              <p className="font-semibold mb-1 text-xl lg:text-xl xl:text-xl md:text-xl xxl:text-2xl">
                 {streak.filter((day) => day).length}{" "}
                 {streak.filter((day) => day).length === 1 ? "Day" : "Days"}
               </p>

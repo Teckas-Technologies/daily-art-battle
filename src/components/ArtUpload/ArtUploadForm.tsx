@@ -152,7 +152,8 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
 
   const handleCreate = async (event: React.MouseEvent) => {
     event.preventDefault();
-
+    setArtTitle("");
+    setDisable(true);
     if (!message) {
       return;
     }
@@ -180,6 +181,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
     setArtworks(newArtworks);
     setImageCreating(true);
     const res = await fetchGeneratedImage(message);
+    setDisable(false);
     setToast(true);
     setSuccessToast("yes");
     setToastMessage("You have spent 1 GFX coin for generating AI art!");
@@ -399,7 +401,7 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
                       </div>
                     </>
                   ) : (
-                    <span>{artwork.fileName}</span>
+                    <span>{}</span>
                   )}
 
                   <div className="selectfileWrapper absolute bottom-2">
@@ -544,7 +546,13 @@ const ArtUploadForm: React.FC<ArtUploadFormProps> = ({
               }`}
               onClick={onSuccessUpload}
             >
-              {uploading ? "Uploading..." : "Upload"}
+              {uploading ? (
+              "Uploading..."
+              ) : (
+              <>
+                Upload <span>{ART_UPLOAD}</span><InlineSVG src="/icons/coin.svg" />
+              </>
+              )}
               {uploading && (
                 <div role="status">
                   <svg

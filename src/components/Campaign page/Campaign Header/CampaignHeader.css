@@ -132,7 +132,7 @@
 
 .publicStatus {
   background: #00ff001a;
-  border: 0.75px solid #00ff99;
+  border: 0.75px solid #00ff00;
   padding: 3px 17.5px;
   border-radius: 5px;
 
@@ -442,7 +442,7 @@
 
   .publicStatus {
     background: #00ff001a;
-    border: 0.75px solid #00ff99;
+    border: 0.75px solid #00ff00;
     padding: 6.5px 22.5px;
     border-radius: 5px;
     height: 33px;
@@ -593,7 +593,7 @@
     font-size: 14px;
     padding: 5px 15px;
     background: #00ff001a;
-    border: 0.75px solid #00ff99;
+    border: 0.75px solid #00ff00;
     border-radius: 41.25px;
   }
 
