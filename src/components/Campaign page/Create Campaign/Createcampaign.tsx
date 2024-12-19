@@ -478,8 +478,8 @@ const CreateCampaign: React.FC<CampaignCreationProps> = ({
                       className="w-5 h-5 text-red-500"
                     />
                     {campaignUrlValid && (
-                      <div className="absolute bottom-6 md:left-[-80px] right-[10px] bg-[#272727] text-white text-xs py-1 px-3 rounded-xl md:w-[200px] w-[120px] h-[50px] md:h-[30px]">
-                        Campaign URL slready exists
+                      <div className="absolute bottom-6 md:left-[-80px] right-[10px] bg-[#272727] text-white text-xs py-1 px-3 rounded-xl md:w-[210px] w-[120px] h-[50px] md:h-[30px]">
+                        Campaign URL already exists
                       </div>
                     )}
                     </div>

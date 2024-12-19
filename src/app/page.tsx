@@ -119,6 +119,13 @@ const Home: NextPage = () => {
     }
   }, [user]);
 
+  const handleCloseArtPrompt = ()=>{
+    setShowUploadModal(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("openupload");
+    window.history.replaceState(null, "", url.toString());
+  }
+
   const telegram = async (user_id: any) => {
     setAuthToken(session?.idToken as string);
     const res = await telegramDrop(user_id);
@@ -188,7 +195,7 @@ const Home: NextPage = () => {
       {showUploadModal && (
         <ArtUploadForm
           campaignId={GFX_CAMPAIGNID}
-          onClose={() => setShowUploadModal(false)}
+          onClose={handleCloseArtPrompt}
           onSuccessUpload={() => setUploadSuccess(true)}
           setSignToast={setSignToast}
           setErrMsg={setErrMsg}
@@ -227,8 +234,10 @@ const Home: NextPage = () => {
       )}
       {newUser && (
         <ClaimPopup
-          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
+          msg={`🎉 Welcome to the World of GFXvs!
+As a token of our excitement, we’ve credited your account with ${SIGNUP} GFX Coins! Use them wisely to kickstart your NFT journey and explore exclusive rewards. 🚀`}
           onClose={() => setNewUser(false)}
+          toggleUploadModal={toggleUploadModal}
         />
       )}
 
@@ -237,14 +246,19 @@ const Home: NextPage = () => {
       )}
       {nearDrop && (
         <ClaimPopup
-          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
+          msg={`🎉 Legendary Reward Unlocked!
+Your account's legacy has earned you exclusive NearDrop Point your gateway to rare NFTs and exciting perks. 🌟
+The longer your account's journey, the more epic the rewards! Keep collecting, keep winning! 🚀`}
           onClose={() => setNearDrop(false)}
+          toggleUploadModal={toggleUploadModal}
         />
       )}
       {teleConnect && (
         <ClaimPopup
-          msg="Success! You've claimed your Telegram drop! 🎉"
+          msg="🎉 Success! Your Telegram Drop Has Landed!
+You've unlocked exclusive rewards for connecting your Telegram account. Keep exploring to earn even more treasures on your journey! 🚀"
           onClose={() => setTeleConnect(false)}
+          toggleUploadModal={toggleUploadModal}
         />
       )}
       

@@ -7,10 +7,15 @@ import "./Popup.css";
 interface Props {
   onClose: () => void;
   msg: string;
+  toggleUploadModal: () => void;
 }
 
-export const ClaimPopup: React.FC<Props> = ({ onClose, msg }) => {
+export const ClaimPopup: React.FC<Props> = ({ onClose, msg,toggleUploadModal }) => {
   const { signInUser } = useAuth();
+  const uploadArt = ()=>{
+    onClose();
+    toggleUploadModal();
+  }
   return (
     <div className="sign-in-popup fixed top-0 z-50 w-full h-full flex items-center justify-center px-3">
       <div className="signin-card w-[25rem] h-auto lg:p-8 md:p-6 p-4 rounded-2xl bg-black">
@@ -30,9 +35,9 @@ export const ClaimPopup: React.FC<Props> = ({ onClose, msg }) => {
         <div className="popup-btns w-full flex justify-center items-center gap-3 py-1 mb-5">
           <div
             className="cancel-btn-new px-10 py-2 rounded-3xl cursor-pointer"
-            onClick={onClose}
+            onClick={uploadArt}
           >
-            <h2 className="font-semibold text-md">Cancel</h2>
+            <h2 className="font-semibold text-md">Upload Art</h2>
           </div>
          
         </div>

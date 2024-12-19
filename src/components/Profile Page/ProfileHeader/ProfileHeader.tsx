@@ -8,6 +8,7 @@ import useUpdateUserProfile from "@/hooks/updateProfileHook";
 import Toast from "@/components/Toast";
 import { uploadFile } from "@mintbase-js/storage";
 import useFetchReferralLink from "@/hooks/ReferralLinkHooks";
+import { REFFERER } from "@/config/points";
 
 interface ProfileHeaderProps {
   onEditClick: () => void;
@@ -26,6 +27,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const [successToast, setSuccessToast] = useState("");
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [referralLink,setReferralLink] = useState("");
+  const [showShareIcons, setShowShareIcons] = useState(false);
+  const [showShareIcon, setShowShareIcon] = useState(false);
   const { user } = useAuth();
   let userDetails = user;
   const { updateUserProfile, isLoading, error } = useUpdateUserProfile();
@@ -38,7 +41,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const res = await getReferralLink();
     setReferralLink(res.referralLink);
   }
-
+  const handleShareClick = () => {
+    setShowShareIcons(!showShareIcons);
+  };
+  const handleShareClicks = () => {
+    setShowShareIcon(!showShareIcon);
+  };
   useEffect(()=>{
     fetchReferralLink();
   },[user])
@@ -94,6 +102,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       }
 
       try {
+        setIsImageLoading(true);
         const uploadResult = await uploadFile(file);
         const arweaveUrl = `https://arweave.net/${uploadResult.id}`;
 
@@ -104,6 +113,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         if (updatedProfile) {
           setProfileImg(arweaveUrl);
           setToastMessage("Profile image updated successfully!");
+          setIsImageLoading(false);
           setSuccessToast("yes");
           setToast(true);
         }
@@ -132,7 +142,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="flex mb-6 md:mb-0 lg:items-center gap-3 profile-img">
           <div className="profile-img relative flex items-center gap-3">
             <div
-              className="relative md:w-[90px] w-[105px] md:h-[90px] h-[105px] lg:w-[90px] lg:h-[90px] xl:h-[90px] xl:w-[90px] xxl:h-[120px] xxl:w-[120px] rounded-lg"
+              className="relative w-[70px] h-[70px] md:w-[90px] w-[105px] md:h-[90px] h-[105px] lg:w-[90px] lg:h-[90px] xl:h-[90px] xl:w-[90px] xxl:h-[120px] xxl:w-[120px] rounded-lg"
               style={{ border: "1px solid #bbbbbb33" }}
             >
               {isImageLoading || isLoading ? (
@@ -143,12 +153,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 <img
                   alt="Profile Picture"
                   src={profileImg}
-                  className="relative rounded-lg w-full h-full object-cover"
+                  className="relative rounded-lg md:w-full md:h-full lg:w-full lg:h-full object-cover"
                 />
               )}
             </div>
 
-            <div className="absolute top-[5px] right-[5px] p-[2px] cursor-pointer bg-white border border-gray-500 rounded-full shadow-sm">
+            <div className="absolute top-[18px] md:top-[6px] xl:top-[6px] lg:top-[6px] right-[5px] p-[2px] cursor-pointer bg-white border border-gray-500 rounded-full shadow-sm">
               <InlineSVG
                 src="/icons/edit.svg"
                 className="w-[12px] h-[12px]"
@@ -246,11 +256,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               )}
             </div>
           </div>
-          <div className="flex flex-col link-div">
+          <div className="flex flex-col link-div relative">
             <p className="flex flex-row items-center justify-center gap-4 text-white text-[10px] font-semibold">
               Referral Link{" "}
               <span className="gfx-text flex flex-row items-center justify-center gap-1 text-[10px] font-semibold">
-                100 GFXvs <InlineSVG src="/icons/coin.svg" />
+                {REFFERER} GFXvs <InlineSVG src="/icons/coin.svg" />
               </span>
             </p>
 
@@ -260,7 +270,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                   ? `${referralLink.slice(0, 20)}...`
                   : referralLink}
               </p>
-              <div className="flex flex-row items-center justify-center gap-1">
+              <div className="relative flex flex-row items-center justify-center gap-1">
                 <div className="flex flex-row items-center justify-center gap-1 copy-icon-container">
                   <InlineSVG
                     src="/icons/copy-green.svg"
@@ -272,16 +282,55 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                   )}
                 </div>
 
-                <InlineSVG src="/icons/share.svg" />
+                <InlineSVG src="/icons/share.svg"  onClick={handleShareClicks}
+                  style={{ cursor: "pointer" }}/>
+                       {showShareIcon && (
+                <div
+                  className={`absolute top-[35px] bottom-[2px] flex items-center gap-2 sm:gap-3 social-share-icons ${
+                    showShareIcon ? "animated-show" : "animated-hide"
+                  }`}
+                >
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(referralLink)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InlineSVG
+                      src="/icons/whatsapp.svg"
+                      className="header-social-share"
+                    />
+                  </a>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                      referralLink
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InlineSVG
+                      src="/icons/facebook-icon.svg"
+                      className="header-social-share"
+                    />
+                  </a>
+                  <a
+                    href={`https://t.me/share/url?url=${encodeURIComponent(
+                      referralLink
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InlineSVG
+                      src="/icons/tele-icon.svg"
+                      className="header-social-share"
+                    />
+                  </a>
+                </div>
+              )}
               </div>
             </div>
-            <button
-              className="flex items-center bg-transparent justify-center text-xs font-light px-1 py-3 gap-2 rounded-full text-[#FFFFFF] mt-5 w-full"
+            <a href="https://t.me/GFXvs_Bot/GFXvs?startapp=command" target="_blank"><button
+              className="flex items-center bg-transparent justify-center text-xs font-light px-1 py-3 gap-2 rounded-full text-[#FFFFFF] mt-7 w-full"
               style={{ border: "0.75px solid #00FF00", marginTop: "10px" }}
-              onClick={() => {
-                window.location.href =
-                  "https://t.me/GFXvs_Bot/GFXvs?startapp=command";
-              }}
             >
               <InlineSVG
                 src="/icons/tele-green.svg"
@@ -289,6 +338,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               />
               Connect
             </button>
+            </a>
           </div>
         </div>
 
@@ -319,7 +369,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <p className="flex flex-row items-center gap-4 text-white text-xs font-semibold lg:text-xs xl:text-xs xxl:text-sm md:text-xs">
               Referral Link{" "}
               <span className="gfx-text flex flex-row items-center justify-center gap-1 text-xs font-semibold lg:text-xs xl:text-xs md:text-xs">
-                100 GFXvs{" "}
+              {REFFERER} GFXvs{" "}
                 <img
                   src="/icons/coin.svg"
                   alt="Coin Icon"
@@ -328,7 +378,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </span>
             </p>
 
-            <div className="flex items-center gap-2 mt-2 ">
+            <div className="flex items-center gap-2 mt-2 relative">
               <p className="bg-transparent py-1 text-xs font-extralight lg:text-xs xl:text-xs xxl:text-sm md:text-xs">
                 {referralLink.length > 20
                   ? `${referralLink.slice(0, 20)}...`
@@ -346,16 +396,56 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                   )}
                 </div>
 
-                <InlineSVG src="/icons/share.svg" />
+                <InlineSVG src="/icons/share.svg"  onClick={handleShareClick}
+                  style={{ cursor: "pointer" }}/>
+                  {showShareIcons && (
+                <div
+                  className={`absolute top-[35px] bottom-[2px] flex items-center gap-2 sm:gap-3 social-share-icons ${
+                    showShareIcons ? "animated-show" : "animated-hide"
+                  }`}
+                >
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(referralLink)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InlineSVG
+                      src="/icons/whatsapp.svg"
+                      className="header-social-share"
+                    />
+                  </a>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                      referralLink
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InlineSVG
+                      src="/icons/facebook-icon.svg"
+                      className="header-social-share"
+                    />
+                  </a>
+                  <a
+                    href={`https://t.me/share/url?url=${encodeURIComponent(
+                      referralLink
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InlineSVG
+                      src="/icons/tele-icon.svg"
+                      className="header-social-share"
+                    />
+                  </a>
+                </div>
+              )}
+
               </div>
             </div>
-            <button
-              className="flex items-center bg-transparent justify-center text-xs font-light px-9 py-2 gap-2 rounded-full text-[#FFFFFF] w-[100%] mt-1 lg:px-9 lg:py-2 lg:mt-4 lg:text-xs lg:font-light"
+            <a href="https://t.me/GFXvs_Bot/GFXvs?startapp=command" target="_blank"><button
+              className="flex items-center mt-2 bg-transparent justify-center text-xs font-light px-10 py-2 gap-2 rounded-full text-[#FFFFFF] w-[100%] mt-4 lg:px-9 lg:py-2 lg:mt-4 lg:text-xs lg:font-light"
               style={{ border: "0.75px solid #00FF00" }}
-              onClick={() => {
-                window.location.href =
-                  "https://t.me/GFXvs_Bot/GFXvs?startapp=command";
-              }}
             >
               <InlineSVG
                 src="/icons/tele-green.svg"
@@ -363,6 +453,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               />
               Connect
             </button>
+            </a>
           </div>
         </div>
 

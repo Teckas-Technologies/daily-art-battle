@@ -32,6 +32,9 @@ export const ProfileBody: React.FC<Props> = ({
     const walletHistory = searchParams?.get("walletHistory");
     if (walletHistory) {
       handleTabClick("wallet");
+      const url = new URL(window.location.href);
+      url.searchParams.delete("walletHistory");
+      window.history.replaceState(null, "", url.toString());
     }
   }, [searchParams, pathName]);
 

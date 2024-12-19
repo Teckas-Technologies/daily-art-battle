@@ -345,16 +345,21 @@ const page = () => {
         setErrMsg={setErrMsg}
       />
       {newUser && (
-        <ClaimPopup
-          msg={`🎉 Welcome! You've been credited with ${SIGNUP} GFX.`}
-          onClose={() => setNewUser(false)}
-        />
+         <ClaimPopup
+         msg={`🎉 Welcome to the World of GFXvs!
+  As a token of our excitement, we’ve credited your account with ${SIGNUP} GFX Coins! Use them wisely to kickstart your NFT journey and explore exclusive rewards. 🚀`}
+         onClose={() => setNewUser(false)}
+         toggleUploadModal={toggleUploadModal}
+       />
       )}
       {nearDrop && (
-        <ClaimPopup
-          msg={`Reward unlocked! You've earned ${NEAR_DROP} NearDrop points!`}
-          onClose={() => setNearDrop(false)}
-        />
+         <ClaimPopup
+         msg={`🎉 Legendary Reward Unlocked!
+Your account's legacy has earned you exclusive NearDrop Point your gateway to rare NFTs and exciting perks. 🌟
+The longer your account's journey, the more epic the rewards! Keep collecting, keep winning! 🚀`}
+         onClose={() => setNearDrop(false)}
+         toggleUploadModal={toggleUploadModal}
+       />
       )}
       {walltMisMatchPopup && (
         <WalletConnectPopup onClose={() => setWalletMismatchPopup(false)} />
