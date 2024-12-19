@@ -153,7 +153,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 <img
                   alt="Profile Picture"
                   src={profileImg}
-                  className="relative rounded-lg md:w-full md:h-full lg:w-full lg:h-full object-cover"
+                  className="relative rounded-lg w-[70px] h-[70px] md:w-full md:h-full lg:w-full lg:h-full object-cover"
                 />
               )}
             </div>

@@ -14,10 +14,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       await connectToDatabase();
       //Here we'll count votes and mint nfts for audience
-      await countVotes();
-      await createBattle();
-      waitUntil(mintNfts());
-      await automateReward();
+      const tasks = async () => {
+        await countVotes();
+        await createBattle();
+        await mintNfts();
+        await automateReward();
+      };
+      waitUntil(tasks());
       res.status(200).json({ success: true });
     } catch (error:any) {
       res.status(500).json({ success: false, error:error.message });
