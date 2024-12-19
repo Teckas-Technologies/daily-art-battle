@@ -5,6 +5,7 @@ import Campaign from "../model/campaign";
 import { GFX_CAMPAIGNID } from "@/config/constants";
 import spinner from "./spinnerUtils";
 import uploadArweave from "./uploadArweave";
+import mongoose from "mongoose";
 
 export async function getNextAvailableDate(campaignId: string): Promise<Date> {
   await connectToDatabase();
@@ -210,6 +211,13 @@ export const createGfxvsBattle = async (): Promise<any> => {
 
   export const createGfxvsBattleauto = async (campaignId:any): Promise<any> => {
     console.log(campaignId);
+    const today = new Date();
+    const campaign = await Campaign.findOne({
+      _id: campaignId,
+      startDate: { $lte: today }, 
+      endDate: { $gte: today },  
+    });
+    if(campaign){
     const battles = await Battle.find({isBattleEnded:false,campaignId:campaignId});
     const [artA, artB] = await findTopTwoArts(campaignId);
     if(battles.length<=0 && (artA && artB)){
@@ -254,7 +262,6 @@ export const createGfxvsBattle = async (): Promise<any> => {
       console.log(battleData);
       const newBattle = new Battle(battleData);
       const res = await newBattle.save();
-  
      try {
       // Updating artA
       const updateArtA = await ArtTable.findOneAndUpdate(
@@ -290,4 +297,7 @@ export const createGfxvsBattle = async (): Promise<any> => {
     } else{
       console.log("Not enough arts");
     }
+  }else{
+    console.log('Campaign is not active or does not exist.');
+  }
 }
