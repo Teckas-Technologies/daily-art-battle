@@ -7,6 +7,7 @@ import { BASE_URL } from "@/config/constants";
 import useUpdateUserProfile from "@/hooks/updateProfileHook";
 import Toast from "@/components/Toast";
 import { uploadFile } from "@mintbase-js/storage";
+import useFetchReferralLink from "@/hooks/ReferralLinkHooks";
 
 interface ProfileHeaderProps {
   onEditClick: () => void;
@@ -24,13 +25,23 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const [toastMessage, setToastMessage] = useState("");
   const [successToast, setSuccessToast] = useState("");
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [referralLink,setReferralLink] = useState("");
   const { user } = useAuth();
   let userDetails = user;
   const { updateUserProfile, isLoading, error } = useUpdateUserProfile();
-  const [profileImg, setProfileImg] = useState<string>(
+  const {getReferralLink} = useFetchReferralLink();
+   const [profileImg, setProfileImg] = useState<string>(
     user?.user?.profileImg || "/images/User_New.png"
   );
-  const referralLink = `${BASE_URL}/${userDetails?.user?.referralCode}`;
+  // const referralLink = `${BASE_URL}/${userDetails?.user?.referralCode}`;
+  const fetchReferralLink = async() =>{
+    const res = await getReferralLink();
+    setReferralLink(res.referralLink);
+  }
+
+  useEffect(()=>{
+    fetchReferralLink();
+  },[user])
   const handleCopy = () => {
     navigator.clipboard
       .writeText(referralLink)
