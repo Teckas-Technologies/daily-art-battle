@@ -7,6 +7,7 @@ import { fetchWithAuth, getAuthToken, setAuthToken } from '../../../utils/authTo
 import { useSession } from 'next-auth/react';
 import { LeaderBoardResponse, useLeaderBoard } from '@/hooks/leaderboard';
 import Loader from '../ArtBattle/Loader/Loader';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const LeaderboardHolders = () => {
   const { leaderBoard, totalPage, fetchLeaderBoard } = useLeaderBoard();
@@ -14,7 +15,7 @@ const LeaderboardHolders = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [leaderboardData, setLeaderBoardData] = useState<LeaderBoardResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const { data: session } = useSession();
+  const { user:data } = useUser();
   const leaderboardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -176,7 +177,7 @@ const fetchInitialData = async () => {
         {leaderboardData.map((user: LeaderBoardResponse) => (
           <div
             key={user.rank}
-            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] ${session?.user?.email===user.email?"border-[#00FF00]":"border-[#939393]"} rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
+            className={`flex items-center text-center justify-between p-4 mb-4 border-[0.5px] ${data?.email===user.email?"border-[#00FF00]":"border-[#939393]"} rounded-xl ${getRowClass(user.rank)} gap-2 md:gap-4 text-xs sm:text-sm md:text-base`}
           >
             <div className="w-[40px] sm:w-[50px] text-xs sm:text-sm md:text-base">{user.rank}</div>
             <span className="w-[100px] sm:w-[120px] md:w-[200px] lg:w-[250px] text-center break-words text-xs sm:text-sm md:text-base">

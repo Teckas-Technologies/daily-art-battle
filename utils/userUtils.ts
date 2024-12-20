@@ -85,14 +85,6 @@ export async function createGoogleuser(session:any){
         gfxCoin: SIGNUP,  
         transactionType: TransactionType.RECEIVED_FROM_SIGNUP  
       });
-      await newTransaction.save();
-        newUser.gfxCoin += REFFERED_USER;
-        const newTransactions = new Transactions({
-          email: userDetails.email,
-          gfxCoin: REFFERED_USER,  
-          transactionType: TransactionType.RECEIVED_FROM_REFERRAL  
-        });
-        await newTransactions.save();
        const response = await newUser.save();
        return response;
 }
