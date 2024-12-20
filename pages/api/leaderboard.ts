@@ -33,31 +33,39 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 rank: skip + index + 1 
             }));
         res.status(200).json({data:leaders,totalDocuments,totalPages});
-        }else if(queryType=="collectors"){
-            const skip = limit * (page === 1 ? 0 : page - 1);
-            const totalDocumentsResult = await RaffleTicket.aggregate([
-              { $group: { _id: "$email" } },
-              { $count: "total" }  
+        }else if (queryType == "collectors") {
+          const skip = limit * (page === 1 ? 0 : page - 1);
+        
+          // Total documents for pagination
+          const totalDocumentsResult = await RaffleTicket.aggregate([
+            { $group: { _id: "$email" } },
+            { $count: "total" }
           ]);
           const totalDocuments = totalDocumentsResult[0]?.total || 0;
           const totalPages = Math.ceil(totalDocuments / limit);
-          const results = await Battle.aggregate([
-            // Combine all voters into a single array
+        
+          // Aggregate participationCount from RaffleTicket
+          const raffleParticipation = await RaffleTicket.aggregate([
+            {
+              $group: {
+                _id: "$email",
+                participationCount: { $sum: "$raffleCount" },
+              },
+            },
+          ]);
+        
+          // Aggregate rareNftCount from Battle
+          const battleRareNft = await Battle.aggregate([
             {
               $project: {
                 voters: { $concatArrays: ["$artAvoters", "$artBvoters"] },
                 specialWinner: "$specialWinner",
               },
             },
-        
-            // Unwind voters array to count participation
             { $unwind: "$voters" },
-        
-            // Group by voter email to calculate participation and special wins
             {
               $group: {
-                _id: "$voters", // Group by voter (email or unique identifier)
-                participationCount: { $sum: 1 },
+                _id: "$voters",
                 rareNftCount: {
                   $sum: {
                     $cond: [{ $eq: ["$specialWinner", "$voters"] }, 1, 0],
@@ -65,51 +73,55 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 },
               },
             },
+          ]);
         
-            // Sort by participation and special wins in descending order
-            {
-              $sort: { participationCount: -1, rareNftCount: -1 },
-            },
-
-            // Join with the UserTableSchema to get user details
-            {
-              $lookup: {
-                from: "usertables", // Replace with your actual UserTable collection name
-                localField: "_id",
-                foreignField: "email", // Adjust based on your user schema
-                as: "userDetails",
-              },
-            },
+          // Combine results from both aggregations
+          const combinedResults = await Promise.all([
+            raffleParticipation,
+            battleRareNft,
+          ]).then(([raffleData, battleData]) => {
+            const battleMap = new Map(
+              battleData.map((doc) => [doc._id, doc.rareNftCount])
+            );
         
-            // Unwind the user details array
-            { $unwind: "$userDetails" },
-
-            {
-              $setWindowFields: {
-                partitionBy: null, // Use `null` for no partitioning
-                sortBy: { participationCount: -1,},
-                output: {
-                  rank: { $documentNumber: {} }, // Assign rank based on sorting
-                },
-              },  
-            },
-          
+            return raffleData.map((raffleDoc) => {
+              const rareNftCount = battleMap.get(raffleDoc._id) || 0;
+              return {
+                _id: raffleDoc._id,
+                participationCount: raffleDoc.participationCount,
+                rareNftCount,
+              };
+            });
+          });
         
-            // Project the required fields
-            {
-              $project: {
-                firstName: "$userDetails.firstName",
-                lastName: "$userDetails.lastName",
-                profileImg: "$userDetails.profileImg",
-                participationCount: 1,
-                rareNftCount: 1,
-                rank:1,
-              },
-            },
-          ]).skip(skip).limit(limit);
-              res.status(200).json({data:results,totalDocuments,totalPages});
-
-            }else if (queryType == "creators") {
+          // Sort results by participationCount and rareNftCount
+          combinedResults.sort((a, b) => {
+            if (b.participationCount === a.participationCount) {
+              return b.rareNftCount - a.rareNftCount;
+            }
+            return b.participationCount - a.participationCount;
+          });
+        
+          // Add rank and join user details
+          const results = await Promise.all(
+            combinedResults.map(async (entry, index) => {
+              const userDetails = await User.findOne({ email: entry._id });
+              return {
+                ...entry,
+                rank: index + 1,
+                firstName: userDetails?.firstName || "",
+                lastName: userDetails?.lastName || "",
+                profileImg: userDetails?.profileImg || "",
+              };
+            })
+          );
+        
+          // Paginate results
+          const paginatedResults = results.slice(skip, skip + limit);
+        
+          res.status(200).json({ data: paginatedResults, totalDocuments, totalPages });
+        }
+        else if (queryType == "creators") {
               const skip = limit * (page === 1 ? 0 : page - 1);
           
               // Fetch the total number of documents
