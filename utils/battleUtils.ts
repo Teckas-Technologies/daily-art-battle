@@ -73,9 +73,9 @@ export const findPreviousBattles = async (page: number, limit: number,campaignId
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalDocuments = await Battle.countDocuments({ isBattleEnded:true,isNftMinted:true,campaignId:campaignId});
   const totalPages = Math.ceil(totalDocuments / limit);
-  const pastBattles = await Battle.find({ endTime: { $lt: today } ,campaignId:campaignId}).sort({ startTime: -1,_id: 1  }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({isBattleEnded:true,isNftMinted:true,campaignId:campaignId}).sort({ startTime: -1,_id: 1  }).skip(skip).limit(limit);
   return { pastBattles ,totalDocuments,totalPages};
 }
 
@@ -84,9 +84,9 @@ export const findPreviousBattlesAsc = async (page: number, limit: number,campaig
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalDocuments = await Battle.countDocuments({ isBattleEnded:true,isNftMinted:true,campaignId:campaignId});
   const totalPages = Math.ceil(totalDocuments / limit);
-  const pastBattles = await Battle.find({ endTime: { $lt: today },campaignId:campaignId}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
+  const pastBattles = await Battle.find({ isBattleEnded:true,isNftMinted:true,campaignId:campaignId}).sort({ startTime: 1 ,_id: 1 }).skip(skip).limit(limit);
   return { pastBattles,totalDocuments,totalPages };
 }
 
@@ -95,11 +95,11 @@ export const findPreviousBattlesByVotes = async (page: number, limit: number,cam
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalDocuments = await Battle.countDocuments({isBattleEnded:true,isNftMinted:true,campaignId:campaignId});
   const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.aggregate([
     {
-      $match: { endTime: { $lt: today },campaignId:campaignId }
+      $match: { isBattleEnded:true,isNftMinted:true,campaignId:campaignId }
     },
     {
       $addFields: {
@@ -124,11 +124,11 @@ export const findPreviousBattlesByVotesAsc = async (page: number, limit: number,
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const skip = (page - 1) * limit;
-  const totalDocuments = await Battle.countDocuments({ endTime: { $lt: today },campaignId:campaignId});
+  const totalDocuments = await Battle.countDocuments({isBattleEnded:true,isNftMinted:true,campaignId:campaignId});
   const totalPages = Math.ceil(totalDocuments / limit);
   const pastBattles = await Battle.aggregate([
     {
-      $match: { endTime: { $lt: today } ,campaignId:campaignId}
+      $match: { isBattleEnded:true,isNftMinted:true ,campaignId:campaignId}
     },
     {
       $addFields: {
