@@ -22,11 +22,16 @@ import { ART_UPLOAD } from "@/config/points";
 import { validateUser } from "../../utils/validateClient";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { createTransaction } from "../../utils/updateAdminTrans";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
+import { connectToDatabase } from "../../utils/mongoose";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
+    await connectToDatabase();
   
     switch (req.method) {
       //POST method is used to create art.
@@ -61,6 +66,9 @@ export default async function handler(
         });
         
         await newTransaction.save();
+
+        const transaction = await createTransaction(ART_UPLOAD, AdminTransactionType.RECEIVED_FROM_ART_UPLOAD,email);
+        const updatedBalance = await updateAdminBalance(ART_UPLOAD, AdminTransactionType.EARN);
         const saveart = await scheduleArt(art);
         console.log(newTransaction);
         return res.status(201).json(saveart);

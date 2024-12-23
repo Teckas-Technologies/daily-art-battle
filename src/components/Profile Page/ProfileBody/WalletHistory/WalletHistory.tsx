@@ -43,6 +43,8 @@ const WalletHistory: React.FC<WalletHistoryProps> = ({ rendered }) => {
       "Spent for AI Image Generation",
     [TransactionType.SPENT_FOR_RAFFLE]: "Spent for Raffle",
     [TransactionType.SPENT_FOR_CAMPAIGN]: "Spent for Campaign Creation",
+    [TransactionType.RECEIVED_FROM_ARTIST_RAFFLE]: "Received Raffle Reward",
+    [TransactionType.RECEIVED_FROM_WINNING_ARTIST]: "Received Winning art reward",
   };
   const {
     user,

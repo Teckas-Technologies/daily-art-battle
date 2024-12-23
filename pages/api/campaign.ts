@@ -9,6 +9,10 @@ import ArtTable from "../../model/ArtTable";
 import { validateUser } from "../../utils/validateClient";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { ART_UPLOAD } from "@/config/points";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { createTransaction } from "../../utils/updateAdminTrans";
 
 export const config = {
   api: {
@@ -74,8 +78,10 @@ export default async function handler(
               gfxCoin: (calculatedCoins + data.specialRewards),  
               transactionType: TransactionType.SPENT_FOR_CAMPAIGN 
             });
-            
             await newTransaction.save();
+            const transaction = await createTransaction((calculatedCoins + data.specialRewards), AdminTransactionType.RECEIVED_FROM_CAMPAIGN,email);
+            const updatedBalance = await updateAdminBalance(ART_UPLOAD, AdminTransactionType.EARN);
+            
           }else{
           await User.updateOne(
             { email: email },

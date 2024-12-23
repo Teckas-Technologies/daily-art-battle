@@ -3,6 +3,9 @@ import User, { UserTable } from "../model/User";
 import { getManagementApiToken, getUserDetails } from "./userDetails";
 import Transactions from "../model/Transactions";
 import { TransactionType } from "../model/enum/TransactionType";
+import { updateAdminBalance } from "./updateAdminBal";
+import { AdminTransactionType } from "../model/enum/AdminTransactionType";
+import { createTransaction } from "./updateAdminTrans";
 
 export async function createAuth0user(session:any){
     const accessToken = await getManagementApiToken();
@@ -35,6 +38,8 @@ export async function createAuth0user(session:any){
         transactionType: TransactionType.RECEIVED_FROM_SIGNUP  
       });
       await newTransaction.save();
+      const transaction = await createTransaction(SIGNUP, AdminTransactionType.SPENT_FOR_SIGNUP, userDetails.email);
+      const updatedBalance = await updateAdminBalance(SIGNUP, AdminTransactionType.SPENT);
 
       if (referrer) {
         referrer.referredUsers.push(newUser._id);
@@ -47,6 +52,8 @@ export async function createAuth0user(session:any){
         });
         
         await newTransaction.save();
+        const transaction = await createTransaction(SIGNUP, AdminTransactionType.SPENT_FOR_REFERRAL, referrer.email);
+        const updatedBalance = await updateAdminBalance(SIGNUP, AdminTransactionType.SPENT);
         newUser.gfxCoin += REFFERED_USER;
         const newTransactions = new Transactions({
           email: userDetails.email,
@@ -54,6 +61,8 @@ export async function createAuth0user(session:any){
           transactionType: TransactionType.RECEIVED_FROM_REFERRAL  
         });
         await newTransactions.save();
+        await createTransaction(SIGNUP, AdminTransactionType.SPENT_FOR_REFERRAL, userDetails.email);
+       await updateAdminBalance(SIGNUP, AdminTransactionType.SPENT);
       }
     
       const response = await newUser.save();
@@ -85,6 +94,9 @@ export async function createGoogleuser(session:any){
         gfxCoin: SIGNUP,  
         transactionType: TransactionType.RECEIVED_FROM_SIGNUP  
       });
+      await newTransaction.save();
+      const transaction = await createTransaction(SIGNUP, AdminTransactionType.SPENT_FOR_SIGNUP, userDetails.email);
+      const updatedBalance = await updateAdminBalance(SIGNUP, AdminTransactionType.SPENT);
        const response = await newUser.save();
        return response;
 }

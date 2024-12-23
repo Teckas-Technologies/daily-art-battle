@@ -19,7 +19,6 @@ export const countVotes = async (): Promise<void> => {
        const artB = await ArtTable.findOne({_id:battle.artBId});
         const artAVotes = artA.raffleTickets;
         const artBVotes = artB.raffleTickets;
-
         const winningArt = artAVotes >= artBVotes ? 'Art A' : 'Art B';
         // Update battle information
         battle.artAVotes = artAVotes;

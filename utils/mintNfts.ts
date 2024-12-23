@@ -9,9 +9,12 @@ import { execute, transfer, TransferArgs } from "@mintbase-js/sdk";
 import { ART_BATTLE_CONTRACT } from "@/config/constants";
 import User from "../model/User";
 import Transactions from "../model/Transactions";
-import { PARTICIPANT, SPECIAL_WINNER } from "@/config/points";
+import { PARTICIPANT, RAFFLE_TICKET, SPECIAL_WINNER, WINNING_ART_PERCENTAGE } from "@/config/points";
 import RaffleTicket from "../model/RaffleTicket";
 import { TransactionType } from "../model/enum/TransactionType";
+import { createTransaction } from "./updateAdminTrans";
+import { updateAdminBalance } from "./updateAdminBal";
+import { AdminTransactionType } from "../model/enum/AdminTransactionType";
 
 interface Transfer {
   receiverId: string;
@@ -55,6 +58,8 @@ export const mintNfts = async (): Promise<void> => {
               transactionType: TransactionType.RECEIVED_FROM_SPECIAL_WINNER,
             });
             await newTransaction.save();
+            const transaction = await createTransaction(SPECIAL_WINNER, AdminTransactionType.SPENT_FOR_SPECIAL_WINNER,user.email);
+            const updatedBalance = await updateAdminBalance(SPECIAL_WINNER, AdminTransactionType.SPENT);            
             battle.specialWinner = specialWinner;
             battle.specialWinnerName = user.firstName + " " + user.lastName;
             battle.profileImg = user.profileImg;
@@ -63,6 +68,11 @@ export const mintNfts = async (): Promise<void> => {
           battle.isNftMinted = true;
           const res = await battle.save();
           console.log("saved", res);
+          if(battle.winningArt==='Art A'){
+            await winningArtReward(battle.artAartistEmail,battle.artAVotes+battle.artBVotes,)
+          }else{
+            await winningArtReward(battle.artBartistEmail,battle.artAVotes+battle.artBVotes)
+          }
       }
     }
   }
@@ -73,3 +83,20 @@ const selectRandomWinner = (votes: any[]): any => {
   const randomIndex = Math.floor(Math.random() * votes.length);
   return votes[randomIndex];
 };
+
+const winningArtReward =async(artistEmail:any,raffleCount:any) =>{
+  const totalAmount = raffleCount * RAFFLE_TICKET;
+  const thirtyPercent = (totalAmount * WINNING_ART_PERCENTAGE) / 100;
+  await User.updateOne(
+    { email: artistEmail },
+    { $inc: { gfxCoin: thirtyPercent } }
+  );
+  const newTransaction = new Transactions({
+    email: artistEmail,
+    gfxCoin: thirtyPercent,
+    transactionType: TransactionType.RECEIVED_FROM_WINNING_ARTIST,
+  });
+  await newTransaction.save();
+  const transaction = await createTransaction(thirtyPercent, AdminTransactionType.SPENT_FOR_WINNING_ARTIST,artistEmail);
+  const updatedBalance = await updateAdminBalance(thirtyPercent, AdminTransactionType.SPENT);            
+}

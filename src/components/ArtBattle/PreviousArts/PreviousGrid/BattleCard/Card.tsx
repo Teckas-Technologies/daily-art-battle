@@ -10,6 +10,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ battle, onClick }) => {
   const date = new Date(battle.startTime);
+  const url = encodeURIComponent(window.location.href);
   const formattedDate = date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -32,7 +33,7 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
 
   const handleClickOutside = (e: MouseEvent) => {
     if (shareRef.current && !shareRef.current.contains(e.target as Node)) {
-      setArtOverlay(false);
+      // setArtOverlay(false);
     }
   };
   const shareOnFacebook = () => {
@@ -41,6 +42,7 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
       `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       "_blank"
     );
+    setArtOverlay(false);
   };
 
   const shareOnTwitter = () => {
@@ -50,17 +52,20 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
       `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
       "_blank"
     );
+    setArtOverlay(false);
   };
 
   const shareOnTelegram = () => {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent("Check out this amazing battle!");
     window.open(`https://t.me/share/url?url=${url}&text=${text}`, "_blank");
+    setArtOverlay(false);
   };
   const shareOnWhatsapp = () => {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent("Check out this amazing battle!");
     window.open(`https://wa.me/?text=${text} ${url}`, "_blank");
+    setArtOverlay(false);
   };
   return (
     <div
@@ -101,7 +106,7 @@ const Card: React.FC<CardProps> = ({ battle, onClick }) => {
 
         {artOverlay && (
           <div className="share-overlay flex flex-row items-center justify-center md:gap-4 gap-1 absolute top-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2">
-            <InlineSVG
+           <InlineSVG
               src="/icons/facebook-icon.svg"
               className="bg-white rounded-full md:p-2 md:w-10 md:h-10 w-[25px] h-[25px] p-1 cursor-pointer pointer-events-auto"
               onClick={shareOnFacebook}

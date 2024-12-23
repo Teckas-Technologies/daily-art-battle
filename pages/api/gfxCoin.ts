@@ -7,12 +7,15 @@ import { providers, utils } from 'near-api-js';
 import { ART_BATTLE_CONTRACT, NEXT_PUBLIC_NETWORK, SPECIAL_WINNER_CONTRACT } from "@/config/constants";
 import Hashes from "../../model/Hashes";
 import  { authenticateUser } from "../../utils/verifyToken";
-import { BEFORE_MAY_2021, DEFAULT, EMAIL_VERIFY, GFXCOIN_PER_NEAR, GFXCOIN_PER_USDC, INSTA_CONNECT, MAY_2021_AND_AFTER, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, X_CONNECT, YEAR_2022, YEAR_2023 } from "@/config/points";
+import { BEFORE_MAY_2021, DEFAULT, EMAIL_VERIFY, GFXCOIN_PER_NEAR, GFXCOIN_PER_USDC, INSTA_CONNECT, MAY_2021_AND_AFTER, PARTICIPATION_NFT_BURN, RARE_NFT_BURN, REGISTERED, TELEGRAM_DROP, WEEKLY_CLAIM, X_CONNECT, YEAR_2022, YEAR_2023 } from "@/config/points";
 import { error } from "console";
 import Transactions from "../../model/Transactions";
 import axios from "axios";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { createTransaction } from "../../utils/updateAdminTrans";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -67,6 +70,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 transactionType: TransactionType.RECEIVED_FROM_BURN
                               });
                               await newTransaction.save();
+                             const trans= await createTransaction(coins, AdminTransactionType.SPENT_FOR_BURN,email);
+                             const updatedBalance = await updateAdminBalance(coins, AdminTransactionType.SPENT);
                             const newHash = new Hashes({
                                 email: email,
                                 walletAddress:walletAddress,
@@ -103,6 +108,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     transactionType: TransactionType.RECEIVED_FROM_NEAR_AIRDROP
                 });
                 await newTransaction.save();
+                const trans= await createTransaction(coins, AdminTransactionType.SPENT_FOR_NEAR_AIRDROP,email);
+                const updatedBalance = await updateAdminBalance(coins, AdminTransactionType.SPENT);
             } else if (query === 'telegramDrop') {
                 const {userId} = req.body; 
                 const coins = await calculateTelegramDropCoins(userId);
@@ -114,6 +121,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     transactionType: TransactionType.RECEIVED_FROM_TELEGRAM_AIRDROP
                 });
                 await newTransaction.save();
+                const trans= await createTransaction(coins, AdminTransactionType.SPENT_FOR_TELEGRAM_AIRDROP,email);
+                const updatedBalance = await updateAdminBalance(coins, AdminTransactionType.SPENT);
                 await handleDrop(email, coins, isClaimedField);
             } else if (query === 'instaConnect') {
                 const coins = INSTA_CONNECT;
@@ -190,6 +199,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         transactionType: TransactionType.RECEIVED_FROM_USDT_TRANSFER
                       });
                       await newTransaction.save();
+                      const trans= await createTransaction(coins, AdminTransactionType.SPENT_FOR_USDT_TRANSFER,email);
+                      const updatedBalance = await updateAdminBalance(coins, AdminTransactionType.SPENT);
                     const newHash = new Hashes({
                         email:email,
                         walletAddress:walletAddress,
@@ -226,6 +237,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             transactionType: TransactionType.RECEIVED_FROM_NEAR_TRANSFER
                           });
                           await newTransaction.save();
+                          const trans= await createTransaction(coins, AdminTransactionType.SPENT_FOR_NEAR_TRANSFER,email);
+                          const updatedBalance = await updateAdminBalance(coins, AdminTransactionType.SPENT);
                         const newHash = new Hashes({
                             email:email,
                             walletAddress:walletAddress,

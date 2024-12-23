@@ -1,8 +1,11 @@
 import ArtTable from "../model/ArtTable";
 import Campaign from "../model/campaign";
+import { AdminTransactionType } from "../model/enum/AdminTransactionType";
 import { TransactionType } from "../model/enum/TransactionType";
 import Transactions from "../model/Transactions";
 import User from "../model/User";
+import { updateAdminBalance } from "./updateAdminBal";
+import { createTransaction } from "./updateAdminTrans";
 
 export default async function automateReward(){
     try{
@@ -64,6 +67,8 @@ const distribute = async(artList: any[],rewardPerUser:any)=>{
                 transactionType: TransactionType.RECEIVED_FROM_SPECIAL_REWARD
             });
             await newTransaction.save();
+            const transaction = await createTransaction(rewardPerUser, AdminTransactionType.SPENT_FOR_SPECIAL_REWARD,userEmail);
+            const updatedBalance = await updateAdminBalance(rewardPerUser, AdminTransactionType.SPENT);                        
         })
     );
 }

@@ -2,12 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/mongoose";
 import { authenticateUser } from "../../utils/verifyToken";
 import User from "../../model/User";
-import { PARTICIPATION_NFT_BURN, RARE_NFT_BURN } from "@/config/points";
+import { ART_UPLOAD, PARTICIPATION_NFT_BURN, RARE_NFT_BURN } from "@/config/points";
 import Transactions from "../../model/Transactions";
 import Battle from "../../model/Battle";
 import RaffleTicket from "../../model/RaffleTicket";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { createTransaction } from "../../utils/updateAdminTrans";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
@@ -38,6 +41,10 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     transactionType: TransactionType.RECEIVED_FROM_BURN
                   });
                   await newTransaction.save();
+
+                  const transaction = await createTransaction(RARE_NFT_BURN, AdminTransactionType.SPENT_FOR_BURN,email);
+                  const updatedBalance = await updateAdminBalance(RARE_NFT_BURN, AdminTransactionType.SPENT);
+
                 res.status(200).json({message:"Updated successfully"})
             }else if(queryType=="raffles"){
 
@@ -61,6 +68,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     transactionType: TransactionType.RECEIVED_FROM_BURN
                   });
                   await newTransaction.save();
+                  const transaction = await createTransaction(noOfcoll * PARTICIPATION_NFT_BURN, AdminTransactionType.SPENT_FOR_BURN,email);
+                  const updatedBalance = await updateAdminBalance(noOfcoll * PARTICIPATION_NFT_BURN, AdminTransactionType.SPENT);
                   res.status(200).json({message:"Updated successfully"})
 
             }
