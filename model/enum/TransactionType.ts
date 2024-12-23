@@ -11,12 +11,13 @@ export enum TransactionType {
     RECEIVED_FROM_SIGNUP = 'received_from_signup',
     RECEIVED_FROM_SPECIAL_WINNER = 'received_from_special_winner',
     RECEIVED_FROM_SPECIAL_REWARD = 'received_from_special_reward',
+    RECEIVED_FROM_WINNING_ARTIST = 'received_from_winning_art',
+    RECEIVED_FROM_ARTIST_RAFFLE = 'received_from_artist_raffle',
 
     // Spent Transactions
     SPENT_FOR_ART_UPLOAD = 'spent_for_art_upload',
     SPENT_FOR_AI_IMAGE_GENERATION = 'spent_for_ai_image_generation',
     SPENT_FOR_RAFFLE = 'spent_for_raffle',
     SPENT_FOR_CAMPAIGN = 'spent_for_campaign',
-
   }
   

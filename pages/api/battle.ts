@@ -38,6 +38,7 @@ export default async function handler(
       //GET method is used for fetching battles
       case "GET":
         await validateUser(req);
+        await connectToDatabase();
         const timeout = (ms: any) =>
           new Promise((resolve) => setTimeout(resolve, ms));
         const { queryType } = req.query;

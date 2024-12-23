@@ -27,6 +27,7 @@ import { WalletConnectPopup } from "@/components/PopUps/WalletConnectPopup";
 import usePostNearDrop from "@/hooks/NearDrop";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 import { NEAR_DROP, SIGNUP, TELEGRAM_DROP } from "@/config/points";
+import Loader from "@/components/ArtBattle/Loader/Loader";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -280,6 +281,22 @@ const page = () => {
 
   //   triggerNearDrop();
   // }, [signedAccountId, userDetails, userTrigger]);
+
+  if (!user)
+    return (
+      <div
+        style={{
+          background: "#000000",
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader md="22" sm="15" />
+      </div>
+    );
   return (
     <main
       className="relative flex flex-col w-full justify-center overflow-x-hidden bg-black min-h-[100vh] px-3 md:px-[2rem] lg:px-[3rem] xl:px-[7rem] xxl:px-[9rem]"

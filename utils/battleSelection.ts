@@ -14,7 +14,8 @@ export async function getNextAvailableDate(campaignId: string): Promise<Date> {
   // If there’s no latest battle, return today's date at 12:00 PM (noon) as the default start time
   // if (!latestBattle) {
     const today = new Date();
-    if(today.getUTCHours()<=12){
+    if(today.getUTCHours()<12){
+      console.log(today.getHours());
       today.setUTCHours(0, 0, 0, 0);
     }else{
       today.setUTCHours(12, 0, 0, 0);
@@ -212,12 +213,20 @@ export const createGfxvsBattle = async (): Promise<any> => {
   export const createGfxvsBattleauto = async (campaignId:any): Promise<any> => {
     console.log(campaignId);
     const today = new Date();
-    const campaign = await Campaign.findOne({
-      _id: campaignId,
-      startDate: { $lte: today }, 
-      endDate: { $gte: today },  
-    });
-    if(campaign){
+    if (campaignId === GFX_CAMPAIGNID) {
+      console.log("Processing GFX campaign...");
+    } else {
+      const campaign = await Campaign.findOne({
+        _id: campaignId,
+        startDate: { $lte: today },
+        endDate: { $gte: today },
+      });
+  
+      if (!campaign) {
+        console.log('Campaign is not active or does not exist.');
+        return;
+      }
+    }
     const battles = await Battle.find({isBattleEnded:false,campaignId:campaignId});
     const [artA, artB] = await findTopTwoArts(campaignId);
     if(battles.length<=0 && (artA && artB)){
@@ -296,8 +305,5 @@ export const createGfxvsBattle = async (): Promise<any> => {
       return newBattle;
     } else{
       console.log("Not enough arts");
-    }
-  }else{
-    console.log('Campaign is not active or does not exist.');
-  }
+}
 }

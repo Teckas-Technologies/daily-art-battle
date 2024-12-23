@@ -5,10 +5,13 @@ import { OPENAI } from "@/config/constants";
 import User from "../../model/User";
 import { authenticateUser, verifyToken } from "../../utils/verifyToken";
 import JwtPayload from "../../utils/verifyToken";
-import { AI_IMAGE } from "@/config/points";
+import { AI_IMAGE, ART_UPLOAD } from "@/config/points";
 import Transactions from "../../model/Transactions";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { createTransaction } from "../../utils/updateAdminTrans";
 
 const openai = new OpenAI({
   apiKey: OPENAI,
@@ -76,6 +79,8 @@ export default async function handler(
         });
         
         await newTransaction.save();
+        const transaction = await createTransaction(AI_IMAGE, AdminTransactionType.RECEIVED_FROM_AI_IMAGE_GENERATION,email);
+        const updatedBalance = await updateAdminBalance(AI_IMAGE, AdminTransactionType.EARN);
         res.status(200).json({ imageUrl, imageBlob: blob });
       }
     } catch (error) {

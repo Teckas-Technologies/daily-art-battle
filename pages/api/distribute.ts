@@ -7,6 +7,9 @@ import User from "../../model/User";
 import Transactions from "../../model/Transactions";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { createTransaction } from "../../utils/updateAdminTrans";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try{
     await connectToDatabase();
@@ -39,6 +42,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   transactionType: TransactionType.RECEIVED_FROM_SPECIAL_REWARD
               });
               await newTransaction.save();
+              const transaction = await createTransaction(rewardPerUser, AdminTransactionType.SPENT_FOR_SPECIAL_REWARD,email);
+              const updatedBalance = await updateAdminBalance(rewardPerUser, AdminTransactionType.SPENT);
+               
           })
       );
 

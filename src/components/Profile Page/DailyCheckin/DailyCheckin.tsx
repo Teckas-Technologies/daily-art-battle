@@ -14,6 +14,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
   const [streak, setStreak] = useState(Array(7).fill(false));
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [isClaimed, setIsClaimed] = useState(false);
+  const [isWeeklyClaimed, setIsWeeklyClaimed] = useState(false);
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [successToast, setSuccessToast] = useState("");
@@ -37,19 +38,16 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
     console.log("data .......", data);
 
     if (data) {
-      const streakDays = data.data.streakDays || 0;
+      let streakDays = data.data.streakDays || 0;
       console.log("updated days", streakDays);
-
       const updatedStreak = Array(7).fill(false);
 
       for (let i = 0; i < streakDays; i++) {
         updatedStreak[i] = true;
       }
-
       setStreak(updatedStreak);
       if (streakDays === 7) {
         console.log("....");
-
         setCurrentIndex(6);
       } else {
         setCurrentIndex(streakDays - 1);
@@ -62,6 +60,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
 
     const result = await dailyCheckin();
     if (result) {
+      console.log(result);
       setIsClaimed(true);
       setToastMessage(`Claimed reward for Day ${index + 1}!`);
       setSuccessToast("yes");
@@ -82,16 +81,16 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
     return currentDate === claimDateString;
   };
   const handleWeeklyClaim = async () => {
-    if (streakDays === 7 && !isClaimed) {
+    if (streakDays === 7 && !isWeeklyClaimed) {
       const result = await weeklyCheckin();
       if (result) {
-        setIsClaimed(true);
+        setIsWeeklyClaimed(true);
         setToast(true);
         setToastMessage("Claimed 7-day streak reward!");
         setSuccessToast("yes");
 
         await fetchStreakData();
-        setIsClaimed(false);
+        setIsWeeklyClaimed(false);
         setUserTrigger(!userTrigger);
       }
     }
@@ -213,15 +212,15 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
                 {DAILY_CHECKIN}
               </span>
               <button
-                className={`hidden mt-2 py-[5px] rounded-md text-[10px] md:py-[3px] md:flex ${
-                  claimed || isWeeklyClaimedToday()
-                    ? "bg-[#00FF00] text-black"
-                    : "bg-gray-400 text-white"
-                } ${isWeeklyClaimedToday() ? "px-[6px]" : "px-6 md:px-4"}`}
+                className={`hidden mt-2 py-[5px] rounded-md text-[10px] md:py-[3px] md:flex 
+                  ${
+                    isClickable(index) || claimed || isWeeklyClaimedToday() ? "bg-[#00FF00] cursor-pointer text-black" : "bg-gray-400  text-white cursor-not-allowed"
+                  }
+                   ${isWeeklyClaimedToday() ? "px-[6px]" : "px-6 md:px-4"}`}
                 onClick={() => isClickable(index) && toggleDay(index)}
                 disabled={isClaimedForToday()}
               >
-                {isWeeklyClaimedToday() ? "Claimed" : "Claim"}
+                {claimed || isWeeklyClaimedToday() ? "Claimed" : "Claim"}
               </button>
             </div>
           ))}
@@ -262,7 +261,7 @@ const DailyCheckin: React.FC<DailyCheckinProps> = ({ coin }) => {
               }
               disabled={streakDays !== 7 || isWeeklyClaimedToday()}
             >
-              {isWeeklyClaimedToday() ? "Claimed" : "Claim"}
+              {isWeeklyClaimedToday()? "Claimed" : "Claim"}
             </button>
 
             <div id="content-top"></div>

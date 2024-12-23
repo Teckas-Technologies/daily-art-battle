@@ -3,10 +3,13 @@ import { authenticateUser } from "../../utils/verifyToken";
 import { connectToDatabase } from "../../utils/mongoose";
 import DailyCheckin from "../../model/DailyCheckin";
 import User from "../../model/User";
-import { DAILY_CHECKIN, WEEKLY_CLAIM } from "@/config/points";
+import { ART_UPLOAD, DAILY_CHECKIN, WEEKLY_CLAIM } from "@/config/points";
 import Transactions from "../../model/Transactions";
 import { TransactionType } from "../../model/enum/TransactionType";
 import { getSession } from "@auth0/nextjs-auth0";
+import { AdminTransactionType } from "../../model/enum/AdminTransactionType";
+import { updateAdminBalance } from "../../utils/updateAdminBal";
+import { createTransaction } from "../../utils/updateAdminTrans";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     try {
@@ -41,6 +44,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   });
                   
                   await newTransaction.save();
+
+                  const transaction = await createTransaction(DAILY_CHECKIN, AdminTransactionType.SPENT_FOR_DAILY_CHECKIN,email);
+                  const updatedBalance = await updateAdminBalance(DAILY_CHECKIN, AdminTransactionType.SPENT);
                   return res.status(200).json({ message: 'Claimed day 1 reward!' });
                 }
                 const lastClaimed = new Date(checkin.lastClaimedDate).setUTCHours(0, 0, 0, 0);
@@ -69,6 +75,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   });
                   
                   await newTransaction.save();
+                  const transaction = await createTransaction(DAILY_CHECKIN, AdminTransactionType.SPENT_FOR_DAILY_CHECKIN,email);
+                  const updatedBalance = await updateAdminBalance(DAILY_CHECKIN, AdminTransactionType.SPENT);
               
                 res.status(200).json({
                   message: `Claimed day ${checkin.streakDays} reward!`,
@@ -105,6 +113,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                   });
                   
                   await newTransaction.save();
+                  const transaction = await createTransaction(WEEKLY_CLAIM, AdminTransactionType.SPENT_FOR_WEEKLY_CLAIM,email);
+                  const updatedBalance = await updateAdminBalance(WEEKLY_CLAIM, AdminTransactionType.SPENT);
               
                 res.status(200).json({ message: 'Claimed 7-day streak reward!' })
             }
@@ -114,8 +124,24 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         }else if(req.method=='GET'){
           try {
             await connectToDatabase();
-            const dailyCheckin = await DailyCheckin.findOne({email:email});
-            res.status(200).json({data:dailyCheckin});
+            const dailyCheckin = await DailyCheckin.findOne({ email: email });
+
+            if (dailyCheckin) {
+              const today = new Date();
+              const yesterday = new Date();
+              
+              yesterday.setDate(today.getDate() - 1);
+              const todayDateOnly = today.toISOString().split('T')[0];
+              const yesterdayDateOnly = yesterday.toISOString().split('T')[0];
+              const lastClaimedDateOnly = new Date(dailyCheckin.lastClaimedDate).toISOString().split('T')[0];
+              if (lastClaimedDateOnly !== todayDateOnly && lastClaimedDateOnly !== yesterdayDateOnly) {
+                  dailyCheckin.streakDays = 0;
+              }
+              
+              res.status(200).json({data:dailyCheckin});
+            } else {
+              res.status(400).json({ error: 'DailyCheckin record not found' });
+            }
           } catch (error:any) {
             res.status(400).json({error:error.message});
           }
