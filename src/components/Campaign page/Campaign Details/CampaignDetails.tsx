@@ -451,7 +451,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                           className="profile-image"
                         />
                         <h4>
-                          {winnerArtist.length > 10
+                          {winnerArtist && winnerArtist.length > 10
                             ? `${winnerArtist.slice(0, 10)}...`
                             : winnerArtist}
                         </h4>
