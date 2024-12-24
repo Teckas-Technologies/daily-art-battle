@@ -60,7 +60,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             await newTransaction.save();
             const trans= await createTransaction(requiredCoins, AdminTransactionType.RECEIVED_FROM_RAFFLE,email);
             const updatedBalance = await updateAdminBalance(requiredCoins, AdminTransactionType.EARN);
-            await artistReward(email,ticketCount);
+            await artistReward(artId,ticketCount);
             res.status(201).json({ message: 'Raffle tickets purchased successfully' });
         }catch(error:any){
             res.status(400).json({error:error.message});
