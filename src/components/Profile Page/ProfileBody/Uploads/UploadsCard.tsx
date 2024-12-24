@@ -102,8 +102,9 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
         if (!user) {
             return;
         }
+
         console.log("Raffle Art Offchain Burn Clicked!");
-        setConfirmPopup({ info: "Earn GFXvs Points", text: `Burn this ${isSpinner ? "Special" : "Participation"} Art for<br />${isSpinner ? RARE_NFT_BURN : PARTICIPATION_NFT_BURN} GFXvs Coins`, isMint: false });
+        setConfirmPopup({ info: "Earn GFXvs Points", text: `Burn this ${isSpinner ? "Special" : "Participation"} Art to get GFXvs Coins`, isMint: false });
     }
 
     const closeMintBurnPopup = () => {
