@@ -226,7 +226,10 @@ const page = () => {
     };
 
     if (signedAccountId) {
-      fetchTransaction();
+      const timeout = setTimeout(() => {
+        fetchTransaction();
+      }, 5000); 
+      return () => clearTimeout(timeout);
     }
   }, [signedAccountId, userDetails, searchParams, pathName, userTrigger]);
 
