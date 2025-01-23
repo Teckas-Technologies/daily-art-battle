@@ -95,7 +95,7 @@ export const UploadsCard: React.FC<UploadsCardProps> = ({ art, isNFT, isUploaded
             await wallet?.signIn();
             return;
         }
-        setConfirmPopup({ info: "Earn GFXvs Points", text: "Burn this rare NFT for<br />1000 GFXvs Coins", isMint: false });
+        setConfirmPopup({ info: "Earn GFXvs Points", text: `Burn this NFT for<br /> GFXvs Coins`, isMint: false });
     }
 
     const handleOffchainBurn = async () => {
