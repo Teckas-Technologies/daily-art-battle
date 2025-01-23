@@ -258,7 +258,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
           <div className="flex flex-col link-div relative">
             <p className="flex flex-row items-center justify-center gap-4 text-white text-[10px] font-semibold">
-              Referral Link{" "}
+              Referral Code{" "}
               <span className="gfx-text flex flex-row items-center justify-center gap-1 text-[10px] font-semibold">
                 {REFFERER} GFXvs <InlineSVG src="/icons/coin.svg" />
               </span>
@@ -266,9 +266,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
             <div className="flex items-center gap-2 mt-2 ">
               <p className="bg-transparent py-1 text-xs font-extralight">
-                {referralLink.length > 20
+                {/* {referralLink.length > 20
                   ? `${referralLink.slice(0, 20)}...`
-                  : referralLink}
+                  : referralLink} */}
+                  {user?.user.referralCode}
               </p>
               <div className="relative flex flex-row items-center justify-center gap-1">
                 <div className="flex flex-row items-center justify-center gap-1 copy-icon-container">
@@ -367,7 +368,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
           <div className="flex flex-col lg:items-center link-div">
             <p className="flex flex-row items-center gap-4 text-white text-xs font-semibold lg:text-xs xl:text-xs xxl:text-sm md:text-xs">
-              Referral Link{" "}
+              Referral Code{" "}
               <span className="gfx-text flex flex-row items-center justify-center gap-1 text-xs font-semibold lg:text-xs xl:text-xs md:text-xs">
               {REFFERER} GFXvs{" "}
                 <img
@@ -380,9 +381,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
             <div className="flex items-center gap-2 mt-2 relative">
               <p className="bg-transparent py-1 text-xs font-extralight lg:text-xs xl:text-xs xxl:text-sm md:text-xs">
-                {referralLink.length > 20
+                {/* {referralLink.length > 20
                   ? `${referralLink.slice(0, 20)}...`
-                  : referralLink}
+                  : referralLink} */}
+                   {user?.user.referralCode}
               </p>
               <div className="flex flex-row items-center justify-center gap-1">
                 <div className="flex flex-row items-center justify-center gap-1 copy-icon-container">
