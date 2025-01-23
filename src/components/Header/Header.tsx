@@ -356,6 +356,11 @@ export const Header: React.FC<Props> = ({
             signedAccountId ? handleSignOut() : handleSignIn();
           }} // router.push("/profile")
         />
+        {signedAccountId&&(
+          <div className="hidden sm:block">
+            <p>{signedAccountId}</p>
+            </div>
+        )}
         {!userDetails && (
           <div className="header-actions flex items-center gap-3">
             {/* <h2 className='font-semibold spartan-semibold'>Login |</h2> */}

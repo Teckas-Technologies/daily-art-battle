@@ -15,14 +15,14 @@ interface Props {
     text: string;
     isMint: boolean;
     onClose: () => void;
-    art: ArtData | NftToken | RaffleArt;
+    art: ArtData | NftToken | RaffleArt | any;
     isSpinner?: boolean;
     setBurnArtSuccess: (e: boolean) => void;
     setBurnArtFailed: (e: boolean) => void;
 }
  
 export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, art, isSpinner, setBurnArtFailed, setBurnArtSuccess }) => {
-    const { mintImage } = useMintImage();
+    const { mintImage ,burnNft} = useMintImage();
     const { offchainBurn } = useOffChainBurn();
     const [burningArt, setBurningArt] = useState(false);
     const [minting, setmMinting] = useState(false);
@@ -56,6 +56,11 @@ export const MintBurnPopup: React.FC<Props> = ({ info, text, isMint, onClose, ar
                     setBurnArtFailed?.(true);
                 }
                 onClose();
+            }else{
+                setBurningArt(true);
+                console.log(art);
+                const res = await burnNft(art.token_id,art.nft_contract_id);
+                setBurningArt(false);
             }
         }
 
