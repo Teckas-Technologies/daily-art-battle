@@ -29,8 +29,9 @@ export async function scheduleArt(data: any): Promise<any> {
     ...data,
     uploadedTime: startDate,
   });
+   await newArt.save();
   await createGfxvsBattleauto(data.campaignId);
-  return await newArt.save();
+  return newArt;
 }
 
 export const findAllArts = async (campaignId:string,page: number, limit: number): Promise<any> => {
