@@ -49,9 +49,10 @@ const useMintImage = () => {
         args: {
           metadata: JSON.stringify(metadata),   
           nft_contract_id:data.contractId,
+          count:data.count,
         },
-        gas: '200000000000000', 
-        deposit: '10000000000000000000000'
+        gas: '300000000000000', 
+        deposit: '49260000000000000000000'
       });
       console.log("Ress 1 >>> ", res);
       return res;
@@ -67,7 +68,8 @@ const useMintImage = () => {
    * @returns 
    */
   const burnNft = async (
-    tokenId:any
+    tokenId:any,
+    nft_contract_id:any
   ) => {
     if (!wallet) {
       throw new Error("Wallet is not defined.");
@@ -75,7 +77,8 @@ const useMintImage = () => {
 
     try {
       const res = await wallet.callMethod({
-        contractId: NEXT_PUBLIC_PROXY_ADDRESS,
+        callbackUrl: window.location.origin + `/profile?isBurn=true`,
+        contractId: nft_contract_id,
         method: 'nft_batch_burn',                  
         args: {
           token_ids: [tokenId],                       
@@ -144,7 +147,46 @@ const useMintImage = () => {
       setLoading(false);
     }
   }
-  return { mintImage,burnNft,saveHash,getHash,loading, error };
+
+  
+  const postBurn = async (
+    walletAddress: string,
+    transactionHash: string
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/api/gfxCoin?queryType=burnNft&walletAddress=${walletAddress}&transactionHash=${transactionHash}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Response received:", response);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      setUserTrigger(true);
+      const result = await response.json();
+      console.log("Parsed response >>:", result);
+      return result;
+    } catch (err: any) {
+      console.error("Error occurred:", err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      console.log("Loading state set to false");
+    }
+  };
+
+
+  return { mintImage,burnNft,saveHash,getHash,postBurn,loading, error };
 };
 
 export default useMintImage;

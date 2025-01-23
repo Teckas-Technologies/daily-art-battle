@@ -28,6 +28,7 @@ import usePostNearDrop from "@/hooks/NearDrop";
 import { ClaimPopup } from "@/components/PopUps/ClaimPopup";
 import { NEAR_DROP, SIGNUP, TELEGRAM_DROP } from "@/config/points";
 import Loader from "@/components/ArtBattle/Loader/Loader";
+import { burn } from "@mintbase-js/sdk";
 const page = () => {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -45,6 +46,7 @@ const page = () => {
   const [errMsg, setErrMsg] = useState("");
   const [walltMisMatchPopup, setWalletMismatchPopup] = useState(false);
   const { postNearTransfer, getNearTransfer } = useNearTransfer();
+  const {postBurn} = useMintImage();
   const { postUSDTTransfer } = useUSDTTransfer();
   const { wallet, signedAccountId } = useContext(NearContext);
   const searchParams = useSearchParams();
@@ -113,6 +115,7 @@ const page = () => {
       const isUsdttransfer = searchParams?.get("isUsdttransfer") || "";
       const artId = searchParams?.get("artId") || "";
       const queryType = searchParams?.get("queryType") || "";
+      const isBurn = searchParams?.get("isBurn") || "";
 
       if (signedAccountId) {
         if (isMint) {
@@ -147,7 +150,42 @@ const page = () => {
             setSuccessToast("no");
             setToast(true);
           }
-        } else if (isNeartransfer) {
+        }
+        else if (isBurn) {
+          try {
+            console.log("burn",isBurn);
+            if (txnHash) {
+              const notExist = await getHash(txnHash);
+              console.log("NOT Exist:", notExist);
+              if (notExist) {
+                const senderId = accountId;
+                const rpcUrl = `https://rpc.${NEXT_PUBLIC_NETWORK}.near.org`;
+                const txnStatus = await getTxnStatus(txnHash, senderId, rpcUrl);
+
+                if (txnStatus === "success") {
+                  setToastMessage(`Burn Successful!`);
+                  setSuccessToast("yes");
+                  setToast(true);
+                  await postBurn(signedAccountId,txnHash);
+                  await saveHash(txnHash);
+                  window.history.replaceState(null, "", "/profile");
+                } else {
+                  setToastMessage(`Burn Failed!`);
+                  setSuccessToast("no");
+                  setToast(true);
+                  window.history.replaceState(null, "", "/profile");
+                }
+              } else {
+                console.log("Transaction hash already exists in the database.");
+              }
+            }
+          } catch (error) {
+            setToastMessage(`Minting Failed!`);
+            setSuccessToast("no");
+            setToast(true);
+          }
+        }
+         else if (isNeartransfer) {
           try {
             if (txnHash) {
               const existingTxn = await getNearTransfer(txnHash);

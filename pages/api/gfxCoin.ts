@@ -262,8 +262,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({error:error.message});
     }
     }else if(req.method=="GET"){
-        await connectToDatabase();
         try {
+            await connectToDatabase();
             const transactionHash = req.query.transactionHash;
             const existinghash = await Hashes.findOne({hash:transactionHash});
             if(existinghash){
