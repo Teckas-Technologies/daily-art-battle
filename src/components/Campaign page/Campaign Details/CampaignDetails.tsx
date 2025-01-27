@@ -394,7 +394,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                           className="profile-image"
                         />
                         <h4 style={{ margin: 0 }}>
-                          {special.artistId.length > 10
+                          {special.artistId && special.artistId.length > 10
                             ? `${special.artistId.substring(0, 10)}...`
                             : special.artistId}
                         </h4>
@@ -451,7 +451,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({
                           className="profile-image"
                         />
                         <h4>
-                          {winnerArtist.length > 10
+                          {winnerArtist && winnerArtist.length > 10
                             ? `${winnerArtist.slice(0, 10)}...`
                             : winnerArtist}
                         </h4>
